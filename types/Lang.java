@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 /**Langファイル関係*/
 public class Lang {
-	
+	//同期チェック
 	/**登録名のリスト*/
 	static ArrayList<String> LangList = new ArrayList<String>();
 	/**登録名-LangのMAP*/
