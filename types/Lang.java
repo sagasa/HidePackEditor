@@ -11,14 +11,14 @@ import java.util.regex.Pattern;
 
 /**Langファイル関係*/
 public class Lang {
-	
+
 	/**登録名のリスト*/
 	static ArrayList<String> LangList = new ArrayList<String>();
 	/**登録名-LangのMAP*/
 	static HashMap<String,HashMap<String,String>> LangDataMap = new HashMap<String,HashMap<String,String>>();
 	/**使用するLang(登録名)*/
 	static String UseLang;
-	
+
 	/**インターフェースの文字列*/
 	public enum LangData{
 		/** 登録名 : String型 全部小文字 **/
@@ -60,17 +60,13 @@ public class Lang {
 	}
 	//Englishを登録
 	static void LangInit (File langDir) throws IOException{
-		HashMap<String,String> newLang = new HashMap<String,String>();
 		//例としてEnglish.langを出力
 		FileWriter writer = new FileWriter(langDir.getAbsolutePath()+"/English.lang");
 		for (LangData d:LangData.values()){
-			newLang.put(d.getName(), d.getDefault());
 			writer.write(d.getName()+"="+d.getDefault()+"\n");
 		}
 		writer.close();
-		LangDataMap.put("English", newLang);
-		LangList.add("English");
-		UseLang = "English";	
+		UseLang = "English";
 	}
 	/**ファイルからLangを読み取る*/
 	public static void readLang(String path){
@@ -87,7 +83,7 @@ public class Lang {
 				{
 					//ファイル読み込み
 					System.out.println("Loaded content Lang : " + file.getName());
-					
+
 					BufferedReader input = new BufferedReader(new FileReader(file));
 					String line;
 					HashMap<String,String> data = new HashMap<String,String>();
@@ -110,7 +106,7 @@ public class Lang {
 					LangDataMap.put(langName, newLang);
 					LangList.add(langName);
 				}
-	
+
 			}
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック

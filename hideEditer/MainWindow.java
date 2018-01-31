@@ -17,6 +17,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import types.BulletData;
 import types.ContentsPack;
@@ -76,10 +77,15 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 	    menubar.add(edit);
 
 	    JMenuItem fileItem1 = new JMenuItem("New");
+	    fileItem1.setActionCommand("New");
 	    JMenuItem fileItem2 = new JMenuItem("Open");
+	    fileItem2.setActionCommand("Open");
 	    JMenuItem fileItem3 = new JMenuItem("Save");
+	    fileItem3.setActionCommand("Save");
 	    JMenuItem fileItem4 = new JMenuItem("Save As...");
+	    fileItem4.setActionCommand("Save As...");
 	    JMenuItem fileItem5 = new JMenuItem("Exit");
+	    fileItem5.setActionCommand("Exit");
 
 	    fileItem1.addActionListener(this);
 	    fileItem2.addActionListener(this);
@@ -127,13 +133,16 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 		if (e.getActionCommand().equals("Open")){
 			JFileChooser filechooser = new JFileChooser();
 			filechooser.setCurrentDirectory(new File("."));
-			filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY );
+			FileNameExtensionFilter filter = new FileNameExtensionFilter(
+			        "zip file", "zip");
+			filechooser.setFileFilter(filter);
+			filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY );
 
 		    int selected = filechooser.showOpenDialog(this);
 		    System.out.println(selected);
 		    //パックを読む
 		    if(selected == 0){
-		    	PackReader.Read(filechooser.getSelectedFile());
+		    	Pack = PackReader.Read(filechooser.getSelectedFile());
 		    	PackInfoEditer.write();
 		    }
 		}
@@ -141,10 +150,14 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 		//パックを制作する
 		if (e.getActionCommand().equals("New")){
 			Pack = PackReader.NewPack();
-			PackInfoEditer.write();;
+			PackInfoEditer.write();
 		}
-	   // JLabel label = new JLabel("Push A Button");
-	    //JOptionPane.showMessageDialog(this, label);
+
+		//パックを保存
+		if (e.getActionCommand().equals("Save")){
+			PackWriter.exportPack();
+		}
+
 	  }
 	@Override
 	public void componentHidden(ComponentEvent arg0) {
@@ -156,10 +169,6 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 	}
 	@Override
 	public void componentResized(ComponentEvent e) {
-
-	//	if (MainWindow.getWidth() < 900) MainWindow.setSize(900, MainWindow.getHeight());
-		//if (MainWindow.getHeight() < 500) MainWindow.setSize(MainWindow.getWidth(), 500);
-		//ContentsList.ContentsTab.setBounds(0, 0, 200, MainWindow.getHeight()-65);
 		ContentsList.reSize();
 		EditWindow.OpenWindow.setBounds(200, 20, 600, MainWindow.getHeight()-85);
 	}

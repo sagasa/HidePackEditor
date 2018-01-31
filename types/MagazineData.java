@@ -2,6 +2,8 @@ package types;
 
 import com.google.gson.JsonObject;
 
+import helper.JsonWrapper;
+
 public class MagazineData {
 
 	/** 登録名 : String型 全部小文字 **/

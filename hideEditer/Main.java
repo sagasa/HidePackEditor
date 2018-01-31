@@ -31,16 +31,16 @@ public class Main {
 	//	GunData newGun = new GunData();
 	//	System.out.println(newGun);
 
-		GunData newgun = new GunData();
-		System.out.println(newgun.MakeJsonData());
 
-		/*
+		ContentsPack pack = new ContentsPack();
+		ContentsPack.PackDataList.PACK_NAME.setData(pack, "newPack2");
+
 		ContentsPack pack2 = new ContentsPack(pack.MakeJsonData());
 		System.out.println(PackDataList.PACK_NAME.getData(pack2));
 		System.out.println(pack2.MakeJsonData());
 		//System.out.println("test: " + gson.toJson(new TestData()));
-*/
-		PackWriter.exportPack();
+
+		//PackWriter.exportPack();
 		//PackReader.Read(new File("./test.zip"));
 
 
@@ -49,11 +49,11 @@ public class Main {
 		System.out.println(Arrays.toString(Lang.getLangList()));
 		Lang.setLang("jp");
 		System.out.println(Lang.LangData.SET.get());
-		
-		
+
+
 
 		main = new MainWindow();
-		//main.openWindow();
+		main.openWindow();
 
 
 	}

@@ -1,5 +1,7 @@
 package hideEditer;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,12 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import helper.ArrayEditor;
 import types.ContentsPack;
 import types.GunData;
 import types.GunData.GunDataList;
@@ -52,28 +56,25 @@ public class PackReader {
 		return pack;
 	}
 
+	static ContentsPack loadedPack;
 	/**パックを読む*/
-	public static void Read(File file) {
+	public static ContentsPack Read(File file) {
+		//初期化
+		loadedPack = null;
+		MainWindow.gunMap.clear();
+		//TODO後でぜんType追加
 		//パックがあるか調べる
 		String Path = file.getAbsolutePath();
 		if(checkDir(Path)){
-
-		}
-		//zipから読み込み
-		try {
-			zipRead(file);
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			try {
+				//zipから読み込み
+				zipRead(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
-		/*
-		if (new File(Path+"/pack.json").exists()&&new File(Path+"/pack.json").isFile()) {
-			System.out.println("パックを認識しました");
-			ContentsPack pack = new ContentsPack();
-			MainWindow.PackDir = file;
-			MainWindow.Pack = pack;
-		}*/
+		return loadedPack;
 	}
 	//パック確認変数
 	static boolean packInfo;
@@ -92,12 +93,18 @@ public class PackReader {
         	//dirかどうか確認
         	if (!entry.isDirectory()){
         		//内容を読み取り
-        		byte[] buffer = new byte[(int) entry.getSize()];
-        		int size = zipIn.read(buffer);
-        		//パックラッパーに送る
-        		PackWrapper(buffer,entry.getName());
 
-	            //String zipString = new String(Arrays.copyOf(buffer, size));
+        	//	byte[] buffer = new byte[0x6400000];
+        		byte[] buffer = new byte[1024];
+        		byte[] data = new byte[0];
+        		int size;
+        		while (0 < (size = zipIn.read(buffer))) {
+        			data = ArrayEditor.ByteArrayCombining(data,buffer);
+        		}
+        		//パックラッパーに送る
+        		PackWrapper(data,entry.getName());
+
+	            //String zipString = new String(data);
 	            //System.out.println(zipString+" "+entry.getName()+" "+entry.getSize());
         	}
         	zipIn.closeEntry();
@@ -110,7 +117,7 @@ public class PackReader {
 		//JsonObject newData = gson.fromJson(new String(Arrays.copyOf(data, data.length)), JsonObject.class);
 		//Gun認識
 		if (Pattern.compile("^(.*)/guns/(.*).json").matcher(name).matches()){
-			GunData newGun = new GunData(gson.fromJson(new String(Arrays.copyOf(data, data.length)), JsonObject.class));
+			GunData newGun = new GunData(new String(data));
 			MainWindow.gunMap.put(GunDataList.DISPLAY_NAME.getData(newGun).toString(), newGun);
 		}
 		//bullet認識
@@ -122,8 +129,9 @@ public class PackReader {
 			System.out.println("magazine");
 		}
 		//packInfo認識
-		else if (Pattern.compile("^(.*)/pack.json").matcher(name).matches()){
-			System.out.println("pack");
+		else if (Pattern.compile("^(.*)pack.json").matcher(name).matches()){
+			System.out.println("pack :"+new String(data,Charset.forName("UTF-8")));
+			//loadedPack = new ContentsPack(new String(data,Charset.forName("UTF-8")));
 		}
 
 		//Resources認識
