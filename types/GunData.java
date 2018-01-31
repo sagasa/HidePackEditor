@@ -170,7 +170,7 @@ public class GunData {
 
 		//マップに格納
 		for (GunDataList d:GunDataList.values()){
-			System.out.println(d.getName()+"  "+d.getDefaultValue() + "  "+ w.getString("gun_"+d.getName(), d.getDefaultValue().toString()));
+			//System.out.println(d.getName()+"  "+d.getDefaultValue() + "  "+ w.getString("gun_"+d.getName(), d.getDefaultValue().toString()));
 			switch (d.types){
 			case "String":
 				Data.put(d.getName(), w.getString("gun_"+d.getName(),d.getDefaultValue().toString()));

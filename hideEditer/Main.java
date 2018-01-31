@@ -1,6 +1,7 @@
 package hideEditer;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,6 +12,7 @@ import com.google.gson.JsonObject;
 import types.ContentsPack;
 import types.ContentsPack.PackDataList;
 import types.GunData;
+import types.Lang;
 import valueEditer.EditWindow;
 
 public class Main {
@@ -29,11 +31,10 @@ public class Main {
 	//	GunData newGun = new GunData();
 	//	System.out.println(newGun);
 
-		/*ContentsPack pack = new ContentsPack();
-		PackDataList.PACK_NAME.setData(pack, "TEST");
-		PackDataList.NEW_CREATIVE_TAB.setData(pack, new String[]{"TEST1","TEST2"});
-		System.out.println(pack.MakeJsonData());
+		GunData newgun = new GunData();
+		System.out.println(newgun.MakeJsonData());
 
+		/*
 		ContentsPack pack2 = new ContentsPack(pack.MakeJsonData());
 		System.out.println(PackDataList.PACK_NAME.getData(pack2));
 		System.out.println(pack2.MakeJsonData());
@@ -44,7 +45,12 @@ public class Main {
 
 
 		//lang
-		LangReader.loadLangList();
+		Lang.readLang("./lang");
+		System.out.println(Arrays.toString(Lang.getLangList()));
+		Lang.setLang("jp");
+		System.out.println(Lang.LangData.SET.get());
+		
+		
 
 		main = new MainWindow();
 		//main.openWindow();
