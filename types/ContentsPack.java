@@ -6,6 +6,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import helper.JsonWrapper;
+
 public class ContentsPack {
 
 	/**初期値*/
@@ -74,9 +76,10 @@ public class ContentsPack {
 	}
 
 	/**JsonObjectからデータを読み込む ; pack_name, pack_version, pack_newcreativetab[]*/
-	public ContentsPack(JsonObject obj) {
+	public ContentsPack(String json) {
 		//初期値を忘れずに
-		JsonWrapper w = new JsonWrapper(obj);
+		Gson gson = new Gson();
+		JsonWrapper w = new JsonWrapper(gson.fromJson(json, JsonObject.class));
 
 		//マップに格納
 		for (PackDataList d:PackDataList.values()){
@@ -98,7 +101,7 @@ public class ContentsPack {
 
 	}
 	/**JsonObjectを作成*/
-	public JsonObject MakeJsonData(){
+	public String MakeJsonData(){
 		Gson gson = new Gson();
 		JsonObject JsonData = new JsonObject();
 		for (PackDataList d:PackDataList.values()){
@@ -113,12 +116,12 @@ public class ContentsPack {
 				JsonData.addProperty("pack_"+d.getName(), new Float (d.getData(this).toString()));
 			break;
 			case "String[]":
-				JsonElement element = 
+				JsonElement element =
 			     gson.toJsonTree((String[])d.getData(this) , new TypeToken<String[]>() {}.getType());
 				JsonData.add("pack_"+d.getName(), element.getAsJsonArray());
 			break;
 			}
 		}
-		return JsonData;
+		return gson.toJson(JsonData);
 	}
 }

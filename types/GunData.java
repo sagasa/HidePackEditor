@@ -7,6 +7,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import helper.JsonWrapper;
+
 public class GunData {
 
 	/**エディタのみで使用するデータ*/
@@ -162,11 +164,11 @@ public class GunData {
 		this(null);
 	}
 
-	/** JsonObjectからデータを読み込む */
-	public GunData(JsonObject obj) {
+	/** JsonStringからデータを読み込む */
+	public GunData(String json) {
 		// 初期値を忘れずに
-
-		JsonWrapper w = new JsonWrapper(obj);
+		Gson gson = new Gson();
+		JsonWrapper w = new JsonWrapper(gson.fromJson(json, JsonObject.class));
 
 		//マップに格納
 		for (GunDataList d:GunDataList.values()){
@@ -188,7 +190,7 @@ public class GunData {
 		}
 	}
 	/**JsonObjectを作成*/
-	public JsonObject MakeJsonData(){
+	public String MakeJsonData(){
 		Gson gson = new Gson();
 		JsonObject JsonData = new JsonObject();
 		for (GunDataList d:GunDataList.values()){
@@ -203,12 +205,12 @@ public class GunData {
 				JsonData.addProperty("gun_"+d.getName(), new Float (d.getData(this).toString()));
 			break;
 			case "String[]":
-				JsonElement element = 
+				JsonElement element =
 			     gson.toJsonTree((String[])d.getData(this) , new TypeToken<String[]>() {}.getType());
 				JsonData.add("gun_"+d.getName(), element.getAsJsonArray());
 			break;
 			}
 		}
-		return JsonData;
+		return gson.toJson(JsonData);
 	}
 }
