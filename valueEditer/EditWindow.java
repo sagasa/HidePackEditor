@@ -29,7 +29,7 @@ public class EditWindow implements ActionListener{
 	public static JPanel OpenWindow;
 
 	String[] settingCommand = {"UseSneakRecoil","UseADSRecoil","UseSneakADSRecoil"};
-	
+
 	/**エディターを開く*/
 	public void MakeWindow(JFrame window) {
 
@@ -161,7 +161,7 @@ public class EditWindow implements ActionListener{
 
 		    JComboBox combo = new JComboBox(combodata);
 
-		    
+
 		    /**パラメータ設定パネルの数*/
 		    final int panelNumber = 6;
 			//パラメータ設定パネル
@@ -172,7 +172,7 @@ public class EditWindow implements ActionListener{
 				settingPanel[i].setLayout(null);
 				OpenWindow.add(settingPanel[i]);
 		    }
-		    
+
 
 		    /**ポインタ*/
 			int[] p = {0,0,1,1,1,0};
@@ -196,7 +196,7 @@ public class EditWindow implements ActionListener{
 					settingPanel[n].add(panel);
 					p[n]++;
 				}
-				System.out.println(settingData.getName()+" "+settingData.getData(data));
+				//System.out.println(settingData.getName()+" "+settingData.getData(data));
 			}
 			//仕様の可否を設定するパネル
 			int[] setting2 = {2,3,4};
@@ -208,7 +208,7 @@ public class EditWindow implements ActionListener{
 				canUse[i2].addActionListener(this);
 				canUse[i2].setSelected(data.UseRecoil[i2]);
 				settingPanel[i].add(canUse[i2]);
-				
+
 				i2++;
 			}
 			//サイズを決定
@@ -218,8 +218,8 @@ public class EditWindow implements ActionListener{
 			for (int i :line1){
 				settingPanel[i].setBounds(5, hight1, OpenWindow.getWidth()/2-5, p[i]*24+6);
 				hight1 += settingPanel[i].getHeight()+5;
-				System.out.println(settingPanel[i].getComponentCount());
-				
+				//System.out.println(settingPanel[i].getComponentCount());
+
 			}
 
 			//2行目
@@ -262,7 +262,7 @@ public class EditWindow implements ActionListener{
 			}
 			i++;
 		}
-		
+
 		if (e.getActionCommand().equals("setShortName")){
 			GunDataList.SHORT_NAME.setData(data,shortName2.getText().toLowerCase());
 			shortName2.setText((String) GunDataList.SHORT_NAME.getData(data));

@@ -32,10 +32,10 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 	String type;
 	/**set可能かどうか*/
 	boolean canEdit;
-	
+
 	/**テキストボックス*/
 	JTextField setting2;
-	
+
 	/**コンストラクタ 編集可能*/
 	public SetPanel(GunDataList d,GunData gun){
 		datatype = d;
@@ -50,7 +50,7 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 		type = "gun";
 		canEdit = canedit;
 	}
-	
+
 	/**設定ボックス IntとFloatのみ対応*/
 	@Override
 	public void paintComponent(Graphics g){
@@ -79,8 +79,8 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 			setting2.setFont(new Font("BOLD", Font.BOLD, 13));
 			this.add(setting2);
 		}
-		
-		
+
+
 
 		//決定ボタン
 		JButton setting3 = new JButton("set");
@@ -107,7 +107,7 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 		}
 		setting2.setText(((GunDataList) datatype).getData((GunData)data).toString());
 	}
-	
+
 	/**決定*/
 	void set(){
 		Pattern p = Pattern.compile("[^\\d\\.]");
@@ -124,7 +124,7 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 			break;
 			}
 		}catch(NumberFormatException e2){}
-		
+
 		setting2.setText(((GunDataList) datatype).getData((GunData)data).toString());
 	}
 	@Override
@@ -149,13 +149,13 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 			change(1);
 		break;
 		}
-		System.out.println(e.getKeyCode());
-		
+		//System.out.println(e.getKeyCode());
+
 	}
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO 自動生成されたメソッド・スタブ
-		
+
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
