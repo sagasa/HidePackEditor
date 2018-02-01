@@ -23,6 +23,11 @@ public class Lang {
 	public enum LangData{
 		/** 登録名 : String型 全部小文字 **/
 		SET("set"),
+		FILE("File"),
+		Edit("Edit"),
+		NEW("New"),
+		OPEN("Open"),
+		SAVE("Save"),
 		;
 		String Name;
 		LangData(String name){
