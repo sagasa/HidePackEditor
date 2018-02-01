@@ -81,12 +81,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 
 	/**リストを再描画*/
 	public static void write() {
-		//MainWindow.Editer.deleteGunEditer();
-		//System.out.println("GunData1"+gunModel);
 		gunModel.clear();
-		//System.out.println(gunModel);
-		//for (String a:gunModel){}
-		//System.out.println("GunData2"+gunModel);
 		for (GunData data:MainWindow.gunMap.values()){
 			System.out.println(GunDataList.DISPLAY_NAME.getData(data));
 			gunModel.addElement((String) GunDataList.DISPLAY_NAME.getData(data));
@@ -131,21 +126,13 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent e) {
-
-	}
+	public void mouseClicked(MouseEvent e) {}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO 自動生成されたメソッド・スタブ
-
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO 自動生成されたメソッド・スタブ
-
-	}
+	public void mouseExited(MouseEvent e) {}
 
 	@Override
 	public void mousePressed(MouseEvent e) {

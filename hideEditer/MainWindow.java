@@ -139,11 +139,12 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 			filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY );
 
 		    int selected = filechooser.showOpenDialog(this);
-		    System.out.println(selected);
+		    //System.out.println(selected);
 		    //パックを読む
 		    if(selected == 0){
 		    	Pack = PackReader.Read(filechooser.getSelectedFile());
 		    	PackInfoEditer.write();
+		    	ContentsList.write();
 		    }
 		}
 

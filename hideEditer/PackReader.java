@@ -31,23 +31,11 @@ public class PackReader {
 	/**パックを制作する*/
 	public static ContentsPack NewPack() {
 		int i = 1;
-		try {
-			//パックを仮に作る 名前を付ける
+		
+		//パックを仮に作る 名前を付ける
 
-			while(new File("./newPack"+i).exists()){i ++;}
-			File packDir = new File("./newPack"+i);
-			packDir.mkdir();
-			//中のファイルを作る
-			new File(packDir.getAbsolutePath()+"/guns").mkdir();
-			new File(packDir.getAbsolutePath()+"/bullets").mkdir();
-			new File(packDir.getAbsolutePath()+"/magazines").mkdir();
-			new File(packDir.getAbsolutePath()+"/resources").mkdir();
-			new File(packDir.getAbsolutePath()+"/pack.json").createNewFile();
-			System.out.println("パックを作成しました"+packDir.getName());
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		while(new File("./newPack"+i+".zip").exists()){i ++;}
+		File packDir = new File("./newPack"+i+".zip");
 
 		ContentsPack pack = new ContentsPack();
 		ContentsPack.PackDataList.PACK_NAME.setData(pack, "newPack"+i);
@@ -99,7 +87,7 @@ public class PackReader {
         		byte[] data = new byte[0];
         		int size;
         		while (0 < (size = zipIn.read(buffer))) {
-        			data = ArrayEditor.ByteArrayCombining(data,buffer);
+        			data = ArrayEditor.ByteArrayCombining(data,Arrays.copyOf(buffer, size));
         		}
         		//パックラッパーに送る
         		PackWrapper(data,entry.getName());
@@ -116,22 +104,23 @@ public class PackReader {
 	static void PackWrapper(byte[] data,String name){
 		//JsonObject newData = gson.fromJson(new String(Arrays.copyOf(data, data.length)), JsonObject.class);
 		//Gun認識
-		if (Pattern.compile("^(.*)/guns/(.*).json").matcher(name).matches()){
+		if (Pattern.compile("^(.*)guns/(.*).json").matcher(name).matches()){
 			GunData newGun = new GunData(new String(data));
+			System.out.println("gun");
 			MainWindow.gunMap.put(GunDataList.DISPLAY_NAME.getData(newGun).toString(), newGun);
 		}
 		//bullet認識
-		else if (Pattern.compile("^(.*)/bullets/(.*).json").matcher(name).matches()){
+		else if (Pattern.compile("^(.*)bullets/(.*).json").matcher(name).matches()){
 			System.out.println("bullet");
 		}
 		//magazines認識
-		else if (Pattern.compile("^(.*)/magazines/(.*).json").matcher(name).matches()){
+		else if (Pattern.compile("^(.*)magazines/(.*).json").matcher(name).matches()){
 			System.out.println("magazine");
 		}
 		//packInfo認識
 		else if (Pattern.compile("^(.*)pack.json").matcher(name).matches()){
 			System.out.println("pack :"+new String(data,Charset.forName("UTF-8")));
-			//loadedPack = new ContentsPack(new String(data,Charset.forName("UTF-8")));
+			loadedPack = new ContentsPack(new String(data,Charset.forName("UTF-8")));
 		}
 
 		//Resources認識

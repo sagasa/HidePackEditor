@@ -186,13 +186,13 @@ public class EditWindow implements ActionListener{
 					//仕様の可否の設定がいるもののみ
 					if (2<=n&&n<=4){
 						panel = new SetPanel(settingData,data,data.UseRecoil[n-2]);
-						System.out.println(data.UseRecoil[n-2]+" "+(n-2));
+						//System.out.println(data.UseRecoil[n-2]+" "+(n-2));
 					}else{
 						panel = new SetPanel(settingData,data);
-						System.out.println("add");
+						//System.out.println("add");
 					}
 					panel.setBounds(5, 5+p[n]*24, OpenWindow.getWidth()/2-15, 20);
-					System.out.println(settingPanel[n].getWidth());
+					//System.out.println(settingPanel[n].getWidth());
 					settingPanel[n].add(panel);
 					p[n]++;
 				}
