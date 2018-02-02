@@ -33,7 +33,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	static JList<String> guns;
 
 	static public JTabbedPane ContentsTab;
-	
+
 	/**ID用ポインタ*/
 	static int gunNum = 0;
 
@@ -73,7 +73,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	    this.addChangeListener(this);
 	    Window.add(this);
 	    reSize();
-	    
+
 	    Window.validate();
 
 	}
@@ -93,8 +93,9 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 		gunNum ++;
 		GunData newGun = new GunData();
 		GunDataList.DISPLAY_NAME.setData(newGun,"new gun No."+gunNum);
+		GunDataList.SHORT_NAME.setData(newGun,"gun_"+gunNum);
 		MainWindow.gunMap.put((String) GunDataList.DISPLAY_NAME.getData(newGun), newGun);
-		System.out.println("ok");
+		//System.out.println("ok");
 		write();
 	}
 
@@ -124,7 +125,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	public static void reSize(){
 		ContentsTab.setBounds(0, 80, 200, MainWindow.MainWindow.getHeight()-145);
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {}
 

@@ -21,11 +21,8 @@ public class PackReader {
 	public static ContentsPack NewPack() {
 		int i = 1;
 		// パックを仮に作る 名前を付ける
-		while (new File("./newPack" + i + ".zip").exists()) {
-			i++;
-		}
 		ContentsPack pack = new ContentsPack();
-		ContentsPack.PackDataList.PACK_NAME.setData(pack, "newPack" + i);
+		ContentsPack.PackDataList.PACK_NAME.setData(pack, "NotSet");
 		Gson gson = new Gson();
 		System.out.println("test: " + gson.toJson(pack));
 		return pack;

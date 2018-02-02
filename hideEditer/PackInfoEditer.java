@@ -79,7 +79,7 @@ public class PackInfoEditer extends JPanel implements ActionListener {
 		shortName3.setBounds(165, 5, 25, 24);
 		shortName3.setBorder(border);
 		shortName3.addActionListener(this);
-		shortName3.setActionCommand("setShortName");
+		shortName3.setActionCommand("setName");
 		this.add(shortName3);
 
 		//ラベル
@@ -100,7 +100,7 @@ public class PackInfoEditer extends JPanel implements ActionListener {
 		displayName3.setBounds(165, 35, 25, 24);
 		displayName3.setBorder(border);
 		displayName3.addActionListener(this);
-		displayName3.setActionCommand("setDisplayName");
+		displayName3.setActionCommand("setVersion");
 		this.add(displayName3);
 	}
 	public static void reSize(){
@@ -108,8 +108,8 @@ public class PackInfoEditer extends JPanel implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO 自動生成されたメソッド・スタブ
+	public void actionPerformed(ActionEvent e) {
+
 
 	}
 }

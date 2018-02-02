@@ -13,9 +13,11 @@ import java.util.HashMap;
 import javax.swing.Box;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -34,7 +36,7 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 
 	/*データの宣言*/
 	/**開いてるパック*/
-	public static File PackDir;
+	public static File PackDir = null;
 	/**開いてるパック*/
 	public static ContentsPack Pack = null;
 
@@ -83,7 +85,7 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 	    JMenuItem fileItem3 = new JMenuItem("Save");
 	    fileItem3.setActionCommand("Save");
 	    JMenuItem fileItem4 = new JMenuItem("Save As...");
-	    fileItem4.setActionCommand("Save As...");
+	    fileItem4.setActionCommand("SaveAs");
 	    JMenuItem fileItem5 = new JMenuItem("Exit");
 	    fileItem5.setActionCommand("Exit");
 
@@ -115,12 +117,6 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 	    Editer = new EditWindow();
 	    Editer.MakeWindow(MainWindow);
 
-
-	    LineBorder border = new LineBorder(Color.black, 1, false);
-	    IconPrint iconTest = new IconPrint("./test.png");
-	    iconTest.setBounds(1000, 5, 100, 100);
-	    iconTest.setBorder(border);
-	    MainWindow.add(iconTest);
 	    MainWindow.setVisible(true);
 	    MainWindow.repaint();
 	    System.out.println(Pack);
@@ -150,16 +146,58 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 
 		//パックを制作する
 		if (e.getActionCommand().equals("New")){
-			Pack = PackReader.NewPack();
-			PackInfoEditer.write();
+			//上書きするか聞く
+			boolean Overwrite=true;
+			if (Pack!=null){
+				if (JOptionPane.showConfirmDialog(this, "Overwrite?","Warning",2,2)==2){
+					Overwrite = false;
+				}
+			}
+			if(Overwrite==true){
+				Pack = PackReader.NewPack();
+				//初期化
+				gunMap.clear();
+				magazineMap.clear();
+				bulletMap.clear();
+				PackDir = null;
+				PackInfoEditer.write();
+				ContentsList.write();
+			}
 		}
 
 		//パックを保存
 		if (e.getActionCommand().equals("Save")){
-			PackWriter.exportPack();
+			if (PackDir!=null){
+				PackWriter.exportPack(PackDir);
+			}else{
+				save();
+			}
+		}
+		//名前を付けてパックを保存
+		if (e.getActionCommand().equals("SaveAs")){
+			save();
 		}
 
 	  }
+	/**名前を付けて保存*/
+	void save(){
+		JFileChooser filechooser = new JFileChooser();
+		filechooser.setCurrentDirectory(new File("."));
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(
+		        "zip file", "zip");
+		filechooser.setFileFilter(filter);
+		//filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+	    int selected = filechooser.showSaveDialog(this);
+	    //System.out.println(selected);
+	    //パックを書く
+	    if(selected == 0){
+	    	PackWriter.exportPack(filechooser.getSelectedFile());
+	    	PackDir = filechooser.getSelectedFile();
+	    }
+	}
+
+
 	@Override
 	public void componentHidden(ComponentEvent arg0) {
 

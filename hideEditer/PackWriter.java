@@ -31,32 +31,32 @@ public class PackWriter {
 		}
 	}
 
-	public static void exportPack(){
-
-		//データをまとめる
-		ArrayList<ExportData> dataList = new ArrayList<ExportData>();
-		PackWriter This = new PackWriter();
-		//銃のデータ
-		for (GunData d:MainWindow.gunMap.values()){
-			dataList.add(This.new ExportData("guns/"+GunData.GunDataList.DISPLAY_NAME.getData(d).toString()+".json",d.MakeJsonData().getBytes()));
-		}
-
-		//パックデータ
-		dataList.add(This.new ExportData("pack.json",MainWindow.Pack.MakeJsonData().getBytes()));
-
-		File file = new File("./testpack.zip");
-	    try {
-	    	if(file.exists()){
-	    		file.createNewFile();
-	    	}
-	    	zipWriter(file,dataList.toArray(new ExportData[dataList.size()]));
-
-
-
-			} catch (IOException e) {
-				e.printStackTrace();
+	public static void exportPack(File file){
+		//パックがあるなら
+		if(MainWindow.Pack!=null){
+			//データをまとめる
+			ArrayList<ExportData> dataList = new ArrayList<ExportData>();
+			PackWriter This = new PackWriter();
+			//銃のデータ
+			for (GunData d:MainWindow.gunMap.values()){
+				dataList.add(This.new ExportData("guns/"+GunData.GunDataList.DISPLAY_NAME.getData(d).toString()+".json",d.MakeJsonData().getBytes()));
 			}
 
+			//パックデータ
+			dataList.add(This.new ExportData("pack.json",MainWindow.Pack.MakeJsonData().getBytes()));
+
+		    try {
+		    	if(file.exists()){
+		    		file.createNewFile();
+		    	}
+		    	zipWriter(file,dataList.toArray(new ExportData[dataList.size()]));
+
+
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
 	}
 
 	public static void zipWriter(File file, ExportData[] dataes) throws IOException {

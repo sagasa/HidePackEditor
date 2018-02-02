@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JOptionPane;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -54,6 +56,7 @@ public class Main {
 
 		main = new MainWindow();
 		main.openWindow();
+
 
 
 	}
