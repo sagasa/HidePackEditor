@@ -164,6 +164,7 @@ public class GunData {
 		this(null);
 	}
 
+	static final String headName = "gun_";
 	/** JsonStringからデータを読み込む */
 	public GunData(String json) {
 		// 初期値を忘れずに
@@ -174,17 +175,20 @@ public class GunData {
 		for (GunDataList d:GunDataList.values()){
 			//System.out.println(d.getName()+"  "+d.getDefaultValue() + "  "+ w.getString("gun_"+d.getName(), d.getDefaultValue().toString()));
 			switch (d.types){
+			case "boolean":
+				Data.put(d.getName(), w.getBoolean(headName+d.getName(),new Boolean (d.getDefaultValue().toString())));
+			break;
 			case "String":
-				Data.put(d.getName(), w.getString("gun_"+d.getName(),d.getDefaultValue().toString()));
+				Data.put(d.getName(), w.getString(headName+d.getName(),d.getDefaultValue().toString()));
 			break;
 			case "int":
-				Data.put(d.getName(), w.getInt("gun_"+d.getName(), new Integer (d.getDefaultValue().toString())));
+				Data.put(d.getName(), w.getInt(headName+d.getName(), new Integer (d.getDefaultValue().toString())));
 			break;
 			case "float":
-				Data.put(d.getName(), w.getFloat("gun_"+d.getName(), new Float (d.getDefaultValue().toString())));
+				Data.put(d.getName(), w.getFloat(headName+d.getName(), new Float (d.getDefaultValue().toString())));
 			break;
 			case "String[]":
-				Data.put(d.getName(), w.getStringArray("gun_"+d.getName(), (String[]) d.getDefaultValue()));
+				Data.put(d.getName(), w.getStringArray(headName+d.getName(), (String[]) d.getDefaultValue()));
 			break;
 			}
 		}
@@ -195,19 +199,22 @@ public class GunData {
 		JsonObject JsonData = new JsonObject();
 		for (GunDataList d:GunDataList.values()){
 			switch (d.types){
+			case "boolean":
+				JsonData.addProperty(headName+d.getName(),new Boolean(d.getData(this).toString()));
+			break;
 			case "String":
-				JsonData.addProperty("gun_"+d.getName(),d.getData(this).toString());
+				JsonData.addProperty(headName+d.getName(),d.getData(this).toString());
 			break;
 			case "int":
-				JsonData.addProperty("gun_"+d.getName(), new Integer (d.getData(this).toString()));
+				JsonData.addProperty(headName+d.getName(), new Integer (d.getData(this).toString()));
 			break;
 			case "float":
-				JsonData.addProperty("gun_"+d.getName(), new Float (d.getData(this).toString()));
+				JsonData.addProperty(headName+d.getName(), new Float (d.getData(this).toString()));
 			break;
 			case "String[]":
 				JsonElement element =
 			     gson.toJsonTree((String[])d.getData(this) , new TypeToken<String[]>() {}.getType());
-				JsonData.add("gun_"+d.getName(), element.getAsJsonArray());
+				JsonData.add(headName+d.getName(), element.getAsJsonArray());
 			break;
 			}
 		}

@@ -52,7 +52,7 @@ public class JsonWrapper {
 	}
 	
 	/**keyで取得したboolean型を返す nullならデフォルトを返す */
-	public boolean getBoolean(String key, boolean defaultValue) {
+	public Boolean getBoolean(String key, Boolean defaultValue) {
 		if(_obj==null){
 			return defaultValue;
 		}
