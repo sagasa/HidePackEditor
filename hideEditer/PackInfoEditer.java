@@ -90,7 +90,7 @@ public class PackInfoEditer extends JPanel implements ActionListener {
 		this.add(displayName);
 
 		//テキストボックス
-		VersionText = new JTextField(ContentsPack.PackDataList.PACK_LORE.getData(MainWindow.Pack).toString());
+		VersionText = new JTextField(ContentsPack.PackDataList.PACK_VERSION.getData(MainWindow.Pack).toString());
 		VersionText.setBounds(70, 35, 95, 24);
 		VersionText.setBorder(border);
 		this.add(VersionText);
@@ -109,7 +109,11 @@ public class PackInfoEditer extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
-
+		if (e.getActionCommand().equals("setName")){
+			ContentsPack.PackDataList.PACK_NAME.setData(MainWindow.Pack,NameText.getText());
+		}
+		if (e.getActionCommand().equals("setVersion")){
+			ContentsPack.PackDataList.PACK_VERSION.setData(MainWindow.Pack,VersionText.getText());
+		}
 	}
 }

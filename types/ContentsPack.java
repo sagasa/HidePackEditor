@@ -23,7 +23,7 @@ public class ContentsPack {
 		/**パックの登録名 ファイル名ではない*/
 		PACK_NAME("PackName","name","String"),
 		/**パックのバージョン*/
-		PACK_LORE("PackLore","lore","String"),
+		PACK_VERSION("PackVersion","version","String"),
 
 		/** 新しいクリエイティブタブ 複数設定可能 : String配列型 **/
 		NEW_CREATIVE_TAB("NewCreativeTab", new String[] {},"String[]"),;

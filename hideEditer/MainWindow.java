@@ -183,6 +183,7 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 	void save(){
 		JFileChooser filechooser = new JFileChooser();
 		filechooser.setCurrentDirectory(new File("."));
+		filechooser.setSelectedFile(new File("hoge.zip"));
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
 		        "zip file", "zip");
 		filechooser.setFileFilter(filter);
