@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -16,7 +18,7 @@ import types.ContentsPack;
 import types.GunData.GunDataList;
 
 /**右上のパック情報編集用 インスタンスは1つまで*/
-public class PackInfoEditer extends JPanel implements ActionListener {
+public class PackInfoEditer extends JPanel implements ActionListener, FocusListener {
 	private static final long serialVersionUID = 1845308493302986037L;
 
 	static PackInfoEditer Editer;
@@ -71,6 +73,7 @@ public class PackInfoEditer extends JPanel implements ActionListener {
 		//テキストボックス
 		NameText = new JTextField(ContentsPack.PackDataList.PACK_NAME.getData(MainWindow.Pack).toString());
 		NameText.setBounds(70, 5, 95, 24);
+		NameText.addFocusListener(this);
 		NameText.setBorder(border);
 		this.add(NameText);
 
@@ -115,5 +118,16 @@ public class PackInfoEditer extends JPanel implements ActionListener {
 		if (e.getActionCommand().equals("setVersion")){
 			ContentsPack.PackDataList.PACK_VERSION.setData(MainWindow.Pack,VersionText.getText());
 		}
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		System.out.println("this ");
+
+	}
+
+	@Override
+	public void focusLost(FocusEvent arg0) {
+
 	}
 }
