@@ -54,6 +54,8 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 	PackInfoEditer PackInfo;
 	/**コンテンツウインドウのインスタンス*/
 	public static ContentsList Contents;
+	/**リソースリストのインスタンス*/
+	public static ResourcesList Resources;
 	/**エディタウインドウのインスタンス*/
 	public static EditWindow Editer;
 
@@ -114,6 +116,11 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 	    Contents = new ContentsList();
 	    Contents.MakeWindow(MainWindow);
 	    ContentsList.reSize();
+	    
+	    Resources = new ResourcesList();
+	    Resources.MakeWindow(MainWindow);
+	    Resources.reSize();
+	    
 	    Editer = new EditWindow();
 	    Editer.MakeWindow(MainWindow);
 
@@ -210,6 +217,7 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 	@Override
 	public void componentResized(ComponentEvent e) {
 		ContentsList.reSize();
+		ResourcesList.reSize();
 		EditWindow.OpenWindow.setBounds(200, 20, 600, MainWindow.getHeight()-85);
 	}
 	@Override
