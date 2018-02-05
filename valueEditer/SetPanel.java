@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseWheelEvent;
@@ -21,7 +23,7 @@ import javax.swing.border.LineBorder;
 import types.GunData;
 import types.GunData.GunDataList;
 
-public class SetPanel extends JPanel implements ActionListener, MouseWheelListener, KeyListener{
+public class SetPanel extends JPanel implements MouseWheelListener, KeyListener, FocusListener{
 	private static final long serialVersionUID = 3496770761921234269L;
 
 	/**データリスト*/
@@ -70,6 +72,7 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 			setting2.setBounds(this.getWidth()-68, 0, 30 , this.getHeight());
 			setting2.addMouseWheelListener(this);
 			setting2.addKeyListener(this);
+			setting2.addFocusListener(this);
 			setting2.setBorder(border);
 			this.add(setting2);
 		}else{
@@ -79,18 +82,6 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 			setting2.setFont(new Font("BOLD", Font.BOLD, 13));
 			this.add(setting2);
 		}
-
-
-
-		//決定ボタン
-		JButton setting3 = new JButton("set");
-		setting3.setBounds(this.getWidth()-36, 0,36 , this.getHeight());
-		setting3.setBorder(border);
-		setting3.addActionListener(this);
-		setting3.setActionCommand("setGun");
-		setting3.setEnabled(canEdit);
-		this.add(setting3);
-
 	}
 	/**1増やすor1減らす 引数 1,-1*/
 	void change(int i){
@@ -101,7 +92,7 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 		break;
 		case "float":
 			String num2 = ((GunDataList) datatype).getData((GunData)data).toString();
-			((GunDataList) datatype).setData((GunData)data,new BigDecimal(num2).add(new BigDecimal("-0.1").multiply(new BigDecimal(i))));
+			((GunDataList) datatype).setData((GunData)data,new BigDecimal(num2).add(new BigDecimal("0.1").multiply(new BigDecimal(i))));
 			//System.out.println(num2+" "+(e.getWheelRotation()*-0.1));
 		break;
 		}
@@ -128,10 +119,6 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 		setting2.setText(((GunDataList) datatype).getData((GunData)data).toString());
 	}
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		set();
-	}
-	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		//System.out.println(e.getWheelRotation());
 		change(e.getWheelRotation());
@@ -141,12 +128,13 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 		switch(e.getKeyCode()){
 		case 10:
 			set();
+			this.getParent().requestFocusInWindow();
 		break;
 		case 38:
-			change(-1);
+			change(1);
 		break;
 		case 40:
-			change(1);
+			change(-1);
 		break;
 		}
 		//System.out.println(e.getKeyCode());
@@ -154,12 +142,16 @@ public class SetPanel extends JPanel implements ActionListener, MouseWheelListen
 	}
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		// TODO 自動生成されたメソッド・スタブ
-
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
-
 	}
-	;
+	@Override
+	public void focusGained(FocusEvent e) {
+	}
+	@Override
+	public void focusLost(FocusEvent e) {
+		//これをフラグに書き換える
+		set();
+	}
 }

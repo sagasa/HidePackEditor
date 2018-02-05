@@ -96,6 +96,7 @@ public class PackInfoEditer extends JPanel implements ActionListener, FocusListe
 		VersionText = new JTextField(ContentsPack.PackDataList.PACK_VERSION.getData(MainWindow.Pack).toString());
 		VersionText.setBounds(70, 35, 95, 24);
 		VersionText.setBorder(border);
+		VersionText.addFocusListener(this);
 		this.add(VersionText);
 
 		//決定ボタン
@@ -122,7 +123,7 @@ public class PackInfoEditer extends JPanel implements ActionListener, FocusListe
 
 	@Override
 	public void focusGained(FocusEvent e) {
-		System.out.println("this ");
+		System.out.println("this "+e.toString());
 
 	}
 
