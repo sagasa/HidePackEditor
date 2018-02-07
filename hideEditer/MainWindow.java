@@ -2,12 +2,14 @@ package hideEditer;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.List;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.Box;
@@ -48,6 +50,9 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 
 	/**マガジンのMAP*/
 	public static HashMap<String,BulletData> magazineMap = new HashMap<String,BulletData>();
+
+	/**マガジンのList*/
+	public static ArrayList<String> iconMap = new ArrayList<String>();
 
 	/*インスタンスの格納*/
 	/**パックインフォのインスタンス*/
@@ -116,11 +121,11 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 	    Contents = new ContentsList();
 	    Contents.MakeWindow(MainWindow);
 	    ContentsList.reSize();
-	    
+
 	    Resources = new ResourcesList();
 	    Resources.MakeWindow(MainWindow);
 	    Resources.reSize();
-	    
+
 	    Editer = new EditWindow();
 	    Editer.MakeWindow(MainWindow);
 

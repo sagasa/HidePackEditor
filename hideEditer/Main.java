@@ -14,7 +14,6 @@ import com.google.gson.JsonObject;
 import types.ContentsPack;
 import types.ContentsPack.PackDataList;
 import types.GunData;
-import types.Lang;
 import valueEditer.EditWindow;
 
 public class Main {

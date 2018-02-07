@@ -27,17 +27,16 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 
 	JPopupMenu popup = new JPopupMenu();
 
-	/**銃の表示リスト 名前のテキストリスト*/
-	static DefaultListModel<String> gunModel;
-	static JList<String> guns;
+	/**iconの表示リスト 名前のテキストリスト*/
+	static DefaultListModel<String> iconModel;
+
+	/**音の表示リスト 名前のテキストリスト*/
+	static DefaultListModel<String> soundModel;
 
 	static public JTabbedPane ContentsTab;
 
 	/**ID用ポインタ*/
 	static int gunNum = 0;
-
-	/**弾の表示リスト 名前のテキストリスト*/
-	static DefaultListModel<String> bulletModel;
 
 	public void MakeWindow (JFrame Window){
 		ContentsTab = this;
@@ -51,21 +50,21 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	    popup.add(propertyMenuItem);
 
 		//銃のリスト
-		guns = new JList<String>();
-	    gunModel = new DefaultListModel<String>();
-	    guns.setModel(gunModel);
+	    JList<String> guns = new JList<String>();
+	    iconModel = new DefaultListModel<String>();
+	    guns.setModel(iconModel);
 	    guns.addMouseListener(this);
 	    guns.addListSelectionListener(this);
 	    JScrollPane gunSP = new JScrollPane();
 	    gunSP.getViewport().setView(guns);
 
 	    //弾のリスト
-	    JList<String> bullets = new JList<String>();
-	    bulletModel = new DefaultListModel<String>();
-	    bullets.setModel(bulletModel);
-	    bullets.addMouseListener(this);
+	    JList<String> sounds = new JList<String>();
+	    soundModel = new DefaultListModel<String>();
+	    sounds.setModel(soundModel);
+	    sounds.addMouseListener(this);
 	    JScrollPane bulletSP = new JScrollPane();
-	    bulletSP.getViewport().setView(bullets);
+	    bulletSP.getViewport().setView(sounds);
 
 	    this.addTab("GunList", gunSP);
 	    this.addTab("BulletList", bulletSP);
@@ -80,10 +79,10 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 
 	/**リストを再描画*/
 	public static void write() {
-		gunModel.clear();
+		iconModel.clear();
 		for (GunData data:MainWindow.gunMap.values()){
 			System.out.println(GunDataList.DISPLAY_NAME.getData(data));
-			gunModel.addElement((String) GunDataList.DISPLAY_NAME.getData(data));
+			iconModel.addElement((String) GunDataList.DISPLAY_NAME.getData(data));
 		}
 
 	}
@@ -111,7 +110,6 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 		switch (this.getSelectedIndex()){
 		case 0:
 			//銃のエディタ
-			MainWindow.Editer.wrietGunEditer(MainWindow.gunMap.get(guns.getSelectedValue()));
 		break;
 		case 1:
 			addbullet();
@@ -122,7 +120,7 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	/**リサイズ
 	 * @return */
 	public static void reSize(){
-		ContentsTab.setBounds(MainWindow.MainWindow.getWidth()-250, 80, 200, MainWindow.MainWindow.getHeight()-145);
+		ContentsTab.setBounds(MainWindow.MainWindow.getWidth()-215, 80, 200, MainWindow.MainWindow.getHeight()-145);
 	}
 
 	@Override
@@ -196,4 +194,3 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 
 
 }
-	
