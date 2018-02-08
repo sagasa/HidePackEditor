@@ -26,6 +26,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import types.BulletData;
 import types.ContentsPack;
 import types.GunData;
+import types.ImageData;
 import valueEditer.EditWindow;
 
 public class MainWindow extends JFrame implements ActionListener, ComponentListener{
@@ -51,8 +52,8 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 	/**マガジンのMAP*/
 	public static HashMap<String,BulletData> magazineMap = new HashMap<String,BulletData>();
 
-	/**マガジンのList*/
-	public static ArrayList<String> iconMap = new ArrayList<String>();
+	/**iconのList*/
+	public static HashMap<String,ImageData> iconMap = new HashMap<String,ImageData>();
 
 	/*インスタンスの格納*/
 	/**パックインフォのインスタンス*/

@@ -115,16 +115,17 @@ public class PackReader {
 
 		// Resources認識
 		// Icon
-		if (Pattern.compile("^(.*)/Resources/icon/(.*).png").matcher(name).matches()) {
+		if (Pattern.compile("^(.*)Resources/icon/(.*).png").matcher(name).matches()) {
+			Pattern.compile(".png$").matcher(Pattern.compile("^(.*)Resources/icon/").matcher(name).replaceAll("")).replaceAll("");
 			System.out.println("icon");
 		}
-		if (Pattern.compile("^(.*)/Resources/model/(.*).ogg").matcher(name).matches()) {
+		if (Pattern.compile("^(.*)Resources/model/(.*).ogg").matcher(name).matches()) {
 			System.out.println("model");
 		}
-		if (Pattern.compile("^(.*)/Resources/texture/(.*).png").matcher(name).matches()) {
+		if (Pattern.compile("^(.*)Resources/texture/(.*).png").matcher(name).matches()) {
 			System.out.println("texture");
 		}
-		if (Pattern.compile("^(.*)/Resources/sounds/(.*).ogg").matcher(name).matches()) {
+		if (Pattern.compile("^(.*)Resources/sounds/(.*).ogg").matcher(name).matches()) {
 			System.out.println("sounds");
 		}
 
@@ -139,4 +140,8 @@ public class PackReader {
 		return file.canRead();
 	}
 
+	enum PackDataList{
+		DATA_GUN(Pattern.compile("^(.*)guns/(.*).json"),new Pattern[]{Pattern.compile("^(.*)guns/"),Pattern.compile(".json$")});
+		
+	}
 }
