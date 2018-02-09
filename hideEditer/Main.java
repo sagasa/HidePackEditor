@@ -1,10 +1,15 @@
 package hideEditer;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import com.google.gson.Gson;
@@ -27,25 +32,7 @@ public class Main {
 	public static EditWindow editer;
 
 	public static void main(String[] args){
-
-
-	//	GunData newGun = new GunData();
-	//	System.out.println(newGun);
-
-
-		/*
-		ContentsPack pack = new ContentsPack();
-		ContentsPack.PackDataList.PACK_NAME.setData(pack, "newPack2");
-
-		ContentsPack pack2 = new ContentsPack(pack.MakeJsonData());
-		System.out.println(PackDataList.PACK_NAME.getData(pack2));
-		System.out.println(pack2.MakeJsonData());
-		*/
-		//System.out.println("test: " + gson.toJson(new TestData()));
-
-		//PackWriter.exportPack();
-		//PackReader.Read(new File("./test.zip"));
-
+		init();
 
 		//lang
 		Lang.readLang("./lang");
@@ -55,11 +42,15 @@ public class Main {
 
 		main = new MainWindow();
 		main.openWindow();
-
-
-
 	}
-
-
+	/**初期化*/
+	static void init(){
+		/*try {
+			BufferedImage Image = ImageIO.read(ClassLoader
+			        .getSystemResourceAsStream("./HidePackEditer/resources"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
+	}
 
 }

@@ -2,6 +2,7 @@ package types;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -12,8 +13,17 @@ public class ImageData {
 	public BufferedImage Image;
 	
 	
-	public ImageData(byte[] input,String name) throws IOException{
-		Image = ImageIO.read(new ByteArrayInputStream(input));
+	public ImageData(byte[] input,String name){
+		try {
+			Image = ImageIO.read(new ByteArrayInputStream(input));
+		} catch (IOException e) {
+			
+		}
 		ImageName = name;
+	}
+	
+	public boolean isSet(){
+		
+		return false;
 	}
 }

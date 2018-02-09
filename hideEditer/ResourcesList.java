@@ -19,6 +19,7 @@ import javax.swing.event.ListSelectionListener;
 
 import types.GunData;
 import types.GunData.GunDataList;
+import types.ImageData;
 
 /**アクションリスナーのためにstaticにしていない 実質staticクラス インスタンスはMainWindowに格納*/
 public class ResourcesList extends JTabbedPane implements MouseListener , ActionListener ,ListSelectionListener ,ChangeListener{
@@ -32,7 +33,13 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 
 	/**音の表示リスト 名前のテキストリスト*/
 	static DefaultListModel<String> soundModel;
-
+	
+	/**modelの表示リスト 名前のテキストリスト*/
+	static DefaultListModel<String> modelModel;
+	
+	/**textureの表示リスト 名前のテキストリスト*/
+	static DefaultListModel<String> textureModel;
+	
 	static public JTabbedPane ContentsTab;
 
 	/**ID用ポインタ*/
@@ -49,7 +56,7 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	    popup.add(updateMenuItem);
 	    popup.add(propertyMenuItem);
 
-		//銃のリスト
+		//iconのリスト
 	    JList<String> icon = new JList<String>();
 	    iconModel = new DefaultListModel<String>();
 	    icon.setModel(iconModel);
@@ -57,8 +64,24 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	    icon.addListSelectionListener(this);
 	    JScrollPane iconSP = new JScrollPane();
 	    iconSP.getViewport().setView(icon);
-
-	    //弾のリスト
+	    
+	    //modelのリスト
+	    JList<String> model = new JList<String>();
+	    modelModel = new DefaultListModel<String>();
+	    model.setModel(modelModel);
+	    model.addMouseListener(this);
+	    JScrollPane modelSP = new JScrollPane();
+	    modelSP.getViewport().setView(model);
+	    
+	    //textureのリスト
+	    JList<String> texture = new JList<String>();
+	    textureModel = new DefaultListModel<String>();
+	    texture.setModel(textureModel);
+	    texture.addMouseListener(this);
+	    JScrollPane textureSP = new JScrollPane();
+	    textureSP.getViewport().setView(texture);
+	    
+	    //soundsのリスト
 	    JList<String> sounds = new JList<String>();
 	    soundModel = new DefaultListModel<String>();
 	    sounds.setModel(soundModel);
@@ -67,6 +90,8 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	    soundsSP.getViewport().setView(sounds);
 
 	    this.addTab("IconList", iconSP);
+	    this.addTab("ModelList", modelSP);
+	    this.addTab("TextureList", textureSP);
 	    this.addTab("SoundsList", soundsSP);
 	    this.addChangeListener(this);
 	    Window.add(this);
@@ -80,38 +105,21 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	/**リストを再描画*/
 	public static void write() {
 		iconModel.clear();
-		for (GunData data:MainWindow.gunMap.values()){
-			System.out.println(GunDataList.DISPLAY_NAME.getData(data));
-			iconModel.addElement((String) GunDataList.DISPLAY_NAME.getData(data));
+		for (ImageData data:MainWindow.iconMap.values()){
+			System.out.println(data.ImageName);
+			iconModel.addElement(data.ImageName);
 		}
-	}
-	/**銃を追加*/
-	public void addgun() {
-		gunNum ++;
-		GunData newGun = new GunData();
-		GunDataList.DISPLAY_NAME.setData(newGun,"new gun No."+gunNum);
-		GunDataList.SHORT_NAME.setData(newGun,"gun_"+gunNum);
-		MainWindow.gunMap.put((String) GunDataList.DISPLAY_NAME.getData(newGun), newGun);
-		//System.out.println("ok");
-		write();
-	}
-
-	/**弾を追加*/
-	public void addbullet() {
-
-
 	}
 
 	/**タブから判断してエディタを開く*/
 	public void OpenEditer() {
-
 		//編集画面を開く
 		switch (this.getSelectedIndex()){
 		case 0:
-			//銃のエディタ
+			
 		break;
 		case 1:
-			addbullet();
+			
 		break;
 		}
 	}
@@ -159,10 +167,10 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	//		System.out.println(ContentsTab.getSelectedIndex());
 			switch (this.getSelectedIndex()){
 				case 0:
-					addgun();
+					
 				break;
 				case 1:
-					addbullet();
+					
 				break;
 			}
 		}
@@ -184,12 +192,7 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		//タブが変わったらエディットウィンドウをクリア
-
 		MainWindow.Editer.clearEditer();
 		OpenEditer();
-
 	}
-
-
-
 }

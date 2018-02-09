@@ -126,12 +126,15 @@ public class PackReader {
 			MainWindow.iconMap.put(n, newImage);
  			System.out.println("icon");
 		}
+		//model
 		if (Pattern.compile("^(.*)resources/model/(.*).json").matcher(name).matches()) {
 			System.out.println("model");
 		}
+		//texture
 		if (Pattern.compile("^(.*)resources/texture/(.*).png").matcher(name).matches()) {
 			System.out.println("texture");
 		}
+		//sounds
 		if (Pattern.compile("^(.*)resources/sounds/(.*).ogg").matcher(name).matches()) {
 			System.out.println("sounds");
 		}
