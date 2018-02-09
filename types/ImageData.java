@@ -6,13 +6,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+/**Image格納用*/
 public class ImageData {
-	public String IconName;
-	public BufferedImage Icon;
+	public String ImageName;
+	public BufferedImage Image;
 	
 	
 	public ImageData(byte[] input,String name) throws IOException{
-		Icon = ImageIO.read(new ByteArrayInputStream(input));
-		
+		Image = ImageIO.read(new ByteArrayInputStream(input));
+		ImageName = name;
 	}
 }

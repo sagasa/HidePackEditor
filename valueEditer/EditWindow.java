@@ -142,7 +142,7 @@ public class EditWindow implements ActionListener{
 			OpenWindow.add(iconPanel);
 
 			//アイコンの画像
-			IconPrint icon1 = new IconPrint("./test.png");
+			IconPrint icon1 = new IconPrint(MainWindow.iconMap.get(GunDataList.ICON.getData(data)));
 			icon1.setBorder(border);
 			icon1.setBounds(5, 5, 55, 55);
 			iconPanel.add(icon1);

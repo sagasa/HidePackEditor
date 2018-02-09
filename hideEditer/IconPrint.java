@@ -9,7 +9,9 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-/**サイズを合わせてアイコンを描画 アイコンの画像パスを指定*/
+import types.ImageData;
+
+/** サイズを合わせてアイコンを描画 アイコンの画像パスを指定 */
 public class IconPrint extends JPanel {
 
 	/**
@@ -17,28 +19,35 @@ public class IconPrint extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**画像のパス*/
-	String path;
+	/** 画像のパス */
+	BufferedImage Image;
+
+	/**pathから作成*/
 	public IconPrint(String p) {
-		path = p;
+		try {
+			Image = ImageIO.read(new File(p));
+		} catch (Exception e) {
+			Image = null;
+		}
+	}
+	/**BufferedImageから作成*/
+	public IconPrint(BufferedImage i){
+		Image = i;
 	}
 
-	public void paintComponent(Graphics g){
-		Graphics2D g2 = (Graphics2D)g;
+	/**ImageDataから作成*/
+	public IconPrint(ImageData imageData) {
+		Image = imageData.Image;
+	}
+	
+	public void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
 
 		g2.setBackground(Color.white);
 		g2.clearRect(1, 1, this.getWidth(), this.getHeight());
 
-	    BufferedImage readImage = null;
-	    try {
-	      readImage = ImageIO.read(new File(path));
-	    } catch (Exception e) {
-
-	      readImage = null;
-	    }
-
-	    if (readImage != null){
-	      g2.drawImage(readImage, 0, 0,this.getWidth() ,this.getHeight() , this);
-	    }
+		if (Image != null) {
+			g2.drawImage(Image, 0, 0, this.getWidth(), this.getHeight(), this);
+		}
 	}
 }
