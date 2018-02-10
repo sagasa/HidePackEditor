@@ -27,6 +27,11 @@ import types.GunData.GunDataList;
 public class EditWindow implements ActionListener{
 	/**現在開いている編集ウィンドウ*/
 	public static JPanel OpenWindow;
+	
+	/**現在のパネルの幅*/
+	public static int panelWidth;
+	/**パネルの行数*/
+	public static int panelNumber;
 
 	String[] settingCommand = {"UseSneakRecoil","UseADSRecoil","UseSneakADSRecoil"};
 
@@ -142,10 +147,10 @@ public class EditWindow implements ActionListener{
 			OpenWindow.add(iconPanel);
 
 			//アイコンの画像
-			IconPrint icon1 = new IconPrint(MainWindow.iconMap.get(GunDataList.ICON.getData(data)));
+			/*IconPrint icon1 = new IconPrint(MainWindow.iconMap.get(GunDataList.ICON.getData(data)));
 			icon1.setBorder(border);
 			icon1.setBounds(5, 5, 55, 55);
-			iconPanel.add(icon1);
+			iconPanel.add(icon1);*/
 			//サイズを表示
 			ImageIcon icon2 = new ImageIcon("./test.png");
 			JLabel IconSize = new JLabel("Size: "+icon2.getIconWidth()+"x"+icon2.getIconHeight());
@@ -238,7 +243,16 @@ public class EditWindow implements ActionListener{
 	}
 
 
-
+	/**リサイズ+パネルサイズを再計算*/
+	public static void reSize(){
+		OpenWindow.setBounds(200, 20, 600, MainWindow.MainWindow.getHeight()-85);
+		panelNumber = 0;
+		for(int width = OpenWindow.getWidth();width > 0;width-=300){
+			panelNumber ++;
+		}
+		System.out.println(panelNumber+" "+ OpenWindow.getWidth());
+		
+	}
 
 	/**エディターを閉じる*/
 	public void clearEditer() {

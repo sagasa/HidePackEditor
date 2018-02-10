@@ -224,7 +224,7 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 	public void componentResized(ComponentEvent e) {
 		ContentsList.reSize();
 		ResourcesList.reSize();
-		EditWindow.OpenWindow.setBounds(200, 20, 600, MainWindow.getHeight()-85);
+		EditWindow.reSize();
 	}
 	@Override
 	public void componentShown(ComponentEvent arg0) {
