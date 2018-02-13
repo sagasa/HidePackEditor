@@ -8,10 +8,10 @@ public class BulletData {
 	HashMap<String,Object> Data = new HashMap<String,Object>();
 
 	/**弾のデータ 初期値も同時に代入*/
-	public enum GunDataList {
+	public enum BulletDataList {
 		/** 登録名 : String型**/
 		NAME("ShortName","name","String"),
-		
+
 		/**弾の寿命 (tick) : int型**/
 		BULLET_LIFE("bulletLife",600,"int"),
 
@@ -23,7 +23,7 @@ public class BulletData {
 		HIT_DAMAGE_TANK("tankDamage",0,"int"),
 		/**直撃の対航空機ダメージ : int型**/
 		HIT_DAMAGE_AIR("aircraftDamage",0,"int"),
-		
+
 		/**直撃の対人ノックバック : ノックバック距離(m)=ノックバック : float型**/
 		HIT_KNOCKBACK_PLAYER("playerKnockback",0F,"float"),
 		/**直撃の対MOBノックバック : ノックバック距離(m)=ノックバック : float型**/
@@ -32,10 +32,10 @@ public class BulletData {
 		HIT_KNOCKBACK_TANK("tankKnockback",0F,"float"),
 		/**直撃の対航空機ノックバック : ノックバック距離(m)=ノックバック/重量 : float型**/
 		HIT_KNOCKBACK_AIR("aircraftKnockback",0F,"float"),
-		
+
 		/**爆風範囲 :int型**/
 		EXP_RANGE("explosionRange",0,"int"),
-		
+
 		/**爆風の対人ダメージ底値 : 爆風ダメージ=底値-距離(m)*係数 : float型**/
 		EXP_DAMAGE_BASE_PLAYER("playerExplosionDamageBase",0F,"float"),
 		/**爆風の対人ダメージ係数 : 爆風ダメージ=底値-距離(m)*係数 : float型**/
@@ -52,7 +52,7 @@ public class BulletData {
 		EXP_DAMAGE_BASE_AIR("aircraftExplosionDamageBase",0,"int"),
 		/**爆風の対航空機ダメージ係数 : 爆風ダメージ=底値-距離(m)*係数 : int型**/
 		EXP_DAMAGE_COE_AIR("aircraftExplosionDamageCoe",0,"int"),
-		
+
 		/**爆風の対人ノックバック底値 : ノックバック距離(m)=底値-距離(m)*係数 : float型**/
 		EXP_KNOCKACK_BASE_PLAYER("playerExplosionKnockbackBase",0F,"float"),
 		/**爆風の対人ノックバック係数 : ノックバック距離(m)=底値-距離(m)*係数 : float型**/
@@ -69,13 +69,13 @@ public class BulletData {
 		EXP_KNOCKACK_BASE_AIR("aircraftExplosionKnockbackBase",0F,"float"),
 		/**爆風の対航空機ノックバック係数 : ノックバック距離(m)=(底値-距離(m)*係数)/重量 : float型**/
 		EXP_KNOCKACK_COE_AIR("aircraftExplosionKnockbackCoe",0F,"float"),
-		
+
 		/**距離減衰を使用するか : boolean型**/
 		DECAY_USE("useDecay",false,"boolean"),
 
 		/**弾道落下を使用するか : boolean型**/
 		GRAVITY_USE("useGravity",false,"boolean"),
-		
+
 		/**透過する・ブロック : String[]型*/
 		THROUGH_BLOCK("throughBlock", new String[] {},"String[]"),
 		/**透過するエンティティ : String[]型*/
@@ -97,7 +97,7 @@ public class BulletData {
 		 近接信管・反応するエンティティ
 		 誘導：true/false・手動/ロックオン/継続ロックオン・反応するエンティティ
 		 */
-		
+
 		/**登録名*/
 		private String name;
 		/**初期値*/
@@ -108,7 +108,7 @@ public class BulletData {
 		private String types;
 
 		/**コンストラクタ 表示名+データ+Type カテゴリはデフォルト*/
-		GunDataList(String name, Object obj ,String types) {
+		BulletDataList(String name, Object obj ,String types) {
 			this.name = name;
 			this.defaultValue = obj;
 			this.cate = -1;
@@ -118,7 +118,7 @@ public class BulletData {
 		}
 
 		/**コンストラクタ 表示名+データ+Type+カテゴリ*/
-		GunDataList(String name, Object obj,String types ,int cate) {
+		BulletDataList(String name, Object obj,String types ,int cate) {
 			this.name = name;
 			this.defaultValue = obj;
 			this.cate = cate;
@@ -159,8 +159,8 @@ public class BulletData {
 			}
 		}
 	}
-	
+
 	public BulletData(){
-		
+
 	}
 }

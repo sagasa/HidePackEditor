@@ -2,6 +2,7 @@ package valueEditer;
 
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,7 +28,7 @@ import types.GunData.GunDataList;
 public class EditWindow implements ActionListener{
 	/**現在開いている編集ウィンドウ*/
 	public static JPanel OpenWindow;
-	
+
 	/**現在のパネルの幅*/
 	public static int panelWidth;
 	/**パネルの行数*/
@@ -68,7 +69,9 @@ public class EditWindow implements ActionListener{
 	public void wrietGunEditer(GunData d) {
 		data = d;
 		OpenWindow.removeAll();
-
+		EditPanel test = new EditPanel(EditPanel.NAME_PANEL,data);
+		OpenWindow.add(test);
+		/*
 		if (d != null){
 			LineBorder border = new LineBorder(Color.black, 1, false);
 
@@ -147,10 +150,10 @@ public class EditWindow implements ActionListener{
 			OpenWindow.add(iconPanel);
 
 			//アイコンの画像
-			/*IconPrint icon1 = new IconPrint(MainWindow.iconMap.get(GunDataList.ICON.getData(data)));
+			IconPrint icon1 = new IconPrint(MainWindow.iconMap.get(GunDataList.ICON.getData(data)));
 			icon1.setBorder(border);
 			icon1.setBounds(5, 5, 55, 55);
-			iconPanel.add(icon1);*/
+			iconPanel.add(icon1);
 			//サイズを表示
 			ImageIcon icon2 = new ImageIcon("./test.png");
 			JLabel IconSize = new JLabel("Size: "+icon2.getIconWidth()+"x"+icon2.getIconHeight());
@@ -167,7 +170,7 @@ public class EditWindow implements ActionListener{
 		    JComboBox combo = new JComboBox(combodata);
 
 
-		    /**パラメータ設定パネルの数*/
+		    //パラメータ設定パネルの数
 		    final int panelNumber = 6;
 			//パラメータ設定パネル
 		    JPanel[] settingPanel = new JPanel[panelNumber];
@@ -179,7 +182,7 @@ public class EditWindow implements ActionListener{
 		    }
 
 
-		    /**ポインタ*/
+		    //ポインタ
 			int[] p = {0,0,1,1,1,0};
 			//テキストボックス
 			for(GunDataList settingData:GunDataList.values()){
@@ -237,7 +240,7 @@ public class EditWindow implements ActionListener{
 
 
 		}
-
+*/
 
 		OpenWindow.repaint();
 	}
@@ -251,7 +254,6 @@ public class EditWindow implements ActionListener{
 			panelNumber ++;
 		}
 		System.out.println(panelNumber+" "+ OpenWindow.getWidth());
-		
 	}
 
 	/**エディターを閉じる*/
