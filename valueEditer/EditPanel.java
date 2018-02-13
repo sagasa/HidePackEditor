@@ -59,9 +59,20 @@ public class EditPanel extends JPanel {
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		// 名前設定パネル
 		this.setBorder(border);
-		this.setBounds(5, 5, 250, 65);
+		this.setBounds(5, 5, 250, 50);
 		this.setLayout(null);
 
+		int yPointer = 3;
+
+		StringSetPanel name1 = new StringSetPanel(GunDataList.DISPLAY_NAME, gunData);
+		name1.setBounds(0, yPointer, 250, 20);
+		this.add(name1);
+		yPointer += 20;
+
+		StringSetPanel name2 = new StringSetPanel(GunDataList.SHORT_NAME, gunData);
+		name2.setBounds(0, 28, 250, 20);
+		this.add(name2);
+		/*
 		// ラベル
 		JLabel shortName = new JLabel("ShortName :");
 		shortName.setBounds(6, 4, 85, 24);
@@ -87,5 +98,6 @@ public class EditPanel extends JPanel {
 		displayName2.setBounds(90, 35, this.getWidth() - 95, 24);
 		displayName2.setBorder(border);
 		this.add(displayName2);
+		*/
 	}
 }

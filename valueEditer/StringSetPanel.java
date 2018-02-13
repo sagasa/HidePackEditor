@@ -16,107 +16,145 @@ import javax.swing.border.LineBorder;
 import types.GunData;
 import types.GunData.GunDataList;
 
-public class StringSetPanel extends JPanel implements KeyListener, FocusListener, ComponentListener{
+public class StringSetPanel extends JPanel implements KeyListener, FocusListener, ComponentListener {
 	private static final long serialVersionUID = 3496770761921234269L;
 
-	/**データリスト*/
+	/** データリスト */
 	Object datatype;
-	/**データ*/
+	/** データ */
 	Object data;
-	/**データ型*/
+	/** データ型 */
 	String type;
-	/**set可能かどうか*/
+	/** set可能かどうか */
 	boolean canEdit;
 
-	/**テキストボックス*/
+	/** テキストボックス */
 	JTextField txtField;
 
-	/**コンストラクタ 編集可能*/
-	public StringSetPanel(GunDataList d,GunData gun){
+	/** コンストラクタ 編集可能 */
+	public StringSetPanel(GunDataList d, GunData gun) {
 		datatype = d;
 		data = gun;
 		type = "gun";
 		canEdit = true;
 		this.addComponentListener(this);
-		init();
+		this.setOpaque(false);
 	}
-	/**コンストラクタ 編集 可/不可*/
-	public StringSetPanel(GunDataList d,GunData gun, boolean canedit){
+
+	/** コンストラクタ 編集 可/不可 */
+	public StringSetPanel(GunDataList d, GunData gun, boolean canedit) {
 		datatype = d;
 		data = gun;
 		type = "gun";
 		canEdit = canedit;
-		init();
 	}
 
-	//描画
-	void init(){
+	// 描画
+	void write() {
 		LineBorder border = new LineBorder(Color.black, 1, false);
+		this.removeAll();
 		this.setLayout(null);
-		//ラベル
-		JLabel setting = new JLabel(((GunDataList) datatype).getName()+" :");
-		setting.setBounds(0, 0, this.getWidth()-70, this.getHeight());
+		// ラベル
+		JLabel setting = new JLabel(getname() + " :");
+		setting.setBounds(0, 0, this.getWidth() - 155, this.getHeight());
 		setting.setHorizontalAlignment(JLabel.RIGHT);
 		setting.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(setting);
 
-		//テキストボックス
-		//条件分岐
-		if(canEdit){
-			txtField = new JTextField(((GunDataList) datatype).getData((GunData)data).toString());
-			txtField.setBounds(this.getWidth()-68, 0, 30 , this.getHeight());
+		// テキストボックス
+		// 条件分岐
+		if (canEdit) {
+			txtField = new JTextField(get());
+			txtField.setBounds(this.getWidth() - 150, 0, 147, this.getHeight());
 			txtField.addKeyListener(this);
 			txtField.addFocusListener(this);
 			txtField.setBorder(border);
 			this.add(txtField);
-		}else{
-			JLabel setting2 = new JLabel(((GunDataList) datatype).getData((GunData)data).toString());
-			setting2.setBounds(this.getWidth()-68, 0, 30 , this.getHeight());
+		} else {
+			JLabel setting2 = new JLabel(get());
+			setting2.setBounds(this.getWidth() - 150, 0, 147, this.getHeight());
 			setting2.setHorizontalAlignment(JLabel.CENTER);
 			setting2.setFont(new Font("BOLD", Font.BOLD, 13));
 			this.add(setting2);
 		}
 	}
-	/**リサイズ*/
 
-	/**決定*/
-	void set(){
-		((GunDataList) datatype).setData((GunData)data,txtField.getText());
-		txtField.setText(((GunDataList) datatype).getData((GunData)data).toString());
+	/**変数から登録名読み込み*/
+	String getname(){
+		String value = null;
+		switch (type) {
+		case "gun":
+			value = ((GunDataList) datatype).getName();
+			break;
+		}
+
+		return value;
 	}
+
+	/**変数からデータ読み込み*/
+	String get(){
+		String value = null;
+		switch (type) {
+		case "gun":
+			value = ((GunDataList) datatype).getData((GunData) data).toString();
+			break;
+		}
+
+		return value;
+	}
+
+	/** 変数に書き込み */
+	void set(String value) {
+		switch (type) {
+		case "gun":
+			((GunDataList) datatype).setData((GunData) data, value);
+			break;
+		}
+	}
+
 	@Override
 	public void keyPressed(KeyEvent e) {
-		switch(e.getKeyCode()){
+		switch (e.getKeyCode()) {
 		case 10:
-			set();
+			set(txtField.getText());
 			this.getParent().requestFocusInWindow();
-		break;
+			break;
 		}
-		//System.out.println(e.getKeyCode());
-
+		// System.out.println(e.getKeyCode());
 	}
+
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 	}
+
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}
+
 	@Override
 	public void focusGained(FocusEvent e) {
 	}
+
 	@Override
 	public void focusLost(FocusEvent e) {
-		//これをフラグに書き換える
-		set();
+		// これをフラグに書き換える
+		set(txtField.getText());
 	}
+
 	@Override
 	public void componentResized(ComponentEvent e) {
-		
+		write();
 	}
+
 	@Override
-	public void componentHidden(ComponentEvent e) {}
+	public void componentHidden(ComponentEvent e) {
+	}
+
 	@Override
-	public void componentMoved(ComponentEvent e) {}
+	public void componentMoved(ComponentEvent e) {
+	}
+
 	@Override
-	public void componentShown(ComponentEvent e) {}
+	public void componentShown(ComponentEvent e) {
+	}
 }
