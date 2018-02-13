@@ -23,7 +23,8 @@ import javax.swing.border.LineBorder;
 import types.GunData;
 import types.GunData.GunDataList;
 
-public class SetPanel extends JPanel implements MouseWheelListener, KeyListener, FocusListener{
+/**設定ボックス IntとFloatのみ対応*/
+public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyListener, FocusListener{
 	private static final long serialVersionUID = 3496770761921234269L;
 
 	/**データリスト*/
@@ -39,23 +40,24 @@ public class SetPanel extends JPanel implements MouseWheelListener, KeyListener,
 	JTextField setting2;
 
 	/**コンストラクタ 編集可能*/
-	public SetPanel(GunDataList d,GunData gun){
+	public NumberSetPanel(GunDataList d,GunData gun){
 		datatype = d;
 		data = gun;
 		type = "gun";
 		canEdit = true;
+		init();
 	}
 	/**コンストラクタ 編集 可/不可*/
-	public SetPanel(GunDataList d,GunData gun, boolean canedit){
+	public NumberSetPanel(GunDataList d,GunData gun, boolean canedit){
 		datatype = d;
 		data = gun;
 		type = "gun";
 		canEdit = canedit;
+		init();
 	}
 
-	/**設定ボックス IntとFloatのみ対応*/
-	@Override
-	public void paintComponent(Graphics g){
+	//描画
+	void init(){
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		this.setLayout(null);
 		//ラベル
@@ -83,6 +85,7 @@ public class SetPanel extends JPanel implements MouseWheelListener, KeyListener,
 			this.add(setting2);
 		}
 	}
+	
 	/**1増やすor1減らす 引数 1,-1*/
 	void change(int i){
 		switch (((GunDataList) datatype).getType()){

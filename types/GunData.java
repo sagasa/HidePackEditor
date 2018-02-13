@@ -18,7 +18,7 @@ public class GunData {
 	HashMap<String,Object> Data = new HashMap<String,Object>();
 
 	/**弾のデータ 初期値も同時に代入*/
-	public enum GunDataList {
+	public enum GunDataList{
 		/** 登録名 : String型 全部小文字 **/
 		SHORT_NAME("ShortName","name","String"),
 		/** 表示名 : String型 **/

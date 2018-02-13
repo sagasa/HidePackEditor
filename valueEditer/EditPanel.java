@@ -18,12 +18,12 @@ public class EditPanel extends JPanel {
 
 	/** 中身なしパネル用定数 */
 	static final int BLANK_PANEL = 0;
-	/** 名前1つ設定用定数 */
-	static final int NAME_PANEL = 1;
-	/** 名前2つ設定用定数 */
-	static final int NAME_LORE_PANEL = 2;
+	/** 名前設定用定数 */
+	static final int GUN_NAME_PANEL = 1;
+	/** 名前その他設定用定数 */
+	static final int GUN_INFO_PANEL = 2;
 	/** アイコン設定用定数 */
-	static final int ICON_PANEL = 3;
+	static final int GUN_ICON_PANEL = 3;
 	/** 銃のリコイル設定用定数 */
 	static final int GUN_RECOIL_PANEL = 4;
 	/** 銃の使用する弾設定用定数 */
@@ -49,13 +49,13 @@ public class EditPanel extends JPanel {
 	void init() {
 		System.out.println("init");
 		switch (PanelMode) {
-		case NAME_PANEL:
-			namePanel();
+		case GUN_NAME_PANEL:
+			gunNamePanel();
 			break;
 		}
 	}
 
-	void namePanel() {
+	void gunNamePanel() {
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		// 名前設定パネル
 		this.setBorder(border);

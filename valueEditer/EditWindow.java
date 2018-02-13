@@ -69,7 +69,7 @@ public class EditWindow implements ActionListener{
 	public void wrietGunEditer(GunData d) {
 		data = d;
 		OpenWindow.removeAll();
-		EditPanel test = new EditPanel(EditPanel.NAME_PANEL,data);
+		EditPanel test = new EditPanel(EditPanel.GUN_NAME_PANEL,data);
 		OpenWindow.add(test);
 		/*
 		if (d != null){
