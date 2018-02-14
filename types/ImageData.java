@@ -17,13 +17,26 @@ public class ImageData {
 		try {
 			Image = ImageIO.read(new ByteArrayInputStream(input));
 		} catch (IOException e) {
-			
+		}
+		ImageName = name;
+	}
+	/**パスから取得*/
+	public ImageData(String path,String name){
+		try {
+			Image = ImageIO.read(new File(path));
+		} catch (IOException e) {
+			System.err.println("can't find file : "+path);
 		}
 		ImageName = name;
 	}
 	
-	public boolean isSet(){
-		
-		return false;
+	/**幅取得*/
+	public int getWidth(){
+		return Image.getWidth();
+	}
+	
+	/**高さ取得*/
+	public int getHeight(){
+		return Image.getHeight();
 	}
 }
