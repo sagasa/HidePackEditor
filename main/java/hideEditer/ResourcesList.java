@@ -4,7 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -28,22 +31,29 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 
 	JPopupMenu popup = new JPopupMenu();
 
+	/**ぬるぽ回避用いめーじ*/
+	static public ImageData nullImage;
+
 	/**iconの表示リスト 名前のテキストリスト*/
 	static DefaultListModel<String> iconModel;
 
 	/**音の表示リスト 名前のテキストリスト*/
 	static DefaultListModel<String> soundModel;
-	
+
 	/**modelの表示リスト 名前のテキストリスト*/
 	static DefaultListModel<String> modelModel;
-	
+
 	/**textureの表示リスト 名前のテキストリスト*/
 	static DefaultListModel<String> textureModel;
-	
+
 	static public JTabbedPane ContentsTab;
 
 	/**ID用ポインタ*/
 	static int gunNum = 0;
+
+	public ResourcesList(){
+		nullImage = new ImageData(ClassLoader.getSystemResourceAsStream("icon/notSet.png"),"null");
+	}
 
 	public void MakeWindow (JFrame Window){
 		ContentsTab = this;
@@ -64,7 +74,7 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	    icon.addListSelectionListener(this);
 	    JScrollPane iconSP = new JScrollPane();
 	    iconSP.getViewport().setView(icon);
-	    
+
 	    //modelのリスト
 	    JList<String> model = new JList<String>();
 	    modelModel = new DefaultListModel<String>();
@@ -72,7 +82,7 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	    model.addMouseListener(this);
 	    JScrollPane modelSP = new JScrollPane();
 	    modelSP.getViewport().setView(model);
-	    
+
 	    //textureのリスト
 	    JList<String> texture = new JList<String>();
 	    textureModel = new DefaultListModel<String>();
@@ -80,7 +90,7 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	    texture.addMouseListener(this);
 	    JScrollPane textureSP = new JScrollPane();
 	    textureSP.getViewport().setView(texture);
-	    
+
 	    //soundsのリスト
 	    JList<String> sounds = new JList<String>();
 	    soundModel = new DefaultListModel<String>();
@@ -116,10 +126,10 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 		//編集画面を開く
 		switch (this.getSelectedIndex()){
 		case 0:
-			
+
 		break;
 		case 1:
-			
+
 		break;
 		}
 	}
@@ -167,10 +177,10 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 	//		System.out.println(ContentsTab.getSelectedIndex());
 			switch (this.getSelectedIndex()){
 				case 0:
-					
+
 				break;
 				case 1:
-					
+
 				break;
 			}
 		}

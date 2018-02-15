@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -14,6 +15,7 @@ import javax.swing.border.LineBorder;
 
 import hideEditer.IconPrint;
 import hideEditer.MainWindow;
+import hideEditer.ResourcesList;
 import types.GunData;
 import types.GunData.GunDataList;
 import types.ImageData;
@@ -116,8 +118,14 @@ public class EditPanel extends JPanel implements ActionListener {
 		this.setBounds(260, 60, 250, 60);
 		this.setLayout(null);
 
-		//MainWindow.iconMap.get(GunDataList.ICON.getData(data))
-		ImageData image = new ImageData("./src/resources/notSet.png","notSet");
+		ImageData image;
+
+		//見つかれば設定された画像見つからなければnullImage
+		if (MainWindow.iconMap.containsKey(GunDataList.ICON.getData(gunData))){
+			image = MainWindow.iconMap.get(GunDataList.ICON.getData(gunData));
+		}else{
+			image = ResourcesList.nullImage;
+		}
 
 		IconPrint icon1 = new IconPrint(image);
 		icon1.setBorder(border);
@@ -128,6 +136,13 @@ public class EditPanel extends JPanel implements ActionListener {
 		IconSize.setBounds(60, 38, 190, 18);
 		IconSize.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(IconSize);
+
+		JComboBox<String> IconList = new JComboBox<String>();
+		for (ImageData data:MainWindow.iconMap.values()){
+			IconList.addItem(data.ImageName);
+		}
+		IconList.setBounds(60, 10, 80, 20);
+		this.add(IconList);
 
 	}
 

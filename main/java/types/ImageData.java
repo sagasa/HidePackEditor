@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -11,8 +12,8 @@ import javax.imageio.ImageIO;
 public class ImageData {
 	public String ImageName;
 	public BufferedImage Image;
-	
-	
+
+
 	public ImageData(byte[] input,String name){
 		try {
 			Image = ImageIO.read(new ByteArrayInputStream(input));
@@ -29,12 +30,21 @@ public class ImageData {
 		}
 		ImageName = name;
 	}
-	
+	/**パスから取得*/
+	public ImageData(InputStream in,String name){
+		try {
+			Image = ImageIO.read(in);
+		} catch (IOException e) {
+			System.err.println("error at reading image");
+		}
+		ImageName = name;
+	}
+
 	/**幅取得*/
 	public int getWidth(){
 		return Image.getWidth();
 	}
-	
+
 	/**高さ取得*/
 	public int getHeight(){
 		return Image.getHeight();
