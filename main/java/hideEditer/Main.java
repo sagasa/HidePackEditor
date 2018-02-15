@@ -32,8 +32,6 @@ public class Main {
 	public static EditWindow editer;
 
 	public static void main(String[] args){
-		init();
-
 		//lang
 		Lang.readLang("./lang");
 		Lang.setLang("jp");
@@ -43,13 +41,4 @@ public class Main {
 		main = new MainWindow();
 		main.openWindow();
 	}
-	/**初期化*/
-	static void init(){
-		try {
-			BufferedImage Image = ImageIO.read(ClassLoader.getSystemResourceAsStream("icon/notSet.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 }
