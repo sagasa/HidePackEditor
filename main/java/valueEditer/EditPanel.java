@@ -35,7 +35,7 @@ public class EditPanel extends JPanel implements ActionListener {
 	static final int GUN_BULLET_PANEL = 5;
 	/** 削除+コピペ */
 	static final int DELETE_PANEL = 6;
-	
+
 	/** エディターのモード */
 	int PanelMode;
 
@@ -56,7 +56,7 @@ public class EditPanel extends JPanel implements ActionListener {
 	void write() {
 		//System.out.println("init");
 		this.removeAll();
-		
+
 		switch (PanelMode) {
 		case GUN_NAME_PANEL:
 			gunNamePanel();
@@ -72,11 +72,11 @@ public class EditPanel extends JPanel implements ActionListener {
 	//削除パネル
 	void deletePanel(){
 		LineBorder border = new LineBorder(Color.black, 1, false);
-		
+
 		this.setBorder(border);
 		this.setBounds(260, 5, 250, 50);
 		this.setLayout(null);
-		
+
 		//コピーボタン
 		JButton copy = new JButton("copy");
 		copy.setBounds(5, 10, 80, 30);
@@ -96,7 +96,7 @@ public class EditPanel extends JPanel implements ActionListener {
 		paste.setFont(new Font("BOLD", Font.BOLD, 14));
 		paste.setBackground(Color.CYAN);
 		this.add(paste);
-		
+
 		//削除ボタン
 		JButton delete = new JButton("delete");
 		delete.setBounds(190, 10, 50, 30);
@@ -107,34 +107,34 @@ public class EditPanel extends JPanel implements ActionListener {
 		delete.setBackground(Color.RED);
 		this.add(delete);
 	}
-	
+
 	//アイコン設定パネル
 	void gunIconPanel(){
 		LineBorder border = new LineBorder(Color.black, 1, false);
-		
+
 		this.setBorder(border);
 		this.setBounds(260, 60, 250, 60);
 		this.setLayout(null);
-		
+
 		//MainWindow.iconMap.get(GunDataList.ICON.getData(data))
-		ImageData image = new ImageData("./resources/notSet.png","notSet");
-		
+		ImageData image = new ImageData("./src/resources/notSet.png","notSet");
+
 		IconPrint icon1 = new IconPrint(image);
 		icon1.setBorder(border);
 		icon1.setBounds(5, 5, 50, 50);
 		this.add(icon1);
-		
+
 		JLabel IconSize = new JLabel("Size: x"+image.getWidth()+", y"+image.getHeight()+" Name: "+image.ImageName);
 		IconSize.setBounds(60, 38, 190, 18);
 		IconSize.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(IconSize);
-		
+
 	}
-	
+
 	// 名前設定パネル
 	void gunNamePanel() {
 		LineBorder border = new LineBorder(Color.black, 1, false);
-		
+
 		this.setBorder(border);
 		this.setBounds(5, 5, 250, 50);
 		this.setLayout(null);
@@ -154,6 +154,6 @@ public class EditPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO 自動生成されたメソッド・スタブ
-		
+
 	}
 }

@@ -45,12 +45,11 @@ public class Main {
 	}
 	/**初期化*/
 	static void init(){
-		/*try {
-			BufferedImage Image = ImageIO.read(ClassLoader
-			        .getSystemResourceAsStream("./HidePackEditer/resources"));
+		try {
+			BufferedImage Image = ImageIO.read(ClassLoader.getSystemResourceAsStream("icon/notSet.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 
 }
