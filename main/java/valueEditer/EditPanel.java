@@ -1,10 +1,12 @@
 package valueEditer;
 
+import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -121,8 +123,8 @@ public class EditPanel extends JPanel implements ActionListener {
 		ImageData image;
 
 		//見つかれば設定された画像見つからなければnullImage
-		if (MainWindow.iconMap.containsKey(GunDataList.ICON.getData(gunData))){
-			image = MainWindow.iconMap.get(GunDataList.ICON.getData(gunData));
+		if (MainWindow.iconMap.containsKey(GunDataList.ICON.getData(gunData).toString())){
+			image = MainWindow.iconMap.get(GunDataList.ICON.getData(gunData).toString());
 		}else{
 			image = ResourcesList.nullImage;
 		}
@@ -138,14 +140,19 @@ public class EditPanel extends JPanel implements ActionListener {
 		this.add(IconSize);
 
 		JComboBox<String> IconList = new JComboBox<String>();
+		IconList.addActionListener(this);
+		IconList.addItem("");
 		for (ImageData data:MainWindow.iconMap.values()){
 			IconList.addItem(data.ImageName);
 		}
 		IconList.setBounds(60, 10, 80, 20);
+		IconList.setSelectedItem(GunDataList.ICON.getData(gunData).toString());
+		IconList.setActionCommand("iconSet");
 		this.add(IconList);
 
 	}
 
+	
 	// 名前設定パネル
 	void gunNamePanel() {
 		LineBorder border = new LineBorder(Color.black, 1, false);
@@ -167,8 +174,12 @@ public class EditPanel extends JPanel implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO 自動生成されたメソッド・スタブ
-
-	}
+		System.out.println(e.getActionCommand());
+		//アイコン設定
+		if(e.getActionCommand() == "iconSet"){
+			GunDataList.ICON.setData(gunData,Pattern.compile("]$").matcher(Pattern.compile("^(.*)selectedItemReminder=").matcher(e.toString()).replaceAll("")).replaceAll(""));
+		}
+	} 
 }
