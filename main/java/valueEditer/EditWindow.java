@@ -77,6 +77,9 @@ public class EditWindow implements ActionListener{
 		
 		EditPanel test3 = new EditPanel(EditPanel.DELETE_PANEL,data);
 		OpenWindow.add(test3);
+		
+		EditPanel test4 = new EditPanel(EditPanel.GUN_INFO_PANEL,data);
+		OpenWindow.add(test4);
 		/*
 		if (d != null){
 			LineBorder border = new LineBorder(Color.black, 1, false);

@@ -4,6 +4,7 @@ import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
@@ -29,7 +30,7 @@ public class EditPanel extends JPanel implements ActionListener {
 	static final int BLANK_PANEL = 0;
 	/** 名前設定用定数 */
 	static final int GUN_NAME_PANEL = 1;
-	/** 名前その他設定用定数 */
+	/** その他数値パラメーター設定用定数 */
 	static final int GUN_INFO_PANEL = 2;
 	/** アイコン設定用定数 */
 	static final int GUN_ICON_PANEL = 3;
@@ -71,7 +72,39 @@ public class EditPanel extends JPanel implements ActionListener {
 		case DELETE_PANEL:
 			 deletePanel();
 		break;
+		case GUN_INFO_PANEL:
+			gunDataPanel();
+		break;
 		}
+	}
+	//基本パラメーターパネル
+	void gunDataPanel(){
+		LineBorder border = new LineBorder(Color.black, 1, false);
+
+		this.setBorder(border);
+		this.setBounds(5, 120, 160, 0);
+		this.setLayout(null);
+		
+		int p = 0;
+		for(GunDataList settingData:GunDataList.values()){
+			NumberSetPanel panel;
+			//カテゴリを取得
+			int n = settingData.getCate();
+			//カテゴリ分け -1以外なら
+			if(n==0){
+				panel = new NumberSetPanel(settingData,gunData);
+				//System.out.println("add");
+				
+				panel.setBounds(5, 5+p*24, this.getWidth()-10, 20);
+				//System.out.println(settingPanel[n].getWidth());
+				this.add(panel);
+				p++;
+				System.out.println(settingData.getName()+" "+settingData.getData(gunData));
+			}
+		}
+		Rectangle size =this.getBounds();
+		size.height=p*24+6;
+		this.setBounds(size);
 	}
 	//削除パネル
 	void deletePanel(){
@@ -134,7 +167,7 @@ public class EditPanel extends JPanel implements ActionListener {
 		icon1.setBounds(5, 5, 50, 50);
 		this.add(icon1);
 
-		JLabel IconSize = new JLabel("Size: x"+image.getWidth()+", y"+image.getHeight()+" Name: "+image.ImageName);
+		JLabel IconSize = new JLabel("Size: "+image.getWidth()+"x"+image.getHeight()+" Name:");
 		IconSize.setBounds(60, 38, 190, 18);
 		IconSize.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(IconSize);
@@ -145,7 +178,7 @@ public class EditPanel extends JPanel implements ActionListener {
 		for (ImageData data:MainWindow.iconMap.values()){
 			IconList.addItem(data.ImageName);
 		}
-		IconList.setBounds(60, 10, 80, 20);
+		IconList.setBounds(255, 38, 80, 20);
 		IconList.setSelectedItem(GunDataList.ICON.getData(gunData).toString());
 		IconList.setActionCommand("iconSet");
 		this.add(IconList);
@@ -179,7 +212,9 @@ public class EditPanel extends JPanel implements ActionListener {
 		System.out.println(e.getActionCommand());
 		//アイコン設定
 		if(e.getActionCommand() == "iconSet"){
-			GunDataList.ICON.setData(gunData,Pattern.compile("]$").matcher(Pattern.compile("^(.*)selectedItemReminder=").matcher(e.toString()).replaceAll("")).replaceAll(""));
+			String name = Pattern.compile("]$").matcher(Pattern.compile("^(.*)selectedItemReminder=").matcher(e.toString()).replaceAll("")).replaceAll("");
+			GunDataList.ICON.setData(gunData,name);
+			write();
 		}
 	} 
 }

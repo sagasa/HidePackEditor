@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -24,7 +26,7 @@ import types.GunData;
 import types.GunData.GunDataList;
 
 /**設定ボックス IntとFloatのみ対応*/
-public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyListener, FocusListener{
+public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyListener, FocusListener, ComponentListener{
 	private static final long serialVersionUID = 3496770761921234269L;
 
 	/**データリスト*/
@@ -45,7 +47,8 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 		data = gun;
 		type = "gun";
 		canEdit = true;
-		init();
+		this.addComponentListener(this);
+		this.setOpaque(false);
 	}
 	/**コンストラクタ 編集 可/不可*/
 	public NumberSetPanel(GunDataList d,GunData gun, boolean canedit){
@@ -59,10 +62,11 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 	//描画
 	void init(){
 		LineBorder border = new LineBorder(Color.black, 1, false);
+		//this.setBorder(border);
 		this.setLayout(null);
 		//ラベル
 		JLabel setting = new JLabel(((GunDataList) datatype).getName()+" :");
-		setting.setBounds(0, 0, this.getWidth()-70, this.getHeight());
+		setting.setBounds(0, 0, this.getWidth()-33, this.getHeight());
 		setting.setHorizontalAlignment(JLabel.RIGHT);
 		setting.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(setting);
@@ -71,7 +75,7 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 		//条件分岐
 		if(canEdit){
 			setting2 = new JTextField(((GunDataList) datatype).getData((GunData)data).toString());
-			setting2.setBounds(this.getWidth()-68, 0, 30 , this.getHeight());
+			setting2.setBounds(this.getWidth()-30, 0, 30 , this.getHeight());
 			setting2.addMouseWheelListener(this);
 			setting2.addKeyListener(this);
 			setting2.addFocusListener(this);
@@ -79,7 +83,7 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 			this.add(setting2);
 		}else{
 			JLabel setting2 = new JLabel(((GunDataList) datatype).getData((GunData)data).toString());
-			setting2.setBounds(this.getWidth()-68, 0, 30 , this.getHeight());
+			setting2.setBounds(this.getWidth()-30, 0, 30 , this.getHeight());
 			setting2.setHorizontalAlignment(JLabel.CENTER);
 			setting2.setFont(new Font("BOLD", Font.BOLD, 13));
 			this.add(setting2);
@@ -157,4 +161,16 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 		//これをフラグに書き換える
 		set();
 	}
+	
+	@Override
+	public void componentResized(ComponentEvent arg0) {
+		init();
+	}
+	
+	@Override
+	public void componentHidden(ComponentEvent arg0) {}
+	@Override
+	public void componentMoved(ComponentEvent arg0) {}
+	@Override
+	public void componentShown(ComponentEvent arg0) {}
 }
