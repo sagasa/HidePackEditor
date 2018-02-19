@@ -33,62 +33,62 @@ public class GunData {
 		/** レート ; レートtick間隔で発射する : int型 **/
 		RATE("Rate",1 , "int" ,0),
 		/** 装弾数 : int型 **/
-		MAGAZINE_SIZE("MagazineSize",1 , "int" ,0),
+		MAGAZINE_SIZE("MagazineSize",1 , "int" ,0 ,1F),
 		/** 発射数 : int型 **/
-		BULLET_NUMBER("ShootNumner",1 ,"int" ,0),
+		BULLET_NUMBER("ShootNumner",1 ,"int" ,0 ,1F),
 		/** 精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
-		ACCURACY("Accuracy",0F ,"float" ,0),
+		ACCURACY("Accuracy",0F ,"float" ,0 ,0F),
 		/** ADS精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
-		ADS_ACCURACY("ADSAccuracy",0F ,"float" ,0),
+		ADS_ACCURACY("ADSAccuracy",0F ,"float" ,0 ,0F),
 
 		/** 反動の速さ : 反動を適応する時間(tick) : int型 **/
-		RECOIL_TIME("RecoilTime",1 ,"int" ,1),
+		RECOIL_TIME("RecoilTime",1 ,"int" ,1 ,1F),
 		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
-		RECOIL_RETURN("RecoilReturn",0F ,"float" ,1),
+		RECOIL_RETURN("RecoilReturn",0F ,"float" ,1 ,0F),
 		/** Yawの反動 : 反動の中央値(角度°) : float型 **/
 		YAW_RECOIL_BASE("YawRecoilBase",0F ,"float" ,1),
 		/** Yawの反動 : 反動の拡散値(角度°) : float型 **/
-		YAW_RECOIL_SPREAD("YawRecoilSpread",0F ,"float" ,1),
+		YAW_RECOIL_SPREAD("YawRecoilSpread",0F ,"float" ,1 ,0F),
 		/** Pitchの反動 : 反動の中央値(角度°) : float型 **/
 		PITCH_RECOIL_BASE("PitchRecoilBase",0F ,"float" ,1),
 		/** Pitchの反動 : 反動の拡散値(角度°) : float型 **/
-		PITCH_RECOIL_SPREAD("PitchRecoilSpread",0F ,"float" ,1),
+		PITCH_RECOIL_SPREAD("PitchRecoilSpread",0F ,"float" ,1 ,0F),
 
 		/** スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
 		SNEAK_YAW_RECOIL_BASE("SneakYawRecoilBase",0F ,"float" ,2),
 		/** スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		SNEAK_YAW_RECOIL_SPREAD("SneakYawRecoilSpread",0F ,"float" ,2),
+		SNEAK_YAW_RECOIL_SPREAD("SneakYawRecoilSpread",0F ,"float" ,2 ,0F),
 		/** スニーク時のPitchの反動 : 反動の中央値(角度°) : float型 **/
 		SNEAK_PITCH_RECOIL_BASE("SneakPitchRecoilBase",0F ,"float" ,2),
 		/** スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		SNEAK_PITCH_RECOIL_SPREAD("SneakPitchRecoilSpread",0F ,"float" ,2),
+		SNEAK_PITCH_RECOIL_SPREAD("SneakPitchRecoilSpread",0F ,"float" ,2 ,0F),
 
 		/** ADS時のYawの反動 : 反動の中央値(角度°) : float型 **/
 		ADS_YAW_RECOIL_BASE("ADSYawRecoilBase",0F ,"float" ,3),
 		/** ADS時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		ADS_YAW_RECOIL_SPREAD("ADSYawRecoilSpread",0F ,"float" ,3),
+		ADS_YAW_RECOIL_SPREAD("ADSYawRecoilSpread",0F ,"float" ,3 ,0F),
 		/** ADS時のPitchの反動 : 反動の中央値(角度°) : float型 **/
 		ADS_PITCH_RECOIL_BASE("ADSPitchRecoilBase",0F ,"float" ,3),
 		/** ADS時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		ADS_PITCH_RECOIL_SPREAD("ADSPitchRecoilSpread",0F ,"float" ,3),
+		ADS_PITCH_RECOIL_SPREAD("ADSPitchRecoilSpread",0F ,"float" ,3 ,0F),
 
 		/** ADS+スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
 		ADS_SNEAK_YAW_RECOIL_BASE("ADSSneakYawRecoilBase",0F ,"float" ,4),
 		/** ADS+スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		ADS_SNEAK_YAW_RECOIL_SPREAD("ADSSneakYawRecoilSpread",0F ,"float" ,4),
+		ADS_SNEAK_YAW_RECOIL_SPREAD("ADSSneakYawRecoilSpread",0F ,"float" ,4 ,0F),
 		/** ADS+スニーク時のPitchの反動 : 反動の中央値(角度°) : float型 **/
 		ADS_SNEAK_PITCH_RECOIL_BASE("ADSSneakPitchRecoilBase",0F ,"float" ,4),
 		/** ADS+スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		ADS_SNEAK_PITCH_RECOIL_SPREAD("ADSSneakPitchRecoilSpread",0F ,"float" ,4),
+		ADS_SNEAK_PITCH_RECOIL_SPREAD("ADSSneakPitchRecoilSpread",0F ,"float" ,4 ,0F),
 
 		/** 対人ダメージ倍率 : float型 **/
-		PLAYER_DAMAGE_DIAMETER("playerDamageDiameter",1F ,"float" ,5),
+		PLAYER_DAMAGE_DIAMETER("playerDamageDiameter",1F ,"float" ,5 ,0F),
 		/** 対MOBダメージ倍率 : float型 **/
-		LIVING_DAMAGE_DIAMETER("livingDamageDiameter",1F ,"float" ,5),
+		LIVING_DAMAGE_DIAMETER("livingDamageDiameter",1F ,"float" ,5 ,0F),
 		/** 対地上兵器ダメージ倍率 : float型 **/
-		TANK_DAMAGE_DIAMETER("tankDamageDiameter",1F ,"float" ,5),
+		TANK_DAMAGE_DIAMETER("tankDamageDiameter",1F ,"float" ,5 ,0F),
 		/** 対航空機ダメージ倍率 : float型 **/
-		AIRCRAFT_DAMAGE_DIAMETER("aircraftDamageDiameter",1F ,"float" ,5),
+		AIRCRAFT_DAMAGE_DIAMETER("aircraftDamageDiameter",1F ,"float" ,5 ,0F),
 
 		/** 使用する弾の名前 複数設定可能 : String配列型 **/
 		TYPES_BULLETS("BulletNames", new String[] {},"String[]"),
@@ -104,27 +104,40 @@ public class GunData {
 		private int cate;
 		/**Type*/
 		private String types;
+		/**最小値*/
+		private Float min;
 
 		/**コンストラクタ 表示名+データ+Type カテゴリはデフォルト*/
 		GunDataList(String name, Object obj ,String types) {
 			this.name = name;
 			this.defaultValue = obj;
 			this.cate = -1;
+			this.min = null;
 			if (types.equals("String")||types.equals("int")||types.equals("float")||types.equals("String[]")){
 				this.types = types;
 			}
 		}
 
-		/**コンストラクタ 表示名+データ+Type+カテゴリ*/
+		/**コンストラクタ +カテゴリ*/
 		GunDataList(String name, Object obj,String types ,int cate) {
-			this.name = name;
-			this.defaultValue = obj;
+			this(name, obj, types);
 			this.cate = cate;
-			//一応チェック
-			if (types.equals("String")||types.equals("int")||types.equals("float")||types.equals("String[]")){
-				this.types = types;
-			}
-
+		}
+		
+		/**最小値の設定*/
+		GunDataList(String name, Object obj,String types ,int cate,float minimam){
+			this(name, obj, types, cate);
+			this.min = minimam;
+		}
+		/**最小値の設定*/
+		GunDataList(String name, Object obj,String types ,float minimam){
+			this(name, obj, types);
+			this.min = minimam;
+		}
+		
+		/**最小値を返す*/
+		public Float getMin() {
+			return min;
 		}
 		/**登録名を返す*/
 		public String getName() {

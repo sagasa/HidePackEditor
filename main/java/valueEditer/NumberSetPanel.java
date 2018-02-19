@@ -95,11 +95,24 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 		switch (((GunDataList) datatype).getType()){
 		case "int":
 			int num = new Integer (((GunDataList) datatype).getData((GunData)data).toString());
-			((GunDataList) datatype).setData((GunData)data,num+(i));
-		break;
+			if (((GunDataList) datatype).getMin()!=null){
+				if(num+i>=((GunDataList) datatype).getMin()){
+					((GunDataList) datatype).setData((GunData)data,num+(i));
+				}
+			}else{
+				((GunDataList) datatype).setData((GunData)data,num+(i));
+			}
+			
+			break;
 		case "float":
 			String num2 = ((GunDataList) datatype).getData((GunData)data).toString();
-			((GunDataList) datatype).setData((GunData)data,new BigDecimal(num2).add(new BigDecimal("0.1").multiply(new BigDecimal(i))));
+			
+			float value = new BigDecimal(num2).add(new BigDecimal("0.1").multiply(new BigDecimal(i))).floatValue();
+			Float min = ((GunDataList) datatype).getMin();
+			if (min == null || value >= min){
+				((GunDataList) datatype).setData((GunData)data,value);
+			}
+			
 			//System.out.println(num2+" "+(e.getWheelRotation()*-0.1));
 		break;
 		}
