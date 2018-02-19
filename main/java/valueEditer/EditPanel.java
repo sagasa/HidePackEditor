@@ -87,25 +87,20 @@ public class EditPanel extends JPanel implements ActionListener {
 
 		int p = 0;
 		for(GunDataList settingData:GunDataList.values()){
-			NumberSetPanel panel;
-			//カテゴリを取得
-			int n = settingData.getCate();
 			//カテゴリ分け -1以外なら
-			if(n==0){
-				panel = new NumberSetPanel(settingData,gunData);
-				//System.out.println("add");
-
+			if(settingData.getCate()==0){
+				NumberSetPanel panel = new NumberSetPanel(settingData,gunData);
 				panel.setBounds(5, 5+p*24, this.getWidth()-10, 20);
-				//System.out.println(settingPanel[n].getWidth());
 				this.add(panel);
 				p++;
-				System.out.println(settingData.getName()+" "+settingData.getData(gunData));
 			}
 		}
+		//高さだけ上書き
 		Rectangle size =this.getBounds();
 		size.height=p*24+6;
 		this.setBounds(size);
 	}
+	
 	//削除パネル
 	void deletePanel(){
 		LineBorder border = new LineBorder(Color.black, 1, false);
