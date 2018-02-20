@@ -2,30 +2,17 @@ package valueEditer;
 
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Vector;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
-import hideEditer.ContentsList;
-import hideEditer.IconPrint;
 import hideEditer.MainWindow;
 import types.GunData;
-import types.GunData.GunDataList;
 
 /**アクションリスナーのためにstaticにしていない 実質staticクラス インスタンスはMainWindowに格納*/
-public class EditWindow implements ActionListener{
+public class EditWindow{
 	/**現在開いている編集ウィンドウ*/
 	public static JPanel OpenWindow;
 
@@ -34,7 +21,6 @@ public class EditWindow implements ActionListener{
 	/**パネルの行数*/
 	public static int panelNumber;
 
-	String[] settingCommand = {"UseSneakRecoil","UseADSRecoil","UseSneakADSRecoil"};
 
 	/**エディターを開く*/
 	public void MakeWindow(JFrame window) {
@@ -64,19 +50,19 @@ public class EditWindow implements ActionListener{
 		OpenWindow.removeAll();
 		EditPanel test = new EditPanel(EditPanel.GUN_NAME_PANEL,data);
 		OpenWindow.add(test);
-		
+
 		EditPanel test2 = new EditPanel(EditPanel.GUN_ICON_PANEL,data);
 		OpenWindow.add(test2);
-		
+
 		EditPanel test3 = new EditPanel(EditPanel.DELETE_PANEL,data);
 		OpenWindow.add(test3);
-		
+
 		EditPanel test4 = new EditPanel(EditPanel.GUN_INFO_PANEL,data);
 		OpenWindow.add(test4);
-		
+
 		EditPanel test5 = new EditPanel(EditPanel.GUN_RECOIL_PANEL_0,data);
 		OpenWindow.add(test5);
-		
+
 		EditPanel test6 = new EditPanel(EditPanel.GUN_RECOIL_PANEL_1,data);
 		OpenWindow.add(test6);
 		/*
@@ -268,47 +254,6 @@ public class EditWindow implements ActionListener{
 	public void clearEditer() {
 		OpenWindow.removeAll();
 		OpenWindow.repaint();
-	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		//使用の可否
-		int i = 0;
-		for(String command:settingCommand){
-			if (e.getActionCommand().equals(command)){
-				if (canUse[i].getSelectedObjects()!=null){
-					data.UseRecoil[i]=true;
-					System.out.println(e.getActionCommand()+"check");
-				}else{
-					data.UseRecoil[i]=false;
-					System.out.println(e.getActionCommand()+"unCheck");
-				}
-				this.wrietGunEditer(data);
-			}
-			i++;
-		}
-
-		if (e.getActionCommand().equals("setShortName")){
-			GunDataList.SHORT_NAME.setData(data,shortName2.getText().toLowerCase());
-			shortName2.setText((String) GunDataList.SHORT_NAME.getData(data));
-			//System.out.println(data.ShortName+" "+data);
-		}
-		if (e.getActionCommand().equals("setDisplayName")){
-			MainWindow.gunMap.remove((String) GunDataList.DISPLAY_NAME.getData(data));
-			//変更
-			GunDataList.DISPLAY_NAME.setData(data,displayName2.getText()) ;
-
-			displayName2.setText((String) GunDataList.DISPLAY_NAME.getData(data));
-			//System.out.println(data.ShortName+" "+data);
-			//MAPの登録書き換え
-			MainWindow.gunMap.put((String) GunDataList.DISPLAY_NAME.getData(data),data);
-			//再描画
-			ContentsList.write();
-		}
-		if (e.getActionCommand().equals("delete")){
-			MainWindow.gunMap.remove((String) GunDataList.DISPLAY_NAME.getData(data));
-			ContentsList.write();
-			//System.out.println(data.ShortName+" "+data);
-		}
 	}
 
 }
