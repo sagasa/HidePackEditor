@@ -12,7 +12,9 @@ import helper.JsonWrapper;
 public class GunData {
 
 	/**エディタのみで使用するデータ*/
-	public boolean[] UseRecoil = {false,false,false};
+	public boolean UseSneakRecoil = false;
+	public boolean UseADSRecoil = false;
+	public boolean UseADSSneakRecoil = false;
 
 	/**全データ*/
 	HashMap<String,Object> Data = new HashMap<String,Object>();

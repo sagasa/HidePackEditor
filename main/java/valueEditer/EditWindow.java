@@ -46,13 +46,6 @@ public class EditWindow implements ActionListener{
 		OpenWindow.setBackground(Color.WHITE);
 		OpenWindow.setBounds(200, 20, 600, window.getHeight()-85);
 		//OpenWindow.setBackground(Color.ORANGE);
-		//ヘルプ用テキストバー
-		JLabel helpBar = new JLabel("ShortName :");
-		helpBar.setBounds(5, OpenWindow.getHeight()-50, 85, 24);
-		helpBar.setFont(new Font("BOLD", Font.BOLD, 13));
-		helpBar.setBorder(border);
-		OpenWindow.add(helpBar);
-
 		window.add(OpenWindow);
 
 	}
@@ -80,6 +73,12 @@ public class EditWindow implements ActionListener{
 		
 		EditPanel test4 = new EditPanel(EditPanel.GUN_INFO_PANEL,data);
 		OpenWindow.add(test4);
+		
+		EditPanel test5 = new EditPanel(EditPanel.GUN_RECOIL_PANEL_0,data);
+		OpenWindow.add(test5);
+		
+		EditPanel test6 = new EditPanel(EditPanel.GUN_RECOIL_PANEL_1,data);
+		OpenWindow.add(test6);
 		/*
 		if (d != null){
 			LineBorder border = new LineBorder(Color.black, 1, false);
@@ -257,7 +256,7 @@ public class EditWindow implements ActionListener{
 
 	/**リサイズ+パネルサイズを再計算*/
 	public static void reSize(){
-		OpenWindow.setBounds(200, 20, 600, MainWindow.MainWindow.getHeight()-85);
+		OpenWindow.setBounds(200, 20, 515, MainWindow.MainWindow.getHeight()-85);
 		panelNumber = 0;
 		for(int width = OpenWindow.getWidth();width > 0;width-=300){
 			panelNumber ++;

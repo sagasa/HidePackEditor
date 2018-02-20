@@ -35,17 +35,21 @@ public class EditPanel extends JPanel implements ActionListener {
 	/** アイコン設定用定数 */
 	static final int GUN_ICON_PANEL = 3;
 	/** 銃のリコイル設定用定数 */
-	static final int GUN_RECOIL_PANEL = 4;
+	static final int GUN_RECOIL_PANEL_0 = 4;
+	/** 銃のリコイル設定用定数 */
+	static final int GUN_RECOIL_PANEL_1 = 5;
 	/** 銃の使用する弾設定用定数 */
-	static final int GUN_BULLET_PANEL = 5;
+	static final int GUN_BULLET_PANEL = 6;
 	/** 削除+コピペ */
-	static final int DELETE_PANEL = 6;
+	static final int DELETE_PANEL = 7;
 
 	/** エディターのモード */
 	int PanelMode;
 
 	GunData gunData;
 
+	LineBorder border = new LineBorder(Color.black, 1, false);
+	
 	/** モードを引数にインスタンス */
 	public EditPanel(int mode, GunData data) {
 		PanelMode = mode;
@@ -73,22 +77,37 @@ public class EditPanel extends JPanel implements ActionListener {
 			 deletePanel();
 		break;
 		case GUN_INFO_PANEL:
-			gunDataPanel();
+			this.setBorder(border);
+			this.setBounds(5, 60, 250, 0);
+			this.setLayout(null);
+			gunDataPanel(0);
+		break;
+		case GUN_RECOIL_PANEL_0:
+			this.setBorder(border);
+			this.setBounds(5, 240, 250, 0);
+			this.setLayout(null);
+			gunDataPanel(1);
+			gunDataPanel(2,7);
+		break;
+		case GUN_RECOIL_PANEL_1:
+			this.setBorder(border);
+			this.setBounds(260, 240, 250, 0);
+			this.setLayout(null);
+			gunDataPanel(3,2);
+			gunDataPanel(4,7);
 		break;
 		}
 	}
 	//基本パラメーターパネル
-	void gunDataPanel(){
-		LineBorder border = new LineBorder(Color.black, 1, false);
-
-		this.setBorder(border);
-		this.setBounds(5, 120, 160, 0);
-		this.setLayout(null);
-
-		int p = 0;
+	void gunDataPanel(int cate){
+		gunDataPanel(cate,0);
+	}
+	//基本パラメーターパネル
+	void gunDataPanel(int cate,int offset){
+		int p = offset;
 		for(GunDataList settingData:GunDataList.values()){
 			//カテゴリ分け -1以外なら
-			if(settingData.getCate()==0){
+			if(settingData.getCate()==cate){
 				NumberSetPanel panel = new NumberSetPanel(settingData,gunData);
 				panel.setBounds(5, 5+p*24, this.getWidth()-10, 20);
 				this.add(panel);
@@ -103,8 +122,6 @@ public class EditPanel extends JPanel implements ActionListener {
 	
 	//削除パネル
 	void deletePanel(){
-		LineBorder border = new LineBorder(Color.black, 1, false);
-
 		this.setBorder(border);
 		this.setBounds(260, 5, 250, 50);
 		this.setLayout(null);
@@ -142,8 +159,6 @@ public class EditPanel extends JPanel implements ActionListener {
 
 	//アイコン設定パネル
 	void gunIconPanel(){
-		LineBorder border = new LineBorder(Color.black, 1, false);
-
 		this.setBorder(border);
 		this.setBounds(260, 60, 250, 60);
 		this.setLayout(null);
@@ -169,7 +184,7 @@ public class EditPanel extends JPanel implements ActionListener {
 
 		JLabel IconSize = new JLabel("Size: "+image.getWidth()+"x"+image.getHeight()+" Name:");
 		IconSize.setBounds(60, 38, 110, 18);
-		IconSize.setFont(new Font("BOLD", Font.BOLD, 13));
+		IconSize.setFont(new Font("BOLD", Font.BOLD, 12));
 		this.add(IconSize);
 
 		JComboBox<String> IconList = new JComboBox<String>();
@@ -188,8 +203,6 @@ public class EditPanel extends JPanel implements ActionListener {
 
 	// 名前設定パネル
 	void gunNamePanel() {
-		LineBorder border = new LineBorder(Color.black, 1, false);
-
 		this.setBorder(border);
 		this.setBounds(5, 5, 250, 50);
 		this.setLayout(null);
