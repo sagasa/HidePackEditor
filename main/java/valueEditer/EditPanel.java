@@ -98,7 +98,7 @@ public class EditPanel extends JPanel implements ActionListener {
 		break;
 		}
 	}
-	//基本パラメーターパネル
+	//基本パラメーターパネル オフセットはデフォルト0
 	void gunDataPanel(int cate){
 		gunDataPanel(cate,0);
 	}
