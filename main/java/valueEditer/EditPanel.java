@@ -49,7 +49,7 @@ public class EditPanel extends JPanel implements ActionListener {
 	GunData gunData;
 
 	LineBorder border = new LineBorder(Color.black, 1, false);
-	
+
 	/** モードを引数にインスタンス */
 	public EditPanel(int mode, GunData data) {
 		PanelMode = mode;
@@ -57,76 +57,103 @@ public class EditPanel extends JPanel implements ActionListener {
 		write();
 	}
 
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-	}
-
 	void write() {
-		//System.out.println("init");
-		this.removeAll();
-
+		removeAll();
+		// System.out.println("init");
 		switch (PanelMode) {
 		case GUN_NAME_PANEL:
 			gunNamePanel();
-		break;
+			break;
 		case GUN_ICON_PANEL:
 			gunIconPanel();
-		break;
+			break;
 		case DELETE_PANEL:
-			 deletePanel();
-		break;
+			deletePanel();
+			break;
 		case GUN_INFO_PANEL:
 			this.setBorder(border);
 			this.setBounds(5, 60, 250, 0);
 			this.setLayout(null);
 			gunDataPanel(0);
-		break;
+			break;
 		case GUN_RECOIL_PANEL_0:
 			this.setBorder(border);
 			this.setBounds(5, 240, 250, 0);
 			this.setLayout(null);
 			gunDataPanel(1);
-			gunDataPanel(2,7);
-		break;
+			CheckBoxPanel check = new CheckBoxPanel("UseSneakRecoil", CheckBoxPanel.USE_SNEAK_RECOIL, gunData, this);
+			check.setBounds(5, 149, 240, 20);
+			this.add(check);
+			gunDataPanel(2, 7, gunData.UseSneakRecoil);
+			break;
 		case GUN_RECOIL_PANEL_1:
 			this.setBorder(border);
 			this.setBounds(260, 240, 250, 0);
 			this.setLayout(null);
-			gunDataPanel(3,2);
-			gunDataPanel(4,7);
+			CheckBoxPanel check2 = new CheckBoxPanel("UseADSRecoil", CheckBoxPanel.USE_ADS_RECOIL, gunData, this);
+			check2.setBounds(5, 29, 240, 20);
+			this.add(check2);
+			gunDataPanel(3, 2, gunData.UseADSRecoil);
+			CheckBoxPanel check3 = new CheckBoxPanel("UseADSSnaekRecoil", CheckBoxPanel.USE_ADSSNEAK_RECOIL, gunData,
+					this);
+			check3.setBounds(5, 149, 240, 20);
+			this.add(check3);
+			gunDataPanel(4, 7, gunData.UseADSSneakRecoil);
+			break;
+		case GUN_BULLET_PANEL:
+			gunMagazinePanel();
 		break;
 		}
+		repaint();
 	}
-	//基本パラメーターパネル オフセットはデフォルト0
-	void gunDataPanel(int cate){
-		gunDataPanel(cate,0);
+
+	//弾選択パネル
+	void gunMagazinePanel(){
+		this.setBorder(border);
+		this.setBounds(260, 125, 250, 100);
+		this.setLayout(null);
+
+		ListChooser magChooser = new ListChooser(new String[]{"No1","No2"});
+		magChooser.setBounds(5, 5, this.getWidth()-10, this.getHeight()-10);
+		magChooser.setBorder(border);
+		this.add(magChooser);
 	}
-	//基本パラメーターパネル
-	void gunDataPanel(int cate,int offset){
+	
+	// 基本パラメーターパネル オフセットはデフォルト0
+	void gunDataPanel(int cate) {
+		gunDataPanel(cate, 0, true);
+	}
+
+	// 基本パラメーターパネル
+	void gunDataPanel(int cate, int offset) {
+		gunDataPanel(cate, offset, true);
+	}
+
+	// 基本パラメーターパネル
+	void gunDataPanel(int cate, int offset, boolean canEdit) {
 		int p = offset;
-		for(GunDataList settingData:GunDataList.values()){
-			//カテゴリ分け -1以外なら
-			if(settingData.getCate()==cate){
-				NumberSetPanel panel = new NumberSetPanel(settingData,gunData);
-				panel.setBounds(5, 5+p*24, this.getWidth()-10, 20);
+		for (GunDataList settingData : GunDataList.values()) {
+			// カテゴリ分け -1以外なら
+			if (settingData.getCate() == cate) {
+				NumberSetPanel panel = new NumberSetPanel(settingData, gunData, canEdit);
+				panel.setBounds(5, 5 + p * 24, this.getWidth() - 10, 20);
 				this.add(panel);
 				p++;
 			}
 		}
-		//高さだけ上書き
-		Rectangle size =this.getBounds();
-		size.height=p*24+6;
+		// 高さだけ上書き
+		Rectangle size = this.getBounds();
+		size.height = p * 24 + 6;
 		this.setBounds(size);
 	}
-	
-	//削除パネル
-	void deletePanel(){
+
+	// 削除パネル
+	void deletePanel() {
 		this.setBorder(border);
 		this.setBounds(260, 5, 250, 50);
 		this.setLayout(null);
 
-		//コピーボタン
+		// コピーボタン
 		JButton copy = new JButton("copy");
 		copy.setBounds(5, 10, 80, 30);
 		copy.setBorder(border);
@@ -136,7 +163,7 @@ public class EditPanel extends JPanel implements ActionListener {
 		copy.setBackground(Color.CYAN);
 		this.add(copy);
 
-		//貼り付けボタン
+		// 貼り付けボタン
 		JButton paste = new JButton("paste");
 		paste.setBounds(90, 10, 80, 30);
 		paste.setBorder(border);
@@ -146,7 +173,7 @@ public class EditPanel extends JPanel implements ActionListener {
 		paste.setBackground(Color.CYAN);
 		this.add(paste);
 
-		//削除ボタン
+		// 削除ボタン
 		JButton delete = new JButton("delete");
 		delete.setBounds(190, 10, 50, 30);
 		delete.setBorder(border);
@@ -157,18 +184,18 @@ public class EditPanel extends JPanel implements ActionListener {
 		this.add(delete);
 	}
 
-	//アイコン設定パネル
-	void gunIconPanel(){
+	// アイコン設定パネル
+	void gunIconPanel() {
 		this.setBorder(border);
 		this.setBounds(260, 60, 250, 60);
 		this.setLayout(null);
 
 		ImageData image;
 
-		//見つかれば設定された画像見つからなければnullImage
-		if (MainWindow.iconMap.containsKey(GunDataList.ICON.getData(gunData).toString())){
+		// 見つかれば設定された画像見つからなければnullImage
+		if (MainWindow.iconMap.containsKey(GunDataList.ICON.getData(gunData).toString())) {
 			image = MainWindow.iconMap.get(GunDataList.ICON.getData(gunData).toString());
-		}else{
+		} else {
 			image = ResourcesList.nullImage;
 		}
 
@@ -182,7 +209,7 @@ public class EditPanel extends JPanel implements ActionListener {
 		IconLore.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(IconLore);
 
-		JLabel IconSize = new JLabel("Size: "+image.getWidth()+"x"+image.getHeight()+" Name:");
+		JLabel IconSize = new JLabel("Size: " + image.getWidth() + "x" + image.getHeight() + " Name:");
 		IconSize.setBounds(60, 38, 110, 18);
 		IconSize.setFont(new Font("BOLD", Font.BOLD, 12));
 		this.add(IconSize);
@@ -190,7 +217,7 @@ public class EditPanel extends JPanel implements ActionListener {
 		JComboBox<String> IconList = new JComboBox<String>();
 		IconList.addActionListener(this);
 		IconList.addItem("");
-		for (ImageData data:MainWindow.iconMap.values()){
+		for (ImageData data : MainWindow.iconMap.values()) {
 			IconList.addItem(data.ImageName);
 		}
 		IconList.setBounds(170, 38, 75, 18);
@@ -199,7 +226,6 @@ public class EditPanel extends JPanel implements ActionListener {
 		this.add(IconList);
 
 	}
-
 
 	// 名前設定パネル
 	void gunNamePanel() {
@@ -219,14 +245,44 @@ public class EditPanel extends JPanel implements ActionListener {
 		this.add(name2);
 	}
 
+	// 有効化に数値を代入
+	public void gunDataset(int cate) {
+		switch (cate) {
+		case CheckBoxPanel.USE_SNEAK_RECOIL:
+			GunDataList.SNEAK_PITCH_RECOIL_BASE.setData(gunData, GunDataList.PITCH_RECOIL_BASE.getData(gunData));
+			GunDataList.SNEAK_PITCH_RECOIL_SPREAD.setData(gunData, GunDataList.PITCH_RECOIL_SPREAD.getData(gunData));
+			GunDataList.SNEAK_YAW_RECOIL_BASE.setData(gunData, GunDataList.YAW_RECOIL_BASE.getData(gunData));
+			GunDataList.SNEAK_YAW_RECOIL_SPREAD.setData(gunData, GunDataList.YAW_RECOIL_SPREAD.getData(gunData));
+			break;
+		case CheckBoxPanel.USE_ADS_RECOIL:
+			GunDataList.ADS_PITCH_RECOIL_BASE.setData(gunData, GunDataList.PITCH_RECOIL_BASE.getData(gunData));
+			GunDataList.ADS_PITCH_RECOIL_SPREAD.setData(gunData, GunDataList.PITCH_RECOIL_SPREAD.getData(gunData));
+			GunDataList.ADS_YAW_RECOIL_BASE.setData(gunData, GunDataList.YAW_RECOIL_BASE.getData(gunData));
+			GunDataList.ADS_YAW_RECOIL_SPREAD.setData(gunData, GunDataList.YAW_RECOIL_SPREAD.getData(gunData));
+			break;
+		case CheckBoxPanel.USE_ADSSNEAK_RECOIL:
+			GunDataList.ADS_SNEAK_PITCH_RECOIL_BASE.setData(gunData,
+					GunDataList.ADS_PITCH_RECOIL_BASE.getData(gunData));
+			GunDataList.ADS_SNEAK_PITCH_RECOIL_SPREAD.setData(gunData,
+					GunDataList.ADS_PITCH_RECOIL_SPREAD.getData(gunData));
+			GunDataList.ADS_SNEAK_YAW_RECOIL_BASE.setData(gunData, GunDataList.ADS_YAW_RECOIL_BASE.getData(gunData));
+			GunDataList.ADS_SNEAK_YAW_RECOIL_SPREAD.setData(gunData,
+					GunDataList.ADS_YAW_RECOIL_SPREAD.getData(gunData));
+			break;
+		}
+
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO 自動生成されたメソッド・スタブ
-		System.out.println(e.getActionCommand());
-		//アイコン設定
-		if(e.getActionCommand() == "iconSet"){
-			String name = Pattern.compile("]$").matcher(Pattern.compile("^(.*)selectedItemReminder=").matcher(e.toString()).replaceAll("")).replaceAll("");
-			GunDataList.ICON.setData(gunData,name);
+		// System.out.println(e.getActionCommand());
+		// アイコン設定
+		if (e.getActionCommand() == "iconSet") {
+			String name = Pattern.compile("]$")
+					.matcher(Pattern.compile("^(.*)selectedItemReminder=").matcher(e.toString()).replaceAll(""))
+					.replaceAll("");
+			GunDataList.ICON.setData(gunData, name);
+			//System.out.println(GunDataList.ICON.getData(gunData));
 			write();
 		}
 	}

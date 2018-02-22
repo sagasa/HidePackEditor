@@ -3,8 +3,6 @@ package valueEditer;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
@@ -17,7 +15,6 @@ import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -38,17 +35,16 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 	/**set可能かどうか*/
 	boolean canEdit;
 
+
+	//内容
+	/**ラベル*/
+	JLabel setting;
 	/**テキストボックス*/
 	JTextField setting2;
 
 	/**コンストラクタ 編集可能*/
 	public NumberSetPanel(GunDataList d,GunData gun){
-		datatype = d;
-		data = gun;
-		type = "gun";
-		canEdit = true;
-		this.addComponentListener(this);
-		this.setOpaque(false);
+		this(d, gun, true);
 	}
 	/**コンストラクタ 編集 可/不可*/
 	public NumberSetPanel(GunDataList d,GunData gun, boolean canedit){
@@ -56,40 +52,43 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 		data = gun;
 		type = "gun";
 		canEdit = canedit;
+		this.addComponentListener(this);
+		this.setOpaque(false);
 		init();
+		write();
 	}
-
-	//描画
+	/**編集可能か切り替え*/
+	public void setEnabled(boolean value){
+		canEdit = value;
+	}
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		write();
+	}
+	//画面制作
 	void init(){
 		LineBorder border = new LineBorder(Color.black, 1, false);
-		//this.setBorder(border);
 		this.setLayout(null);
 		//ラベル
-		JLabel setting = new JLabel(((GunDataList) datatype).getName()+" :");
-		setting.setBounds(0, 0, this.getWidth()-33, this.getHeight());
+		setting = new JLabel(((GunDataList) datatype).getName()+" :");
 		setting.setHorizontalAlignment(JLabel.RIGHT);
 		setting.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(setting);
-
 		//テキストボックス
-		//条件分岐
-		if(canEdit){
-			setting2 = new JTextField(((GunDataList) datatype).getData((GunData)data).toString());
-			setting2.setBounds(this.getWidth()-30, 0, 30 , this.getHeight());
-			setting2.addMouseWheelListener(this);
-			setting2.addKeyListener(this);
-			setting2.addFocusListener(this);
-			setting2.setBorder(border);
-			this.add(setting2);
-		}else{
-			JLabel setting2 = new JLabel(((GunDataList) datatype).getData((GunData)data).toString());
-			setting2.setBounds(this.getWidth()-30, 0, 30 , this.getHeight());
-			setting2.setHorizontalAlignment(JLabel.CENTER);
-			setting2.setFont(new Font("BOLD", Font.BOLD, 13));
-			this.add(setting2);
-		}
+		setting2 = new JTextField();
+		setting2.addMouseWheelListener(this);
+		setting2.addKeyListener(this);
+		setting2.addFocusListener(this);
+		setting2.setBorder(border);
+		this.add(setting2);
 	}
-	
+	//内容更新
+	void write(){
+		//テキストボックス
+		setting2.setText(((GunDataList) datatype).getData((GunData)data).toString());
+		setting2.setEnabled(canEdit);
+	}
 	/**1増やすor1減らす 引数 1,-1*/
 	void change(int i){
 		switch (((GunDataList) datatype).getType()){
@@ -116,7 +115,7 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 			//System.out.println(num2+" "+(e.getWheelRotation()*-0.1));
 		break;
 		}
-		setting2.setText(((GunDataList) datatype).getData((GunData)data).toString());
+		repaint();
 	}
 
 	/**決定*/
@@ -136,7 +135,7 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 			}
 		}catch(NumberFormatException e2){}
 
-		setting2.setText(((GunDataList) datatype).getData((GunData)data).toString());
+		repaint();
 	}
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
@@ -145,6 +144,7 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 		}
 	@Override
 	public void keyPressed(KeyEvent e) {
+		//System.out.println(e.getSource());
 		switch(e.getKeyCode()){
 		case 10:
 			set();
@@ -177,7 +177,8 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 	
 	@Override
 	public void componentResized(ComponentEvent arg0) {
-		init();
+		setting.setBounds(0, 0, this.getWidth()-33, this.getHeight());
+		setting2.setBounds(this.getWidth()-30, 0, 30 , this.getHeight());
 	}
 	
 	@Override
