@@ -65,6 +65,9 @@ public class EditWindow{
 
 		EditPanel test6 = new EditPanel(EditPanel.GUN_RECOIL_PANEL_1,data);
 		OpenWindow.add(test6);
+		
+		EditPanel test7 = new EditPanel(EditPanel.GUN_BULLET_PANEL,data);
+		OpenWindow.add(test7);
 		/*
 		if (d != null){
 			LineBorder border = new LineBorder(Color.black, 1, false);
