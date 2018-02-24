@@ -173,6 +173,7 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 				magazineMap.clear();
 				bulletMap.clear();
 				PackDir = null;
+				ContentsList.gunNum = 0;
 				PackInfoEditer.write();
 				ContentsList.write();
 			}

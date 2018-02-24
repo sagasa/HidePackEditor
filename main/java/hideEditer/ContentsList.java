@@ -90,6 +90,10 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	/**銃を追加*/
 	public void addgun() {
 		gunNum ++;
+		//名前が重複しないように
+		while (MainWindow.gunMap.containsKey("new gun No."+gunNum)){
+			gunNum ++;
+		}
 		GunData newGun = new GunData();
 		GunDataList.DISPLAY_NAME.setData(newGun,"new gun No."+gunNum);
 		GunDataList.SHORT_NAME.setData(newGun,"gun_"+gunNum);
@@ -106,17 +110,17 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 
 	/**タブから判断してエディタを開く*/
 	public void OpenEditer() {
-
-		//編集画面を開く
-		switch (this.getSelectedIndex()){
-		case 0:
-			//銃のエディタ
-			MainWindow.Editer.wrietGunEditer(MainWindow.gunMap.get(guns.getSelectedValue()));
-		break;
-		case 1:
-			addbullet();
-		break;
-		}
+			//編集画面を開く
+			switch (this.getSelectedIndex()){
+			case 0:
+				//銃のエディタ
+				MainWindow.Editer.wrietGunEditer(MainWindow.gunMap.get(guns.getSelectedValue()));
+			break;
+			case 1:
+				addbullet();
+			break;
+			}	
+		
 	}
 
 	/**リサイズ
@@ -178,7 +182,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		//決定したところで
-		if (!e.getValueIsAdjusting()){
+		if (!e.getValueIsAdjusting()&&!guns.isSelectionEmpty()){
 			OpenEditer();
 		}
 	}
