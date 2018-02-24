@@ -110,7 +110,7 @@ public class EditPanel extends JPanel implements ActionListener {
 	//弾選択パネル
 	void gunMagazinePanel(){
 		this.setBorder(border);
-		this.setBounds(260, 125, 250, 100);
+		this.setBounds(260, 125, 120, 100);
 		this.setLayout(null);
 
 		ListChooser magChooser = new ListChooser(new String[]{"No1","No2"});

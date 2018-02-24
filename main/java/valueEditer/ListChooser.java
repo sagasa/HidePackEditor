@@ -27,7 +27,9 @@ public class ListChooser extends JPanel implements ComponentListener{
 	    for(String str: list){
 	    	listModel.addElement(str);
 	    }
+	    this.repaint();
 	    this.add(listSP);
+	    
 	}
 
 	@Override
@@ -38,7 +40,8 @@ public class ListChooser extends JPanel implements ComponentListener{
 
 	@Override
 	public void componentResized(ComponentEvent arg0) {
-	    listSP.setBounds(0, 0, this.getWidth()/2-5, this.getHeight());
+	    listSP.setBounds(0, 0, this.getWidth(), this.getHeight());
+	    this.revalidate();
 	}
 
 	@Override
