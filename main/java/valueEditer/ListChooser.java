@@ -15,7 +15,7 @@ import types.GunData.GunDataList;
 public class ListChooser extends JPanel implements ComponentListener{
 	private static final long serialVersionUID = 7470418576334013852L;
 //TODO めっちゃやりかけ
-	DefaultListModel<String> listModel;
+	DefaultListModel<ListComponent> listModel;
 	JScrollPane listSP;
 	JComboBox<String> combo;
 
@@ -35,8 +35,8 @@ public class ListChooser extends JPanel implements ComponentListener{
 		this.setLayout(null);
 		this.addComponentListener(this);
 		//選択中リスト
-		JList<String> model = new JList<String>();
-		listModel = new DefaultListModel<String>();
+		JList<ListComponent> model = new JList<ListComponent>();
+		listModel = new DefaultListModel<ListComponent>();
 	    model.setModel(listModel);
 	    listSP = new JScrollPane();
 	    listSP.getViewport().setView(model);
@@ -67,8 +67,8 @@ public class ListChooser extends JPanel implements ComponentListener{
 
 	@Override
 	public void componentResized(ComponentEvent arg0) {
-	    listSP.setBounds(0, 0, this.getWidth(), this.getHeight()-30);
-	    combo.setBounds(0, this.getHeight()-28, this.getWidth()-30, 28);
+	    listSP.setBounds(0, 0, this.getWidth(), this.getHeight()-22);
+	    combo.setBounds(0, this.getHeight()-18, this.getWidth()-28, 18);
 	    this.revalidate();
 	}
 

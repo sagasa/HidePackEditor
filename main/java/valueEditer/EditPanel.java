@@ -115,7 +115,6 @@ public class EditPanel extends JPanel implements ActionListener {
 
 		ListChooser magChooser = new ListChooser(ListChooser.GUN_MAGAZINE_LIST,gunData);
 		magChooser.setBounds(5, 5, this.getWidth()-10, this.getHeight()-10);
-		magChooser.setBorder(border);
 		this.add(magChooser);
 	}
 
