@@ -101,17 +101,17 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 			}else{
 				((GunDataList) datatype).setData((GunData)data,num+(i));
 			}
-			
+
 			break;
 		case "float":
 			String num2 = ((GunDataList) datatype).getData((GunData)data).toString();
-			
+
 			float value = new BigDecimal(num2).add(new BigDecimal("0.1").multiply(new BigDecimal(i))).floatValue();
 			Float min = ((GunDataList) datatype).getMin();
 			if (min == null || value >= min){
 				((GunDataList) datatype).setData((GunData)data,value);
 			}
-			
+
 			//System.out.println(num2+" "+(e.getWheelRotation()*-0.1));
 		break;
 		}
@@ -140,7 +140,7 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		//System.out.println(e.getWheelRotation());
-		change(e.getWheelRotation());
+		change(e.getWheelRotation()*-1);
 		}
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -174,13 +174,13 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 		//これをフラグに書き換える
 		set();
 	}
-	
+
 	@Override
 	public void componentResized(ComponentEvent arg0) {
 		setting.setBounds(0, 0, this.getWidth()-33, this.getHeight());
 		setting2.setBounds(this.getWidth()-30, 0, 30 , this.getHeight());
 	}
-	
+
 	@Override
 	public void componentHidden(ComponentEvent arg0) {}
 	@Override

@@ -35,7 +35,7 @@ public class GunData {
 		/** レート ; レートtick間隔で発射する : int型 **/
 		RATE("Rate",1 , "int" ,0),
 		/** 装弾数 : int型 **/
-		MAGAZINE_SIZE("MagazineSize",1 , "int" ,0 ,1F),
+		MAGAZINE_NUMBER("MagazineNumber",1 , "int" ,0 ,1F),
 		/** 発射数 : int型 **/
 		BULLET_NUMBER("ShootNumner",1 ,"int" ,0 ,1F),
 		/** 精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
@@ -125,7 +125,7 @@ public class GunData {
 			this(name, obj, types);
 			this.cate = cate;
 		}
-		
+
 		/**最小値の設定*/
 		GunDataList(String name, Object obj,String types ,int cate,float minimam){
 			this(name, obj, types, cate);
@@ -136,7 +136,7 @@ public class GunData {
 			this(name, obj, types);
 			this.min = minimam;
 		}
-		
+
 		/**最小値を返す*/
 		public Float getMin() {
 			return min;
