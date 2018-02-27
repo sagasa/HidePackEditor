@@ -93,7 +93,7 @@ public class GunData {
 		AIRCRAFT_DAMAGE_DIAMETER("aircraftDamageDiameter",1F ,"float" ,5 ,0F),
 
 		/** 使用する弾の名前 複数設定可能 : String配列型 **/
-		TYPES_BULLETS("BulletNames", new String[] {},"String[]"),
+		TYPES_BULLETS("BulletNames", new String[] {"test1","test2"},"String[]"),
 		/** 使用できるアタッチメントのType 複数設定可能 : String配列型 **/
 		TYPES_ATTACHMENTS("AttachmentNames", new String[] {},"String[]"),;
 

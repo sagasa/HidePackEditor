@@ -54,7 +54,7 @@ public class ListChooser extends JPanel implements ComponentListener{
 		System.out.println(GunDataList.TYPES_BULLETS.getData(gunData));
 		listModel.clear();
 		for(String str: (String[])GunDataList.TYPES_BULLETS.getData(gunData)){
-	    	listModel.addElement(str);
+	    	listModel.addElement(new ListComponent(mode, gunData, str));
 	    }
 	    this.repaint();
 	}
