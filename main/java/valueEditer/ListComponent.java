@@ -33,11 +33,15 @@ public class ListComponent extends JPanel implements ComponentListener, ListCell
 		this.add(botton);
 	}
 
+	/**レンダー登録用*/
+	public ListComponent() {
+	}
+
 	//レンダーメゾット
 	@Override
 	public Component getListCellRendererComponent(JList<? extends ListComponent> list, ListComponent value, int index,
 			boolean isSelected, boolean cellHasFocus) {
-		return this;
+		return value;
 	}
 
 
