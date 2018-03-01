@@ -39,6 +39,7 @@ public class ListChooser extends JPanel implements ComponentListener{
 		listModel = new DefaultListModel<ListComponent>();
 		model.setCellRenderer(new ListComponent());
 	    model.setModel(listModel);
+	    model.setFixedCellHeight(20);
 	    listSP = new JScrollPane();
 	    listSP.getViewport().setView(model);
 	    this.add(listSP);
