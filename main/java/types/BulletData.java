@@ -2,6 +2,14 @@ package types;
 
 import java.util.HashMap;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+
+import helper.JsonWrapper;
+import types.GunData.GunDataList;
+
 public class BulletData {
 
 	/**全データ*/
@@ -137,11 +145,11 @@ public class BulletData {
 			return types;
 		}
 		/**データを返す*/
-		public Object getData(GunData d) {
+		public Object getData(BulletData d) {
 			return d.Data.get(this.getName());
 		}
 		/**Nameからデータを返す*/
-		public Object getData(GunData d,String Name) {
+		public Object getData(BulletData d,String Name) {
 			return d.Data.get(Name);
 		}
 		/**初期値を返す*/
@@ -153,14 +161,72 @@ public class BulletData {
 			return cate;
 		}
 		/**データを設定する nullは上書きしない*/
-		public void setData(GunData d,Object obj) {
+		public void setData(BulletData d,Object obj) {
 			if (obj != null){
 				d.Data.replace(this.getName(), obj);
 			}
 		}
 	}
 
-	public BulletData(){
+	/** 初期値*/
+	public BulletData() {
+		this(null);
+	}
 
+	static final String headName = "bullet_";
+	/** JsonStringからデータを読み込む */
+	public BulletData(String json) {
+		// 初期値を忘れずに
+		Gson gson = new Gson();
+		JsonWrapper w = new JsonWrapper(gson.fromJson(json, JsonObject.class));
+
+		//マップに格納
+		for (BulletDataList d:BulletDataList.values()){
+			//System.out.println(d.getName()+"  "+d.getDefaultValue() + "  "+ w.getString("gun_"+d.getName(), d.getDefaultValue().toString()));
+			switch (d.types){
+			case "boolean":
+				Data.put(d.getName(), w.getBoolean(headName+d.getName(),new Boolean (d.getDefaultValue().toString())));
+			break;
+			case "String":
+				Data.put(d.getName(), w.getString(headName+d.getName(),d.getDefaultValue().toString()));
+			break;
+			case "int":
+				Data.put(d.getName(), w.getInt(headName+d.getName(), new Integer (d.getDefaultValue().toString())));
+			break;
+			case "float":
+				Data.put(d.getName(), w.getFloat(headName+d.getName(), new Float (d.getDefaultValue().toString())));
+			break;
+			case "String[]":
+				Data.put(d.getName(), w.getStringArray(headName+d.getName(), (String[]) d.getDefaultValue()));
+			break;
+			}
+		}
+	}
+	/**JsonObjectを作成*/
+	public String MakeJsonData(){
+		Gson gson = new Gson();
+		JsonObject JsonData = new JsonObject();
+		for (BulletDataList d:BulletDataList.values()){
+			switch (d.types){
+			case "boolean":
+				JsonData.addProperty(headName+d.getName(),new Boolean(d.getData(this).toString()));
+			break;
+			case "String":
+				JsonData.addProperty(headName+d.getName(),d.getData(this).toString());
+			break;
+			case "int":
+				JsonData.addProperty(headName+d.getName(), new Integer (d.getData(this).toString()));
+			break;
+			case "float":
+				JsonData.addProperty(headName+d.getName(), new Float (d.getData(this).toString()));
+			break;
+			case "String[]":
+				JsonElement element =
+			     gson.toJsonTree((String[])d.getData(this) , new TypeToken<String[]>() {}.getType());
+				JsonData.add(headName+d.getName(), element.getAsJsonArray());
+			break;
+			}
+		}
+		return gson.toJson(JsonData);
 	}
 }

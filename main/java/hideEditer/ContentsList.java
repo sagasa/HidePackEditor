@@ -16,6 +16,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import types.BulletData;
+import types.BulletData.BulletDataList;
 import types.GunData;
 import types.GunData.GunDataList;
 
@@ -31,13 +33,15 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	static DefaultListModel<String> gunModel;
 	static JList<String> guns;
 
+	/**弾の表示リスト 名前のテキストリスト*/
+	static DefaultListModel<String> bulletModel;
+	static JList<String> bullets;
+	
 	static public JTabbedPane ContentsTab;
 
 	/**ID用ポインタ*/
 	static int gunNum = 0;
-
-	/**弾の表示リスト 名前のテキストリスト*/
-	static DefaultListModel<String> bulletModel;
+	static int bulletNum = 0;
 
 	public void MakeWindow (JFrame Window){
 		ContentsTab = this;
@@ -60,7 +64,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	    gunSP.getViewport().setView(guns);
 
 	    //弾のリスト
-	    JList<String> bullets = new JList<String>();
+	    bullets = new JList<String>();
 	    bulletModel = new DefaultListModel<String>();
 	    bullets.setModel(bulletModel);
 	    bullets.addMouseListener(this);
@@ -85,6 +89,11 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 			System.out.println(GunDataList.DISPLAY_NAME.getData(data));
 			gunModel.addElement((String) GunDataList.DISPLAY_NAME.getData(data));
 		}
+		bulletModel.clear();
+		for (BulletData data:MainWindow.bulletMap.values()){
+			System.out.println(BulletDataList.NAME.getData(data));
+			bulletModel.addElement((String) BulletDataList.NAME.getData(data));
+		}
 
 	}
 	/**銃を追加*/
@@ -104,23 +113,33 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 
 	/**弾を追加*/
 	public void addbullet() {
-
-
+		bulletNum ++;
+		//名前が重複しないように
+		while (MainWindow.gunMap.containsKey("new bullet No."+bulletNum)){
+			gunNum ++;
+		}
+		BulletData newGun = new BulletData();
+		BulletDataList.NAME.setData(newGun,"new bullet No."+bulletNum);
+		MainWindow.bulletMap.put((String) BulletDataList.NAME.getData(newGun), newGun);
+		//System.out.println("ok");
+		write();
 	}
 
-	/**タブから判断してエディタを開く*/
+	/** タブから判断してエディタを開く */
 	public void OpenEditer() {
-			//編集画面を開く
-			switch (this.getSelectedIndex()){
-			case 0:
-				//銃のエディタ
+		// 編集画面を開く
+		switch (this.getSelectedIndex()) {
+		case 0:
+			// 銃のエディタ
+			if(!guns.isSelectionEmpty()){
 				MainWindow.Editer.wrietGunEditer(MainWindow.gunMap.get(guns.getSelectedValue()));
+			}
 			break;
-			case 1:
-				addbullet();
+		case 1:
+
 			break;
-			}	
-		
+		}
+
 	}
 
 	/**リサイズ
@@ -191,7 +210,6 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		//タブが変わったらエディットウィンドウをクリア
-
 		MainWindow.Editer.clearEditer();
 		OpenEditer();
 

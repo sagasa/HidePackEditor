@@ -16,7 +16,7 @@ import javax.swing.border.LineBorder;
 import types.GunData;
 
 /** ListChooser用削除パネル付きのパネル */
-public class ListComponent extends JPanel implements ComponentListener, ListCellRenderer<ListComponent> {
+public class ListComponent extends JPanel implements ListCellRenderer<ListComponent> {
 	private static final long serialVersionUID = 3283536785946717774L;
 
 	public static final int GUN_MAGAZINE = 1;
@@ -48,7 +48,6 @@ public class ListComponent extends JPanel implements ComponentListener, ListCell
 		label.setBorder(border);
 		label.setHorizontalAlignment(JLabel.CENTER);
 		label.setOpaque(true);
-		this.addComponentListener(this);
 		this.add(label);
 	}
 
@@ -61,23 +60,5 @@ public class ListComponent extends JPanel implements ComponentListener, ListCell
 	public Component getListCellRendererComponent(JList<? extends ListComponent> list, ListComponent value, int index,
 			boolean isSelected, boolean cellHasFocus) {
 		return value;
-	}
-
-
-	@Override
-	public void componentHidden(ComponentEvent arg0) {
-	}
-
-	@Override
-	public void componentMoved(ComponentEvent arg0) {
-	}
-
-	@Override
-	public void componentResized(ComponentEvent arg0) {
-
-	}
-
-	@Override
-	public void componentShown(ComponentEvent arg0) {
 	}
 }

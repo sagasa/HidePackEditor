@@ -30,15 +30,11 @@ public class StringSetPanel extends JPanel implements KeyListener, FocusListener
 
 	/** テキストボックス */
 	JTextField txtField;
+	JLabel setting;
 
 	/** コンストラクタ 編集可能 */
 	public StringSetPanel(GunDataList d, GunData gun) {
-		datatype = d;
-		data = gun;
-		type = "gun";
-		canEdit = true;
-		this.addComponentListener(this);
-		this.setOpaque(false);
+		this(d,gun,true);
 	}
 
 	/** コンストラクタ 編集 可/不可 */
@@ -47,36 +43,33 @@ public class StringSetPanel extends JPanel implements KeyListener, FocusListener
 		data = gun;
 		type = "gun";
 		canEdit = canedit;
+		this.addComponentListener(this);
+		this.setOpaque(false);
+		init();
 	}
 
-	// 描画
-	void write() {
+	//インスタンス
+	void init() {
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		this.removeAll();
 		this.setLayout(null);
 		// ラベル
-		JLabel setting = new JLabel(getname() + " :");
-		setting.setBounds(0, 0, this.getWidth() - 155, this.getHeight());
+		setting = new JLabel(getname() + " :");
 		setting.setHorizontalAlignment(JLabel.RIGHT);
 		setting.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(setting);
 
 		// テキストボックス
-		// 条件分岐
-		if (canEdit) {
-			txtField = new JTextField(get());
-			txtField.setBounds(this.getWidth() - 150, 0, 147, this.getHeight());
-			txtField.addKeyListener(this);
-			txtField.addFocusListener(this);
-			txtField.setBorder(border);
-			this.add(txtField);
-		} else {
-			JLabel setting2 = new JLabel(get());
-			setting2.setBounds(this.getWidth() - 150, 0, 147, this.getHeight());
-			setting2.setHorizontalAlignment(JLabel.CENTER);
-			setting2.setFont(new Font("BOLD", Font.BOLD, 13));
-			this.add(setting2);
-		}
+		txtField = new JTextField(get());
+		txtField.addKeyListener(this);
+		txtField.addFocusListener(this);
+		txtField.setBorder(border);
+		txtField.setEnabled(canEdit);
+		this.add(txtField);
+	}
+	// 描画
+	void write() {
+		txtField.setText(get());
 	}
 
 	/**変数から登録名読み込み*/
@@ -143,7 +136,8 @@ public class StringSetPanel extends JPanel implements KeyListener, FocusListener
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		write();
+		txtField.setBounds(this.getWidth() - 150, 0, 147, this.getHeight());
+		setting.setBounds(0, 0, this.getWidth() - 155, this.getHeight());
 	}
 
 	@Override

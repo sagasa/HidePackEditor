@@ -1,9 +1,11 @@
 package valueEditer;
 
+import java.awt.Insets;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -18,6 +20,7 @@ public class ListChooser extends JPanel implements ComponentListener{
 	DefaultListModel<ListComponent> listModel;
 	JScrollPane listSP;
 	JComboBox<String> combo;
+	JButton botton;
 
 	//モード定数
 	/**銃の使用マガジン選択*/
@@ -43,11 +46,14 @@ public class ListChooser extends JPanel implements ComponentListener{
 	    listSP = new JScrollPane();
 	    listSP.getViewport().setView(model);
 	    this.add(listSP);
-	    write();
 	    //選択元のコンボボックス
 	    combo = new JComboBox<String>();
 	    this.add(combo);
-
+	    //追加ボタン
+	    botton = new JButton("add");
+	    botton.setMargin(new Insets(0, 0, 0, 0));
+	    this.add(botton);
+	    write();
 	}
 
 	/**リストの内容更新*/
@@ -56,8 +62,13 @@ public class ListChooser extends JPanel implements ComponentListener{
 		System.out.println(GunDataList.TYPES_BULLETS.getData(gunData));
 		listModel.clear();
 		for(String str: (String[])GunDataList.TYPES_BULLETS.getData(gunData)){
+			combo.addItem(str);
 	    	listModel.addElement(new ListComponent(mode, gunData, str));
 	    }
+		//追加済みを削除
+		//for
+		
+		
 	    this.repaint();
 	}
 
@@ -70,7 +81,8 @@ public class ListChooser extends JPanel implements ComponentListener{
 	@Override
 	public void componentResized(ComponentEvent arg0) {
 	    listSP.setBounds(0, 0, this.getWidth(), this.getHeight()-22);
-	    combo.setBounds(0, this.getHeight()-18, this.getWidth()-28, 18);
+	    combo.setBounds(0, this.getHeight()-18, this.getWidth()-30, 18);
+	    botton.setBounds(this.getWidth()-30, this.getHeight()-18, 30, 18);
 	    this.revalidate();
 	}
 
