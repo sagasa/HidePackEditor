@@ -115,11 +115,11 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	public void addbullet() {
 		bulletNum ++;
 		//名前が重複しないように
-		while (MainWindow.gunMap.containsKey("new bullet No."+bulletNum)){
+		while (MainWindow.gunMap.containsKey("new bullet "+bulletNum)){
 			gunNum ++;
 		}
 		BulletData newGun = new BulletData();
-		BulletDataList.NAME.setData(newGun,"new bullet No."+bulletNum);
+		BulletDataList.NAME.setData(newGun,"new bullet "+bulletNum);
 		MainWindow.bulletMap.put((String) BulletDataList.NAME.getData(newGun), newGun);
 		//System.out.println("ok");
 		write();

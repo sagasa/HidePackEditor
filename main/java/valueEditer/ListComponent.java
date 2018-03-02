@@ -14,6 +14,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.border.LineBorder;
 
 import types.GunData;
+import types.GunData.GunDataList;
 
 /** ListChooser用削除パネル付きのパネル */
 public class ListComponent extends JPanel implements ListCellRenderer<ListComponent> {
@@ -55,6 +56,15 @@ public class ListComponent extends JPanel implements ListCellRenderer<ListCompon
 	public ListComponent() {
 	}
 
+	/** 元データから削除 */
+	public void delete() {
+		switch (mode) {
+		case GUN_MAGAZINE:
+			String[] list = (String[]) GunDataList.TYPES_BULLETS.getData(gundata);
+			
+			break;
+		}
+	}
 	//レンダーメゾット
 	@Override
 	public Component getListCellRendererComponent(JList<? extends ListComponent> list, ListComponent value, int index,

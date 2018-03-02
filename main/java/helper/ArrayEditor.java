@@ -1,5 +1,8 @@
 package helper;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**プリミティブ配列の結合など*/
 public class ArrayEditor {
 	/**byte配列2つを結合*/
@@ -8,5 +11,12 @@ public class ArrayEditor {
 		System.arraycopy(in1,0,out,0,in1.length); //a→cにコピー
 		System.arraycopy(in2,0,out,in1.length, in2.length); //b→cにコピー
 		return out;
+	}
+	/**配列から要素を削除*/
+	static public String[] RemoveFromArray(String[] array ,String data){
+		List<String> Array = Arrays.asList(array);
+		Array.remove(data);
+		return (String[]) Array.toArray();
+		
 	}
 }
