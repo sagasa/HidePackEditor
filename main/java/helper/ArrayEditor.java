@@ -1,7 +1,7 @@
 package helper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**プリミティブ配列の結合など*/
 public class ArrayEditor {
@@ -14,9 +14,14 @@ public class ArrayEditor {
 	}
 	/**配列から要素を削除*/
 	static public String[] RemoveFromArray(String[] array ,String data){
-		List<String> Array = Arrays.asList(array);
+		ArrayList<String> Array = new ArrayList<String>(Arrays.asList(array));
 		Array.remove(data);
-		return (String[]) Array.toArray();
-		
+		return Array.toArray(new String[Array.size()]);
+	}
+	/**配列に要素を追加*/
+	static public String[] AddToArray(String[] array ,String data){
+		ArrayList<String> Array = new ArrayList<String>(Arrays.asList(array));
+		Array.add(data);
+		return Array.toArray(new String[Array.size()]);
 	}
 }

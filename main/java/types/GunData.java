@@ -32,6 +32,8 @@ public class GunData {
 		PLAYER_SPEED("PlayerSpeed",1F ,"float" ,0),
 		/** 弾速 1秒の移動距離(m)=弾速 : float型 **/
 		BULLET_SPEED("BulletSpeed",1F , "float" ,0),
+		/** リロード ; リロードにtickかかる : int型 **/
+		RELOAD_TIME("Reload",20 , "int" ,0),
 		/** レート ; レートtick間隔で発射する : int型 **/
 		RATE("Rate",1 , "int" ,0),
 		/** 装弾数 : int型 **/
@@ -93,7 +95,7 @@ public class GunData {
 		AIRCRAFT_DAMAGE_DIAMETER("aircraftDamageDiameter",1F ,"float" ,5 ,0F),
 
 		/** 使用する弾の名前 複数設定可能 : String配列型 **/
-		TYPES_BULLETS("BulletNames", new String[] {"test1","test2","TEST3"},"String[]"),
+		TYPES_BULLETS("BulletNames", new String[] {},"String[]"),
 		/** 使用できるアタッチメントのType 複数設定可能 : String配列型 **/
 		TYPES_ATTACHMENTS("AttachmentNames", new String[] {},"String[]"),;
 

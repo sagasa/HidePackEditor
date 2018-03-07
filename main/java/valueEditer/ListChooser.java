@@ -1,6 +1,9 @@
 package valueEditer;
 
 import java.awt.Insets;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -19,9 +22,8 @@ import types.GunData;
 import types.BulletData.BulletDataList;
 import types.GunData.GunDataList;
 
-public class ListChooser extends JPanel implements ComponentListener, MouseListener{
+public class ListChooser extends JPanel implements ComponentListener, MouseListener, ActionListener{
 	private static final long serialVersionUID = 7470418576334013852L;
-//TODO めっちゃやりかけ
 	DefaultListModel<ListComponent> listModel;
 	JList<ListComponent> model;
 	JScrollPane listSP;
@@ -31,6 +33,8 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 	//モード定数
 	/**銃の使用マガジン選択*/
 	static final int GUN_MAGAZINE_LIST = 1;
+	/**銃の使用マガジン選択*/
+	static final int GUN_ATTACHHMENT_LIST = 2;
 
 	//使用データ
 	/**モード格納*/
@@ -59,6 +63,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 	    this.add(combo);
 	    //追加ボタン
 	    botton = new JButton("add");
+	    botton.addActionListener(this);
 	    botton.setMargin(new Insets(0, 0, 0, 0));
 	    this.add(botton);
 	    write();
@@ -70,14 +75,30 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 		case GUN_MAGAZINE_LIST:
 			//銃のデータから吸い出して適応
 			combo.removeAllItems();
-			System.out.println(GunDataList.TYPES_BULLETS.getData(gunData));
+			//System.out.println(GunDataList.TYPES_BULLETS.getData(gunData));
 			for(BulletData data:MainWindow.bulletMap.values()){
 				combo.addItem((String) BulletDataList.NAME.getData(data));
 			}
 			listModel.clear();
 			for(String str: (String[])GunDataList.TYPES_BULLETS.getData(gunData)){
 				combo.removeItem(str);
-		    	listModel.addElement(new ListComponent(mode, gunData, str));
+				System.out.println(str);
+		    	listModel.addElement(new ListComponent(str));
+		    }
+			break;
+		case GUN_ATTACHHMENT_LIST:
+			//銃のデータから吸い出して適応
+			combo.removeAllItems();
+			//System.out.println(GunDataList.TYPES_ATTACHMENTS.getData(gunData));
+			for(BulletData data:MainWindow.bulletMap.values()){
+				combo.addItem((String) BulletDataList.NAME.getData(data));
+			}
+			listModel.clear();
+			//TODO アタッチメント追加したら追記
+			for(String str: (String[])GunDataList.TYPES_ATTACHMENTS.getData(gunData)){
+				combo.removeItem(str);
+				System.out.println(str);
+		    	listModel.addElement(new ListComponent(str));
 		    }
 			break;
 		}
@@ -87,9 +108,13 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 	
 	/**削除*/
 	void delete(int index) {
-		
-		listModel.getElementAt(index).gundata;
-    }
+		switch (mode) {
+		case GUN_MAGAZINE_LIST:
+			GunDataList.TYPES_BULLETS.setData(gunData, helper.ArrayEditor.RemoveFromArray((String[]) GunDataList.TYPES_BULLETS.getData(gunData), listModel.getElementAt(index).name));
+			break;
+		}
+		write();
+	}
 
 	@Override
 	public void componentHidden(ComponentEvent arg0) {}
@@ -120,13 +145,23 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 	@Override
 	public void mousePressed(MouseEvent e) {
 		//削除ボタンの位置検出
-		if(e.getX()>70){
+		int index = model.locationToIndex(e.getPoint());
+		//オフセットを除去して送る
+		if(listModel.getElementAt(model.locationToIndex(e.getPoint())).isInBotton(new Point(e.getX()-model.indexToLocation(index).x,e.getY()-model.indexToLocation(index).y))){
 			delete(model.locationToIndex(e.getPoint()));
 		}
-		System.out.println(model.locationToIndex(e.getPoint())+" "+e.getX());
 	}
-
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		//ついか
+		if(combo.getSelectedIndex()!=-1){
+			GunDataList.TYPES_BULLETS.setData(gunData, helper.ArrayEditor.AddToArray((String[]) GunDataList.TYPES_BULLETS.getData(gunData), combo.getSelectedItem().toString()));
+			write();
+		}
+		
+	}
 }

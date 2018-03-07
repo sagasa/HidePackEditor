@@ -35,9 +35,7 @@ public class Main {
 		//lang
 		Lang.readLang("./lang");
 		Lang.setLang("jp");
-
-
-
+	
 		main = new MainWindow();
 		main.openWindow();
 	}

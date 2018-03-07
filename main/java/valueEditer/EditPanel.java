@@ -1,9 +1,7 @@
 package valueEditer;
 
-import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import hideEditer.IconPrint;
@@ -40,8 +37,10 @@ public class EditPanel extends JPanel implements ActionListener {
 	static final int GUN_RECOIL_PANEL_1 = 5;
 	/** 銃の使用する弾設定用定数 */
 	static final int GUN_BULLET_PANEL = 6;
+	/** 銃の使用するアタッチメント設定用定数 */
+	static final int GUN_ATTACHMENTS_PANEL = 7;
 	/** 削除+コピペ */
-	static final int DELETE_PANEL = 7;
+	static final int DELETE_PANEL = 8;
 
 	/** エディターのモード */
 	int PanelMode;
@@ -78,7 +77,7 @@ public class EditPanel extends JPanel implements ActionListener {
 			break;
 		case GUN_RECOIL_PANEL_0:
 			this.setBorder(border);
-			this.setBounds(5, 240, 250, 0);
+			this.setBounds(5, 264, 250, 0);
 			this.setLayout(null);
 			gunDataPanel(1);
 			CheckBoxPanel check = new CheckBoxPanel("UseSneakRecoil", CheckBoxPanel.USE_SNEAK_RECOIL, gunData, this);
@@ -100,11 +99,25 @@ public class EditPanel extends JPanel implements ActionListener {
 			this.add(check3);
 			gunDataPanel(4, 7, gunData.UseADSSneakRecoil);
 			break;
+		case GUN_ATTACHMENTS_PANEL:
+			gunAttachmentPanel();
+			break;
 		case GUN_BULLET_PANEL:
 			gunMagazinePanel();
 		break;
 		}
 		repaint();
+	}
+
+	//アタッチメント選択パネル
+	void gunAttachmentPanel() {
+		this.setBorder(border);
+		this.setBounds(390, 125, 120, 110);
+		this.setLayout(null);
+
+		ListChooser attachmentsChooser = new ListChooser(ListChooser.GUN_ATTACHHMENT_LIST,gunData);
+		attachmentsChooser.setBounds(5, 5, this.getWidth()-10, this.getHeight()-10);
+		this.add(attachmentsChooser);
 	}
 
 	//弾選択パネル
