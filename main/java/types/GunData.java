@@ -3,6 +3,7 @@ package types;
 import java.util.HashMap;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -212,7 +213,7 @@ public class GunData {
 	}
 	/**JsonObjectを作成*/
 	public String MakeJsonData(){
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		JsonObject JsonData = new JsonObject();
 		for (GunDataList d:GunDataList.values()){
 			switch (d.types){

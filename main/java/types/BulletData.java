@@ -3,12 +3,12 @@ package types;
 import java.util.HashMap;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import helper.JsonWrapper;
-import types.GunData.GunDataList;
 
 public class BulletData {
 
@@ -17,9 +17,19 @@ public class BulletData {
 
 	/**弾のデータ 初期値も同時に代入*/
 	public enum BulletDataList {
-		/** 登録名 : String型**/
-		NAME("ShortName","name","String"),
+		/** 登録名 : String型 全部小文字 **/
+		SHORT_NAME("ShortName","name","String"),
+		/** 表示名 : String型 **/
+		DISPLAY_NAME("DisplayName","name","String"),
+		/** アイテムのアイコン : String型 **/
+		ICON("Icon","sanple","String"),
+		
+		/** 装弾数 : int型 **/
+		MAGAZINE_SIZE("MagazineSize",600,"int"),
 
+		/** スタックサイズ : int型 **/
+		STACK_SIZE("StackSize",600,"int"),
+		
 		/**弾の寿命 (tick) : int型**/
 		BULLET_LIFE("bulletLife",600,"int"),
 
@@ -204,7 +214,7 @@ public class BulletData {
 	}
 	/**JsonObjectを作成*/
 	public String MakeJsonData(){
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		JsonObject JsonData = new JsonObject();
 		for (BulletDataList d:BulletDataList.values()){
 			switch (d.types){

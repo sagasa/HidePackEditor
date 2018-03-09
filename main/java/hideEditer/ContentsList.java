@@ -91,8 +91,8 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 		}
 		bulletModel.clear();
 		for (BulletData data:MainWindow.bulletMap.values()){
-			System.out.println(BulletDataList.NAME.getData(data));
-			bulletModel.addElement((String) BulletDataList.NAME.getData(data));
+			System.out.println(BulletDataList.DISPLAY_NAME.getData(data));
+			bulletModel.addElement((String) BulletDataList.DISPLAY_NAME.getData(data));
 		}
 
 	}
@@ -119,8 +119,8 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 			gunNum ++;
 		}
 		BulletData newGun = new BulletData();
-		BulletDataList.NAME.setData(newGun,"new bullet "+bulletNum);
-		MainWindow.bulletMap.put((String) BulletDataList.NAME.getData(newGun), newGun);
+		BulletDataList.DISPLAY_NAME.setData(newGun,"new bullet "+bulletNum);
+		MainWindow.bulletMap.put((String) BulletDataList.DISPLAY_NAME.getData(newGun), newGun);
 		//System.out.println("ok");
 		write();
 	}
