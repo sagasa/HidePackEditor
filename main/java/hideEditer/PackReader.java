@@ -12,6 +12,8 @@ import java.util.zip.ZipInputStream;
 
 import com.google.gson.Gson;
 import helper.ArrayEditor;
+import types.BulletData;
+import types.BulletData.BulletDataList;
 import types.ContentsPack;
 import types.GunData;
 import types.GunData.GunDataList;
@@ -101,16 +103,14 @@ public class PackReader {
 		// Gun認識
 		if (Pattern.compile("^(.*)guns/(.*).json").matcher(name).matches()) {
 			GunData newGun = new GunData(new String(data, Charset.forName("UTF-8")));
-			System.out.println("gun");
 			MainWindow.gunMap.put(GunDataList.DISPLAY_NAME.getData(newGun).toString(), newGun);
+			System.out.println("gun");
 		}
 		// bullet認識
 		else if (Pattern.compile("^(.*)bullets/(.*).json").matcher(name).matches()) {
+			BulletData newBullet = new BulletData(new String(data, Charset.forName("UTF-8")));
+			MainWindow.bulletMap.put(BulletDataList.DISPLAY_NAME.getData(newBullet).toString(), newBullet);
 			System.out.println("bullet");
-		}
-		// magazines認識
-		else if (Pattern.compile("^(.*)magazines/(.*).json").matcher(name).matches()) {
-			System.out.println("magazine");
 		}
 		// packInfo認識
 		else if (Pattern.compile("^(.*)pack.json").matcher(name).matches()) {
