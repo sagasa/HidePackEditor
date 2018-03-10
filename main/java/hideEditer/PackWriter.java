@@ -82,10 +82,4 @@ public class PackWriter {
 		zos.close();
 
 	}
-
-	/**
-	 * zipを書き込んで、zipを展開して内容を確認する。<br/>
-	 * ByteArrayOuputStreamで実施しているため、close処理が適当、、、
-	 */
-
 }

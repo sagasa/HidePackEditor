@@ -13,18 +13,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import hideEditer.ContentsList;
+import hideEditer.MainWindow;
 import types.GunData;
 import types.GunData.GunDataList;
 
 public class StringSetPanel extends JPanel implements KeyListener, FocusListener, ComponentListener {
 	private static final long serialVersionUID = 3496770761921234269L;
 
-	/** データリスト */
-	Object datatype;
+	public static final int GUN_DISPLAY_NAME = 1;
+	public static final int GUN_SHORT_NAME = 2;
+	
 	/** データ */
 	Object data;
 	/** データ型 */
-	String type;
+	int type;
 	/** set可能かどうか */
 	boolean canEdit;
 
@@ -33,16 +36,15 @@ public class StringSetPanel extends JPanel implements KeyListener, FocusListener
 	JLabel setting;
 
 	/** コンストラクタ 編集可能 */
-	public StringSetPanel(GunDataList d, GunData gun) {
-		this(d,gun,true);
+	public StringSetPanel(int type,  GunData gun) {
+		this(type,gun,true);
 	}
 
 	/** コンストラクタ 編集 可/不可 */
-	public StringSetPanel(GunDataList d, GunData gun, boolean canedit) {
-		datatype = d;
-		data = gun;
-		type = "gun";
-		canEdit = canedit;
+	public StringSetPanel(int type, GunData gun, boolean canedit) {
+		this.data = gun;
+		this.type = type;
+		this.canEdit = canedit;
 		this.addComponentListener(this);
 		this.setOpaque(false);
 		init();
@@ -76,8 +78,11 @@ public class StringSetPanel extends JPanel implements KeyListener, FocusListener
 	String getname(){
 		String value = null;
 		switch (type) {
-		case "gun":
-			value = ((GunDataList) datatype).getName();
+		case GUN_DISPLAY_NAME:
+			value = GunDataList.DISPLAY_NAME.getName();
+			break;
+		case GUN_SHORT_NAME:
+			value = GunDataList.SHORT_NAME.getName();
 			break;
 		}
 
@@ -88,8 +93,11 @@ public class StringSetPanel extends JPanel implements KeyListener, FocusListener
 	String get(){
 		String value = null;
 		switch (type) {
-		case "gun":
-			value = ((GunDataList) datatype).getData((GunData) data).toString();
+		case GUN_DISPLAY_NAME:
+			value = GunDataList.DISPLAY_NAME.getData((GunData) data).toString();
+			break;
+		case GUN_SHORT_NAME:
+			value = GunDataList.SHORT_NAME.getData((GunData) data).toString();
 			break;
 		}
 
@@ -99,9 +107,17 @@ public class StringSetPanel extends JPanel implements KeyListener, FocusListener
 	/** 変数に書き込み */
 	void set(String value) {
 		switch (type) {
-		case "gun":
-			((GunDataList) datatype).setData((GunData) data, value);
+		case GUN_DISPLAY_NAME:
+			//エントリを置き換え
+			GunData cash = MainWindow.gunMap.get(this.get());
+			MainWindow.gunMap.remove(this.get());
+			GunDataList.DISPLAY_NAME.setData((GunData) data, value);
+			MainWindow.gunMap.put(value, cash);
+			ContentsList.write();
 			break;
+		case GUN_SHORT_NAME:
+			GunDataList.SHORT_NAME.setData((GunData) data, value);
+			break;	
 		}
 	}
 
@@ -109,7 +125,6 @@ public class StringSetPanel extends JPanel implements KeyListener, FocusListener
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
 		case 10:
-			set(txtField.getText());
 			this.getParent().requestFocusInWindow();
 			break;
 		}

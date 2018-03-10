@@ -247,12 +247,12 @@ public class EditPanel extends JPanel implements ActionListener {
 
 		int yPointer = 3;
 
-		StringSetPanel name1 = new StringSetPanel(GunDataList.DISPLAY_NAME, gunData);
+		StringSetPanel name1 = new StringSetPanel(StringSetPanel.GUN_DISPLAY_NAME, gunData);
 		name1.setBounds(0, yPointer, 250, 20);
 		this.add(name1);
 		yPointer += 25;
 
-		StringSetPanel name2 = new StringSetPanel(GunDataList.SHORT_NAME, gunData);
+		StringSetPanel name2 = new StringSetPanel(StringSetPanel.GUN_SHORT_NAME, gunData);
 		name2.setBounds(0, yPointer, 250, 20);
 		this.add(name2);
 	}
