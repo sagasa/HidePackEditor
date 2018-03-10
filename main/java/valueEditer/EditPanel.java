@@ -16,6 +16,7 @@ import javax.swing.border.LineBorder;
 import hideEditer.IconPrint;
 import hideEditer.MainWindow;
 import hideEditer.ResourcesList;
+import types.BulletData;
 import types.GunData;
 import types.GunData.GunDataList;
 import types.ImageData;
@@ -41,11 +42,16 @@ public class EditPanel extends JPanel implements ActionListener {
 	static final int GUN_ATTACHMENTS_PANEL = 7;
 	/** 削除+コピペ */
 	static final int DELETE_PANEL = 8;
-
+	
+	/** 名前設定用定数 */
+	static final int BULLET_NAME_PANEL = 11;
+	
 	/** エディターのモード */
 	int PanelMode;
 
+	//編集先のインスタンス
 	GunData gunData;
+	BulletData bulletdata;
 
 	LineBorder border = new LineBorder(Color.black, 1, false);
 
@@ -53,6 +59,13 @@ public class EditPanel extends JPanel implements ActionListener {
 	public EditPanel(int mode, GunData data) {
 		PanelMode = mode;
 		gunData = data;
+		write();
+	}
+	
+	/** モードを引数にインスタンス */
+	public EditPanel(int mode, BulletData data) {
+		PanelMode = mode;
+		bulletdata = data;
 		write();
 	}
 
@@ -105,10 +118,18 @@ public class EditPanel extends JPanel implements ActionListener {
 		case GUN_BULLET_PANEL:
 			gunMagazinePanel();
 		break;
+		case BULLET_NAME_PANEL:
 		}
 		repaint();
 	}
+	//===========================================
+	//                弾用パネル
+	//===========================================
+	
 
+	//===========================================
+	//                銃用パネル
+	//===========================================
 	//アタッチメント選択パネル
 	void gunAttachmentPanel() {
 		this.setBorder(border);
