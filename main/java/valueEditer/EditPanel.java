@@ -32,6 +32,7 @@ public class EditPanel extends JPanel implements ActionListener {
 	static final int GUN_INFO_PANEL = 2;
 	/** アイコン設定用定数 */
 	static final int GUN_ICON_PANEL = 3;
+	static final int GUN_RECOIL_PANEL = 9;
 	/** 銃のリコイル設定用定数 */
 	static final int GUN_RECOIL_PANEL_0 = 4;
 	/** 銃のリコイル設定用定数 */
@@ -87,6 +88,14 @@ public class EditPanel extends JPanel implements ActionListener {
 			this.setBounds(5, 60, 250, 0);
 			this.setLayout(null);
 			gunDataPanel(0);
+			break;
+		case GUN_RECOIL_PANEL:
+			this.setOpaque(false);
+			this.setBounds(5, 264, 505, 200);
+			this.setLayout(null);
+			RecoilEditer editer = new RecoilEditer();
+			editer.setBounds(0,0,this.getWidth(),this.getHeight());
+			this.add(editer);
 			break;
 		case GUN_RECOIL_PANEL_0:
 			this.setBorder(border);

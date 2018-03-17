@@ -60,11 +60,14 @@ public class EditWindow{
 		EditPanel test4 = new EditPanel(EditPanel.GUN_INFO_PANEL,data);
 		OpenWindow.add(test4);
 
-		EditPanel test5 = new EditPanel(EditPanel.GUN_RECOIL_PANEL_0,data);
+		EditPanel test5 = new EditPanel(EditPanel.GUN_RECOIL_PANEL,data);
 		OpenWindow.add(test5);
+		
+		//EditPanel test5 = new EditPanel(EditPanel.GUN_RECOIL_PANEL_0,data);
+		//OpenWindow.add(test5);
 
-		EditPanel test6 = new EditPanel(EditPanel.GUN_RECOIL_PANEL_1,data);
-		OpenWindow.add(test6);
+		//EditPanel test6 = new EditPanel(EditPanel.GUN_RECOIL_PANEL_1,data);
+		//OpenWindow.add(test6);
 		
 		EditPanel test7 = new EditPanel(EditPanel.GUN_BULLET_PANEL,data);
 		OpenWindow.add(test7);
