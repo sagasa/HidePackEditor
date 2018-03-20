@@ -22,7 +22,7 @@ import javax.swing.border.LineBorder;
 import types.GunData;
 import types.GunData.GunDataList;
 
-/**設定ボックス IntとFloatのみ対応*/
+/**設定ボックス IntとFloatのみ対応 changeListener付*/
 public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyListener, FocusListener, ComponentListener{
 	private static final long serialVersionUID = 3496770761921234269L;
 
@@ -34,6 +34,9 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 	String type;
 	/**set可能かどうか*/
 	boolean canEdit;
+
+	/**通知先の保存*/
+	ChangeListener target;
 
 
 	//内容
@@ -61,6 +64,12 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 	public void setEnabled(boolean value){
 		canEdit = value;
 	}
+
+	/**変更通知リスナーを追加*/
+	public void addChangeListener(ChangeListener l){
+		target = l;
+	}
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -115,6 +124,7 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 			//System.out.println(num2+" "+(e.getWheelRotation()*-0.1));
 		break;
 		}
+		target.valueChange();
 		repaint();
 	}
 
@@ -134,7 +144,7 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 			break;
 			}
 		}catch(NumberFormatException e2){}
-
+		target.valueChange();
 		repaint();
 	}
 	@Override

@@ -43,10 +43,10 @@ public class EditPanel extends JPanel implements ActionListener {
 	static final int GUN_ATTACHMENTS_PANEL = 7;
 	/** 削除+コピペ */
 	static final int DELETE_PANEL = 8;
-	
+
 	/** 名前設定用定数 */
 	static final int BULLET_NAME_PANEL = 11;
-	
+
 	/** エディターのモード */
 	int PanelMode;
 
@@ -62,7 +62,7 @@ public class EditPanel extends JPanel implements ActionListener {
 		gunData = data;
 		write();
 	}
-	
+
 	/** モードを引数にインスタンス */
 	public EditPanel(int mode, BulletData data) {
 		PanelMode = mode;
@@ -93,7 +93,7 @@ public class EditPanel extends JPanel implements ActionListener {
 			this.setOpaque(false);
 			this.setBounds(5, 264, 505, 200);
 			this.setLayout(null);
-			RecoilEditer editer = new RecoilEditer();
+			RecoilEditer editer = new RecoilEditer(gunData);
 			editer.setBounds(0,0,this.getWidth(),this.getHeight());
 			this.add(editer);
 			break;
@@ -134,7 +134,7 @@ public class EditPanel extends JPanel implements ActionListener {
 	//===========================================
 	//                弾用パネル
 	//===========================================
-	
+
 
 	//===========================================
 	//                銃用パネル
@@ -287,33 +287,6 @@ public class EditPanel extends JPanel implements ActionListener {
 		this.add(name2);
 	}
 
-	// 有効化に数値を代入
-	public void gunDataset(int cate) {
-		switch (cate) {
-		case CheckBoxPanel.USE_SNEAK_RECOIL:
-			GunDataList.SNEAK_PITCH_RECOIL_BASE.setData(gunData, GunDataList.PITCH_RECOIL_BASE.getData(gunData));
-			GunDataList.SNEAK_PITCH_RECOIL_SPREAD.setData(gunData, GunDataList.PITCH_RECOIL_SPREAD.getData(gunData));
-			GunDataList.SNEAK_YAW_RECOIL_BASE.setData(gunData, GunDataList.YAW_RECOIL_BASE.getData(gunData));
-			GunDataList.SNEAK_YAW_RECOIL_SPREAD.setData(gunData, GunDataList.YAW_RECOIL_SPREAD.getData(gunData));
-			break;
-		case CheckBoxPanel.USE_ADS_RECOIL:
-			GunDataList.ADS_PITCH_RECOIL_BASE.setData(gunData, GunDataList.PITCH_RECOIL_BASE.getData(gunData));
-			GunDataList.ADS_PITCH_RECOIL_SPREAD.setData(gunData, GunDataList.PITCH_RECOIL_SPREAD.getData(gunData));
-			GunDataList.ADS_YAW_RECOIL_BASE.setData(gunData, GunDataList.YAW_RECOIL_BASE.getData(gunData));
-			GunDataList.ADS_YAW_RECOIL_SPREAD.setData(gunData, GunDataList.YAW_RECOIL_SPREAD.getData(gunData));
-			break;
-		case CheckBoxPanel.USE_ADSSNEAK_RECOIL:
-			GunDataList.ADS_SNEAK_PITCH_RECOIL_BASE.setData(gunData,
-					GunDataList.ADS_PITCH_RECOIL_BASE.getData(gunData));
-			GunDataList.ADS_SNEAK_PITCH_RECOIL_SPREAD.setData(gunData,
-					GunDataList.ADS_PITCH_RECOIL_SPREAD.getData(gunData));
-			GunDataList.ADS_SNEAK_YAW_RECOIL_BASE.setData(gunData, GunDataList.ADS_YAW_RECOIL_BASE.getData(gunData));
-			GunDataList.ADS_SNEAK_YAW_RECOIL_SPREAD.setData(gunData,
-					GunDataList.ADS_YAW_RECOIL_SPREAD.getData(gunData));
-			break;
-		}
-
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

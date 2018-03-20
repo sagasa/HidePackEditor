@@ -47,53 +47,91 @@ public class GunData {
 		ADS_ACCURACY("ADSAccuracy",0F ,"float" ,0 ,0F),
 
 		/** 反動の速さ : 反動を適応する時間(tick) : int型 **/
-		RECOIL_TIME("RecoilTime",1 ,"int" ,1 ,1F),
+		RECOIL_TIME("RecoilTime",1 ,"int"  ,1F),
 		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
-		RECOIL_RETURN("RecoilReturn",0F ,"float" ,1 ,0F),
+		RECOIL_RETURN("RecoilReturn",0F ,"float"  ,0F),
+
 		/** Yawの反動 : 反動の中央値(角度°) : float型 **/
-		YAW_RECOIL_BASE("YawRecoilBase",0F ,"float" ,1),
+		MIN_YAW_RECOIL_BASE("MIN_YawRecoilBase",0F ,"float" ,1),
 		/** Yawの反動 : 反動の拡散値(角度°) : float型 **/
-		YAW_RECOIL_SPREAD("YawRecoilSpread",0F ,"float" ,1 ,0F),
+		MIN_YAW_RECOIL_SPREAD("MIN_YawRecoilSpread",0F ,"float" ,1 ,0F),
 		/** Pitchの反動 : 反動の中央値(角度°) : float型 **/
-		PITCH_RECOIL_BASE("PitchRecoilBase",0F ,"float" ,1),
+		MIN_PITCH_RECOIL_BASE("MIN_PitchRecoilBase",0F ,"float" ,1),
 		/** Pitchの反動 : 反動の拡散値(角度°) : float型 **/
-		PITCH_RECOIL_SPREAD("PitchRecoilSpread",0F ,"float" ,1 ,0F),
+		MIN_PITCH_RECOIL_SPREAD("MIN_PitchRecoilSpread",0F ,"float" ,1 ,0F),
 
 		/** スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
-		SNEAK_YAW_RECOIL_BASE("SneakYawRecoilBase",0F ,"float" ,2),
+		MIN_SNEAK_YAW_RECOIL_BASE("MIN_SneakYawRecoilBase",0F ,"float" ,2),
 		/** スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		SNEAK_YAW_RECOIL_SPREAD("SneakYawRecoilSpread",0F ,"float" ,2 ,0F),
+		MIN_SNEAK_YAW_RECOIL_SPREAD("MIN_SneakYawRecoilSpread",0F ,"float" ,2 ,0F),
 		/** スニーク時のPitchの反動 : 反動の中央値(角度°) : float型 **/
-		SNEAK_PITCH_RECOIL_BASE("SneakPitchRecoilBase",0F ,"float" ,2),
+		MIN_SNEAK_PITCH_RECOIL_BASE("MIN_SneakPitchRecoilBase",0F ,"float" ,2),
 		/** スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		SNEAK_PITCH_RECOIL_SPREAD("SneakPitchRecoilSpread",0F ,"float" ,2 ,0F),
+		MIN_SNEAK_PITCH_RECOIL_SPREAD("MIN_SneakPitchRecoilSpread",0F ,"float" ,2 ,0F),
 
 		/** ADS時のYawの反動 : 反動の中央値(角度°) : float型 **/
-		ADS_YAW_RECOIL_BASE("ADSYawRecoilBase",0F ,"float" ,3),
+		MIN_ADS_YAW_RECOIL_BASE("MIN_ADSYawRecoilBase",0F ,"float" ,3),
 		/** ADS時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		ADS_YAW_RECOIL_SPREAD("ADSYawRecoilSpread",0F ,"float" ,3 ,0F),
+		MIN_ADS_YAW_RECOIL_SPREAD("MIN_ADSYawRecoilSpread",0F ,"float" ,3 ,0F),
 		/** ADS時のPitchの反動 : 反動の中央値(角度°) : float型 **/
-		ADS_PITCH_RECOIL_BASE("ADSPitchRecoilBase",0F ,"float" ,3),
+		MIN_ADS_PITCH_RECOIL_BASE("MIN_ADSPitchRecoilBase",0F ,"float" ,3),
 		/** ADS時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		ADS_PITCH_RECOIL_SPREAD("ADSPitchRecoilSpread",0F ,"float" ,3 ,0F),
+		MIN_ADS_PITCH_RECOIL_SPREAD("MIN_ADSPitchRecoilSpread",0F ,"float" ,3 ,0F),
 
 		/** ADS+スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
-		ADS_SNEAK_YAW_RECOIL_BASE("ADSSneakYawRecoilBase",0F ,"float" ,4),
+		MIN_ADS_SNEAK_YAW_RECOIL_BASE("MIN_ADSSneakYawRecoilBase",0F ,"float" ,4),
 		/** ADS+スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		ADS_SNEAK_YAW_RECOIL_SPREAD("ADSSneakYawRecoilSpread",0F ,"float" ,4 ,0F),
+		MIN_ADS_SNEAK_YAW_RECOIL_SPREAD("MIN_ADSSneakYawRecoilSpread",0F ,"float" ,4 ,0F),
 		/** ADS+スニーク時のPitchの反動 : 反動の中央値(角度°) : float型 **/
-		ADS_SNEAK_PITCH_RECOIL_BASE("ADSSneakPitchRecoilBase",0F ,"float" ,4),
+		MIN_ADS_SNEAK_PITCH_RECOIL_BASE("MIN_ADSSneakPitchRecoilBase",0F ,"float" ,4),
 		/** ADS+スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		ADS_SNEAK_PITCH_RECOIL_SPREAD("ADSSneakPitchRecoilSpread",0F ,"float" ,4 ,0F),
+		MIN_ADS_SNEAK_PITCH_RECOIL_SPREAD("MIN_ADSSneakPitchRecoilSpread",0F ,"float" ,4 ,0F),
+
+
+		/** Yawの反動 : 反動の中央値(角度°) : float型 **/
+		MAX_YAW_RECOIL_BASE("MAX_YawRecoilBase",0F ,"float" ,5),
+		/** Yawの反動 : 反動の拡散値(角度°) : float型 **/
+		MAX_YAW_RECOIL_SPREAD("MAX_YawRecoilSpread",0F ,"float" ,5 ,0F),
+		/** Pitchの反動 : 反動の中央値(角度°) : float型 **/
+		MAX_PITCH_RECOIL_BASE("MAX_PitchRecoilBase",0F ,"float" ,5),
+		/** Pitchの反動 : 反動の拡散値(角度°) : float型 **/
+		MAX_PITCH_RECOIL_SPREAD("MAX_PitchRecoilSpread",0F ,"float" ,5 ,0F),
+
+		/** スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
+		MAX_SNEAK_YAW_RECOIL_BASE("MAX_SneakYawRecoilBase",0F ,"float" ,6),
+		/** スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
+		MAX_SNEAK_YAW_RECOIL_SPREAD("MAX_SneakYawRecoilSpread",0F ,"float" ,6 ,0F),
+		/** スニーク時のPitchの反動 : 反動の中央値(角度°) : float型 **/
+		MAX_SNEAK_PITCH_RECOIL_BASE("MAX_SneakPitchRecoilBase",0F ,"float" ,6),
+		/** スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
+		MAX_SNEAK_PITCH_RECOIL_SPREAD("MAX_SneakPitchRecoilSpread",0F ,"float" ,6 ,0F),
+
+		/** ADS時のYawの反動 : 反動の中央値(角度°) : float型 **/
+		MAX_ADS_YAW_RECOIL_BASE("MAX_ADSYawRecoilBase",0F ,"float" ,7),
+		/** ADS時のYawの反動 : 反動の拡散値(角度°) : float型 **/
+		MAX_ADS_YAW_RECOIL_SPREAD("MAX_ADSYawRecoilSpread",0F ,"float" ,7 ,0F),
+		/** ADS時のPitchの反動 : 反動の中央値(角度°) : float型 **/
+		MAX_ADS_PITCH_RECOIL_BASE("MAX_ADSPitchRecoilBase",0F ,"float" ,7),
+		/** ADS時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
+		MAX_ADS_PITCH_RECOIL_SPREAD("MAX_ADSPitchRecoilSpread",0F ,"float" ,7 ,0F),
+
+		/** ADS+スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
+		MAX_ADS_SNEAK_YAW_RECOIL_BASE("MAX_ADSSneakYawRecoilBase",0F ,"float" ,8),
+		/** ADS+スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
+		MAX_ADS_SNEAK_YAW_RECOIL_SPREAD("MAX_ADSSneakYawRecoilSpread",0F ,"float" ,8 ,0F),
+		/** ADS+スニーク時のPitchの反動 : 反動の中央値(角度°) : float型 **/
+		MAX_ADS_SNEAK_PITCH_RECOIL_BASE("MAX_ADSSneakPitchRecoilBase",0F ,"float" ,8),
+		/** ADS+スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
+		MAX_ADS_SNEAK_PITCH_RECOIL_SPREAD("MAX_ADSSneakPitchRecoilSpread",0F ,"float" ,8 ,0F),
 
 		/** 対人ダメージ倍率 : float型 **/
-		PLAYER_DAMAGE_DIAMETER("playerDamageDiameter",1F ,"float" ,5 ,0F),
+		PLAYER_DAMAGE_DIAMETER("playerDamageDiameter",1F ,"float" ,9 ,0F),
 		/** 対MOBダメージ倍率 : float型 **/
-		LIVING_DAMAGE_DIAMETER("livingDamageDiameter",1F ,"float" ,5 ,0F),
+		LIVING_DAMAGE_DIAMETER("livingDamageDiameter",1F ,"float" ,9 ,0F),
 		/** 対地上兵器ダメージ倍率 : float型 **/
-		TANK_DAMAGE_DIAMETER("tankDamageDiameter",1F ,"float" ,5 ,0F),
+		TANK_DAMAGE_DIAMETER("tankDamageDiameter",1F ,"float" ,9 ,0F),
 		/** 対航空機ダメージ倍率 : float型 **/
-		AIRCRAFT_DAMAGE_DIAMETER("aircraftDamageDiameter",1F ,"float" ,5 ,0F),
+		AIRCRAFT_DAMAGE_DIAMETER("aircraftDamageDiameter",1F ,"float" ,9 ,0F),
 
 		/** 使用する弾の名前 複数設定可能 : String配列型 **/
 		TYPES_BULLETS("BulletNames", new String[] {},"String[]"),

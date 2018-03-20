@@ -14,7 +14,7 @@ public class CheckBoxPanel extends JCheckBox implements ActionListener{
 	public static final int USE_SNEAK_RECOIL = 0;
 	public static final int USE_ADS_RECOIL = 1;
 	public static final int USE_ADSSNEAK_RECOIL = 2;
-	
+
 	/**表示名*/
 	String name;
 	/**データ名*/
@@ -23,7 +23,7 @@ public class CheckBoxPanel extends JCheckBox implements ActionListener{
 	Object data;
 	/**更新の対象*/
 	EditPanel panel;
-	
+
 	/**表示名,カテゴリID,データ,更新するJPanel*/
 	public CheckBoxPanel(String name,int cate, Object data,EditPanel panel){
 		this.setText(name);
@@ -65,10 +65,10 @@ public class CheckBoxPanel extends JCheckBox implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (this.getSelectedObjects()==null){
 			setData(false);
-			panel.gunDataset(dataname);
+			//panel.gunDataset(dataname);
 		}else{
 			setData(true);
 		}
-		panel.write();		
+		panel.write();
 	}
 }

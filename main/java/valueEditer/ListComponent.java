@@ -10,17 +10,14 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.LineBorder;
 
-import types.GunData;
-
 /** ListChooser用削除パネル付きのパネル isInBottonでデリーとパネルの中か取得*/
 public class ListComponent extends JPanel implements ListCellRenderer<ListComponent> {
 	private static final long serialVersionUID = 3283536785946717774L;
-	
+
 	// データ格納
 	String name;
 	int mode;
-	GunData gundata;
-	
+
 	JLabel label;
 
 	/**
@@ -57,7 +54,7 @@ public class ListComponent extends JPanel implements ListCellRenderer<ListCompon
 		System.out.println(point+" "+label.getBounds()+" "+ label.getBounds().contains(point));
 		return label.getBounds().contains(point);
 	}
-	
+
 
 	//レンダーメゾット
 	@Override

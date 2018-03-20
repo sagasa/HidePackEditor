@@ -102,10 +102,10 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 		    }
 			break;
 		}
-	
+
 	    this.repaint();
 	}
-	
+
 	/**削除*/
 	void delete(int index) {
 		switch (mode) {
@@ -144,11 +144,14 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		//削除ボタンの位置検出
-		int index = model.locationToIndex(e.getPoint());
-		//オフセットを除去して送る
-		if(listModel.getElementAt(model.locationToIndex(e.getPoint())).isInBotton(new Point(e.getX()-model.indexToLocation(index).x,e.getY()-model.indexToLocation(index).y))){
-			delete(model.locationToIndex(e.getPoint()));
+		//要素があれば
+		if(!listModel.isEmpty()){
+			//削除ボタンの位置検出
+			int index = model.locationToIndex(e.getPoint());
+			//オフセットを除去して送る
+			if(listModel.getElementAt(model.locationToIndex(e.getPoint())).isInBotton(new Point(e.getX()-model.indexToLocation(index).x,e.getY()-model.indexToLocation(index).y))){
+				delete(model.locationToIndex(e.getPoint()));
+			}
 		}
 	}
 
@@ -162,6 +165,6 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 			GunDataList.TYPES_BULLETS.setData(gunData, helper.ArrayEditor.AddToArray((String[]) GunDataList.TYPES_BULLETS.getData(gunData), combo.getSelectedItem().toString()));
 			write();
 		}
-		
+
 	}
 }
