@@ -5,10 +5,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
@@ -19,6 +21,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import types.GunData;
 import types.GunData.GunDataList;
@@ -204,5 +207,23 @@ public class ResourcesList extends JTabbedPane implements MouseListener , Action
 		//タブが変わったらエディットウィンドウをクリア
 		MainWindow.Editer.clearEditer();
 		OpenEditer();
+	}
+	//============================
+	//   	インポート
+	//============================
+	void inport(){
+		JFileChooser filechooser = new JFileChooser();
+		filechooser.setCurrentDirectory(new File("."));
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(
+		        "ResourcesFile", "ogg","png");
+		filechooser.setFileFilter(filter);
+		filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY );
+
+	    int selected = filechooser.showOpenDialog(this);
+	    //System.out.println(selected);
+	    //パックを読む
+	    if(selected == 0){
+	    	filechooser.getSelectedFile();
+	    }
 	}
 }

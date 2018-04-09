@@ -36,7 +36,7 @@ public class GunData {
 		/** リロード ; リロードにtickかかる : int型 **/
 		RELOAD_TIME("Reload",20 , "int" ,0),
 		/** レート ; レートtick間隔で発射する : int型 **/
-		RATE("Rate",1 , "int" ,0),
+		RATE("Rate",1 , "int" ,0,1F),
 		/** 装弾数 : int型 **/
 		MAGAZINE_NUMBER("MagazineNumber",1 , "int" ,0 ,1F),
 		/** 発射数 : int型 **/
@@ -45,11 +45,6 @@ public class GunData {
 		ACCURACY("Accuracy",0F ,"float" ,0 ,0F),
 		/** ADS精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
 		ADS_ACCURACY("ADSAccuracy",0F ,"float" ,0 ,0F),
-
-		/** 反動の速さ : 反動を適応する時間(tick) : int型 **/
-		RECOIL_TIME("RecoilTime",1 ,"int"  ,1F),
-		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
-		RECOIL_RETURN("RecoilReturn",0F ,"float"  ,0F),
 
 		/** Yawの反動 : 反動の中央値(角度°) : float型 **/
 		MIN_YAW_RECOIL_BASE("MIN_YawRecoilBase",0F ,"float" ,1),
@@ -60,6 +55,11 @@ public class GunData {
 		/** Pitchの反動 : 反動の拡散値(角度°) : float型 **/
 		MIN_PITCH_RECOIL_SPREAD("MIN_PitchRecoilSpread",0F ,"float" ,1 ,0F),
 
+		/** 反動の速さ : 反動を適応する時間(tick) : int型 **/
+		DEFAULT_RECOIL_TIME("DefaultRecoilTime",1 ,"int", 9 ,1F),
+		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
+		DEFAULT_RECOIL_RETURN("DefaultRecoilReturn",0F ,"float" ,9 ,0F),
+
 		/** スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
 		MIN_SNEAK_YAW_RECOIL_BASE("MIN_SneakYawRecoilBase",0F ,"float" ,2),
 		/** スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
@@ -68,6 +68,11 @@ public class GunData {
 		MIN_SNEAK_PITCH_RECOIL_BASE("MIN_SneakPitchRecoilBase",0F ,"float" ,2),
 		/** スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
 		MIN_SNEAK_PITCH_RECOIL_SPREAD("MIN_SneakPitchRecoilSpread",0F ,"float" ,2 ,0F),
+
+		/** 反動の速さ : 反動を適応する時間(tick) : int型 **/
+		SNEAK_RECOIL_TIME("SneakRecoilTime",1 ,"int", 10 ,1F),
+		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
+		SNEAK_RECOIL_RETURN("SneakRecoilReturn",0F ,"float" ,10 ,0F),
 
 		/** ADS時のYawの反動 : 反動の中央値(角度°) : float型 **/
 		MIN_ADS_YAW_RECOIL_BASE("MIN_ADSYawRecoilBase",0F ,"float" ,3),
@@ -78,6 +83,11 @@ public class GunData {
 		/** ADS時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
 		MIN_ADS_PITCH_RECOIL_SPREAD("MIN_ADSPitchRecoilSpread",0F ,"float" ,3 ,0F),
 
+		/** 反動の速さ : 反動を適応する時間(tick) : int型 **/
+		ADS_RECOIL_TIME("ADSRecoilTime",1 ,"int", 11 ,1F),
+		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
+		ADS_RECOIL_RETURN("ADSRecoilReturn",0F ,"float" ,11 ,0F),
+
 		/** ADS+スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
 		MIN_ADS_SNEAK_YAW_RECOIL_BASE("MIN_ADSSneakYawRecoilBase",0F ,"float" ,4),
 		/** ADS+スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
@@ -87,6 +97,10 @@ public class GunData {
 		/** ADS+スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
 		MIN_ADS_SNEAK_PITCH_RECOIL_SPREAD("MIN_ADSSneakPitchRecoilSpread",0F ,"float" ,4 ,0F),
 
+		/** 反動の速さ : 反動を適応する時間(tick) : int型 **/
+		ADS_SNEAK_RECOIL_TIME("ADSSneakRecoilTime",1 ,"int", 12 ,1F),
+		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
+		ADS_SNEAK_RECOIL_RETURN("ADSSneakRecoilReturn",0F ,"float" ,12 ,0F),
 
 		/** Yawの反動 : 反動の中央値(角度°) : float型 **/
 		MAX_YAW_RECOIL_BASE("MAX_YawRecoilBase",0F ,"float" ,5),
@@ -125,20 +139,38 @@ public class GunData {
 		MAX_ADS_SNEAK_PITCH_RECOIL_SPREAD("MAX_ADSSneakPitchRecoilSpread",0F ,"float" ,8 ,0F),
 
 		/** 対人ダメージ倍率 : float型 **/
-		PLAYER_DAMAGE_DIAMETER("playerDamageDiameter",1F ,"float" ,9 ,0F),
+		PLAYER_DAMAGE_DIAMETER("playerDamageDiameter",1F ,"float" ,20 ,0F),
 		/** 対MOBダメージ倍率 : float型 **/
-		LIVING_DAMAGE_DIAMETER("livingDamageDiameter",1F ,"float" ,9 ,0F),
+		LIVING_DAMAGE_DIAMETER("livingDamageDiameter",1F ,"float" ,20 ,0F),
 		/** 対地上兵器ダメージ倍率 : float型 **/
-		TANK_DAMAGE_DIAMETER("tankDamageDiameter",1F ,"float" ,9 ,0F),
+		TANK_DAMAGE_DIAMETER("tankDamageDiameter",1F ,"float" ,20 ,0F),
 		/** 対航空機ダメージ倍率 : float型 **/
-		AIRCRAFT_DAMAGE_DIAMETER("aircraftDamageDiameter",1F ,"float" ,9 ,0F),
+		AIRCRAFT_DAMAGE_DIAMETER("aircraftDamageDiameter",1F ,"float" ,20 ,0F),
+
+		/** 発射音のファイル名 : string型 **/
+		SOUND_SHOOT_NAME("SoundShootName","sample" ,"String" ,20),
+		/** 発射音の距離 : float型 **/
+		SOUND_SHOOT_RANGE("SoundShootRange",50F ,"float" ,20),
+		/** 発射音のピッチ : float型 **/
+		SOUND_SHOOT_PITCH("SoundShootPitch",1F ,"float" ,20),
 
 		/** 使用する弾の名前 複数設定可能 : String配列型 **/
 		TYPES_BULLETS("BulletNames", new String[] {},"String[]"),
 		/** 使用できるアタッチメントのType 複数設定可能 : String配列型 **/
 		TYPES_ATTACHMENTS("AttachmentNames", new String[] {},"String[]"),;
 
-		;
+		public static final int MIN_DEFAULT_RECOIL = 1;
+		public static final int MIN_SNEAK_RECOIL = 2;
+		public static final int MIN_ADS_RECOIL = 3;
+		public static final int MIN_ADS_SNEAK_RECOIL = 4;
+		public static final int MAX_DEFAULT_RECOIL = 5;
+		public static final int MAX_SNEAK_RECOIL = 6;
+		public static final int MAX_ADS_RECOIL = 7;
+		public static final int MAX_ADS_SNEAK_RECOIL = 8;
+
+		public static final int DAMAGE_DIAMETER = 20;
+		public static final int SOUND_OPTION = 21;
+
 		/**登録名*/
 		private String name;
 		/**初期値*/

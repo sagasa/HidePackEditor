@@ -22,35 +22,36 @@ import javax.swing.border.LineBorder;
 import types.GunData;
 import types.GunData.GunDataList;
 
-/**設定ボックス IntとFloatのみ対応 changeListener付*/
-public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyListener, FocusListener, ComponentListener{
+/** 設定ボックス IntとFloatのみ対応 changeListener付 */
+public class NumberSetPanel extends JPanel
+		implements MouseWheelListener, KeyListener, FocusListener, ComponentListener {
 	private static final long serialVersionUID = 3496770761921234269L;
 
-	/**データリスト*/
+	/** データリスト */
 	Object datatype;
-	/**データ*/
+	/** データ */
 	Object data;
-	/**データ型*/
+	/** データ型 */
 	String type;
-	/**set可能かどうか*/
+	/** set可能かどうか */
 	boolean canEdit;
 
-	/**通知先の保存*/
+	/** 通知先の保存 */
 	ChangeListener target;
 
-
-	//内容
-	/**ラベル*/
+	// 内容
+	/** ラベル */
 	JLabel setting;
-	/**テキストボックス*/
+	/** テキストボックス */
 	JTextField setting2;
 
-	/**コンストラクタ 編集可能*/
-	public NumberSetPanel(GunDataList d,GunData gun){
+	/** コンストラクタ 編集可能 */
+	public NumberSetPanel(GunDataList d, GunData gun) {
 		this(d, gun, true);
 	}
-	/**コンストラクタ 編集 可/不可*/
-	public NumberSetPanel(GunDataList d,GunData gun, boolean canedit){
+
+	/** コンストラクタ 編集 可/不可 */
+	public NumberSetPanel(GunDataList d, GunData gun, boolean canedit) {
 		datatype = d;
 		data = gun;
 		type = "gun";
@@ -60,13 +61,14 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 		init();
 		write();
 	}
-	/**編集可能か切り替え*/
-	public void setEnabled(boolean value){
+
+	/** 編集可能か切り替え */
+	public void setEnabled(boolean value) {
 		canEdit = value;
 	}
 
-	/**変更通知リスナーを追加*/
-	public void addChangeListener(ChangeListener l){
+	/** 変更通知リスナーを追加 */
+	public void addChangeListener(ChangeListener l) {
 		target = l;
 	}
 
@@ -75,16 +77,17 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 		super.paint(g);
 		write();
 	}
-	//画面制作
-	void init(){
+
+	// 画面制作
+	void init() {
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		this.setLayout(null);
-		//ラベル
-		setting = new JLabel(((GunDataList) datatype).getName()+" :");
+		// ラベル
+		setting = new JLabel(((GunDataList) datatype).getName() + " :");
 		setting.setHorizontalAlignment(JLabel.RIGHT);
 		setting.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(setting);
-		//テキストボックス
+		// テキストボックス
 		setting2 = new JTextField();
 		setting2.addMouseWheelListener(this);
 		setting2.addKeyListener(this);
@@ -92,109 +95,133 @@ public class NumberSetPanel extends JPanel implements MouseWheelListener, KeyLis
 		setting2.setBorder(border);
 		this.add(setting2);
 	}
-	//内容更新
-	void write(){
-		//テキストボックス
-		setting2.setText(((GunDataList) datatype).getData((GunData)data).toString());
+
+	// 内容更新
+	void write() {
+		// テキストボックス
+		setting2.setText(((GunDataList) datatype).getData((GunData) data).toString());
 		setting2.setEnabled(canEdit);
 	}
-	/**1増やすor1減らす 引数 1,-1*/
-	void change(int i){
-		switch (((GunDataList) datatype).getType()){
-		case "int":
-			int num = new Integer (((GunDataList) datatype).getData((GunData)data).toString());
-			if (((GunDataList) datatype).getMin()!=null){
-				if(num+i>=((GunDataList) datatype).getMin()){
-					((GunDataList) datatype).setData((GunData)data,num+(i));
+
+	/** 1増やすor1減らす 引数 1,-1 */
+	void change(int i) {
+		// 編集可能なら
+		if (canEdit) {
+			switch (((GunDataList) datatype).getType()) {
+			case "int":
+				int num = new Integer(((GunDataList) datatype).getData((GunData) data).toString());
+				if (((GunDataList) datatype).getMin() != null) {
+					if (num + i >= ((GunDataList) datatype).getMin()) {
+						((GunDataList) datatype).setData((GunData) data, num + (i));
+					}
+				} else {
+					((GunDataList) datatype).setData((GunData) data, num + (i));
 				}
-			}else{
-				((GunDataList) datatype).setData((GunData)data,num+(i));
+
+				break;
+			case "float":
+				String num2 = ((GunDataList) datatype).getData((GunData) data).toString();
+
+				float value = new BigDecimal(num2).add(new BigDecimal("0.1").multiply(new BigDecimal(i))).floatValue();
+				Float min = ((GunDataList) datatype).getMin();
+				if (min == null || value >= min) {
+					((GunDataList) datatype).setData((GunData) data, value);
+				}
+
+				// System.out.println(num2+" "+(e.getWheelRotation()*-0.1));
+				break;
 			}
-
-			break;
-		case "float":
-			String num2 = ((GunDataList) datatype).getData((GunData)data).toString();
-
-			float value = new BigDecimal(num2).add(new BigDecimal("0.1").multiply(new BigDecimal(i))).floatValue();
-			Float min = ((GunDataList) datatype).getMin();
-			if (min == null || value >= min){
-				((GunDataList) datatype).setData((GunData)data,value);
+			// 更新を通知
+			if (target != null) {
+				target.valueChange();
 			}
+			repaint();
 
-			//System.out.println(num2+" "+(e.getWheelRotation()*-0.1));
-		break;
 		}
-		target.valueChange();
-		repaint();
 	}
 
-	/**決定*/
-	void set(){
+	/** 決定 */
+	void set() {
 		Pattern p = Pattern.compile("[^\\d\\.]");
 		Matcher m = p.matcher(this.setting2.getText());
-		//まずい場合のためにtry
-		try{
-			//型で場合分け
-			switch (((GunDataList) datatype).getType()){
+		// まずい場合のためにtry
+		try {
+			// 型で場合分け
+			switch (((GunDataList) datatype).getType()) {
 			case "int":
-				((GunDataList) datatype).setData((GunData)data,new Integer(m.replaceAll("")));
-			break;
+				((GunDataList) datatype).setData((GunData) data, new Integer(m.replaceAll("")));
+				break;
 			case "float":
-				((GunDataList) datatype).setData((GunData)data,new Float(m.replaceAll("")));
-			break;
+				((GunDataList) datatype).setData((GunData) data, new Float(m.replaceAll("")));
+				break;
 			}
-		}catch(NumberFormatException e2){}
-		target.valueChange();
+		} catch (NumberFormatException e2) {
+		}
+		// 更新を通知
+		if (target != null) {
+			target.valueChange();
+		}
 		repaint();
 	}
+
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		//System.out.println(e.getWheelRotation());
-		change(e.getWheelRotation()*-1);
-		}
+		// System.out.println(e.getWheelRotation());
+		change(e.getWheelRotation() * -1);
+	}
+
 	@Override
 	public void keyPressed(KeyEvent e) {
-		//System.out.println(e.getSource());
-		switch(e.getKeyCode()){
+		// System.out.println(e.getSource());
+		switch (e.getKeyCode()) {
 		case 10:
 			set();
 			this.getParent().requestFocusInWindow();
-		break;
+			break;
 		case 38:
 			change(1);
-		break;
+			break;
 		case 40:
 			change(-1);
-		break;
+			break;
 		}
-		//System.out.println(e.getKeyCode());
+		// System.out.println(e.getKeyCode());
 
 	}
+
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 	}
+
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}
+
 	@Override
 	public void focusGained(FocusEvent e) {
 	}
+
 	@Override
 	public void focusLost(FocusEvent e) {
-		//これをフラグに書き換える
+		// これをフラグに書き換える
 		set();
 	}
 
 	@Override
 	public void componentResized(ComponentEvent arg0) {
-		setting.setBounds(0, 0, this.getWidth()-33, this.getHeight());
-		setting2.setBounds(this.getWidth()-30, 0, 30 , this.getHeight());
+		setting.setBounds(0, 0, this.getWidth() - 33, this.getHeight());
+		setting2.setBounds(this.getWidth() - 30, 0, 30, this.getHeight());
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent arg0) {}
+	public void componentHidden(ComponentEvent arg0) {
+	}
+
 	@Override
-	public void componentMoved(ComponentEvent arg0) {}
+	public void componentMoved(ComponentEvent arg0) {
+	}
+
 	@Override
-	public void componentShown(ComponentEvent arg0) {}
+	public void componentShown(ComponentEvent arg0) {
+	}
 }

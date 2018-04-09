@@ -32,11 +32,8 @@ public class EditPanel extends JPanel implements ActionListener {
 	static final int GUN_INFO_PANEL = 2;
 	/** アイコン設定用定数 */
 	static final int GUN_ICON_PANEL = 3;
-	static final int GUN_RECOIL_PANEL = 9;
 	/** 銃のリコイル設定用定数 */
-	static final int GUN_RECOIL_PANEL_0 = 4;
-	/** 銃のリコイル設定用定数 */
-	static final int GUN_RECOIL_PANEL_1 = 5;
+	static final int GUN_RECOIL_PANEL = 4;
 	/** 銃の使用する弾設定用定数 */
 	static final int GUN_BULLET_PANEL = 6;
 	/** 銃の使用するアタッチメント設定用定数 */
@@ -91,35 +88,11 @@ public class EditPanel extends JPanel implements ActionListener {
 			break;
 		case GUN_RECOIL_PANEL:
 			this.setOpaque(false);
-			this.setBounds(5, 264, 505, 200);
+			this.setBounds(5, 264, 505, 240);
 			this.setLayout(null);
 			RecoilEditer editer = new RecoilEditer(gunData);
 			editer.setBounds(0,0,this.getWidth(),this.getHeight());
 			this.add(editer);
-			break;
-		case GUN_RECOIL_PANEL_0:
-			this.setBorder(border);
-			this.setBounds(5, 264, 250, 0);
-			this.setLayout(null);
-			gunDataPanel(1);
-			CheckBoxPanel check = new CheckBoxPanel("UseSneakRecoil", CheckBoxPanel.USE_SNEAK_RECOIL, gunData, this);
-			check.setBounds(5, 149, 240, 20);
-			this.add(check);
-			gunDataPanel(2, 7, gunData.UseSneakRecoil);
-			break;
-		case GUN_RECOIL_PANEL_1:
-			this.setBorder(border);
-			this.setBounds(260, 240, 250, 0);
-			this.setLayout(null);
-			CheckBoxPanel check2 = new CheckBoxPanel("UseADSRecoil", CheckBoxPanel.USE_ADS_RECOIL, gunData, this);
-			check2.setBounds(5, 29, 240, 20);
-			this.add(check2);
-			gunDataPanel(3, 2, gunData.UseADSRecoil);
-			CheckBoxPanel check3 = new CheckBoxPanel("UseADSSnaekRecoil", CheckBoxPanel.USE_ADSSNEAK_RECOIL, gunData,
-					this);
-			check3.setBounds(5, 149, 240, 20);
-			this.add(check3);
-			gunDataPanel(4, 7, gunData.UseADSSneakRecoil);
 			break;
 		case GUN_ATTACHMENTS_PANEL:
 			gunAttachmentPanel();

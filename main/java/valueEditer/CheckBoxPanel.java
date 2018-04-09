@@ -4,8 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
-import javax.swing.JPanel;
-
 import types.GunData;
 
 public class CheckBoxPanel extends JCheckBox implements ActionListener{
@@ -21,17 +19,21 @@ public class CheckBoxPanel extends JCheckBox implements ActionListener{
 	int dataname;
 	/**データ*/
 	Object data;
-	/**更新の対象*/
-	EditPanel panel;
+
+	/**通知先の保存*/
+	ChangeListener target;
 
 	/**表示名,カテゴリID,データ,更新するJPanel*/
-	public CheckBoxPanel(String name,int cate, Object data,EditPanel panel){
+	public CheckBoxPanel(String name,int cate, Object data){
 		this.setText(name);
 		this.data=data;
 		this.dataname = cate;
-		this.panel = panel;
 		this.addActionListener(this);
 		this.setSelected(getData());
+	}
+	/**変更通知リスナーを追加*/
+	public void addChangeListener(ChangeListener l){
+		target = l;
 	}
 	//データ書き込み
 	void setData (boolean value){
@@ -69,6 +71,6 @@ public class CheckBoxPanel extends JCheckBox implements ActionListener{
 		}else{
 			setData(true);
 		}
-		panel.write();
+		target.valueChange();
 	}
 }
