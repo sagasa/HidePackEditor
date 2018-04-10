@@ -39,7 +39,7 @@ public class PackReader {
 		// 初期化
 		loadedPack = null;
 		MainWindow.gunMap.clear();
-		// TODO後でぜんType追加
+		//TODO 後でぜんType追加
 		// パックがあるか調べる
 		String Path = file.getAbsolutePath();
 		if (checkDir(Path)) {
@@ -80,7 +80,7 @@ public class PackReader {
 				while (0 < (size = zipIn.read(buffer))) {
 					data = ArrayEditor.ByteArrayCombining(data, Arrays.copyOf(buffer, size));
 					buffer = new byte[1024];
-					
+
 				}
 				// パックラッパーに送る
 				PackWrapper(data, entry.getName());
@@ -95,7 +95,7 @@ public class PackReader {
 		in.close();
 	}
 
-	/** byte配列とNameからパックの要素の当てはめる 
+	/** byte配列とNameからパックの要素の当てはめる
 	 * @throws IOException */
 	static void PackWrapper(byte[] data, String name) throws IOException {
 		// JsonObject newData = gson.fromJson(new String(Arrays.copyOf(data,
