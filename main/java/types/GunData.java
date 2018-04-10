@@ -148,11 +148,18 @@ public class GunData {
 		AIRCRAFT_DAMAGE_DIAMETER("aircraftDamageDiameter",1F ,"float" ,20 ,0F),
 
 		/** 発射音のファイル名 : string型 **/
-		SOUND_SHOOT_NAME("SoundShootName","sample" ,"String" ,20),
+		SOUND_SHOOT_NAME("SoundShootName","sample" ,"String" ,21),
 		/** 発射音の距離 : float型 **/
-		SOUND_SHOOT_RANGE("SoundShootRange",50F ,"float" ,20),
+		SOUND_SHOOT_RANGE("SoundShootRange",50F ,"float" ,21),
 		/** 発射音のピッチ : float型 **/
-		SOUND_SHOOT_PITCH("SoundShootPitch",1F ,"float" ,20),
+		SOUND_SHOOT_PITCH("SoundShootPitch",1F ,"float" ,21),
+		
+		/** リロード音のファイル名 : string型 **/
+		SOUND_RELOAD_NAME("SoundReloadName","sample" ,"String" ,21),
+		/** リロード音の距離 : float型 **/
+		SOUND_RELOAD_RANGE("SoundReloadRange",20F ,"float" ,21),
+		/** リロード音のピッチ : float型 **/
+		SOUND_RELOAD_PITCH("SoundReloadPitch",1F ,"float" ,21),
 
 		/** 使用する弾の名前 複数設定可能 : String配列型 **/
 		TYPES_BULLETS("BulletNames", new String[] {},"String[]"),
