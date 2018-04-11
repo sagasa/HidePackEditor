@@ -20,151 +20,159 @@ public class GunData {
 	/**全データ*/
 	HashMap<String,Object> Data = new HashMap<String,Object>();
 
+	/**引数のデータ型の列挙*/
+	public enum DataType{
+		String,
+		Float,
+		Int,
+		Boolean,
+		StringArray;
+	}
 	/**弾のデータ 初期値も同時に代入*/
 	public enum GunDataList{
 		/** 登録名 : String型 全部小文字 **/
-		SHORT_NAME("ShortName","name","String"),
+		SHORT_NAME("ShortName","name",DataType.String),
 		/** 表示名 : String型 **/
-		DISPLAY_NAME("DisplayName","name","String"),
+		DISPLAY_NAME("DisplayName","name",DataType.String),
 		/** アイテムのアイコン : String型 **/
-		ICON("Icon","sanple","String"),
+		ICON("Icon","sanple",DataType.String),
 
 		/** プレイヤーの移動速度 : デフォルトは1 : float型 **/
-		PLAYER_SPEED("PlayerSpeed",1F ,"float" ,0),
+		PLAYER_SPEED("PlayerSpeed",1F ,DataType.Float,0),
 		/** 弾速 1秒の移動距離(m)=弾速 : float型 **/
-		BULLET_SPEED("BulletSpeed",1F , "float" ,0),
+		BULLET_SPEED("BulletSpeed",1F , DataType.Float ,0),
 		/** リロード ; リロードにtickかかる : int型 **/
-		RELOAD_TIME("Reload",20 , "int" ,0),
+		RELOAD_TIME("Reload",20 , DataType.Int ,0),
 		/** レート ; レートtick間隔で発射する : int型 **/
-		RATE("Rate",1 , "int" ,0,1F),
+		RATE("Rate",1 , DataType.Int ,0,1F),
 		/** 装弾数 : int型 **/
-		MAGAZINE_NUMBER("MagazineNumber",1 , "int" ,0 ,1F),
+		MAGAZINE_NUMBER("MagazineNumber",1 , DataType.Int ,0 ,1F),
 		/** 発射数 : int型 **/
-		BULLET_NUMBER("ShootNumner",1 ,"int" ,0 ,1F),
+		BULLET_NUMBER("ShootNumner",1 ,DataType.Int ,0 ,1F),
 		/** 精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
-		ACCURACY("Accuracy",0F ,"float" ,0 ,0F),
+		ACCURACY("Accuracy",0F ,DataType.Float ,0 ,0F),
 		/** ADS精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
-		ADS_ACCURACY("ADSAccuracy",0F ,"float" ,0 ,0F),
+		ADS_ACCURACY("ADSAccuracy",0F ,DataType.Float ,0 ,0F),
 
 		/** Yawの反動 : 反動の中央値(角度°) : float型 **/
-		MIN_YAW_RECOIL_BASE("MIN_YawRecoilBase",0F ,"float" ,1),
+		MIN_YAW_RECOIL_BASE("MIN_YawRecoilBase",0F ,DataType.Float ,1),
 		/** Yawの反動 : 反動の拡散値(角度°) : float型 **/
-		MIN_YAW_RECOIL_SPREAD("MIN_YawRecoilSpread",0F ,"float" ,1 ,0F),
+		MIN_YAW_RECOIL_SPREAD("MIN_YawRecoilSpread",0F ,DataType.Float ,1 ,0F),
 		/** Pitchの反動 : 反動の中央値(角度°) : float型 **/
-		MIN_PITCH_RECOIL_BASE("MIN_PitchRecoilBase",0F ,"float" ,1),
+		MIN_PITCH_RECOIL_BASE("MIN_PitchRecoilBase",0F ,DataType.Float ,1),
 		/** Pitchの反動 : 反動の拡散値(角度°) : float型 **/
-		MIN_PITCH_RECOIL_SPREAD("MIN_PitchRecoilSpread",0F ,"float" ,1 ,0F),
+		MIN_PITCH_RECOIL_SPREAD("MIN_PitchRecoilSpread",0F ,DataType.Float ,1 ,0F),
 
 		/** 反動の速さ : 反動を適応する時間(tick) : int型 **/
-		DEFAULT_RECOIL_TIME("DefaultRecoilTime",1 ,"int", 9 ,1F),
+		DEFAULT_RECOIL_TIME("DefaultRecoilTime",1 ,DataType.Int, 9 ,1F),
 		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
-		DEFAULT_RECOIL_RETURN("DefaultRecoilReturn",0F ,"float" ,9 ,0F),
+		DEFAULT_RECOIL_RETURN("DefaultRecoilReturn",0F ,DataType.Float ,9 ,0F),
 
 		/** スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
-		MIN_SNEAK_YAW_RECOIL_BASE("MIN_SneakYawRecoilBase",0F ,"float" ,2),
+		MIN_SNEAK_YAW_RECOIL_BASE("MIN_SneakYawRecoilBase",0F ,DataType.Float ,2),
 		/** スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		MIN_SNEAK_YAW_RECOIL_SPREAD("MIN_SneakYawRecoilSpread",0F ,"float" ,2 ,0F),
+		MIN_SNEAK_YAW_RECOIL_SPREAD("MIN_SneakYawRecoilSpread",0F ,DataType.Float ,2 ,0F),
 		/** スニーク時のPitchの反動 : 反動の中央値(角度°) : float型 **/
-		MIN_SNEAK_PITCH_RECOIL_BASE("MIN_SneakPitchRecoilBase",0F ,"float" ,2),
+		MIN_SNEAK_PITCH_RECOIL_BASE("MIN_SneakPitchRecoilBase",0F ,DataType.Float ,2),
 		/** スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		MIN_SNEAK_PITCH_RECOIL_SPREAD("MIN_SneakPitchRecoilSpread",0F ,"float" ,2 ,0F),
+		MIN_SNEAK_PITCH_RECOIL_SPREAD("MIN_SneakPitchRecoilSpread",0F ,DataType.Float ,2 ,0F),
 
 		/** 反動の速さ : 反動を適応する時間(tick) : int型 **/
-		SNEAK_RECOIL_TIME("SneakRecoilTime",1 ,"int", 10 ,1F),
+		SNEAK_RECOIL_TIME("SneakRecoilTime",1 ,DataType.Int, 10 ,1F),
 		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
-		SNEAK_RECOIL_RETURN("SneakRecoilReturn",0F ,"float" ,10 ,0F),
+		SNEAK_RECOIL_RETURN("SneakRecoilReturn",0F ,DataType.Float ,10 ,0F),
 
 		/** ADS時のYawの反動 : 反動の中央値(角度°) : float型 **/
-		MIN_ADS_YAW_RECOIL_BASE("MIN_ADSYawRecoilBase",0F ,"float" ,3),
+		MIN_ADS_YAW_RECOIL_BASE("MIN_ADSYawRecoilBase",0F ,DataType.Float ,3),
 		/** ADS時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		MIN_ADS_YAW_RECOIL_SPREAD("MIN_ADSYawRecoilSpread",0F ,"float" ,3 ,0F),
+		MIN_ADS_YAW_RECOIL_SPREAD("MIN_ADSYawRecoilSpread",0F ,DataType.Float ,3 ,0F),
 		/** ADS時のPitchの反動 : 反動の中央値(角度°) : float型 **/
-		MIN_ADS_PITCH_RECOIL_BASE("MIN_ADSPitchRecoilBase",0F ,"float" ,3),
+		MIN_ADS_PITCH_RECOIL_BASE("MIN_ADSPitchRecoilBase",0F ,DataType.Float ,3),
 		/** ADS時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		MIN_ADS_PITCH_RECOIL_SPREAD("MIN_ADSPitchRecoilSpread",0F ,"float" ,3 ,0F),
+		MIN_ADS_PITCH_RECOIL_SPREAD("MIN_ADSPitchRecoilSpread",0F ,DataType.Float ,3 ,0F),
 
 		/** 反動の速さ : 反動を適応する時間(tick) : int型 **/
-		ADS_RECOIL_TIME("ADSRecoilTime",1 ,"int", 11 ,1F),
+		ADS_RECOIL_TIME("ADSRecoilTime",1 ,DataType.Int, 11 ,1F),
 		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
-		ADS_RECOIL_RETURN("ADSRecoilReturn",0F ,"float" ,11 ,0F),
+		ADS_RECOIL_RETURN("ADSRecoilReturn",0F ,DataType.Float ,11 ,0F),
 
 		/** ADS+スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
-		MIN_ADS_SNEAK_YAW_RECOIL_BASE("MIN_ADSSneakYawRecoilBase",0F ,"float" ,4),
+		MIN_ADS_SNEAK_YAW_RECOIL_BASE("MIN_ADSSneakYawRecoilBase",0F ,DataType.Float ,4),
 		/** ADS+スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		MIN_ADS_SNEAK_YAW_RECOIL_SPREAD("MIN_ADSSneakYawRecoilSpread",0F ,"float" ,4 ,0F),
+		MIN_ADS_SNEAK_YAW_RECOIL_SPREAD("MIN_ADSSneakYawRecoilSpread",0F ,DataType.Float ,4 ,0F),
 		/** ADS+スニーク時のPitchの反動 : 反動の中央値(角度°) : float型 **/
-		MIN_ADS_SNEAK_PITCH_RECOIL_BASE("MIN_ADSSneakPitchRecoilBase",0F ,"float" ,4),
+		MIN_ADS_SNEAK_PITCH_RECOIL_BASE("MIN_ADSSneakPitchRecoilBase",0F ,DataType.Float ,4),
 		/** ADS+スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		MIN_ADS_SNEAK_PITCH_RECOIL_SPREAD("MIN_ADSSneakPitchRecoilSpread",0F ,"float" ,4 ,0F),
+		MIN_ADS_SNEAK_PITCH_RECOIL_SPREAD("MIN_ADSSneakPitchRecoilSpread",0F ,DataType.Float ,4 ,0F),
 
 		/** 反動の速さ : 反動を適応する時間(tick) : int型 **/
-		ADS_SNEAK_RECOIL_TIME("ADSSneakRecoilTime",1 ,"int", 12 ,1F),
+		ADS_SNEAK_RECOIL_TIME("ADSSneakRecoilTime",1 ,DataType.Int, 12 ,1F),
 		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
-		ADS_SNEAK_RECOIL_RETURN("ADSSneakRecoilReturn",0F ,"float" ,12 ,0F),
+		ADS_SNEAK_RECOIL_RETURN("ADSSneakRecoilReturn",0F ,DataType.Float ,12 ,0F),
 
 		/** Yawの反動 : 反動の中央値(角度°) : float型 **/
-		MAX_YAW_RECOIL_BASE("MAX_YawRecoilBase",0F ,"float" ,5),
+		MAX_YAW_RECOIL_BASE("MAX_YawRecoilBase",0F ,DataType.Float ,5),
 		/** Yawの反動 : 反動の拡散値(角度°) : float型 **/
-		MAX_YAW_RECOIL_SPREAD("MAX_YawRecoilSpread",0F ,"float" ,5 ,0F),
+		MAX_YAW_RECOIL_SPREAD("MAX_YawRecoilSpread",0F ,DataType.Float ,5 ,0F),
 		/** Pitchの反動 : 反動の中央値(角度°) : float型 **/
-		MAX_PITCH_RECOIL_BASE("MAX_PitchRecoilBase",0F ,"float" ,5),
+		MAX_PITCH_RECOIL_BASE("MAX_PitchRecoilBase",0F ,DataType.Float ,5),
 		/** Pitchの反動 : 反動の拡散値(角度°) : float型 **/
-		MAX_PITCH_RECOIL_SPREAD("MAX_PitchRecoilSpread",0F ,"float" ,5 ,0F),
+		MAX_PITCH_RECOIL_SPREAD("MAX_PitchRecoilSpread",0F ,DataType.Float ,5 ,0F),
 
 		/** スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
-		MAX_SNEAK_YAW_RECOIL_BASE("MAX_SneakYawRecoilBase",0F ,"float" ,6),
+		MAX_SNEAK_YAW_RECOIL_BASE("MAX_SneakYawRecoilBase",0F ,DataType.Float ,6),
 		/** スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		MAX_SNEAK_YAW_RECOIL_SPREAD("MAX_SneakYawRecoilSpread",0F ,"float" ,6 ,0F),
+		MAX_SNEAK_YAW_RECOIL_SPREAD("MAX_SneakYawRecoilSpread",0F ,DataType.Float ,6 ,0F),
 		/** スニーク時のPitchの反動 : 反動の中央値(角度°) : float型 **/
-		MAX_SNEAK_PITCH_RECOIL_BASE("MAX_SneakPitchRecoilBase",0F ,"float" ,6),
+		MAX_SNEAK_PITCH_RECOIL_BASE("MAX_SneakPitchRecoilBase",0F ,DataType.Float ,6),
 		/** スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		MAX_SNEAK_PITCH_RECOIL_SPREAD("MAX_SneakPitchRecoilSpread",0F ,"float" ,6 ,0F),
+		MAX_SNEAK_PITCH_RECOIL_SPREAD("MAX_SneakPitchRecoilSpread",0F ,DataType.Float ,6 ,0F),
 
 		/** ADS時のYawの反動 : 反動の中央値(角度°) : float型 **/
-		MAX_ADS_YAW_RECOIL_BASE("MAX_ADSYawRecoilBase",0F ,"float" ,7),
+		MAX_ADS_YAW_RECOIL_BASE("MAX_ADSYawRecoilBase",0F ,DataType.Float ,7),
 		/** ADS時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		MAX_ADS_YAW_RECOIL_SPREAD("MAX_ADSYawRecoilSpread",0F ,"float" ,7 ,0F),
+		MAX_ADS_YAW_RECOIL_SPREAD("MAX_ADSYawRecoilSpread",0F ,DataType.Float ,7 ,0F),
 		/** ADS時のPitchの反動 : 反動の中央値(角度°) : float型 **/
-		MAX_ADS_PITCH_RECOIL_BASE("MAX_ADSPitchRecoilBase",0F ,"float" ,7),
+		MAX_ADS_PITCH_RECOIL_BASE("MAX_ADSPitchRecoilBase",0F ,DataType.Float ,7),
 		/** ADS時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		MAX_ADS_PITCH_RECOIL_SPREAD("MAX_ADSPitchRecoilSpread",0F ,"float" ,7 ,0F),
+		MAX_ADS_PITCH_RECOIL_SPREAD("MAX_ADSPitchRecoilSpread",0F ,DataType.Float ,7 ,0F),
 
 		/** ADS+スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
-		MAX_ADS_SNEAK_YAW_RECOIL_BASE("MAX_ADSSneakYawRecoilBase",0F ,"float" ,8),
+		MAX_ADS_SNEAK_YAW_RECOIL_BASE("MAX_ADSSneakYawRecoilBase",0F ,DataType.Float ,8),
 		/** ADS+スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
-		MAX_ADS_SNEAK_YAW_RECOIL_SPREAD("MAX_ADSSneakYawRecoilSpread",0F ,"float" ,8 ,0F),
+		MAX_ADS_SNEAK_YAW_RECOIL_SPREAD("MAX_ADSSneakYawRecoilSpread",0F ,DataType.Float ,8 ,0F),
 		/** ADS+スニーク時のPitchの反動 : 反動の中央値(角度°) : float型 **/
-		MAX_ADS_SNEAK_PITCH_RECOIL_BASE("MAX_ADSSneakPitchRecoilBase",0F ,"float" ,8),
+		MAX_ADS_SNEAK_PITCH_RECOIL_BASE("MAX_ADSSneakPitchRecoilBase",0F ,DataType.Float ,8),
 		/** ADS+スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
-		MAX_ADS_SNEAK_PITCH_RECOIL_SPREAD("MAX_ADSSneakPitchRecoilSpread",0F ,"float" ,8 ,0F),
+		MAX_ADS_SNEAK_PITCH_RECOIL_SPREAD("MAX_ADSSneakPitchRecoilSpread",0F ,DataType.Float ,8 ,0F),
 
 		/** 対人ダメージ倍率 : float型 **/
-		PLAYER_DAMAGE_DIAMETER("playerDamageDiameter",1F ,"float" ,20 ,0F),
+		PLAYER_DAMAGE_DIAMETER("playerDamageDiameter",1F ,DataType.Float ,20 ,0F),
 		/** 対MOBダメージ倍率 : float型 **/
-		LIVING_DAMAGE_DIAMETER("livingDamageDiameter",1F ,"float" ,20 ,0F),
+		LIVING_DAMAGE_DIAMETER("livingDamageDiameter",1F ,DataType.Float ,20 ,0F),
 		/** 対地上兵器ダメージ倍率 : float型 **/
-		TANK_DAMAGE_DIAMETER("tankDamageDiameter",1F ,"float" ,20 ,0F),
+		TANK_DAMAGE_DIAMETER("tankDamageDiameter",1F ,DataType.Float ,20 ,0F),
 		/** 対航空機ダメージ倍率 : float型 **/
-		AIRCRAFT_DAMAGE_DIAMETER("aircraftDamageDiameter",1F ,"float" ,20 ,0F),
+		AIRCRAFT_DAMAGE_DIAMETER("aircraftDamageDiameter",1F ,DataType.Float ,20 ,0F),
 
 		/** 発射音のファイル名 : string型 **/
-		SOUND_SHOOT_NAME("SoundShootName","sample" ,"String" ,21),
+		SOUND_SHOOT_NAME("SoundShootName","sample" ,DataType.String ,21),
 		/** 発射音の距離 : float型 **/
-		SOUND_SHOOT_RANGE("SoundShootRange",50F ,"float" ,21),
+		SOUND_SHOOT_RANGE("SoundShootRange",50F ,DataType.Float ,21),
 		/** 発射音のピッチ : float型 **/
-		SOUND_SHOOT_PITCH("SoundShootPitch",1F ,"float" ,21),
+		SOUND_SHOOT_PITCH("SoundShootPitch",1F ,DataType.Float ,21),
 		
 		/** リロード音のファイル名 : string型 **/
-		SOUND_RELOAD_NAME("SoundReloadName","sample" ,"String" ,21),
+		SOUND_RELOAD_NAME("SoundReloadName","sample" ,DataType.String ,21),
 		/** リロード音の距離 : float型 **/
-		SOUND_RELOAD_RANGE("SoundReloadRange",20F ,"float" ,21),
+		SOUND_RELOAD_RANGE("SoundReloadRange",20F ,DataType.Float ,21),
 		/** リロード音のピッチ : float型 **/
-		SOUND_RELOAD_PITCH("SoundReloadPitch",1F ,"float" ,21),
+		SOUND_RELOAD_PITCH("SoundReloadPitch",1F ,DataType.Float ,21),
 
 		/** 使用する弾の名前 複数設定可能 : String配列型 **/
-		TYPES_BULLETS("BulletNames", new String[] {},"String[]"),
+		TYPES_BULLETS("BulletNames", new String[] {},DataType.StringArray),
 		/** 使用できるアタッチメントのType 複数設定可能 : String配列型 **/
-		TYPES_ATTACHMENTS("AttachmentNames", new String[] {},"String[]"),;
+		TYPES_ATTACHMENTS("AttachmentNames", new String[] {},DataType.StringArray),;
 
 		public static final int MIN_DEFAULT_RECOIL = 1;
 		public static final int MIN_SNEAK_RECOIL = 2;
@@ -185,12 +193,12 @@ public class GunData {
 		/**カテゴリID : デフォルト=-1*/
 		private int cate;
 		/**Type*/
-		private String types;
+		private DataType types;
 		/**最小値*/
 		private Float min;
 
 		/**コンストラクタ 表示名+データ+Type カテゴリはデフォルト*/
-		GunDataList(String name, Object obj ,String types) {
+		GunDataList(String name, Object obj ,DataType types) {
 			this.name = name;
 			this.defaultValue = obj;
 			this.cate = -1;
@@ -201,18 +209,18 @@ public class GunData {
 		}
 
 		/**コンストラクタ +カテゴリ*/
-		GunDataList(String name, Object obj,String types ,int cate) {
+		GunDataList(String name, Object obj,DataType types ,int cate) {
 			this(name, obj, types);
 			this.cate = cate;
 		}
 
 		/**最小値の設定*/
-		GunDataList(String name, Object obj,String types ,int cate,float minimam){
+		GunDataList(String name, Object obj,DataType types ,int cate,float minimam){
 			this(name, obj, types, cate);
 			this.min = minimam;
 		}
 		/**最小値の設定*/
-		GunDataList(String name, Object obj,String types ,float minimam){
+		GunDataList(String name, Object obj,DataType types ,float minimam){
 			this(name, obj, types);
 			this.min = minimam;
 		}
@@ -226,7 +234,7 @@ public class GunData {
 			return name;
 		}
 		/**型を返す*/
-		public String getType() {
+		public DataType getType() {
 			return types;
 		}
 		/**データを返す*/
@@ -270,19 +278,19 @@ public class GunData {
 		for (GunDataList d:GunDataList.values()){
 			//System.out.println(d.getName()+"  "+d.getDefaultValue() + "  "+ w.getString("gun_"+d.getName(), d.getDefaultValue().toString()));
 			switch (d.types){
-			case "boolean":
+			case Boolean:
 				Data.put(d.getName(), w.getBoolean(headName+d.getName(),new Boolean (d.getDefaultValue().toString())));
 			break;
-			case "String":
+			case String:
 				Data.put(d.getName(), w.getString(headName+d.getName(),d.getDefaultValue().toString()));
 			break;
-			case "int":
+			case Int:
 				Data.put(d.getName(), w.getInt(headName+d.getName(), new Integer (d.getDefaultValue().toString())));
 			break;
-			case "float":
+			case Float:
 				Data.put(d.getName(), w.getFloat(headName+d.getName(), new Float (d.getDefaultValue().toString())));
 			break;
-			case "String[]":
+			case StringArray:
 				Data.put(d.getName(), w.getStringArray(headName+d.getName(), (String[]) d.getDefaultValue()));
 			break;
 			}
@@ -294,19 +302,19 @@ public class GunData {
 		JsonObject JsonData = new JsonObject();
 		for (GunDataList d:GunDataList.values()){
 			switch (d.types){
-			case "boolean":
+			case Boolean:
 				JsonData.addProperty(headName+d.getName(),new Boolean(d.getData(this).toString()));
 			break;
-			case "String":
+			case String:
 				JsonData.addProperty(headName+d.getName(),d.getData(this).toString());
 			break;
-			case "int":
+			case Int:
 				JsonData.addProperty(headName+d.getName(), new Integer (d.getData(this).toString()));
 			break;
-			case "float":
+			case Float:
 				JsonData.addProperty(headName+d.getName(), new Float (d.getData(this).toString()));
 			break;
-			case "String[]":
+			case StringArray:
 				JsonElement element =
 			     gson.toJsonTree((String[])d.getData(this) , new TypeToken<String[]>() {}.getType());
 				JsonData.add(headName+d.getName(), element.getAsJsonArray());

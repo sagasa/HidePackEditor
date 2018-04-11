@@ -104,11 +104,12 @@ public class NumberSetPanel extends JPanel
 	}
 
 	/** 1増やすor1減らす 引数 1,-1 */
+	@SuppressWarnings("incomplete-switch")
 	void change(int i) {
 		// 編集可能なら
 		if (canEdit) {
 			switch (((GunDataList) datatype).getType()) {
-			case "int":
+			case Int:
 				int num = new Integer(((GunDataList) datatype).getData((GunData) data).toString());
 				if (((GunDataList) datatype).getMin() != null) {
 					if (num + i >= ((GunDataList) datatype).getMin()) {
@@ -119,7 +120,7 @@ public class NumberSetPanel extends JPanel
 				}
 
 				break;
-			case "float":
+			case Float:
 				String num2 = ((GunDataList) datatype).getData((GunData) data).toString();
 
 				float value = new BigDecimal(num2).add(new BigDecimal("0.1").multiply(new BigDecimal(i))).floatValue();
@@ -141,6 +142,7 @@ public class NumberSetPanel extends JPanel
 	}
 
 	/** 決定 */
+	@SuppressWarnings("incomplete-switch")
 	void set() {
 		Pattern p = Pattern.compile("[^\\d\\.]");
 		Matcher m = p.matcher(this.setting2.getText());
@@ -148,10 +150,10 @@ public class NumberSetPanel extends JPanel
 		try {
 			// 型で場合分け
 			switch (((GunDataList) datatype).getType()) {
-			case "int":
+			case Int:
 				((GunDataList) datatype).setData((GunData) data, new Integer(m.replaceAll("")));
 				break;
-			case "float":
+			case Float:
 				((GunDataList) datatype).setData((GunData) data, new Float(m.replaceAll("")));
 				break;
 			}
