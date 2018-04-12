@@ -36,7 +36,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	/**弾の表示リスト 名前のテキストリスト*/
 	static DefaultListModel<String> bulletModel;
 	static JList<String> bullets;
-	
+
 	static public JTabbedPane ContentsTab;
 
 	/**ID用ポインタ*/
@@ -86,8 +86,8 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	public static void write() {
 		gunModel.clear();
 		for (GunData data:MainWindow.gunMap.values()){
-			System.out.println(GunDataList.DISPLAY_NAME.getData(data));
-			gunModel.addElement((String) GunDataList.DISPLAY_NAME.getData(data));
+			System.out.println(data.getDataString(GunDataList.DISPLAY_NAME));
+			gunModel.addElement(data.getDataString(GunDataList.DISPLAY_NAME));
 		}
 		bulletModel.clear();
 		for (BulletData data:MainWindow.bulletMap.values()){
@@ -106,7 +106,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 		GunData newGun = new GunData();
 		GunDataList.DISPLAY_NAME.setData(newGun,"new gun No."+gunNum);
 		GunDataList.SHORT_NAME.setData(newGun,"gun_"+gunNum);
-		MainWindow.gunMap.put((String) GunDataList.DISPLAY_NAME.getData(newGun), newGun);
+		MainWindow.gunMap.put(newGun.getDataString(GunDataList.DISPLAY_NAME), newGun);
 		//System.out.println("ok");
 		write();
 	}

@@ -208,8 +208,8 @@ public class EditPanel extends JPanel implements ActionListener {
 		ImageData image;
 
 		// 見つかれば設定された画像見つからなければnullImage
-		if (MainWindow.iconMap.containsKey(GunDataList.ICON.getData(gunData).toString())) {
-			image = MainWindow.iconMap.get(GunDataList.ICON.getData(gunData).toString());
+		if (MainWindow.iconMap.containsKey(gunData.getDataString(GunDataList.ICON))) {
+			image = MainWindow.iconMap.get(gunData.getDataString(GunDataList.ICON));
 		} else {
 			image = ResourcesList.nullImage;
 		}
@@ -236,7 +236,7 @@ public class EditPanel extends JPanel implements ActionListener {
 			IconList.addItem(data.ImageName);
 		}
 		IconList.setBounds(170, 38, 75, 18);
-		IconList.setSelectedItem(GunDataList.ICON.getData(gunData).toString());
+		IconList.setSelectedItem(gunData.getDataString(GunDataList.ICON));
 		IconList.setActionCommand("iconSet");
 		this.add(IconList);
 

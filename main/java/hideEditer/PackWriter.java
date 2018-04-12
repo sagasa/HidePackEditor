@@ -19,6 +19,7 @@ import java.util.zip.ZipOutputStream;
 
 import types.BulletData;
 import types.GunData;
+import types.GunData.GunDataList;
 
 public class PackWriter {
 	/**出力用データ*/
@@ -40,7 +41,7 @@ public class PackWriter {
 			PackWriter This = new PackWriter();
 			//銃のデータ
 			for (GunData d:MainWindow.gunMap.values()){
-				dataList.add(This.new ExportData("guns/"+GunData.GunDataList.DISPLAY_NAME.getData(d).toString()+".json",d.MakeJsonData().getBytes()));
+				dataList.add(This.new ExportData("guns/"+d.getDataString(GunDataList.DISPLAY_NAME)+".json",d.MakeJsonData().getBytes()));
 			}
 			//弾のデータ
 			for (BulletData d:MainWindow.bulletMap.values()){

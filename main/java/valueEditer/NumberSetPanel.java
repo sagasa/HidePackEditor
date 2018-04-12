@@ -99,7 +99,7 @@ public class NumberSetPanel extends JPanel
 	// 内容更新
 	void write() {
 		// テキストボックス
-		setting2.setText(((GunDataList) datatype).getData((GunData) data).toString());
+		setting2.setText(((GunData) data).getDataString((GunDataList) datatype));
 		setting2.setEnabled(canEdit);
 	}
 
@@ -110,7 +110,7 @@ public class NumberSetPanel extends JPanel
 		if (canEdit) {
 			switch (((GunDataList) datatype).getType()) {
 			case Int:
-				int num = new Integer(((GunDataList) datatype).getData((GunData) data).toString());
+				int num = ((GunData) data).getDataInt((GunDataList) datatype);
 				if (((GunDataList) datatype).getMin() != null) {
 					if (num + i >= ((GunDataList) datatype).getMin()) {
 						((GunDataList) datatype).setData((GunData) data, num + (i));
@@ -121,8 +121,7 @@ public class NumberSetPanel extends JPanel
 
 				break;
 			case Float:
-				String num2 = ((GunDataList) datatype).getData((GunData) data).toString();
-
+				String num2 = ((GunData) data).getDataString((GunDataList) datatype);
 				float value = new BigDecimal(num2).add(new BigDecimal("0.1").multiply(new BigDecimal(i))).floatValue();
 				Float min = ((GunDataList) datatype).getMin();
 				if (min == null || value >= min) {

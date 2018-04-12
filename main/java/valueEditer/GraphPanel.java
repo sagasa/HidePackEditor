@@ -47,16 +47,16 @@ public class GraphPanel extends JPanel{
 		// 罫線描画
 		g2.setPaint(Color.gray);
 		g2.setStroke(new BasicStroke(2.0f));
-		g2.draw(new Line2D.Double(radius, 0.0d, radius, radius*2));
-		g2.draw(new Line2D.Double(0.0d, radius, radius*2, radius));
+		g2.draw(new Line2D.Float(radius, 0.0f, radius, radius*2));
+		g2.draw(new Line2D.Float(0.0f, radius, radius*2, radius));
 		g2.setStroke(new BasicStroke(1.0f));
 		// 10あたり何ピクセルか
 		for (int i = d; i < 80; i += d) {
 			g2.setPaint(Color.gray);
-			g2.draw(new Line2D.Double(radius - i, radius - i, radius + i, radius - i));
-			g2.draw(new Line2D.Double(radius - i, radius - i, radius - i, radius + i));
-			g2.draw(new Line2D.Double(radius + i, radius - i, radius + i, radius + i));
-			g2.draw(new Line2D.Double(radius - i, radius + i, radius + i, radius + i));
+			g2.draw(new Line2D.Float(radius - i, radius - i, radius + i, radius - i));
+			g2.draw(new Line2D.Float(radius - i, radius - i, radius - i, radius + i));
+			g2.draw(new Line2D.Float(radius + i, radius - i, radius + i, radius + i));
+			g2.draw(new Line2D.Float(radius - i, radius + i, radius + i, radius + i));
 			// 数値記載
 			g2.drawString("0", radius+2, radius-1);
 			int draw = i / d * 10;
@@ -85,11 +85,11 @@ public class GraphPanel extends JPanel{
 		if(doWrite){
 			//グラフ描画 MIN
 			int p = 0;
-			int[] data = new int[4];
+			float[] data = new float[4];
 			for (GunDataList settingData : GunDataList.values()) {
 				// カテゴリ分け -1以外なら
 				if (settingData.getCate() == cate) {
-					data[p] = (int) (new Float(settingData.getData(gundata).toString()) * (d / 10));
+					data[p] = gundata.getDataFloat(settingData) * (d / 10);
 					//System.out.println("描画" + settingData.getName());
 					p++;
 				}
@@ -98,11 +98,11 @@ public class GraphPanel extends JPanel{
 			writeRecoilGraph(g2,data);
 			//グラフ描画 MAX
 			p = 0;
-			data = new int[4];
+			data = new float[4];
 			for (GunDataList settingData : GunDataList.values()) {
 				// カテゴリ分け -1以外なら
 				if (settingData.getCate() == cate+4) {
-					data[p] = (int) (new Float(settingData.getData(gundata).toString()) * (d / 10));
+					data[p] = gundata.getDataFloat(settingData) * (d / 10);
 					//System.out.println("描画" + settingData.getName());
 					p++;
 				}
@@ -113,24 +113,24 @@ public class GraphPanel extends JPanel{
 
 	}
 	//グラフ描画
-	void writeRecoilGraph(Graphics2D g2, int[] data){
+	void writeRecoilGraph(Graphics2D g2, float[] data){
 		//突き出た分の描画
 				g2.setStroke(new BasicStroke(1.0f));
-				g2.draw(new Line2D.Double(radius + data[0], radius - data[2] + data[3] + 15, radius + data[0],
+				g2.draw(new Line2D.Float(radius + data[0], radius - data[2] + data[3] + 15, radius + data[0],
 						radius - data[2] - data[3] - 15));
-				g2.draw(new Line2D.Double(radius + data[0] + data[1]+ 15, radius - data[2], radius + data[0] - data[1]- 15,
+				g2.draw(new Line2D.Float(radius + data[0] + data[1]+ 15, radius - data[2], radius + data[0] - data[1]- 15,
 						radius - data[2]));
 				//センターの十字
 				g2.setStroke(new BasicStroke(5.0f));
-				g2.draw(new Line2D.Double(radius + data[0], radius - data[2] + data[3], radius + data[0],
+				g2.draw(new Line2D.Float(radius + data[0], radius - data[2] + data[3], radius + data[0],
 						radius - data[2] - data[3]));
-				g2.draw(new Line2D.Double(radius + data[0] + data[1], radius - data[2], radius + data[0] - data[1],
+				g2.draw(new Line2D.Float(radius + data[0] + data[1], radius - data[2], radius + data[0] - data[1],
 						radius - data[2]));
 				//四角描画
 				g2.setStroke(new BasicStroke(1.5f));
-				g2.draw(new Line2D.Double(radius + data[0] + data[1], radius - data[2] + data[3], radius + data[0] - data[1], radius - data[2] + data[3]));
-				g2.draw(new Line2D.Double(radius + data[0] + data[1], radius - data[2] - data[3],radius + data[0] - data[1] , radius - data[2] - data[3]));
-				g2.draw(new Line2D.Double(radius + data[0] + data[1],radius - data[2] + data[3] ,radius + data[0] + data[1] , radius - data[2] - data[3]));
-				g2.draw(new Line2D.Double(radius + data[0] - data[1],radius - data[2] + data[3] ,radius + data[0] - data[1] , radius - data[2] - data[3]));
+				g2.draw(new Line2D.Float(radius + data[0] + data[1], radius - data[2] + data[3], radius + data[0] - data[1], radius - data[2] + data[3]));
+				g2.draw(new Line2D.Float(radius + data[0] + data[1], radius - data[2] - data[3],radius + data[0] - data[1] , radius - data[2] - data[3]));
+				g2.draw(new Line2D.Float(radius + data[0] + data[1],radius - data[2] + data[3] ,radius + data[0] + data[1] , radius - data[2] - data[3]));
+				g2.draw(new Line2D.Float(radius + data[0] - data[1],radius - data[2] + data[3] ,radius + data[0] - data[1] , radius - data[2] - data[3]));
 	}
 }

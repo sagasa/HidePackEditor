@@ -23,7 +23,7 @@ public class StringSetPanel extends JPanel implements KeyListener, FocusListener
 
 	public static final int GUN_DISPLAY_NAME = 1;
 	public static final int GUN_SHORT_NAME = 2;
-	
+
 	/** データ */
 	Object data;
 	/** データ型 */
@@ -94,10 +94,10 @@ public class StringSetPanel extends JPanel implements KeyListener, FocusListener
 		String value = null;
 		switch (type) {
 		case GUN_DISPLAY_NAME:
-			value = GunDataList.DISPLAY_NAME.getData((GunData) data).toString();
+			value = ((GunData) data).getDataString(GunDataList.DISPLAY_NAME);
 			break;
 		case GUN_SHORT_NAME:
-			value = GunDataList.SHORT_NAME.getData((GunData) data).toString();
+			value = ((GunData) data).getDataString(GunDataList.SHORT_NAME);
 			break;
 		}
 
@@ -117,7 +117,7 @@ public class StringSetPanel extends JPanel implements KeyListener, FocusListener
 			break;
 		case GUN_SHORT_NAME:
 			GunDataList.SHORT_NAME.setData((GunData) data, value);
-			break;	
+			break;
 		}
 	}
 

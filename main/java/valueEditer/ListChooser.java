@@ -80,7 +80,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 				combo.addItem((String) BulletDataList.DISPLAY_NAME.getData(data));
 			}
 			listModel.clear();
-			for(String str: (String[])GunDataList.TYPES_BULLETS.getData(gunData)){
+			for(String str: gunData.getDataStringArray(GunDataList.TYPES_BULLETS)){
 				combo.removeItem(str);
 				System.out.println(str);
 		    	listModel.addElement(new ListComponent(str));
@@ -95,7 +95,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 			}
 			listModel.clear();
 			//TODO アタッチメント追加したら追記
-			for(String str: (String[])GunDataList.TYPES_ATTACHMENTS.getData(gunData)){
+			for(String str: gunData.getDataStringArray(GunDataList.TYPES_ATTACHMENTS)){
 				combo.removeItem(str);
 				System.out.println(str);
 		    	listModel.addElement(new ListComponent(str));
@@ -110,7 +110,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 	void delete(int index) {
 		switch (mode) {
 		case GUN_MAGAZINE_LIST:
-			GunDataList.TYPES_BULLETS.setData(gunData, helper.ArrayEditor.RemoveFromArray((String[]) GunDataList.TYPES_BULLETS.getData(gunData), listModel.getElementAt(index).name));
+			GunDataList.TYPES_BULLETS.setData(gunData, helper.ArrayEditor.RemoveFromArray(gunData.getDataStringArray(GunDataList.TYPES_BULLETS), listModel.getElementAt(index).name));
 			break;
 		}
 		write();
@@ -162,7 +162,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 	public void actionPerformed(ActionEvent e) {
 		//ついか
 		if(combo.getSelectedIndex()!=-1){
-			GunDataList.TYPES_BULLETS.setData(gunData, helper.ArrayEditor.AddToArray((String[]) GunDataList.TYPES_BULLETS.getData(gunData), combo.getSelectedItem().toString()));
+			GunDataList.TYPES_BULLETS.setData(gunData, helper.ArrayEditor.AddToArray(gunData.getDataStringArray(GunDataList.TYPES_BULLETS), combo.getSelectedItem().toString()));
 			write();
 		}
 

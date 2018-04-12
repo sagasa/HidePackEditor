@@ -103,7 +103,7 @@ public class PackReader {
 		// Gun認識
 		if (Pattern.compile("^(.*)guns/(.*).json").matcher(name).matches()) {
 			GunData newGun = new GunData(new String(data, Charset.forName("UTF-8")));
-			MainWindow.gunMap.put(GunDataList.DISPLAY_NAME.getData(newGun).toString(), newGun);
+			MainWindow.gunMap.put(newGun.getDataString(GunDataList.DISPLAY_NAME), newGun);
 			System.out.println("gun");
 		}
 		// bullet認識
