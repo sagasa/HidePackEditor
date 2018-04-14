@@ -1,7 +1,5 @@
 package types;
 
-import java.util.HashMap;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -9,27 +7,19 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import helper.JsonWrapper;
+import types.base.DataBase;
+import types.base.DataType;
+import types.base.EnumDataList;
 
-public class GunData {
+public class GunData extends DataBase{
 
 	/**エディタのみで使用するデータ*/
 	public boolean UseSneakRecoil = false;
 	public boolean UseADSRecoil = false;
 	public boolean UseADSSneakRecoil = false;
 
-	/**全データ*/
-	HashMap<String,Object> Data = new HashMap<String,Object>();
-
-	/**引数のデータ型の列挙*/
-	public enum DataType{
-		String,
-		Float,
-		Int,
-		Boolean,
-		StringArray;
-	}
 	/**弾のデータ 初期値も同時に代入*/
-	public enum GunDataList{
+	public enum GunDataList implements EnumDataList{
 		/** 登録名 : String型 全部小文字 **/
 		SHORT_NAME("ShortName","name",DataType.String),
 		/** 表示名 : String型 **/
@@ -38,15 +28,15 @@ public class GunData {
 		ICON("Icon","sanple",DataType.String),
 
 		/** プレイヤーの移動速度 : デフォルトは1 : float型 **/
-		PLAYER_SPEED("PlayerSpeed",1F ,DataType.Float,0),
+		PLAYER_SPEED("PlayerSpeed",1F ,DataType.Float,0,0F),
 		/** 弾速 1秒の移動距離(m)=弾速 : float型 **/
-		BULLET_SPEED("BulletSpeed",1F , DataType.Float ,0),
+		BULLET_SPEED("BulletSpeed",1F , DataType.Float ,0,0F),
 		/** リロード ; リロードにtickかかる : int型 **/
-		RELOAD_TIME("Reload",20 , DataType.Int ,0),
+		RELOAD_TIME("Reload",20 , DataType.Int ,0 , 1F),
 		/** レート ; レートtick間隔で発射する : int型 **/
 		RATE("Rate",1 , DataType.Int ,0,1F),
 		/** 射撃モード : String配列型 **/
-		FIRE_MODE("FireMode",new String[]{"semiouto"} , DataType.StringArray ,0),
+		FIRE_MODE("FireMode",new String[]{"semiouto"} , DataType.StringArray ,22),
 		/** 装弾数 : int型 **/
 		MAGAZINE_NUMBER("MagazineNumber",1 , DataType.Int ,0 ,1F),
 		/** 発射数 : int型 **/
@@ -187,6 +177,7 @@ public class GunData {
 
 		public static final int DAMAGE_DIAMETER = 20;
 		public static final int SOUND_OPTION = 21;
+		public static final int FIRE_MODE_OPTION = 22;
 
 		/**登録名*/
 		private String name;
@@ -198,6 +189,8 @@ public class GunData {
 		private DataType types;
 		/**最小値*/
 		private Float min;
+		/**最大値*/
+		private Float max;
 
 		/**コンストラクタ 表示名+データ+Type カテゴリはデフォルト*/
 		GunDataList(String name, Object obj ,DataType types) {
@@ -206,7 +199,6 @@ public class GunData {
 			this.cate = -1;
 			this.min = null;
 			this.types = types;
-
 		}
 
 		/**コンストラクタ +カテゴリ*/
@@ -226,74 +218,43 @@ public class GunData {
 			this.min = minimam;
 		}
 
-		/**最小値を返す*/
-		public Float getMin() {
-			return min;
-		}
-		/**登録名を返す*/
-		public String getName() {
-			return name;
-		}
-		/**型を返す*/
-		public DataType getType() {
-			return types;
-		}
-		/**初期値を返す*/
-		public Object getDefaultValue() {
-			return defaultValue;
-		}
-		/**カテゴリを返す*/
-		public int getCate() {
-			return cate;
-		}
+
 		/**データを設定する nullは上書きしない*/
 		public void setData(GunData d,Object obj) {
 			if (obj != null){
 				d.Data.replace(this.toString(), obj);
 			}
 		}
-	}
-	/**データ取得*/
-	public int getDataInt(GunDataList type){
-		if (type.types==DataType.Int){
-			return new Integer(this.Data.get(type.toString()).toString()).intValue();
-		}
-		return 0;
-	}
-	/**データ取得*/
-	public float getDataFloat(GunDataList type){
-		if (type.types==DataType.Float){
-			return new Float(this.Data.get(type.toString()).toString()).floatValue();
-		}
-		return 0;
-	}
-	/**データ取得*/
-	public String getDataString(GunDataList type){
-		if (type.types==DataType.String||type.types==DataType.Int||type.types==DataType.Float){
-			return this.Data.get(type.toString()).toString();
-		}
-		return "";
-	}
-	/**データ取得*/
-	public boolean getDataBoolean(GunDataList type){
-		if (type.types==DataType.Boolean){
-			return new Boolean(this.Data.get(type.toString()).toString()).booleanValue();
-		}
-		return false;
-	}
-	/**データ取得*/
-	public String[] getDataStringArray(GunDataList type){
-		if (type.types==DataType.StringArray){
-			return (String[])this.Data.get(type.toString());
-		}
-		return new String[0];
-	}
 
-	/** 初期値*/
-	public GunData() {
-		this(null);
-	}
+		@Override
+		public Float getMin() {
+			return min;
+		}
+		@Override
+		public Float getMax() {
+			return max;
+		}
 
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public DataType getType() {
+			return types;
+		}
+
+		@Override
+		public Object getDefaultValue() {
+			return defaultValue;
+		}
+
+		@Override
+		public int getCate() {
+			return cate;
+		}
+	}
 	static final String headName = "gun_";
 	/** JsonStringからデータを読み込む */
 	public GunData(String json) {
@@ -322,6 +283,9 @@ public class GunData {
 			}
 		}
 	}
+	public GunData() {
+		this(null);
+	}
 	/**JsonObjectを作成*/
 	public String MakeJsonData(){
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -329,24 +293,25 @@ public class GunData {
 		for (GunDataList d:GunDataList.values()){
 			switch (d.types){
 			case Boolean:
-				JsonData.addProperty(headName+d.toString(),new Boolean(Data.get(d.toString()).toString()));
+				JsonData.addProperty(headName+d.toString(),this.getDataBoolean(d));
 			break;
 			case String:
-				JsonData.addProperty(headName+d.toString(),Data.get(d.toString()).toString());
+				JsonData.addProperty(headName+d.toString(),this.getDataString(d));
 			break;
 			case Int:
-				JsonData.addProperty(headName+d.toString(), new Integer (Data.get(d.toString()).toString()));
+				JsonData.addProperty(headName+d.toString(), this.getDataInt(d));
 			break;
 			case Float:
-				JsonData.addProperty(headName+d.toString(), new Float (Data.get(d.toString()).toString()));
+				JsonData.addProperty(headName+d.toString(), this.getDataFloat(d));
 			break;
 			case StringArray:
 				JsonElement element =
-			     gson.toJsonTree((String[])Data.get(d.toString()) , new TypeToken<String[]>() {}.getType());
+			     gson.toJsonTree(this.getDataStringArray(d) , new TypeToken<String[]>() {}.getType());
 				JsonData.add(headName+d.getName(), element.getAsJsonArray());
 			break;
 			}
 		}
 		return gson.toJson(JsonData);
 	}
+
 }

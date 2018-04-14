@@ -19,7 +19,9 @@ import com.google.gson.JsonObject;
 import types.ContentsPack;
 import types.ContentsPack.PackDataList;
 import types.GunData;
+import types.GunData.GunDataList;
 import valueEditer.EditWindow;
+import valueEditer.valueSetPanels.NumberSetPanel;
 
 public class Main {
 
@@ -35,7 +37,7 @@ public class Main {
 		//lang
 		Lang.readLang("./lang");
 		Lang.setLang("jp");
-	
+
 		main = new MainWindow();
 		main.openWindow();
 	}

@@ -71,6 +71,6 @@ public class CheckBoxPanel extends JCheckBox implements ActionListener{
 		}else{
 			setData(true);
 		}
-		target.valueChange();
+		target.valueChange(ChangeListener.CHECK_CHANGE);
 	}
 }

@@ -12,6 +12,7 @@ import javax.swing.JTabbedPane;
 
 import types.GunData;
 import types.GunData.GunDataList;
+import valueEditer.valueSetPanels.NumberSetPanel;
 
 /**リコイル編集 タブでプレイヤーの状態を選択 グラフィカルで分かりやすく*/
 public class RecoilEditer extends JTabbedPane implements ChangeListener {
@@ -42,16 +43,16 @@ public class RecoilEditer extends JTabbedPane implements ChangeListener {
 	}
 
 	/**状態ごとの設定パネル*/
-	JPanel setPanel(int offset){
+	JPanel setPanel(int cate){
 		JPanel Panel = new JPanel();
 		Panel.setLayout(null);
 		//グラフ 罫線
-		value_graph = new GraphPanel(gundata,offset);
+		value_graph = new GraphPanel(gundata,cate);
 		value_graph.setBounds(5,5,200,200);
 		Panel.add(value_graph);
 		//使用の可否
 		CheckBoxPanel check;
-		switch(offset){
+		switch(cate){
 		case GunDataList.MIN_SNEAK_RECOIL:
 			check = new CheckBoxPanel("UseSneakRecoil", CheckBoxPanel.USE_SNEAK_RECOIL, gundata);
 			check.addChangeListener(this);
@@ -77,14 +78,14 @@ public class RecoilEditer extends JTabbedPane implements ChangeListener {
 		//MAXリコイル設定パネル
 		JPanel MAX_tab = new JPanel();
 		MAX_tab.setLayout(null);
-		valueSetPanel(offset+4,MAX_tab);
+		valueSetPanel(cate+4,MAX_tab);
 		try {
 			tab.addTab("MAX",new ImageIcon(ImageIO.read(ClassLoader.getSystemResourceAsStream("icon/max.png"))), MAX_tab);
 		} catch (IOException e) {}
 
 		JPanel MIN_tab = new JPanel();
 		MIN_tab.setLayout(null);
-		valueSetPanel(offset,MIN_tab);
+		valueSetPanel(cate,MIN_tab);
 		try {
 			tab.addTab("MIN",new ImageIcon(ImageIO.read(ClassLoader.getSystemResourceAsStream("icon/min.png"))), MIN_tab);
 		} catch (IOException e) {}
@@ -92,7 +93,7 @@ public class RecoilEditer extends JTabbedPane implements ChangeListener {
 		// ｲﾝﾌｫ
 		JPanel info_tab = new JPanel();
 		info_tab.setLayout(null);
-		valueSetPanel(offset+8,info_tab);
+		valueSetPanel(cate+8,info_tab);
 		tab.addTab("info", info_tab);
 		Panel.add(tab);
 		return Panel;
@@ -135,7 +136,7 @@ public class RecoilEditer extends JTabbedPane implements ChangeListener {
 	}
 
 	@Override
-	public void valueChange() {
+	public void valueChange(int event) {
 		setEnable();
 		//グラフ再描画
 		this.repaint();
