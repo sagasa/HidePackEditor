@@ -61,7 +61,7 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener{
 	/** 1増やすor1減らす 引数 1,-1 */
 	void change(int i) {
 		// 編集可能なら
-		System.out.println(i +" "+data.getDataInt(typeEnum) + "  "+canEdit +" "+ typeEnum.getMin());
+		//System.out.println(i +" "+data.getDataInt(typeEnum) + "  "+canEdit +" "+ typeEnum.getMin());
 		if (canEdit){
 			switch (this.getDataType()) {
 			case Int:
