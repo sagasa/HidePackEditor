@@ -118,10 +118,10 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 		while (MainWindow.gunMap.containsKey("new bullet "+bulletNum)){
 			gunNum ++;
 		}
-		BulletData newGun = new BulletData();
-		BulletDataList.DISPLAY_NAME.setData(newGun,"new bullet "+bulletNum);
-		MainWindow.bulletMap.put((String) BulletDataList.DISPLAY_NAME.getData(newGun), newGun);
-		//System.out.println("ok");
+		BulletData newBullet = new BulletData();
+		newBullet.setData(BulletDataList.DISPLAY_NAME, "new bullet "+bulletNum);
+		MainWindow.bulletMap.put(newBullet.getDataString(BulletDataList.DISPLAY_NAME), newBullet);
+		System.out.println("ok");
 		write();
 	}
 

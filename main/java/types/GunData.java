@@ -59,6 +59,10 @@ public class GunData extends DataBase{
 		DEFAULT_RECOIL_TIME("DefaultRecoilTime",1 ,DataType.Int, 9 ,1F),
 		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
 		DEFAULT_RECOIL_RETURN("DefaultRecoilReturn",0F ,DataType.Float ,9 ,0F),
+		/** 1発当たりのリコイルパワーの増加数 : int型 **/
+		DEFAULT_RECOILPOWER_SHOOT("RecoilPowerAddPerShoot",0 ,DataType.Int ,9 ,0F),
+		/** 1tick当たりのリコイルパワーの減少数 : int型 **/
+		DEFAULT_RECOILPOWER_TICK("RecoilPowerRemovePerTick",0 ,DataType.Int ,9 ,0F),
 
 		/** スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
 		MIN_SNEAK_YAW_RECOIL_BASE("MIN_SneakYawRecoilBase",0F ,DataType.Float ,2),
@@ -73,7 +77,11 @@ public class GunData extends DataBase{
 		SNEAK_RECOIL_TIME("SneakRecoilTime",1 ,DataType.Int, 10 ,1F),
 		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
 		SNEAK_RECOIL_RETURN("SneakRecoilReturn",0F ,DataType.Float ,10 ,0F),
-
+		/** 1発当たりのリコイルパワーの増加数 : int型 **/
+		SNEAK_RECOILPOWER_SHOOT("RecoilPowerAddPerShoot",0 ,DataType.Int ,10 ,0F),
+		/** 1tick当たりのリコイルパワーの減少数 : int型 **/
+		SNEAK_RECOILPOWER_TICK("RecoilPowerRemovePerTick",0 ,DataType.Int ,10 ,0F),
+		
 		/** ADS時のYawの反動 : 反動の中央値(角度°) : float型 **/
 		MIN_ADS_YAW_RECOIL_BASE("MIN_ADSYawRecoilBase",0F ,DataType.Float ,3),
 		/** ADS時のYawの反動 : 反動の拡散値(角度°) : float型 **/
@@ -87,7 +95,11 @@ public class GunData extends DataBase{
 		ADS_RECOIL_TIME("ADSRecoilTime",1 ,DataType.Int, 11 ,1F),
 		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
 		ADS_RECOIL_RETURN("ADSRecoilReturn",0F ,DataType.Float ,11 ,0F),
-
+		/** 1発当たりのリコイルパワーの増加数 : int型 **/
+		ADS_RECOILPOWER_SHOOT("RecoilPowerAddPerShoot",0 ,DataType.Int ,11 ,0F),
+		/** 1tick当たりのリコイルパワーの減少数 : int型 **/
+		ADS_RECOILPOWER_TICK("RecoilPowerRemovePerTick",0 ,DataType.Int ,11 ,0F),
+		
 		/** ADS+スニーク時のYawの反動 : 反動の中央値(角度°) : float型 **/
 		MIN_ADS_SNEAK_YAW_RECOIL_BASE("MIN_ADSSneakYawRecoilBase",0F ,DataType.Float ,4),
 		/** ADS+スニーク時のYawの反動 : 反動の拡散値(角度°) : float型 **/
@@ -101,7 +113,11 @@ public class GunData extends DataBase{
 		ADS_SNEAK_RECOIL_TIME("ADSSneakRecoilTime",1 ,DataType.Int, 12 ,1F),
 		/** 反動の戻り率 : 反動から復帰する割合 : float型 **/
 		ADS_SNEAK_RECOIL_RETURN("ADSSneakRecoilReturn",0F ,DataType.Float ,12 ,0F),
-
+		/** 1発当たりのリコイルパワーの増加数 : int型 **/
+		ADS_SNEAK_RECOILPOWER_SHOOT("RecoilPowerAddPerShoot",0 ,DataType.Int ,12 ,0F),
+		/** 1tick当たりのリコイルパワーの減少数 : int型 **/
+		ADS_SNEAK_RECOILPOWER_TICK("RecoilPowerRemovePerTick",0 ,DataType.Int ,12 ,0F),
+		
 		/** Yawの反動 : 反動の中央値(角度°) : float型 **/
 		MAX_YAW_RECOIL_BASE("MAX_YawRecoilBase",0F ,DataType.Float ,5),
 		/** Yawの反動 : 反動の拡散値(角度°) : float型 **/
@@ -307,7 +323,7 @@ public class GunData extends DataBase{
 			case StringArray:
 				JsonElement element =
 			     gson.toJsonTree(this.getDataStringArray(d) , new TypeToken<String[]>() {}.getType());
-				JsonData.add(headName+d.getName(), element.getAsJsonArray());
+				JsonData.add(headName+d.toString(), element.getAsJsonArray());
 			break;
 			}
 		}

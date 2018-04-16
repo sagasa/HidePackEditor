@@ -10,6 +10,7 @@ import javax.swing.border.LineBorder;
 
 import hideEditer.MainWindow;
 import types.GunData;
+import valueEditer.EditPanel.PanelList;
 
 /**アクションリスナーのためにstaticにしていない 実質staticクラス インスタンスはMainWindowに格納*/
 public class EditWindow{
@@ -48,33 +49,12 @@ public class EditWindow{
 	public void wrietGunEditer(GunData d) {
 		data = d;
 		OpenWindow.removeAll();
-		EditPanel test = new EditPanel(EditPanel.GUN_NAME_PANEL,data);
-		OpenWindow.add(test);
-
-		EditPanel test2 = new EditPanel(EditPanel.GUN_ICON_PANEL,data);
-		OpenWindow.add(test2);
-
-		EditPanel test3 = new EditPanel(EditPanel.DELETE_PANEL,data);
-		OpenWindow.add(test3);
-
-		EditPanel test4 = new EditPanel(EditPanel.GUN_INFO_PANEL,data);
-		OpenWindow.add(test4);
-
-		EditPanel test5 = new EditPanel(EditPanel.GUN_RECOIL_PANEL,data);
-		OpenWindow.add(test5);
-		
-		//EditPanel test5 = new EditPanel(EditPanel.GUN_RECOIL_PANEL_0,data);
-		//OpenWindow.add(test5);
-
-		//EditPanel test6 = new EditPanel(EditPanel.GUN_RECOIL_PANEL_1,data);
-		//OpenWindow.add(test6);
-		
-		EditPanel test7 = new EditPanel(EditPanel.GUN_BULLET_PANEL,data);
-		OpenWindow.add(test7);
-		
-		EditPanel test8 = new EditPanel(EditPanel.GUN_ATTACHMENTS_PANEL,data);
-		OpenWindow.add(test8);
-
+		for(PanelList p :PanelList.values()){
+			if (p.mode == PanelList.GUN_PANELS){
+				EditPanel panel = new EditPanel(p,data);
+				OpenWindow.add(panel);
+			}
+		}
 		OpenWindow.repaint();
 	}
 

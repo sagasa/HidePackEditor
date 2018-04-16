@@ -9,14 +9,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import helper.JsonWrapper;
+import types.GunData.GunDataList;
 import types.base.DataBase;
 import types.base.DataType;
 import types.base.EnumDataList;
 
 public class BulletData extends DataBase{
-
-	/**全データ*/
-	HashMap<String,Object> Data = new HashMap<String,Object>();
 
 	/**弾のデータ 初期値も同時に代入*/
 	public enum BulletDataList implements EnumDataList{
@@ -194,25 +192,24 @@ public class BulletData extends DataBase{
 		// 初期値を忘れずに
 		Gson gson = new Gson();
 		JsonWrapper w = new JsonWrapper(gson.fromJson(json, JsonObject.class));
-
 		//マップに格納
 		for (BulletDataList d:BulletDataList.values()){
 			//System.out.println(d.getName()+"  "+d.getDefaultValue() + "  "+ w.getString("gun_"+d.getName(), d.getDefaultValue().toString()));
 			switch (d.types){
 			case Boolean:
-				Data.put(d.getName(), w.getBoolean(headName+d.getName(),new Boolean (d.getDefaultValue().toString())));
+				Data.put(d.toString(), w.getBoolean(headName+d.toString(),new Boolean (d.getDefaultValue().toString())));
 			break;
 			case String:
-				Data.put(d.getName(), w.getString(headName+d.getName(),d.getDefaultValue().toString()));
+				Data.put(d.toString(), w.getString(headName+d.toString(),d.getDefaultValue().toString()));
 			break;
 			case Int:
-				Data.put(d.getName(), w.getInt(headName+d.getName(), new Integer (d.getDefaultValue().toString())));
+				Data.put(d.toString(), w.getInt(headName+d.toString(), new Integer (d.getDefaultValue().toString())));
 			break;
 			case Float:
-				Data.put(d.getName(), w.getFloat(headName+d.getName(), new Float (d.getDefaultValue().toString())));
+				Data.put(d.toString(), w.getFloat(headName+d.toString(), new Float (d.getDefaultValue().toString())));
 			break;
 			case StringArray:
-				Data.put(d.getName(), w.getStringArray(headName+d.getName(), (String[]) d.getDefaultValue()));
+				Data.put(d.toString(), w.getStringArray(headName+d.toString(), (String[]) d.getDefaultValue()));
 			break;
 			}
 		}
@@ -224,21 +221,21 @@ public class BulletData extends DataBase{
 		for (BulletDataList d:BulletDataList.values()){
 			switch (d.types){
 			case Boolean:
-				JsonData.addProperty(headName+d.getName(),new Boolean(d.getData(this).toString()));
+				JsonData.addProperty(headName+d.toString(),this.getDataBoolean(d));
 			break;
 			case String:
-				JsonData.addProperty(headName+d.getName(),d.getData(this).toString());
+				JsonData.addProperty(headName+d.toString(),this.getDataString(d));
 			break;
 			case Int:
-				JsonData.addProperty(headName+d.getName(), new Integer (d.getData(this).toString()));
+				JsonData.addProperty(headName+d.toString(), this.getDataInt(d));
 			break;
 			case Float:
-				JsonData.addProperty(headName+d.getName(), new Float (d.getData(this).toString()));
+				JsonData.addProperty(headName+d.toString(), this.getDataFloat(d));
 			break;
 			case StringArray:
 				JsonElement element =
-			     gson.toJsonTree((String[])d.getData(this) , new TypeToken<String[]>() {}.getType());
-				JsonData.add(headName+d.getName(), element.getAsJsonArray());
+			     gson.toJsonTree(this.getDataStringArray(d) , new TypeToken<String[]>() {}.getType());
+				JsonData.add(headName+d.toString(), element.getAsJsonArray());
 			break;
 			}
 		}
