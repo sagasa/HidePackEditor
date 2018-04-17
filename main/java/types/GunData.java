@@ -154,6 +154,14 @@ public class GunData extends DataBase{
 		/** ADS+スニーク時のPitchの反動 : 反動の拡散値(角度°) : float型 **/
 		MAX_ADS_SNEAK_PITCH_RECOIL_SPREAD("MAX_ADSSneakPitchRecoilSpread",0F ,DataType.Float ,8 ,0F),
 
+		/** 対人ダメージ加算値 : float型 **/
+		PLAYER_DAMAGE_ADDITION("playerDamageAddition",0F ,DataType.Float ,20),
+		/** 対MOBダメージ加算値 : float型 **/
+		LIVING_DAMAGE_ADDITION("livingDamageAddition",0F ,DataType.Float ,20),
+		/** 対地上兵器ダメージ加算値 : int型 **/
+		TANK_DAMAGE_ADDITION("tankDamageAddition",0 ,DataType.Int ,20),
+		/** 対航空機ダメージ加算値 : int型 **/
+		AIRCRAFT_DAMAGE_ADDITION("aircraftDamageAddition",0 ,DataType.Int ,20),
 		/** 対人ダメージ倍率 : float型 **/
 		PLAYER_DAMAGE_DIAMETER("playerDamageDiameter",1F ,DataType.Float ,20 ,0F),
 		/** 対MOBダメージ倍率 : float型 **/
@@ -182,6 +190,7 @@ public class GunData extends DataBase{
 		/** 使用できるアタッチメントのType 複数設定可能 : String配列型 **/
 		TYPES_ATTACHMENTS("AttachmentNames", new String[] {},DataType.StringArray),;
 
+		public static final int OPTIONS = 0;
 		public static final int MIN_DEFAULT_RECOIL = 1;
 		public static final int MIN_SNEAK_RECOIL = 2;
 		public static final int MIN_ADS_RECOIL = 3;

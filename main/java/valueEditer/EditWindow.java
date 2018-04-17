@@ -31,7 +31,6 @@ public class EditWindow{
 		OpenWindow.setLayout(null);
 		OpenWindow.setBorder(border);
 		OpenWindow.setBackground(Color.WHITE);
-		OpenWindow.setBounds(200, 20, 600, window.getHeight()-85);
 		//OpenWindow.setBackground(Color.ORANGE);
 		window.add(OpenWindow);
 
@@ -61,7 +60,7 @@ public class EditWindow{
 
 	/**リサイズ+パネルサイズを再計算*/
 	public static void reSize(){
-		OpenWindow.setBounds(200, 20, 515, MainWindow.MainWindow.getHeight()-85);
+		OpenWindow.setBounds(200, 20, 770, MainWindow.MainWindow.getHeight()-85);
 		panelNumber = 0;
 		for(int width = OpenWindow.getWidth();width > 0;width-=300){
 			panelNumber ++;

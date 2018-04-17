@@ -102,12 +102,11 @@ public class EditPanel extends JPanel implements ActionListener {
 			deletePanel();
 			break;
 		case GUN_INFO_PANEL:
-			gunDataPanel(0,0,true);
+			gunDataPanel(GunDataList.OPTIONS,0,true);
 			break;
 		case GUN_RECOIL_PANEL:
 			this.setOpaque(false);
-			this.setBounds(5, 264, 505, 240);
-			this.setLayout(null);
+			this.setBorder(null);
 			RecoilEditer editer = new RecoilEditer((GunData)Data);
 			editer.setBounds(0,0,this.getWidth(),this.getHeight());
 			this.add(editer);
@@ -118,9 +117,14 @@ public class EditPanel extends JPanel implements ActionListener {
 			this.add(attachmentsChooser);
 			break;
 		case GUN_BULLET_PANEL:
-			gunMagazinePanel();
+			ListChooser magChooser = new ListChooser(ListChooser.GUN_MAGAZINE_LIST,(GunData)Data);
+			magChooser.setBounds(5, 5, this.getWidth()-10, this.getHeight()-10);
+			this.add(magChooser);
 		break;
 		//case BULLET_NAME_PANEL:
+		case DAMAGE_DIAMETER_PANEL:
+			gunDataPanel(GunDataList.DAMAGE_DIAMETER,0,true);
+			break;
 		}
 		repaint();
 	}
@@ -132,18 +136,6 @@ public class EditPanel extends JPanel implements ActionListener {
 	//===========================================
 	//                銃用パネル
 	//===========================================
-	//アタッチメント選択パネル
-	void gunAttachmentPanel() {
-		
-	}
-
-	//弾選択パネル
-	void gunMagazinePanel(){
-		ListChooser magChooser = new ListChooser(ListChooser.GUN_MAGAZINE_LIST,(GunData)Data);
-		magChooser.setBounds(5, 5, this.getWidth()-10, this.getHeight()-10);
-		this.add(magChooser);
-	}
-
 	// 基本パラメーターパネル
 	void gunDataPanel(int cate, int offset, boolean canEdit) {
 		int p = offset;
@@ -217,13 +209,17 @@ public class EditPanel extends JPanel implements ActionListener {
 		/** アイコン設定用定数 */
 		GUN_ICON_PANEL(new Rectangle(260, 60, 250, 60),0),
 		/** 銃のリコイル設定用定数 */
-		GUN_RECOIL_PANEL(new Rectangle(1,1,1,1),0),
+		GUN_RECOIL_PANEL(new Rectangle(5,315, 505, 240),0),
 		/** 銃の使用する弾設定用定数 */
-		GUN_BULLET_PANEL(new Rectangle(260, 125, 120, 110),0),
+		GUN_BULLET_PANEL(new Rectangle(260, 125, 250, 100),0),
 		/** 銃の使用するアタッチメント設定用定数 */
-		GUN_ATTACHMENTS_PANEL(new Rectangle(390, 125, 120, 110),0),
+		GUN_ATTACHMENTS_PANEL(new Rectangle(260, 230, 250, 100),0),
 		/** 削除+コピペ */
-		DELETE_PANEL(new Rectangle(260, 5, 250, 50),0)
+		DELETE_PANEL(new Rectangle(260, 5, 250, 50),0),
+		/** ダメージ倍率設定パネル*/
+		DAMAGE_DIAMETER_PANEL(new Rectangle(515, 5, 250, 240),0),
+		/** ダメージ倍率設定パネル*/
+		//(new Rectangle(515, 5, 250, 240),0)
 		;
 		public static final int GUN_PANELS = 0;
 		Rectangle size;
