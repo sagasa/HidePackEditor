@@ -11,7 +11,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import com.google.gson.Gson;
-import helper.ArrayEditor;
+import helper.ArrayEditer;
 import types.BulletData;
 import types.BulletData.BulletDataList;
 import types.ContentsPack;
@@ -78,7 +78,7 @@ public class PackReader {
 				byte[] data = new byte[0];
 				int size;
 				while (0 < (size = zipIn.read(buffer))) {
-					data = ArrayEditor.ByteArrayCombining(data, Arrays.copyOf(buffer, size));
+					data = ArrayEditer.ByteArrayCombining(data, Arrays.copyOf(buffer, size));
 					buffer = new byte[1024];
 
 				}

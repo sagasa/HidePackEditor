@@ -122,8 +122,27 @@ public class EditPanel extends JPanel implements ActionListener {
 			this.add(magChooser);
 		break;
 		//case BULLET_NAME_PANEL:
-		case DAMAGE_DIAMETER_PANEL:
+		case GUN_DAMAGE_DIAMETER_PANEL:
 			gunDataPanel(GunDataList.DAMAGE_DIAMETER,0,true);
+			break;
+		case GUN_FIREMODE_PANEL:
+			CheckBoxPanel fullauto = new CheckBoxPanel("FullAuto",CheckBoxPanel.FIREMODE_FULLAUTO,Data);
+			fullauto.setBounds(5,5, 100, 18);
+			this.add(fullauto);
+			CheckBoxPanel semiauto = new CheckBoxPanel("SemiAuto",CheckBoxPanel.FIREMODE_SEMIAUTO,Data);
+			semiauto.setBounds(130,5, 100, 18);
+			this.add(semiauto);
+			CheckBoxPanel minigun = new CheckBoxPanel("MINIGUN",CheckBoxPanel.FIREMODE_MINIGUN,Data);
+			minigun.setBounds(5,28, 100, 18);
+			this.add(minigun);
+			CheckBoxPanel burst = new CheckBoxPanel("Burst",CheckBoxPanel.FIREMODE_BURST,Data);
+			burst.setBounds(130,28, 100, 18);
+			this.add(burst);
+			break;
+		case GUN_SOUND_PANEL:
+			SoundSetPanel reload = new SoundSetPanel(Data, SoundSetPanel.GUN_SHOOT_SOUND);
+			reload.setBounds(0, 0, 250, 80);
+			this.add(reload);
 			break;
 		}
 		repaint();
@@ -217,9 +236,11 @@ public class EditPanel extends JPanel implements ActionListener {
 		/** 削除+コピペ */
 		DELETE_PANEL(new Rectangle(260, 5, 250, 50),0),
 		/** ダメージ倍率設定パネル*/
-		DAMAGE_DIAMETER_PANEL(new Rectangle(515, 5, 250, 240),0),
-		/** ダメージ倍率設定パネル*/
-		//(new Rectangle(515, 5, 250, 240),0)
+		GUN_DAMAGE_DIAMETER_PANEL(new Rectangle(515, 5, 250, 0),0),
+		/** サウンド設定パネル*/
+		GUN_SOUND_PANEL(new Rectangle(515, 300, 250, 100),0),
+		/** 射撃モード設定パネル*/
+		GUN_FIREMODE_PANEL(new Rectangle(515, 210, 250, 50),0)
 		;
 		public static final int GUN_PANELS = 0;
 		Rectangle size;
@@ -228,6 +249,5 @@ public class EditPanel extends JPanel implements ActionListener {
 			size = Bounds;
 			mode = m;
 		}
-		
 	}
 }

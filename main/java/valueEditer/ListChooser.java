@@ -116,7 +116,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 	void delete(int index) {
 		switch (mode) {
 		case GUN_MAGAZINE_LIST:
-			GunDataList.TYPES_BULLETS.setData(gunData, helper.ArrayEditor.RemoveFromArray(gunData.getDataStringArray(GunDataList.TYPES_BULLETS), listModel.getElementAt(index).name));
+			GunDataList.TYPES_BULLETS.setData(gunData, helper.ArrayEditer.RemoveFromArray(gunData.getDataStringArray(GunDataList.TYPES_BULLETS), listModel.getElementAt(index).name));
 			break;
 		}
 		write();
@@ -168,7 +168,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 	public void actionPerformed(ActionEvent e) {
 		//ついか
 		if(combo.getSelectedIndex()!=-1){
-			GunDataList.TYPES_BULLETS.setData(gunData, helper.ArrayEditor.AddToArray(gunData.getDataStringArray(GunDataList.TYPES_BULLETS), combo.getSelectedItem().toString()));
+			GunDataList.TYPES_BULLETS.setData(gunData, helper.ArrayEditer.AddToArray(gunData.getDataStringArray(GunDataList.TYPES_BULLETS), combo.getSelectedItem().toString()));
 			write();
 		}
 

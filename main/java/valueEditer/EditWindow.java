@@ -16,13 +16,7 @@ import valueEditer.EditPanel.PanelList;
 public class EditWindow{
 	/**現在開いている編集ウィンドウ*/
 	public static JPanel OpenWindow;
-
-	/**現在のパネルの幅*/
-	public static int panelWidth;
-	/**パネルの行数*/
-	public static int panelNumber;
-
-
+	
 	/**エディターを開く*/
 	public void MakeWindow(JFrame window) {
 
@@ -60,12 +54,7 @@ public class EditWindow{
 
 	/**リサイズ+パネルサイズを再計算*/
 	public static void reSize(){
-		OpenWindow.setBounds(200, 20, 770, MainWindow.MainWindow.getHeight()-85);
-		panelNumber = 0;
-		for(int width = OpenWindow.getWidth();width > 0;width-=300){
-			panelNumber ++;
-		}
-		System.out.println(panelNumber+" "+ OpenWindow.getWidth());
+		OpenWindow.setBounds(200, 0, 770, MainWindow.MainWindow.getHeight()-65);
 	}
 
 	/**エディターを閉じる*/

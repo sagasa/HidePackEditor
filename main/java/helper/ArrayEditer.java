@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**プリミティブ配列の結合など*/
-public class ArrayEditor {
+public class ArrayEditer {
 	/**byte配列2つを結合*/
 	static public byte[] ByteArrayCombining(byte[] in1,byte[] in2){
 		byte[] out = new byte[in1.length + in2.length];

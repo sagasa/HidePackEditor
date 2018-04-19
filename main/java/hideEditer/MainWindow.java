@@ -54,6 +54,9 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 
 	/**iconのList*/
 	public static HashMap<String,ImageData> iconMap = new HashMap<String,ImageData>();
+	
+	/**soundのList*/
+	public static HashMap<String,byte[]> soundMap = new HashMap<String,byte[]>();
 
 	/*インスタンスの格納*/
 	/**パックインフォのインスタンス*/
