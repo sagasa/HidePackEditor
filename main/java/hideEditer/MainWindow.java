@@ -71,10 +71,10 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 		//画面の中央に適当なサイズで出現
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		MainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		int w = screenSize.width;
-		int h = screenSize.height;
-		MainWindow.setSize(w/4*3, h/4*3);
-		MainWindow.setLocation(w/8, h/8);
+		int w = screenSize.width/4*3<1190? 1190:screenSize.width/4*3;
+		int h = screenSize.height/4*3<625?625:screenSize.height/4*3;
+		MainWindow.setSize(w, h);
+		MainWindow.setLocation((screenSize.width-w)/2, (screenSize.height-h)/2);
 		MainWindow.addComponentListener(this);
 
 	    //メニューバー
