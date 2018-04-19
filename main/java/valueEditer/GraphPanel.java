@@ -21,7 +21,7 @@ public class GraphPanel extends JPanel{
 	int cate;
 
 	/**表示スケール*/
-	int d = 30;
+	int d = 60;
 
 	final int radius = 100;
 

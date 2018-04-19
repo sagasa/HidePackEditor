@@ -1,27 +1,6 @@
 package hideEditer;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import types.ContentsPack;
-import types.ContentsPack.PackDataList;
-import types.GunData;
-import types.GunData.GunDataList;
 import valueEditer.EditWindow;
-import valueEditer.valueSetPanels.NumberSetPanel;
 
 public class Main {
 
