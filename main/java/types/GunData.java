@@ -36,7 +36,7 @@ public class GunData extends DataBase {
 		/** レート ; レートtick間隔で発射する : int型 **/
 		RATE("Rate", 1, DataType.Int, 0, 1F),
 		/** 射撃モード : String配列型 **/
-		FIRE_MODE("FireMode", new String[] { "semiouto" }, DataType.StringArray, 22),
+		FIRE_MODE("FireMode", new String[] { "semiauto" }, DataType.StringArray, 22),
 		/** 装弾数 : int型 **/
 		MAGAZINE_NUMBER("MagazineNumber", 1, DataType.Int, 0, 1F),
 		/** 発射数 : int型 **/
