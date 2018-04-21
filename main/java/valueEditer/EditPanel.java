@@ -140,8 +140,11 @@ public class EditPanel extends JPanel implements ActionListener {
 			this.add(burst);
 			break;
 		case GUN_SOUND_PANEL:
-			SoundSetPanel reload = new SoundSetPanel(Data, SoundSetPanel.GUN_SHOOT_SOUND);
-			reload.setBounds(0, 0, 250,100);
+			SoundSetPanel shoot = new SoundSetPanel(Data, SoundSetPanel.GUN_SHOOT_SOUND);
+			shoot.setBounds(0, 0, 250,100);
+			this.add(shoot);
+			SoundSetPanel reload = new SoundSetPanel(Data, SoundSetPanel.GUN_RELOAD_SOUND);
+			reload.setBounds(0, 105, 250,100);
 			this.add(reload);
 			break;
 		}
@@ -238,7 +241,7 @@ public class EditPanel extends JPanel implements ActionListener {
 		/** ダメージ倍率設定パネル*/
 		GUN_DAMAGE_DIAMETER_PANEL(new Rectangle(515, 5, 250, 0),0),
 		/** サウンド設定パネル*/
-		GUN_SOUND_PANEL(new Rectangle(515, 300, 250, 100),0),
+		GUN_SOUND_PANEL(new Rectangle(515, 268, 250, 205),0),
 		/** 射撃モード設定パネル*/
 		GUN_FIREMODE_PANEL(new Rectangle(515, 210, 250, 50),0)
 		;
