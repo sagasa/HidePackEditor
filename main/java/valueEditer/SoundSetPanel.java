@@ -17,13 +17,13 @@ import valueEditer.valueSetPanels.NumberSetPanel;
 /**再生する音の設定 ファイル名とピッチをセットで*/
 public class SoundSetPanel extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 4067090528518009773L;
-	
+
 	public static final int GUN_SHOOT_SOUND = 1;
 	public static final int GUN_RELOAD_SOUND = 2;
-	
+
 	DataBase data;
 	int mode;
-	
+
 	public SoundSetPanel(DataBase d,int c){
 		data = d;
 		mode = c;
@@ -41,21 +41,21 @@ public class SoundSetPanel extends JPanel implements ActionListener{
 			NumberSetPanel pitch = new NumberSetPanel(GunDataList.SOUND_SHOOT_PITCH,data);
 			pitch.setBounds(5,51,240,18);
 			this.add(pitch);
-			JLabel IconSize = new JLabel("");
-			IconSize.setBounds(5, 74, 110, 18);
-			IconSize.setFont(new Font("BOLD", Font.BOLD, 12));
-			this.add(IconSize);
+			JLabel nowsounds = new JLabel("SoundName : ");
+			nowsounds.setBounds(5, 74, 110, 18);
+			nowsounds.setFont(new Font("BOLD", Font.BOLD, 12));
+			this.add(nowsounds);
 
-			JComboBox<String> IconList = new JComboBox<String>();
-			IconList.addActionListener(this);
-			IconList.addItem("");
+			JComboBox<String> sounds = new JComboBox<String>();
+			sounds.addActionListener(this);
+			sounds.addItem("");
 			for (String name : MainWindow.soundMap.keySet()) {
-				IconList.addItem(name);
+				sounds.addItem(name);
 			}
-			IconList.setBounds(170, 38, 75, 18);
-			IconList.setSelectedItem(data.getDataString(GunDataList.SOUND_SHOOT_NAME));
-			IconList.setActionCommand("iconSet");
-			this.add(IconList);
+			sounds.setBounds(170, 74, 75, 18);
+			sounds.setSelectedItem(data.getDataString(GunDataList.SOUND_SHOOT_NAME));
+			sounds.setActionCommand("iconSet");
+			this.add(sounds);
 			break;
 		}
 	}
@@ -63,7 +63,7 @@ public class SoundSetPanel extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO 自動生成されたメソッド・スタブ
-		
+
 	}
-	
+
 }

@@ -1,26 +1,21 @@
 package hideEditer;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.List;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.Box;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import types.BulletData;
@@ -54,7 +49,7 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 
 	/**iconのList*/
 	public static HashMap<String,ImageData> iconMap = new HashMap<String,ImageData>();
-	
+
 	/**soundのList*/
 	public static HashMap<String,byte[]> soundMap = new HashMap<String,byte[]>();
 
@@ -128,7 +123,7 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 
 	    Resources = new ResourcesList();
 	    Resources.MakeWindow(MainWindow);
-	    Resources.reSize();
+	    ResourcesList.reSize();
 
 	    Editer = new EditWindow();
 	    Editer.MakeWindow(MainWindow);

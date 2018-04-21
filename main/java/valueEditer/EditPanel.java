@@ -141,7 +141,7 @@ public class EditPanel extends JPanel implements ActionListener {
 			break;
 		case GUN_SOUND_PANEL:
 			SoundSetPanel reload = new SoundSetPanel(Data, SoundSetPanel.GUN_SHOOT_SOUND);
-			reload.setBounds(0, 0, 250, 80);
+			reload.setBounds(0, 0, 250,100);
 			this.add(reload);
 			break;
 		}
@@ -244,7 +244,7 @@ public class EditPanel extends JPanel implements ActionListener {
 		;
 		public static final int GUN_PANELS = 0;
 		Rectangle size;
-		int mode; 
+		int mode;
 		PanelList(Rectangle Bounds,int m){
 			size = Bounds;
 			mode = m;
