@@ -199,6 +199,10 @@ public class GunData extends DataBase {
 		public static final int MAX_SNEAK_RECOIL = 6;
 		public static final int MAX_ADS_RECOIL = 7;
 		public static final int MAX_ADS_SNEAK_RECOIL = 8;
+		public static final int DEFAULT_RECOIL_INFO = 9;
+		public static final int SNEAK_RECOIL_INFO = 10;
+		public static final int ADS_RECOIL_INFO = 11;
+		public static final int ADS_SNEAK_RECOIL_INFO = 12;
 
 		public static final int DAMAGE_DIAMETER = 20;
 		public static final int SOUND_OPTION = 21;
@@ -282,82 +286,111 @@ public class GunData extends DataBase {
 		}
 	}
 
+	/**使っていないリコイルの設定に上位の設定を書き込む*/
 	public void setUnuseRecoil(){
 		if (!UseSneakRecoil){
-			int p1 = 0;
-			int p2 = 0;
-			float[] stack1 = new float[8];
-			int p3 = 0;
-			int p4 = 0;
-			float[] stack2 = new float[8];
+			//ポインタ [データ][0/1]
+			int p[][] = new int[3][2];
+			//スタックはデータの数必要
+			float[] stack1 = new float[4];
+			float[] stack2 = new float[4];
+			float[] stack3 = new float[4];
 			for(GunDataList d:GunDataList.values()){
 				if(d.cate == GunDataList.MIN_DEFAULT_RECOIL){
-					stack1[p1] = getDataFloat(d);
-					p1++;
+					stack1[p[0][0]] = getDataFloat(d);
+					p[0][0]++;
 				}
 				if(d.cate == GunDataList.MIN_SNEAK_RECOIL){
-					setData(d, stack1[p2]);
-					p2++;
+					setData(d, stack1[p[0][1]]);
+					p[0][1]++;
 				}
+
 				if(d.cate == GunDataList.MAX_DEFAULT_RECOIL){
-					stack2[p3] = getDataFloat(d);
-					p3++;
+					stack2[p[1][0]] = getDataFloat(d);
+					p[1][0]++;
 				}
 				if(d.cate == GunDataList.MAX_SNEAK_RECOIL){
-					setData(d, stack2[p4]);
-					p4++;
+					setData(d, stack2[p[1][1]]);
+					p[1][1]++;
+				}
+
+				if(d.cate == GunDataList.DEFAULT_RECOIL_INFO){
+					stack2[p[2][0]] = getDataFloat(d);
+					p[2][0]++;
+				}
+				if(d.cate == GunDataList.SNEAK_RECOIL_INFO){
+					setData(d, stack2[p[2][1]]);
+					p[2][1]++;
 				}
 			}
 		}
 		if (!UseADSRecoil){
-			int p1 = 0;
-			int p2 = 0;
-			float[] stack1 = new float[8];
-			int p3 = 0;
-			int p4 = 0;
-			float[] stack2 = new float[8];
+			//ポインタ [データ][0/1]
+			int p[][] = new int[3][2];
+			//スタックはデータの数必要
+			float[] stack1 = new float[12];
+			float[] stack2 = new float[12];
 			for(GunDataList d:GunDataList.values()){
 				if(d.cate == GunDataList.MIN_DEFAULT_RECOIL){
-					stack1[p1] = getDataFloat(d);
-					p1++;
+					stack1[p[0][0]] = getDataFloat(d);
+					p[0][0]++;
 				}
 				if(d.cate == GunDataList.MIN_ADS_RECOIL){
-					setData(d, stack1[p2]);
-					p2++;
+					setData(d, stack1[p[0][1]]);
+					p[0][1]++;
 				}
+
 				if(d.cate == GunDataList.MAX_DEFAULT_RECOIL){
-					stack2[p3] = getDataFloat(d);
-					p3++;
+					stack2[p[1][0]] = getDataFloat(d);
+					p[1][0]++;
 				}
 				if(d.cate == GunDataList.MAX_ADS_RECOIL){
-					setData(d, stack2[p4]);
-					p4++;
+					setData(d, stack2[p[1][1]]);
+					p[1][1]++;
+				}
+
+				if(d.cate == GunDataList.DEFAULT_RECOIL_INFO){
+					stack2[p[2][0]] = getDataFloat(d);
+					p[2][0]++;
+				}
+				if(d.cate == GunDataList.ADS_RECOIL_INFO){
+					setData(d, stack2[p[2][1]]);
+					p[2][1]++;
 				}
 			}
 		}
 		if (!UseADSSneakRecoil){
-			int p1 = 0;
-			int p2 = 0;
-			float[] stack1 = new float[8];
-			int p3 = 0;
-			int p4 = 0;
-			float[] stack2 = new float[8];
+			//ポインタ [データ][0/1]
+			int p[][] = new int[3][2];
+			//スタックはデータの数必要
+			float[] stack1 = new float[12];
+			float[] stack2 = new float[12];
 			for(GunDataList d:GunDataList.values()){
 				if(d.cate == GunDataList.MIN_SNEAK_RECOIL){
-					stack1[p1] = getDataFloat(d);
-					p1++;
+					stack1[p[0][0]] = getDataFloat(d);
+					p[0][0]++;
 				}
 				if(d.cate == GunDataList.MIN_ADS_SNEAK_RECOIL){
-					setData(d, stack1[p2]);
-					p2++;
+					setData(d, stack1[p[0][1]]);
+					p[0][1]++;
 				}
+
 				if(d.cate == GunDataList.MAX_SNEAK_RECOIL){
-					stack2[p3] = getDataFloat(d);
-					p3++;
+					stack2[p[1][0]] = getDataFloat(d);
+					p[1][0]++;
 				}
 				if(d.cate == GunDataList.MAX_ADS_SNEAK_RECOIL){
-					setData(d, stack2[p4]);
-					p4++;
+					setData(d, stack2[p[1][1]]);
+					p[1][1]++;
+				}
+
+				if(d.cate == GunDataList.SNEAK_RECOIL_INFO){
+					stack2[p[2][0]] = getDataFloat(d);
+					p[2][0]++;
+				}
+				if(d.cate == GunDataList.ADS_SNEAK_RECOIL_INFO){
+					setData(d, stack2[p[2][1]]);
+					p[2][1]++;
 				}
 			}
 		}

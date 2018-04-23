@@ -42,6 +42,10 @@ public abstract class DataBase {
 	}
 	/**データ上書き*/
 	public void setData(EnumDataList type,Object data){
+		//intへのキャスト
+		if(type.getType()==DataType.Int&&data instanceof Float){
+			data = Math.round((Float) data);
+		}
 		this.Data.replace(type.toString(),data);
 	}
 	public DataBase(){
