@@ -126,18 +126,9 @@ public class EditPanel extends JPanel implements ActionListener {
 			gunDataPanel(GunDataList.DAMAGE_DIAMETER,0,true);
 			break;
 		case GUN_FIREMODE_PANEL:
-			CheckBoxPanel fullauto = new CheckBoxPanel("FullAuto",CheckBoxPanel.FIREMODE_FULLAUTO,Data);
-			fullauto.setBounds(5,5, 100, 18);
-			this.add(fullauto);
-			CheckBoxPanel semiauto = new CheckBoxPanel("SemiAuto",CheckBoxPanel.FIREMODE_SEMIAUTO,Data);
-			semiauto.setBounds(130,5, 100, 18);
-			this.add(semiauto);
-			CheckBoxPanel minigun = new CheckBoxPanel("MINIGUN",CheckBoxPanel.FIREMODE_MINIGUN,Data);
-			minigun.setBounds(5,28, 100, 18);
-			this.add(minigun);
-			CheckBoxPanel burst = new CheckBoxPanel("Burst",CheckBoxPanel.FIREMODE_BURST,Data);
-			burst.setBounds(130,28, 100, 18);
-			this.add(burst);
+			FireModePanel firemode = new FireModePanel((GunData)Data);
+			firemode.setBounds(0,0,this.getWidth(),this.getHeight());
+			this.add(firemode);
 			break;
 		case GUN_SOUND_PANEL:
 			SoundSetPanel shoot = new SoundSetPanel(Data, SoundSetPanel.GUN_SHOOT_SOUND);
@@ -241,11 +232,12 @@ public class EditPanel extends JPanel implements ActionListener {
 		/** ダメージ倍率設定パネル*/
 		GUN_DAMAGE_DIAMETER_PANEL(new Rectangle(515, 5, 250, 0),0),
 		/** サウンド設定パネル*/
-		GUN_SOUND_PANEL(new Rectangle(515, 268, 250, 205),0),
+		GUN_SOUND_PANEL(new Rectangle(515, 318, 250, 205),0),
 		/** 射撃モード設定パネル*/
-		GUN_FIREMODE_PANEL(new Rectangle(515, 210, 250, 50),0)
+		GUN_FIREMODE_PANEL(new Rectangle(515, 210, 250, 100),0)
 		;
 		public static final int GUN_PANELS = 0;
+		public static final int BULLET_PANELS = 1;
 		Rectangle size;
 		int mode;
 		PanelList(Rectangle Bounds,int m){
