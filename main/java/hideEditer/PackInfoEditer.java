@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import types.ContentsPack;
+import types.ContentsPack.PackDataList;
 import types.GunData.GunDataList;
 
 /**右上のパック情報編集用 インスタンスは1つまで*/
@@ -71,7 +72,7 @@ public class PackInfoEditer extends JPanel implements ActionListener, FocusListe
 		this.add(shortName);
 
 		//テキストボックス
-		NameText = new JTextField(ContentsPack.PackDataList.PACK_NAME.getData(MainWindow.Pack).toString());
+		NameText = new JTextField(MainWindow.Pack.getDataString(PackDataList.PACK_NAME));
 		NameText.setBounds(70, 5, 95, 24);
 		NameText.addFocusListener(this);
 		NameText.setBorder(border);
@@ -93,7 +94,7 @@ public class PackInfoEditer extends JPanel implements ActionListener, FocusListe
 		this.add(displayName);
 
 		//テキストボックス
-		VersionText = new JTextField(ContentsPack.PackDataList.PACK_VERSION.getData(MainWindow.Pack).toString());
+		VersionText = new JTextField(MainWindow.Pack.getDataString(PackDataList.PACK_VERSION));
 		VersionText.setBounds(70, 35, 95, 24);
 		VersionText.setBorder(border);
 		VersionText.addFocusListener(this);

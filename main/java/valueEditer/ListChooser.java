@@ -195,12 +195,12 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 
 			//NamePanel
 			JLabel name = new JLabel(str);
-			name.setBounds(5, 1, 65, 18);
+			name.setBounds(5, 1, 200, 18);
 			this.add(name);
 			//削除！のパネル
 			LineBorder border = new LineBorder(Color.black, 1, false);
 			label = new JLabel("delete");
-			label.setBounds(70, 1, 35, 18);
+			label.setBounds(200, 1, 35, 18);
 			label.setBackground(Color.RED);
 			label.setForeground(Color.white);
 			label.setFont(new Font("BOLD", Font.BOLD, 10));

@@ -16,6 +16,8 @@ import types.base.EnumDataList;
 public class StringSetPanel extends ValueSetPanel{
 	private static final long serialVersionUID = 3496770761921234269L;
 
+	int textFieldWidth;
+	
 	/** テキストボックス */
 	JTextField txtField;
 	JLabel setting;
@@ -25,10 +27,17 @@ public class StringSetPanel extends ValueSetPanel{
 		this(type,data,true);
 	}
 
+	/** コンストラクタ 編集可能 テキストフィールド幅設定可能*/
+	public StringSetPanel(EnumDataList type, DataBase data,int textFieldW) {
+		this(type,data,true);
+		this.textFieldWidth = textFieldW;
+	}
+	
 	/** コンストラクタ 編集 可/不可 */
 	public StringSetPanel(EnumDataList type, DataBase data, boolean canedit) {
 		super(data,type,canedit);
 		this.setOpaque(false);
+		this.textFieldWidth = 147;
 	}
 
 	//インスタンス
@@ -77,8 +86,8 @@ public class StringSetPanel extends ValueSetPanel{
 
 	@Override
 	public void risize() {
-		txtField.setBounds(this.getWidth() - 150, 0, 147, this.getHeight());
-		setting.setBounds(0, 0, this.getWidth() - 155, this.getHeight());
+		txtField.setBounds(this.getWidth() - textFieldWidth - 3, 0, textFieldWidth, this.getHeight());
+		setting.setBounds(0, 0, this.getWidth() - textFieldWidth-8, this.getHeight());
 	}
 
 

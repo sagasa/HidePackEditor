@@ -68,6 +68,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	    bulletModel = new DefaultListModel<String>();
 	    bullets.setModel(bulletModel);
 	    bullets.addMouseListener(this);
+	    bullets.addListSelectionListener(this);
 	    JScrollPane bulletSP = new JScrollPane();
 	    bulletSP.getViewport().setView(bullets);
 
@@ -86,12 +87,12 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	public static void write() {
 		gunModel.clear();
 		for (GunData data:MainWindow.gunMap.values()){
-			System.out.println(data.getDataString(GunDataList.DISPLAY_NAME));
+			//System.out.println(data.getDataString(GunDataList.DISPLAY_NAME));
 			gunModel.addElement(data.getDataString(GunDataList.DISPLAY_NAME));
 		}
 		bulletModel.clear();
 		for (BulletData data:MainWindow.bulletMap.values()){
-			System.out.println(BulletDataList.DISPLAY_NAME.getData(data));
+			//System.out.println(BulletDataList.DISPLAY_NAME.getData(data));
 			bulletModel.addElement((String) BulletDataList.DISPLAY_NAME.getData(data));
 		}
 
@@ -121,7 +122,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 		BulletData newBullet = new BulletData();
 		newBullet.setData(BulletDataList.DISPLAY_NAME, "new bullet "+bulletNum);
 		MainWindow.bulletMap.put(newBullet.getDataString(BulletDataList.DISPLAY_NAME), newBullet);
-		System.out.println("ok");
+		//System.out.println("ok");
 		write();
 	}
 
@@ -136,7 +137,9 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 			}
 			break;
 		case 1:
-
+			if(!bullets.isSelectionEmpty()){
+				MainWindow.Editer.wrietBulletEditer(MainWindow.bulletMap.get(bullets.getSelectedValue()));
+			}
 			break;
 		}
 
@@ -201,7 +204,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		//決定したところで
-		if (!e.getValueIsAdjusting()&&!guns.isSelectionEmpty()){
+		if (!e.getValueIsAdjusting()){
 			OpenEditer();
 		}
 	}

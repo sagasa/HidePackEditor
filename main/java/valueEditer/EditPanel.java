@@ -17,6 +17,7 @@ import hideEditer.IconPrint;
 import hideEditer.MainWindow;
 import hideEditer.ResourcesList;
 import types.BulletData;
+import types.BulletData.BulletDataList;
 import types.GunData;
 import types.GunData.GunDataList;
 import valueEditer.valueSetPanels.NumberSetPanel;
@@ -63,42 +64,9 @@ public class EditPanel extends JPanel implements ActionListener {
 			this.add(name2);
 			break;
 		case GUN_ICON_PANEL:
-			ImageData image;
-
-			// 見つかれば設定された画像見つからなければnullImage
-			if (MainWindow.iconMap.containsKey(Data.getDataString(GunDataList.ICON))) {
-				image = MainWindow.iconMap.get(Data.getDataString(GunDataList.ICON));
-			} else {
-				image = ResourcesList.nullImage;
-			}
-
-			IconPrint icon1 = new IconPrint(image);
-			icon1.setBorder(border);
-			icon1.setBounds(5, 5, 50, 50);
-			this.add(icon1);
-
-			JLabel IconLore = new JLabel("IconInfo");
-			IconLore.setBounds(60, 5, 110, 18);
-			IconLore.setFont(new Font("BOLD", Font.BOLD, 13));
-			this.add(IconLore);
-
-			JLabel IconSize = new JLabel("Size: " + image.getWidth() + "x" + image.getHeight() + " Name:");
-			IconSize.setBounds(60, 38, 110, 18);
-			IconSize.setFont(new Font("BOLD", Font.BOLD, 12));
-			this.add(IconSize);
-
-			JComboBox<String> IconList = new JComboBox<String>();
-			IconList.addActionListener(this);
-			IconList.addItem("");
-			for (ImageData data : MainWindow.iconMap.values()) {
-				IconList.addItem(data.ImageName);
-			}
-			IconList.setBounds(170, 38, 75, 18);
-			IconList.setSelectedItem(Data.getDataString(GunDataList.ICON));
-			IconList.setActionCommand("iconSet");
-			this.add(IconList);
+			IconPanel();
 			break;
-		case DELETE_PANEL:
+		case GUN_DELETE_PANEL:
 			deletePanel();
 			break;
 		case GUN_INFO_PANEL:
@@ -138,17 +106,32 @@ public class EditPanel extends JPanel implements ActionListener {
 			reload.setBounds(0, 105, 250,100);
 			this.add(reload);
 			break;
+		case BULLET_DELETE_PANEL:
+			deletePanel();
+			break;
+		case BULLET_ICON_PANEL:
+			IconPanel();
+			break;
+		case BULLET_INFO_PANEL:
+			break;
+		case BULLET_NAME_PANEL:
+			int yPointer1 = 3;
+
+			StringSetPanel name11 = new StringSetPanel(BulletDataList.DISPLAY_NAME, Data);
+			name11.setBounds(0, yPointer1, 250, 20);
+			this.add(name11);
+			yPointer1 += 25;
+
+			StringSetPanel name21 = new StringSetPanel(BulletDataList.SHORT_NAME, Data);
+			name21.setBounds(0, yPointer1, 250, 20);
+			this.add(name21);
+			break;
+		default:
+			break;
 		}
 		repaint();
 	}
-	//===========================================
-	//                弾用パネル
-	//===========================================
 
-
-	//===========================================
-	//                銃用パネル
-	//===========================================
 	// 基本パラメーターパネル
 	void gunDataPanel(int cate, int offset, boolean canEdit) {
 		int p = offset;
@@ -167,6 +150,48 @@ public class EditPanel extends JPanel implements ActionListener {
 		this.setBounds(size);
 	}
 
+	void IconPanel(){
+		ImageData image;
+
+		// 見つかれば設定された画像見つからなければnullImage
+		String nowData;
+		if (Data instanceof GunData){
+			nowData = Data.getDataString(GunDataList.ICON);
+		}else{
+			nowData = Data.getDataString(BulletDataList.ICON);
+		}
+		if (MainWindow.iconMap.containsKey(nowData)) {
+			image = MainWindow.iconMap.get(nowData);
+		} else {
+			image = ResourcesList.nullImage;
+		}
+
+		IconPrint icon1 = new IconPrint(image);
+		icon1.setBorder(border);
+		icon1.setBounds(5, 5, 50, 50);
+		this.add(icon1);
+
+		JLabel IconLore = new JLabel("IconInfo");
+		IconLore.setBounds(60, 5, 110, 18);
+		IconLore.setFont(new Font("BOLD", Font.BOLD, 13));
+		this.add(IconLore);
+
+		JLabel IconSize = new JLabel("Size: " + image.getWidth() + "x" + image.getHeight() + " Name:");
+		IconSize.setBounds(60, 38, 110, 18);
+		IconSize.setFont(new Font("BOLD", Font.BOLD, 12));
+		this.add(IconSize);
+
+		JComboBox<String> IconList = new JComboBox<String>();
+		IconList.addActionListener(this);
+		IconList.addItem("");
+		for (ImageData data : MainWindow.iconMap.values()) {
+			IconList.addItem(data.ImageName);
+		}
+		IconList.setBounds(170, 38, 75, 18);
+		IconList.setSelectedItem(Data.getDataString(GunDataList.ICON));
+		IconList.setActionCommand("iconSet");
+		this.add(IconList);
+	}
 	// 削除パネル
 	void deletePanel() {
 		// コピーボタン
@@ -228,13 +253,22 @@ public class EditPanel extends JPanel implements ActionListener {
 		/** 銃の使用するアタッチメント設定用定数 */
 		GUN_ATTACHMENTS_PANEL(new Rectangle(260, 230, 250, 100),0),
 		/** 削除+コピペ */
-		DELETE_PANEL(new Rectangle(260, 5, 250, 50),0),
+		GUN_DELETE_PANEL(new Rectangle(260, 5, 250, 50),0),
 		/** ダメージ倍率設定パネル*/
 		GUN_DAMAGE_DIAMETER_PANEL(new Rectangle(515, 5, 250, 0),0),
 		/** サウンド設定パネル*/
 		GUN_SOUND_PANEL(new Rectangle(515, 318, 250, 205),0),
 		/** 射撃モード設定パネル*/
-		GUN_FIREMODE_PANEL(new Rectangle(515, 210, 250, 100),0)
+		GUN_FIREMODE_PANEL(new Rectangle(515, 210, 250, 100),0),
+		
+		/** 名前設定用定数 */
+		BULLET_NAME_PANEL(new Rectangle(5, 5, 250, 50),1),
+		/** その他数値パラメーター設定用定数 */
+		BULLET_INFO_PANEL(new Rectangle(5, 60, 250, 0),1),
+		/** アイコン設定用定数 */
+		BULLET_ICON_PANEL(new Rectangle(260, 60, 250, 60),1),
+		/** 削除+コピペ */
+		BULLET_DELETE_PANEL(new Rectangle(260, 5, 250, 50),1),
 		;
 		public static final int GUN_PANELS = 0;
 		public static final int BULLET_PANELS = 1;

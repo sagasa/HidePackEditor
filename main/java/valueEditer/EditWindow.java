@@ -9,7 +9,9 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import hideEditer.MainWindow;
+import types.BulletData;
 import types.GunData;
+import types.base.DataBase;
 import valueEditer.EditPanel.PanelList;
 
 /**アクションリスナーのためにstaticにしていない 実質staticクラス インスタンスはMainWindowに格納*/
@@ -19,7 +21,6 @@ public class EditWindow{
 	
 	/**エディターを開く*/
 	public void MakeWindow(JFrame window) {
-
 		OpenWindow = new JPanel();
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		OpenWindow.setLayout(null);
@@ -32,7 +33,7 @@ public class EditWindow{
 
 	static JTextField shortName2;
 	static JTextField displayName2;
-	static GunData data;
+	static DataBase data;
 
 	/**チェックボックス*/
 	JCheckBox[] canUse = new JCheckBox[3];
@@ -44,6 +45,19 @@ public class EditWindow{
 		OpenWindow.removeAll();
 		for(PanelList p :PanelList.values()){
 			if (p.mode == PanelList.GUN_PANELS){
+				EditPanel panel = new EditPanel(p,data);
+				OpenWindow.add(panel);
+			}
+		}
+		OpenWindow.repaint();
+	}
+	
+	/**Bulletエディターを描画*/
+	public void wrietBulletEditer(BulletData d) {
+		data = d;
+		OpenWindow.removeAll();
+		for(PanelList p :PanelList.values()){
+			if (p.mode == PanelList.BULLET_PANELS){
 				EditPanel panel = new EditPanel(p,data);
 				OpenWindow.add(panel);
 			}
