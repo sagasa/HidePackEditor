@@ -89,7 +89,6 @@ public class EditPanel extends JPanel implements ActionListener {
 			magChooser.setBounds(5, 5, this.getWidth()-10, this.getHeight()-10);
 			this.add(magChooser);
 		break;
-		//case BULLET_NAME_PANEL:
 		case GUN_DAMAGE_DIAMETER_PANEL:
 			gunDataPanel(GunDataList.DAMAGE_DIAMETER,0,true);
 			break;
@@ -113,6 +112,7 @@ public class EditPanel extends JPanel implements ActionListener {
 			IconPanel();
 			break;
 		case BULLET_INFO_PANEL:
+			bulletDataPanel(BulletDataList.BULLET_INFO,0,true);
 			break;
 		case BULLET_NAME_PANEL:
 			int yPointer1 = 3;
@@ -149,6 +149,23 @@ public class EditPanel extends JPanel implements ActionListener {
 		size.height = p * 24 + 6;
 		this.setBounds(size);
 	}
+	// 基本パラメーターパネル
+		void bulletDataPanel(int cate, int offset, boolean canEdit) {
+			int p = offset;
+			for (BulletDataList settingData : BulletDataList.values()) {
+				// カテゴリ分け -1以外なら
+				if (settingData.getCate() == cate) {
+					NumberSetPanel panel = new NumberSetPanel(settingData, Data, canEdit);
+					panel.setBounds(5, 5 + p * 24, this.getWidth() - 10, 20);
+					this.add(panel);
+					p++;
+				}
+			}
+			// 高さだけ上書き
+			Rectangle size = this.getBounds();
+			size.height = p * 24 + 6;
+			this.setBounds(size);
+		}
 
 	void IconPanel(){
 		ImageData image;
@@ -265,6 +282,10 @@ public class EditPanel extends JPanel implements ActionListener {
 		BULLET_NAME_PANEL(new Rectangle(5, 5, 250, 50),1),
 		/** その他数値パラメーター設定用定数 */
 		BULLET_INFO_PANEL(new Rectangle(5, 60, 250, 0),1),
+		/** ダメージ設定用定数 */
+		BULLET_DAMAGE_PANEL(new Rectangle(5, 60, 250, 0),1),
+		/** ダメージ設定用定数 */
+		BULLET_EXP_PANEL(new Rectangle(5, 60, 250, 0),1),
 		/** アイコン設定用定数 */
 		BULLET_ICON_PANEL(new Rectangle(260, 60, 250, 60),1),
 		/** 削除+コピペ */

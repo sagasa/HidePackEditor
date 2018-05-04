@@ -121,6 +121,7 @@ public class ContentsList extends JTabbedPane implements MouseListener , ActionL
 		}
 		BulletData newBullet = new BulletData();
 		newBullet.setData(BulletDataList.DISPLAY_NAME, "new bullet "+bulletNum);
+		newBullet.setData(BulletDataList.SHORT_NAME, "bullet_"+bulletNum);
 		MainWindow.bulletMap.put(newBullet.getDataString(BulletDataList.DISPLAY_NAME), newBullet);
 		//System.out.println("ok");
 		write();

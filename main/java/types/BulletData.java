@@ -23,68 +23,68 @@ public class BulletData extends DataBase{
 		ICON("Icon","sanple",DataType.String),
 
 		/** 装弾数 : int型 **/
-		MAGAZINE_SIZE("MagazineSize",600,DataType.Int),
+		MAGAZINE_SIZE("MagazineSize",10,DataType.Int,1),
 
 		/** スタックサイズ : int型 **/
-		STACK_SIZE("StackSize",600,DataType.Int),
+		STACK_SIZE("StackSize",4,DataType.Int,1),
 
 		/**弾の寿命 (tick) : int型**/
-		BULLET_LIFE("bulletLife",600,DataType.Int),
+		BULLET_LIFE("bulletLife",600,DataType.Int,1),
 
 		/**直撃の対人ダメージ : float型**/
-		HIT_DAMAGE_PLAYER("playerDamage",0F,DataType.Float),
+		HIT_DAMAGE_PLAYER("playerDamage",0F,DataType.Float,2),
 		/**直撃の対MOBダメージ : float型**/
-		HIT_DAMAGE_LIVING("livingDamage",0F,DataType.Float),
+		HIT_DAMAGE_LIVING("livingDamage",0F,DataType.Float,2),
 		/**直撃の対地上兵器ダメージ : int型**/
-		HIT_DAMAGE_TANK("tankDamage",0,DataType.Int),
+		HIT_DAMAGE_TANK("tankDamage",0,DataType.Int,2),
 		/**直撃の対航空機ダメージ : int型**/
-		HIT_DAMAGE_AIR("aircraftDamage",0,DataType.Int),
+		HIT_DAMAGE_AIR("aircraftDamage",0,DataType.Int,2),
 
 		/**直撃の対人ノックバック : ノックバック距離(m)=ノックバック : float型**/
-		HIT_KNOCKBACK_PLAYER("playerKnockback",0F,DataType.Float),
+		HIT_KNOCKBACK_PLAYER("playerKnockback",0F,DataType.Float,3),
 		/**直撃の対MOBノックバック : ノックバック距離(m)=ノックバック : float型**/
-		HIT_KNOCKBACK_LIVING("livingKnockback",0F,DataType.Float),
+		HIT_KNOCKBACK_LIVING("livingKnockback",0F,DataType.Float,3),
 		/**直撃の対地上兵器ノックバック : ノックバック距離(m)=ノックバック/重量 : float型**/
-		HIT_KNOCKBACK_TANK("tankKnockback",0F,DataType.Float),
+		HIT_KNOCKBACK_TANK("tankKnockback",0F,DataType.Float,3),
 		/**直撃の対航空機ノックバック : ノックバック距離(m)=ノックバック/重量 : float型**/
-		HIT_KNOCKBACK_AIR("aircraftKnockback",0F,DataType.Float),
+		HIT_KNOCKBACK_AIR("aircraftKnockback",0F,DataType.Float,3),
 
 		/**爆風範囲 :int型**/
-		EXP_RANGE("explosionRange",0,DataType.Int),
+		EXP_RANGE("explosionRange",0,DataType.Int,4),
 
 		/**爆風の対人ダメージ底値 : 爆風ダメージ=底値-距離(m)*係数 : float型**/
-		EXP_DAMAGE_BASE_PLAYER("playerExplosionDamageBase",0F,DataType.Float),
+		EXP_DAMAGE_BASE_PLAYER("playerExplosionDamageBase",0F,DataType.Float,4),
 		/**爆風の対人ダメージ係数 : 爆風ダメージ=底値-距離(m)*係数 : float型**/
-		EXP_DAMAGE_COE_PLAYER("playerExplosionDamageCoe",0F,DataType.Float),
+		EXP_DAMAGE_COE_PLAYER("playerExplosionDamageCoe",0F,DataType.Float,4),
 		/**爆風のMOBダメージ底値 : 爆風ダメージ=底値-距離(m)*係数 : float型**/
-		EXP_DAMAGE_BASE_LIVING("livingExplosionDamageBase",0F,DataType.Float),
+		EXP_DAMAGE_BASE_LIVING("livingExplosionDamageBase",0F,DataType.Float,4),
 		/**爆風のMOBダメージ係数 : 爆風ダメージ=底値-距離(m)*係数 : float型**/
-		EXP_DAMAGE_COE_LIVING("livingExplosionDamageCoe",0,DataType.Float),
+		EXP_DAMAGE_COE_LIVING("livingExplosionDamageCoe",0,DataType.Float,4),
 		/**爆風の対地上兵器ダメージ底値 : 爆風ダメージ=底値-距離(m)*係数 : int型**/
-		EXP_DAMAGE_BASE_TANK("tankExplosionDamageBase",0,DataType.Int),
+		EXP_DAMAGE_BASE_TANK("tankExplosionDamageBase",0,DataType.Int,4),
 		/**爆風の対地上兵器ダメージ係数:爆風ダメージ=底値-距離(m)*係数 : int型**/
-		EXP_DAMAGE_COE_TANK("tankExplosionDamageCoe",0,DataType.Int),
+		EXP_DAMAGE_COE_TANK("tankExplosionDamageCoe",0,DataType.Int,4),
 		/**爆風の対航空機ダメージ底値 : 爆風ダメージ=底値-距離(m)*係数 : int型**/
-		EXP_DAMAGE_BASE_AIR("aircraftExplosionDamageBase",0,DataType.Int),
+		EXP_DAMAGE_BASE_AIR("aircraftExplosionDamageBase",0,DataType.Int,4),
 		/**爆風の対航空機ダメージ係数 : 爆風ダメージ=底値-距離(m)*係数 : int型**/
-		EXP_DAMAGE_COE_AIR("aircraftExplosionDamageCoe",0,DataType.Int),
+		EXP_DAMAGE_COE_AIR("aircraftExplosionDamageCoe",0,DataType.Int,4),
 
 		/**爆風の対人ノックバック底値 : ノックバック距離(m)=底値-距離(m)*係数 : float型**/
-		EXP_KNOCKACK_BASE_PLAYER("playerExplosionKnockbackBase",0F,DataType.Float),
+		EXP_KNOCKACK_BASE_PLAYER("playerExplosionKnockbackBase",0F,DataType.Float,5),
 		/**爆風の対人ノックバック係数 : ノックバック距離(m)=底値-距離(m)*係数 : float型**/
-		EXP_KNOCKACK_COE_PLAYER("playerExplosionKnockbackCoe",0F,DataType.Float),
+		EXP_KNOCKACK_COE_PLAYER("playerExplosionKnockbackCoe",0F,DataType.Float,5),
 		/**爆風のMOBノックバック底値 : ノックバック距離(m)=底値-距離(m)*係数 : float型**/
-		EXP_KNOCKACK_BASE_LIVING("livingExplosionKnockbackBase",0F,DataType.Float),
+		EXP_KNOCKACK_BASE_LIVING("livingExplosionKnockbackBase",0F,DataType.Float,5),
 		/**爆風のMOBノックバック係数 : ノックバック距離(m)=底値-距離(m)*係数 : float型**/
-		EXP_KNOCKACK_COE_LIVING("livingExplosionKnockbackCoe",0F,DataType.Float),
+		EXP_KNOCKACK_COE_LIVING("livingExplosionKnockbackCoe",0F,DataType.Float,5),
 		/**爆風の対地上兵器ノックバック底値 : ノックバック距離(m)=(底値-距離(m)*係数)/重量 : float型**/
-		EXP_KNOCKACK_BASE_TANK("tankExplosionKnockbackBase",0F,DataType.Float),
+		EXP_KNOCKACK_BASE_TANK("tankExplosionKnockbackBase",0F,DataType.Float,5),
 		/**爆風の対地上兵器ノックバック係数 : ノックバック距離(m)=(底値-距離(m)*係数)/重量 : float型**/
-		EXP_KNOCKACK_COE_TANK("tankExplosionKnockbackCoe",0F,DataType.Float),
+		EXP_KNOCKACK_COE_TANK("tankExplosionKnockbackCoe",0F,DataType.Float,5),
 		/**爆風の対航空機ノックバック底値 : ノックバック距離(m)=(底値-距離(m)*係数)/重量 : float型**/
-		EXP_KNOCKACK_BASE_AIR("aircraftExplosionKnockbackBase",0F,DataType.Float),
+		EXP_KNOCKACK_BASE_AIR("aircraftExplosionKnockbackBase",0F,DataType.Float,5),
 		/**爆風の対航空機ノックバック係数 : ノックバック距離(m)=(底値-距離(m)*係数)/重量 : float型**/
-		EXP_KNOCKACK_COE_AIR("aircraftExplosionKnockbackCoe",0F,DataType.Float),
+		EXP_KNOCKACK_COE_AIR("aircraftExplosionKnockbackCoe",0F,DataType.Float,5),
 
 		/**距離減衰を使用するか : boolean型**/
 		DECAY_USE("useDecay",false,DataType.Boolean),
@@ -113,7 +113,13 @@ public class BulletData extends DataBase{
 		 近接信管・反応するエンティティ
 		 誘導：true/false・手動/ロックオン/継続ロックオン・反応するエンティティ
 		 */
-
+		
+		public static final int BULLET_INFO = 1;
+		public static final int BULLET_HIT_DAMAGE = 2;
+		public static final int BULLET_HIT_KNOCKBACK = 3;
+		public static final int BULLET_EXP_DAMAGE = 4;
+		public static final int BULLET_EXP_KNOCKBACK = 5;
+		
 		/**登録名*/
 		private String name;
 		/**初期値*/
