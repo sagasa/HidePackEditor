@@ -31,6 +31,9 @@ public class BulletData extends DataBase{
 		/**弾の寿命 (tick) : int型**/
 		BULLET_LIFE("bulletLife",600,DataType.Int,1),
 
+		/**リロード時にマガジンが破棄されるか : boolean型**/
+		MAGAZINE_BREAK("BreakOnReload",true,DataType.Boolean),
+
 		/**直撃の対人ダメージ : float型**/
 		HIT_DAMAGE_PLAYER("playerDamage",0F,DataType.Float,2),
 		/**直撃の対MOBダメージ : float型**/
@@ -113,13 +116,13 @@ public class BulletData extends DataBase{
 		 近接信管・反応するエンティティ
 		 誘導：true/false・手動/ロックオン/継続ロックオン・反応するエンティティ
 		 */
-		
+
 		public static final int BULLET_INFO = 1;
 		public static final int BULLET_HIT_DAMAGE = 2;
 		public static final int BULLET_HIT_KNOCKBACK = 3;
 		public static final int BULLET_EXP_DAMAGE = 4;
 		public static final int BULLET_EXP_KNOCKBACK = 5;
-		
+
 		/**登録名*/
 		private String name;
 		/**初期値*/

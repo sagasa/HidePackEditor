@@ -8,6 +8,8 @@ import javax.swing.border.LineBorder;
 
 import hideEditer.ContentsList;
 import hideEditer.MainWindow;
+import types.BulletData;
+import types.BulletData.BulletDataList;
 import types.GunData;
 import types.GunData.GunDataList;
 import types.base.DataBase;
@@ -17,7 +19,7 @@ public class StringSetPanel extends ValueSetPanel{
 	private static final long serialVersionUID = 3496770761921234269L;
 
 	int textFieldWidth;
-	
+
 	/** テキストボックス */
 	JTextField txtField;
 	JLabel setting;
@@ -32,7 +34,7 @@ public class StringSetPanel extends ValueSetPanel{
 		this(type,data,true);
 		this.textFieldWidth = textFieldW;
 	}
-	
+
 	/** コンストラクタ 編集 可/不可 */
 	public StringSetPanel(EnumDataList type, DataBase data, boolean canedit) {
 		super(data,type,canedit);
@@ -78,6 +80,12 @@ public class StringSetPanel extends ValueSetPanel{
 			MainWindow.gunMap.remove(getValueString());
 			setValue(txtField.getText());
 			MainWindow.gunMap.put(getValueString(), (GunData) cash);
+			ContentsList.write();
+		}else if(typeEnum == BulletDataList.DISPLAY_NAME){
+			DataBase cash = MainWindow.bulletMap.get(getValueString());
+			MainWindow.bulletMap.remove(getValueString());
+			setValue(txtField.getText());
+			MainWindow.bulletMap.put(getValueString(), (BulletData) cash);
 			ContentsList.write();
 		}else{
 			setValue(txtField.getText());

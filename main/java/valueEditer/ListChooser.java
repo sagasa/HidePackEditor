@@ -83,7 +83,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 			combo.removeAllItems();
 			//System.out.println(GunDataList.TYPES_BULLETS.getData(gunData));
 			for(BulletData data:MainWindow.bulletMap.values()){
-				combo.addItem((String) BulletDataList.DISPLAY_NAME.getData(data));
+				combo.addItem((String) BulletDataList.SHORT_NAME.getData(data));
 			}
 			listModel.clear();
 			for(String str: gunData.getDataStringArray(GunDataList.TYPES_BULLETS)){
@@ -97,7 +97,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 			combo.removeAllItems();
 			//System.out.println(GunDataList.TYPES_ATTACHMENTS.getData(gunData));
 			for(BulletData data:MainWindow.bulletMap.values()){
-				combo.addItem((String) BulletDataList.DISPLAY_NAME.getData(data));
+				combo.addItem((String) BulletDataList.SHORT_NAME.getData(data));
 			}
 			listModel.clear();
 			//TODO アタッチメント追加したら追記
