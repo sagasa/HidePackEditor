@@ -26,9 +26,8 @@ public class ContentsPack extends DataBase {
 		PACK_NAME("PackName", "name", DataType.String),
 		/** パックのバージョン */
 		PACK_VERSION("PackVersion", "version", DataType.String),
-
-		/** 新しいクリエイティブタブ 複数設定可能 : String配列型 **/
-		NEW_CREATIVE_TAB("NewCreativeTab", new String[] {}, DataType.StringArray),;
+		/**登録時の名称*/
+		PACK_ROOTNAME("RootName", "default", DataType.String),
 
 		;
 		/** 登録名 */
@@ -66,7 +65,7 @@ public class ContentsPack extends DataBase {
 		/** データを設定する nullは上書きしない */
 		public void setData(ContentsPack d, Object obj) {
 			if (obj != null) {
-				d.Data.replace(this.getName(), obj);
+				d.Data.replace(this.toString(), obj);
 			}
 		}
 

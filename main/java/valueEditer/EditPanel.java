@@ -114,6 +114,9 @@ public class EditPanel extends JPanel implements ActionListener {
 		case BULLET_INFO_PANEL:
 			bulletDataPanel(BulletDataList.BULLET_INFO,0,true);
 			break;
+		case BULLET_DAMAGE_PANEL:
+			bulletDataPanel(BulletDataList.BULLET_HIT_DAMAGE,0,true);
+			break;
 		case BULLET_NAME_PANEL:
 			int yPointer1 = 3;
 
@@ -277,13 +280,13 @@ public class EditPanel extends JPanel implements ActionListener {
 		GUN_SOUND_PANEL(new Rectangle(515, 318, 250, 205),0),
 		/** 射撃モード設定パネル*/
 		GUN_FIREMODE_PANEL(new Rectangle(515, 210, 250, 100),0),
-		
+
 		/** 名前設定用定数 */
 		BULLET_NAME_PANEL(new Rectangle(5, 5, 250, 50),1),
 		/** その他数値パラメーター設定用定数 */
 		BULLET_INFO_PANEL(new Rectangle(5, 60, 250, 0),1),
 		/** ダメージ設定用定数 */
-		BULLET_DAMAGE_PANEL(new Rectangle(5, 60, 250, 0),1),
+		BULLET_DAMAGE_PANEL(new Rectangle(5, 150, 250, 0),1),
 		/** ダメージ設定用定数 */
 		BULLET_EXP_PANEL(new Rectangle(5, 60, 250, 0),1),
 		/** アイコン設定用定数 */

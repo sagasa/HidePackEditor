@@ -89,8 +89,19 @@ public class BulletData extends DataBase{
 		/**爆風の対航空機ノックバック係数 : ノックバック距離(m)=(底値-距離(m)*係数)/重量 : float型**/
 		EXP_KNOCKACK_COE_AIR("aircraftExplosionKnockbackCoe",0F,DataType.Float,5),
 
-		/**距離減衰を使用するか : boolean型**/
-		DECAY_USE("useDecay",false,DataType.Boolean),
+		/**対人ダメージの減衰開始距離 : 減衰量=減衰開始から距離(m)*係数 : float**/
+		DECAY_DAMAGE_START_PLAYER("DecayPlayerDamageStart",0F,DataType.Float,10),
+		/**対人ダメージの減衰率 : 減衰量=減衰開始から距離(m)*係数 : float**/
+		DECAY_DAMAGE_COE_PLAYER("DecayPlayerDamageCoe",0F,DataType.Float,10),
+		/**対人ダメージの最大減衰幅 : 減衰量=減衰開始から距離(m)*係数 : float**/
+		DECAY_DAMAGE_MAX_PLAYER("DecayPlayerDamageMax",0F,DataType.Float,10),
+
+		/**対MOBダメージの減衰開始距離 : 減衰量=減衰開始から距離(m)*係数 : float**/
+		DECAY_DAMAGE_START_LIVING("DecayLivingDamageStart",0F,DataType.Float,10),
+		/**対MOBダメージの減衰率 : 減衰量=減衰開始から距離(m)*係数 : float**/
+		DECAY_DAMAGE_COE_LIVING("DecayLivingDamageCoe",0F,DataType.Float,10),
+		/**対MOBダメージの最大減衰幅 : 減衰量=減衰開始から距離(m)*係数 : float**/
+		DECAY_DAMAGE_MAX_LIVING("DecayLivingDamageMax",0F,DataType.Float,10),
 
 		/**弾道落下を使用するか : boolean型**/
 		GRAVITY_USE("useGravity",false,DataType.Boolean),

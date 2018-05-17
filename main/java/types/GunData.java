@@ -369,6 +369,7 @@ public class GunData extends DataBase {
 		}
 	}
 
+
 	static final String headName = "gun_";
 
 	/** JsonStringからデータを読み込む */
