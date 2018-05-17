@@ -30,6 +30,9 @@ public class BulletData extends DataBase{
 
 		/**弾の寿命 (tick) : int型**/
 		BULLET_LIFE("bulletLife",600,DataType.Int,1),
+		
+		/**弾の貫通力 : int型**/
+		BULLET_POWER("bulletPower",1,DataType.Int,1,1f),
 
 		/**リロード時にマガジンが破棄されるか : boolean型**/
 		MAGAZINE_BREAK("BreakOnReload",true,DataType.Boolean),
@@ -142,6 +145,8 @@ public class BulletData extends DataBase{
 		private int cate;
 		/**Type*/
 		private DataType types;
+		/** 最小値 */
+		private Float min;
 
 		/**コンストラクタ 表示名+データ+Type カテゴリはデフォルト*/
 		BulletDataList(String name, Object obj ,DataType types) {
@@ -150,12 +155,23 @@ public class BulletData extends DataBase{
 			this.cate = -1;
 			this.types = types;
 		}
+		
 
 		/**コンストラクタ 表示名+データ+Type+カテゴリ*/
 		BulletDataList(String name, Object obj,DataType types ,int cate) {
 			this(name, obj, types);
 			this.cate = cate;
+		}
+		/** 最小値の設定 */
+		BulletDataList(String name, Object obj, DataType types, int cate, float minimam) {
+			this(name, obj, types, cate);
+			this.min = minimam;
+		}
 
+		/** 最小値の設定 */
+		BulletDataList(String name, Object obj, DataType types, float minimam) {
+			this(name, obj, types);
+			this.min = minimam;
 		}
 		/**登録名を返す*/
 		public String getName() {
