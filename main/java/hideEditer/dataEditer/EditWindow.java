@@ -1,4 +1,4 @@
-package valueEditer;
+package hideEditer.dataEditer;
 
 
 import java.awt.Color;
@@ -9,10 +9,10 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import hideEditer.MainWindow;
+import hideEditer.dataEditer.EditPanel.PanelList;
 import types.BulletData;
 import types.GunData;
 import types.base.DataBase;
-import valueEditer.EditPanel.PanelList;
 
 /**アクションリスナーのためにstaticにしていない 実質staticクラス インスタンスはMainWindowに格納*/
 public class EditWindow{

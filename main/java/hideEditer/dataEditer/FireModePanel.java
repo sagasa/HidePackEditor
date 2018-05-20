@@ -1,12 +1,12 @@
-package valueEditer;
+package hideEditer.dataEditer;
 
 import java.util.Arrays;
 
 import javax.swing.JPanel;
 
+import hideEditer.dataEditer.base.NumberSetPanel;
 import types.GunData;
 import types.GunData.GunDataList;
-import valueEditer.valueSetPanels.NumberSetPanel;
 /**射撃モード+バースト時のレート 発射数など*/
 public class FireModePanel extends JPanel implements ChangeListener{
 	private static final long serialVersionUID = 7448329275013860416L;

@@ -1,4 +1,4 @@
-package valueEditer.valueSetPanels;
+package hideEditer.dataEditer.base;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -12,9 +12,10 @@ import java.util.regex.Pattern;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+
+import hideEditer.dataEditer.ChangeListener;
 import types.base.DataBase;
 import types.base.EnumDataList;
-import valueEditer.ChangeListener;
 
 /** 設定ボックス IntとFloatのみ対応 changeListener付 */
 public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener{

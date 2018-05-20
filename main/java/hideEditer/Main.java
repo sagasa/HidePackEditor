@@ -9,7 +9,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 
-import valueEditer.EditWindow;
+import helper.ObjWrapper;
+import hideEditer.dataEditer.EditWindow;
+import hideEditer.modelEditer.LWJGLTest;
 
 public class Main {
 
@@ -26,8 +28,13 @@ public class Main {
 		Lang.readLang("./lang");
 		Lang.setLang("jp");
 
+		new ObjWrapper();
+
+		//LWJGLTest test = new LWJGLTest();
+		//test.Test();
+
 		main = new MainWindow();
-		main.openWindow();
+	//	main.openWindow();
 
 		/*
 		try {

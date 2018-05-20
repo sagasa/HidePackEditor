@@ -1,4 +1,4 @@
-package hideEditer;
+package hideEditer.io;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import hideEditer.MainWindow;
 import types.BulletData;
 import types.GunData;
 import types.GunData.GunDataList;

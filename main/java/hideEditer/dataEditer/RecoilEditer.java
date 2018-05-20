@@ -1,4 +1,4 @@
-package valueEditer;
+package hideEditer.dataEditer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,9 +10,9 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import hideEditer.dataEditer.base.NumberSetPanel;
 import types.GunData;
 import types.GunData.GunDataList;
-import valueEditer.valueSetPanels.NumberSetPanel;
 
 /**リコイル編集 タブでプレイヤーの状態を選択 グラフィカルで分かりやすく*/
 public class RecoilEditer extends JTabbedPane implements ChangeListener {

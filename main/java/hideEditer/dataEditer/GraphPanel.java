@@ -1,4 +1,4 @@
-package valueEditer;
+package hideEditer.dataEditer;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

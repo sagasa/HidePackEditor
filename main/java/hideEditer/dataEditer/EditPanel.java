@@ -1,4 +1,4 @@
-package valueEditer;
+package hideEditer.dataEditer;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -16,12 +16,12 @@ import javax.swing.border.LineBorder;
 import hideEditer.IconPrint;
 import hideEditer.MainWindow;
 import hideEditer.ResourcesList;
+import hideEditer.dataEditer.base.NumberSetPanel;
+import hideEditer.dataEditer.base.StringSetPanel;
 import types.BulletData;
 import types.BulletData.BulletDataList;
 import types.GunData;
 import types.GunData.GunDataList;
-import valueEditer.valueSetPanels.NumberSetPanel;
-import valueEditer.valueSetPanels.StringSetPanel;
 import types.ImageData;
 import types.base.DataBase;
 

@@ -1,4 +1,4 @@
-package hideEditer;
+package hideEditer.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +12,7 @@ import java.util.zip.ZipInputStream;
 
 import com.google.gson.Gson;
 import helper.ArrayEditer;
+import hideEditer.MainWindow;
 import types.BulletData;
 import types.BulletData.BulletDataList;
 import types.ContentsPack;

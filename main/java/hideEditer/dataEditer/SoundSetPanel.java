@@ -1,4 +1,4 @@
-package valueEditer;
+package hideEditer.dataEditer;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -9,9 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import hideEditer.MainWindow;
+import hideEditer.dataEditer.base.NumberSetPanel;
 import types.GunData.GunDataList;
 import types.base.DataBase;
-import valueEditer.valueSetPanels.NumberSetPanel;
 
 /**再生する音の設定 ファイル名とピッチをセットで*/
 public class SoundSetPanel extends JPanel implements ActionListener{

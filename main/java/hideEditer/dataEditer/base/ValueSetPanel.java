@@ -1,4 +1,4 @@
-package valueEditer.valueSetPanels;
+package hideEditer.dataEditer.base;
 
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -9,10 +9,10 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 
+import hideEditer.dataEditer.ChangeListener;
 import types.base.DataBase;
 import types.base.DataType;
 import types.base.EnumDataList;
-import valueEditer.ChangeListener;
 
 public abstract class ValueSetPanel extends JPanel implements ComponentListener, KeyListener, FocusListener{
 	private static final long serialVersionUID = -4980380877478474178L;

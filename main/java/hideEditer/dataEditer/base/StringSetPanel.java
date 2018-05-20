@@ -1,4 +1,4 @@
-package valueEditer.valueSetPanels;
+package hideEditer.dataEditer.base;
 
 import java.awt.Color;
 import java.awt.Font;

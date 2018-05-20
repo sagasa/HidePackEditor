@@ -18,11 +18,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import hideEditer.dataEditer.EditWindow;
+import hideEditer.io.PackReader;
+import hideEditer.io.PackWriter;
 import types.BulletData;
 import types.ContentsPack;
 import types.GunData;
 import types.ImageData;
-import valueEditer.EditWindow;
 
 public class MainWindow extends JFrame implements ActionListener, ComponentListener{
 	/**

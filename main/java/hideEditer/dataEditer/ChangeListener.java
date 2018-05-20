@@ -1,4 +1,4 @@
-package valueEditer;
+package hideEditer.dataEditer;
 
 /**SetPanel用変更通知インターフェース*/
 public interface ChangeListener {
