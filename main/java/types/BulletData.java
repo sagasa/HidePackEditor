@@ -30,7 +30,7 @@ public class BulletData extends DataBase{
 
 		/**弾の寿命 (tick) : int型**/
 		BULLET_LIFE("bulletLife",600,DataType.Int,1),
-		
+
 		/**弾の貫通力 : int型**/
 		BULLET_POWER("bulletPower",1,DataType.Int,1,1f),
 
@@ -106,6 +106,39 @@ public class BulletData extends DataBase{
 		/**対MOBダメージの最大減衰幅 : 減衰量=減衰開始から距離(m)*係数 : float**/
 		DECAY_DAMAGE_MAX_LIVING("DecayLivingDamageMax",0F,DataType.Float,10),
 
+		/** 着弾音を使用するか : boolean型 **/
+		SOUND_HIT_GROUND_USE("SoundHitGroundUse", true, DataType.Boolean, 21),
+		/** 着弾音のファイル名 : string型 **/
+		SOUND_HIT_GROUND_NAME("SoundHitGroundName", "BulletDirt", DataType.String, 21),
+		/** 着弾音の距離 : float型 **/
+		SOUND_HIT_GROUND_RANGE("SoundHitGroundRange", 5F, DataType.Float, 21),
+		/** 着弾音の音量 : float型 **/
+		SOUND_HIT_GROUND_VOL("SoundHitGroundVol", 1F, DataType.Float, 21),
+		/** 着弾音のピッチ : float型 **/
+		SOUND_HIT_GROUND_PITCH("SoundHitGroundPitch", 1F, DataType.Float, 21),
+
+		/** エンティティ着弾音を使用するか : boolean型 **/
+		SOUND_HIT_ENTITY_USE("SoundHitEntityUse", false, DataType.Boolean, 21),
+		/** エンティティ着弾音のファイル名 : string型 **/
+		SOUND_HIT_ENTITY_NAME("SoundHitEntityName", "sample", DataType.String, 21),
+		/** エンティティ着弾音の距離 : float型 **/
+		SOUND_HIT_ENTITY_RANGE("SoundHitEntityRange", 10F, DataType.Float, 21),
+		/** エンティティ着弾音の音量 : float型 **/
+		SOUND_HIT_ENTITY_VOL("SoundHitEntityVol", 1F, DataType.Float, 21),
+		/** エンティティ着弾音のピッチ : float型 **/
+		SOUND_HIT_ENTITY_PITCH("SoundHitEntityPitch", 1F, DataType.Float, 21),
+
+		/** 通過音を使用するか : boolean型 **/
+		SOUND_PASSING_USE("SoundPassingUse", true, DataType.Boolean, 21),
+		/** 通過音のファイル名 : string型 **/
+		SOUND_PASSING_NAME("SoundPassingName", "BulletDirt", DataType.String, 21),
+		/** 通過音の距離 : float型 **/
+		SOUND_PASSING_RANGE("SoundPassingRange", 2F, DataType.Float, 21),
+		/** 通過音の音量 : float型 **/
+		SOUND_PASSING_VOL("SoundPassingVol", 1F, DataType.Float, 21),
+		/** 通過音のピッチ : float型 **/
+		SOUND_PASSING_PITCH("SoundPassingPitch", 1F, DataType.Float, 21),
+
 		/**弾道落下を使用するか : boolean型**/
 		GRAVITY_USE("useGravity",false,DataType.Boolean),
 
@@ -155,7 +188,7 @@ public class BulletData extends DataBase{
 			this.cate = -1;
 			this.types = types;
 		}
-		
+
 
 		/**コンストラクタ 表示名+データ+Type+カテゴリ*/
 		BulletDataList(String name, Object obj,DataType types ,int cate) {

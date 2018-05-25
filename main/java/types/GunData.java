@@ -181,6 +181,8 @@ public class GunData extends DataBase {
 		SOUND_SHOOT_NAME("SoundShootName", "sample", DataType.String, 21),
 		/** 発射音の距離 : float型 **/
 		SOUND_SHOOT_RANGE("SoundShootRange", 50F, DataType.Float, 21),
+		/** 発射音の音量 : float型 **/
+		SOUND_SHOOT_VOL("SoundShootVol", 1F, DataType.Float, 21),
 		/** 発射音のピッチ : float型 **/
 		SOUND_SHOOT_PITCH("SoundShootPitch", 1F, DataType.Float, 21),
 
@@ -188,6 +190,8 @@ public class GunData extends DataBase {
 		SOUND_RELOAD_NAME("SoundReloadName", "sample", DataType.String, 21),
 		/** リロード音の距離 : float型 **/
 		SOUND_RELOAD_RANGE("SoundReloadRange", 20F, DataType.Float, 21),
+		/** リロード音の音量 : float型 **/
+		SOUND_RELOAD_VOL("SoundReloadVol", 1F, DataType.Float, 21),
 		/** リロード音のピッチ : float型 **/
 		SOUND_RELOAD_PITCH("SoundReloadPitch", 1F, DataType.Float, 21),
 

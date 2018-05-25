@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import helper.ObjWrapper;
 import hideEditer.dataEditer.EditWindow;
 import hideEditer.modelEditer.LWJGLTest;
+import types.JsonAOBJ;
 
 public class Main {
 
@@ -28,7 +29,7 @@ public class Main {
 		Lang.readLang("./lang");
 		Lang.setLang("jp");
 
-		new ObjWrapper();
+		//new ObjWrapper();
 
 		//LWJGLTest test = new LWJGLTest();
 		//test.Test();
