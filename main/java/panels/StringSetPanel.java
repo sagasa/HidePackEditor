@@ -15,6 +15,7 @@ public class StringSetPanel extends ValueSetPanel{
 		super(cate, canedit);
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		this.removeAll();
+		this.setOpaque(false);
 		this.setLayout(null);
 		// ラベル
 		setting = new JLabel(lore + " :");
@@ -41,6 +42,11 @@ public class StringSetPanel extends ValueSetPanel{
 	public void setTextBoxWidth(int width){
 		textFieldWidth = width;
 		this.risize();
+	}
+
+	/**テキストボックスの中身書き込み*/
+	public void setText(String value){
+		txtField.setText(value);
 	}
 
 	/** テキストボックス */

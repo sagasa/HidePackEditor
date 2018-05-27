@@ -68,14 +68,12 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		int yOffset = 3;
 		StringSetPanel display = new StringSetPanel(ChangeListener.ITEMINFO_DISPLAY, "DisplayName", info.displayName, true);
 		display.addChangeListener(this);
-		display.setOpaque(false);
 		display.setBounds(x,y+yOffset,240,20);
 		infoPanel.add(display);
 		yOffset += 22;
 
 		StringSetPanel shortName = new StringSetPanel(ChangeListener.ITEMINFO_SHORTNAME, "ShortName", info.shortName, true);
 		shortName.addChangeListener(this);
-		shortName.setOpaque(false);
 		shortName.setBounds(x,y+yOffset,240,20);
 		infoPanel.add(shortName);
 		yOffset += 22;

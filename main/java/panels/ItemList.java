@@ -152,6 +152,7 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 
 	/** マウスイベントを集約 */
 	private void popupMenu(MouseEvent e) {
+	//	if (e.isPopupTrigger()&&Window.Pack!=null) {
 		if (e.isPopupTrigger()) {
 			popup.show(e.getComponent(), e.getX(), e.getY());
 		}

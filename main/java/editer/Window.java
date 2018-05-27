@@ -19,8 +19,8 @@ import javax.swing.JMenuItem;
 import panels.ItemList;
 import panels.ResourceList;
 import panels.ItemEditer;
-import types.BulletData;
-import types.GunData;
+import panels.PackInfoEditer;
+import types.*;
 
 /** メインのフレーム この中にすべて描画 */
 public class Window extends JFrame implements ActionListener, ComponentListener {
@@ -34,13 +34,14 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	/** IconのMAP BulletData */
 	public static Map<String,BufferedImage> IconMap = new HashMap<String,BufferedImage>();
 
-	/**パックの名前*/
-	public static String PackName;
+	/**パック*/
+	public static ContentsPack Pack;
 
 	public static Window MainWindow;
 	public static ItemList ItemList;
 	public static ItemEditer ItemEditer;
 	public static ResourceList ResourceList;
+	public static PackInfoEditer PackInfoEditer;
 
 	/** メニューバーと各パネルを配置 */
 	public Window() {
@@ -97,7 +98,8 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		this.add(ItemList);
 		ResourceList = new ResourceList();
 
-
+		PackInfoEditer = new PackInfoEditer();
+		this.add(PackInfoEditer);
 
 
 		this.setVisible(true);
@@ -120,6 +122,9 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		}
 		if(ItemEditer!=null){
 			ItemEditer.setBounds(200, 0, this.getWidth()-400, this.getHeight()-60);
+		}
+		if(PackInfoEditer!=null){
+			PackInfoEditer.setBounds(0, 0, 200, 100);
 		}
 	}
 
