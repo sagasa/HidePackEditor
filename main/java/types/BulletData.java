@@ -1,12 +1,10 @@
 package types;
 
+import java.util.HashMap;
+
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
-import helper.JsonWrapper;
 import types.base.DataBase;
 import types.base.DataType;
 import types.base.EnumDataList;
@@ -143,14 +141,14 @@ public class BulletData extends DataBase{
 		GRAVITY_USE("useGravity",false,DataType.Boolean),
 
 		/**透過する・ブロック : String[]型*/
-		THROUGH_BLOCK("throughBlock", new String[] {},DataType.StringArray),
+		THROUGH_BLOCK("throughBlock", new String[] {},DataType.Object),
 		/**透過するエンティティ : String[]型*/
-		THROUGH_ENTITY("throughEntity", new String[] {},DataType.StringArray),
+		THROUGH_ENTITY("throughEntity", new String[] {},DataType.Object),
 
 		/**エンティティを貫通するか : boolean型**/
 		BULLET_BOWERED("BulletPowered",false,DataType.Boolean),
 		/** 使用できるアタッチメントのType 複数設定可能 : String配列型 **/
-		TYPES_ATTACHMENTS("AttachmentNames", new String[] {},DataType.StringArray),
+		TYPES_ATTACHMENTS("AttachmentNames", new String[] {},DataType.Object),
 		;
 
 		/*
@@ -249,62 +247,17 @@ public class BulletData extends DataBase{
 	}
 	/** 初期値*/
 	public BulletData() {
-		this(null);
+		for (BulletDataList data : BulletDataList.values()) {
+			Data.put(data.getName(), data.getDefaultValue());
+		}
 	}
 
 	static final String headName = "bullet_";
 	/** JsonStringからデータを読み込む */
 	public BulletData(String json) {
-		// 初期値を忘れずに
+		this();
 		Gson gson = new Gson();
-		JsonWrapper w = new JsonWrapper(gson.fromJson(json, JsonObject.class));
-		//マップに格納
-		for (BulletDataList d:BulletDataList.values()){
-			//System.out.println(d.getName()+"  "+d.getDefaultValue() + "  "+ w.getString("gun_"+d.getName(), d.getDefaultValue().toString()));
-			switch (d.types){
-			case Boolean:
-				Data.put(d.toString(), w.getBoolean(headName+d.toString(),new Boolean (d.getDefaultValue().toString())));
-			break;
-			case String:
-				Data.put(d.toString(), w.getString(headName+d.toString(),d.getDefaultValue().toString()));
-			break;
-			case Int:
-				Data.put(d.toString(), w.getInt(headName+d.toString(), new Integer (d.getDefaultValue().toString())));
-			break;
-			case Float:
-				Data.put(d.toString(), w.getFloat(headName+d.toString(), new Float (d.getDefaultValue().toString())));
-			break;
-			case StringArray:
-				Data.put(d.toString(), w.getStringArray(headName+d.toString(), (String[]) d.getDefaultValue()));
-			break;
-			}
-		}
-	}
-	/**JsonObjectを作成*/
-	public String MakeJsonData(){
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		JsonObject JsonData = new JsonObject();
-		for (BulletDataList d:BulletDataList.values()){
-			switch (d.types){
-			case Boolean:
-				JsonData.addProperty(headName+d.toString(),this.getDataBoolean(d));
-			break;
-			case String:
-				JsonData.addProperty(headName+d.toString(),this.getDataString(d));
-			break;
-			case Int:
-				JsonData.addProperty(headName+d.toString(), this.getDataInt(d));
-			break;
-			case Float:
-				JsonData.addProperty(headName+d.toString(), this.getDataFloat(d));
-			break;
-			case StringArray:
-				JsonElement element =
-			     gson.toJsonTree(this.getDataStringArray(d) , new TypeToken<String[]>() {}.getType());
-				JsonData.add(headName+d.toString(), element.getAsJsonArray());
-			break;
-			}
-		}
-		return gson.toJson(JsonData);
+		Data.putAll(gson.fromJson(json, new TypeToken<HashMap<String, Object>>() {
+		}.getType()));
 	}
 }

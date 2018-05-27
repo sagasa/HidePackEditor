@@ -2,9 +2,12 @@ package types.base;
 
 import java.util.HashMap;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public abstract class DataBase {
 	/**全データ格納*/
-	public HashMap<String,Object> Data;
+	public HashMap<String,Object> Data = new HashMap<String,Object>();;
 	/**データ取得*/
 	public int getDataInt(EnumDataList type){
 		if (type.getType()==DataType.Int){
@@ -34,11 +37,8 @@ public abstract class DataBase {
 		return false;
 	}
 	/**データ取得*/
-	public String[] getDataStringArray(EnumDataList type){
-		if (type.getType()==DataType.StringArray){
-			return (String[])this.Data.get(type.toString());
-		}
-		return new String[0];
+	public Object getDataObject(EnumDataList type){
+		return this.Data.get(type.toString());
 	}
 	/**データ上書き*/
 	public void setData(EnumDataList type,Object data){
@@ -48,7 +48,9 @@ public abstract class DataBase {
 		}
 		this.Data.replace(type.toString(),data);
 	}
-	public DataBase(){
-		Data = new HashMap<String,Object>();
+	/** JsonObjectを作成 */
+	public String MakeJsonData() {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		return gson.toJson(this.Data);
 	}
 }

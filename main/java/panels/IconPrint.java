@@ -1,4 +1,4 @@
-package hideEditer;
+package panels;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,8 +8,6 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-
-import types.ImageData;
 
 /** サイズを合わせてアイコンを描画 アイコンの画像パスを指定 */
 public class IconPrint extends JPanel {
@@ -35,11 +33,7 @@ public class IconPrint extends JPanel {
 		Image = i;
 	}
 
-	/**ImageDataから作成*/
-	public IconPrint(ImageData imageData) {
-		Image = imageData.Image;
-	}
-	
+
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 
