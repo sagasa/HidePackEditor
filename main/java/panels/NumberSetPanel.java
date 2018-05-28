@@ -45,6 +45,7 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 
 	private void init(String lore, String defauletValue) {
 		LineBorder border = new LineBorder(Color.black, 1, false);
+		nowValue = defauletValue;
 		// ラベル
 		setting = new JLabel(lore + " :");
 		setting.setHorizontalAlignment(JLabel.RIGHT);
@@ -117,6 +118,7 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 			save(num);
 			nowValue = num+"";
 		}
+		txtField.setText(nowValue);
 	}
 
 	@Override

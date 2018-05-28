@@ -44,7 +44,7 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
-		infoPanel.setBounds(5, 120, 240, 0);
+		infoPanel.setBounds(5, 110, 240, 0);
 		writeGunNumberValue(infoPanel,1);
 		this.add(infoPanel);
 		//ダメージ倍率系
@@ -54,6 +54,8 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		damageChange.setBounds(255, 120, 240, 0);
 		writeGunNumberValue(damageChange,2);
 		this.add(damageChange);
+		//リコイルエディタ
+		
 	}
 	private void writeGunNumberValue(JPanel root,int cate){
 		int yOffset = 3;

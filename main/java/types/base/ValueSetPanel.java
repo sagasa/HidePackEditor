@@ -14,11 +14,10 @@ public abstract class ValueSetPanel extends JPanel implements ComponentListener,
 
 	public boolean canEdit;
 
-	int cate;
-
 	/** 通知先の保存 */
 	ChangeListener target;
-
+	int cate;
+	
 	public ValueSetPanel(boolean canedit) {
 		this.canEdit = canedit;
 		this.addKeyListener(this);

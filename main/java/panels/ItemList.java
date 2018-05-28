@@ -120,7 +120,7 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 		gunModel.removeAllElements();
 		String[] keySet = Window.GunList.keySet().toArray(new String[Window.GunList.keySet().size()]);
 		Arrays.sort(keySet);
-		System.out.println(Arrays.asList(keySet) );
+		System.out.println(Arrays.asList(keySet));
 		for (String name : keySet) {
 			gunModel.addElement(((ItemInfo) Window.GunList.get(name).getDataObject(GunDataList.ITEM_INFO)).displayName);
 		}
