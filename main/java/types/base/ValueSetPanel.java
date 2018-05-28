@@ -19,18 +19,17 @@ public abstract class ValueSetPanel extends JPanel implements ComponentListener,
 	/** 通知先の保存 */
 	ChangeListener target;
 
-
-	public ValueSetPanel(int cate, boolean canedit) {
+	public ValueSetPanel(boolean canedit) {
 		this.canEdit = canedit;
 		this.addKeyListener(this);
 		this.addFocusListener(this);
 		this.addComponentListener(this);
-		this.cate = cate;
 		repaint();
 	}
 
 	/** 変更通知リスナーを設定 */
-	public void addChangeListener(ChangeListener l) {
+	public void addChangeListener(ChangeListener l,int cate) {
+		this.cate = cate;
 		target = l;
 	}
 
@@ -91,7 +90,9 @@ public abstract class ValueSetPanel extends JPanel implements ComponentListener,
 	}
 
 	public void save(Object value){
-		target.ValueChange(cate, value);
+		if(target!=null){
+			target.ValueChange(cate, value);
+		}
 	}
 
 	@Override

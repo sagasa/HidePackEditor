@@ -30,19 +30,19 @@ public class PackInfoEditer extends JPanel implements ChangeListener{
 		lore.setBounds(10, 2, 100, 20);
 		lore.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(lore);
-		name = new StringSetPanel(ChangeListener.PACKINFO_NAME, "PackName","no loaded pack" , false);
+		name = new StringSetPanel("PackName","no loaded pack" , false);
 		name.setTextBoxWidth(100);
-		name.addChangeListener(this);
+		name.addChangeListener(this,ChangeListener.PACKINFO_NAME);
 		name.setBounds(5,24,190,20);
 		this.add(name);
-		ver = new StringSetPanel(ChangeListener.PACKINFO_VER, "PackVer","no loaded pack" , false);
+		ver = new StringSetPanel("PackVer","no loaded pack" , false);
 		ver.setTextBoxWidth(100);
-		ver.addChangeListener(this);
+		ver.addChangeListener(this,ChangeListener.PACKINFO_VER);
 		ver.setBounds(5,46,190,20);
 		this.add(ver);
-		root = new StringSetPanel(ChangeListener.PACKINFO_ROOTNAME, "RootName","no loaded pack" , false);
+		root = new StringSetPanel("RootName","no loaded pack" , false);
 		root.setTextBoxWidth(100);
-		root.addChangeListener(this);
+		root.addChangeListener(this,ChangeListener.PACKINFO_ROOTNAME);
 		root.setBounds(5,68,190,20);
 		this.add(root);
 	}
@@ -60,7 +60,17 @@ public class PackInfoEditer extends JPanel implements ChangeListener{
 
 	@Override
 	public void ValueChange(int cate, Object value) {
-
+		if(Window.Pack!=null){
+			if(cate==ChangeListener.PACKINFO_NAME){
+				Window.Pack.PACK_NAME = (String) value;
+			}
+			if(cate==ChangeListener.PACKINFO_VER){
+				Window.Pack.PACK_VER = (String) value;
+			}
+			if(cate==ChangeListener.PACKINFO_ROOTNAME){
+				Window.Pack.PACK_ROOTNAME = (String) value;
+			}
+		}
 	}
 
 }

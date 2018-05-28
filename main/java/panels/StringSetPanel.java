@@ -11,10 +11,9 @@ import javax.swing.border.LineBorder;
 import types.base.ValueSetPanel;
 
 public class StringSetPanel extends ValueSetPanel{
-	public StringSetPanel(int cate,String lore,String defauletValue, boolean canedit) {
-		super(cate, canedit);
+	public StringSetPanel(String lore,String defauletValue, boolean canedit) {
+		super(canedit);
 		LineBorder border = new LineBorder(Color.black, 1, false);
-		this.removeAll();
 		this.setOpaque(false);
 		this.setLayout(null);
 		// ラベル
