@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 
 import types.base.ItemInfo;
 import types.base.Sound;
+import types.base.CloneableObj;
 import types.base.DataBase;
 import types.base.DataType;
 import types.base.EnumDataList;
@@ -17,7 +18,9 @@ public class GunData extends DataBase {
 		/** アイテムの名前 : ItemInfo型 */
 		ITEM_INFO(null, null, new ItemInfo("sample", "Sample", "sample"), DataType.Object),
 		/** 弾速 1秒の移動距離(m)=弾速 : float型 **/
-		BULLET_SPEAD(0f, 128f, 5f, DataType.Float, 1),
+		BULLET_SPEED(0f, 128f, 5f, DataType.Float, 1),
+		/** 持ってから撃てるまで ; tickかかる : int型 **/
+		PREPARE_TICK(0f, null, 0, DataType.Int, 1),
 		/** リロード ; リロードにtickかかる : int型 **/
 		RELOAD_TICK(0f, null, 20, DataType.Int, 1),
 		/** レート ; レートtick間隔で発射する : int型 **/
@@ -47,21 +50,21 @@ public class GunData extends DataBase {
 		/** スニークADSリコイル : GunRecoil型 */
 		RECOIL_SNEAK_ADS(null, null, new GunRecoil(), DataType.Object),
 		/** 対人ダメージ加算値 : float型 **/
-		PLAYER_DAMAGE_ADD(null, null, 0, DataType.Float, 2),
+		PLAYER_DAMAGE_ADD(null, null, 0f, DataType.Float, 2),
 		/** 対人ダメージ倍率 : float型 **/
-		PLAYER_DAMAGE_DIAMETER(null, null, 1, DataType.Float, 2),
+		PLAYER_DAMAGE_DIAMETER(null, null, 1f, DataType.Float, 2),
 		/** 対MOBダメージ加算値 : float型 **/
-		LIVING_DAMAGE_ADD(null, null, 0, DataType.Float, 2),
+		LIVING_DAMAGE_ADD(null, null, 0f, DataType.Float, 2),
 		/** 対MOBダメージ倍率 : float型 **/
-		LIVING_DAMAGE_DIAMETER(null, null, 1, DataType.Float, 2),
+		LIVING_DAMAGE_DIAMETER(null, null, 1f, DataType.Float, 2),
 		/** 対地上兵器ダメージ加算値 : int型 **/
 		VEHICLE_DAMAGE_ADD(null, null, 0, DataType.Int, 2),
 		/** 対地上兵器ダメージ倍率 : float型 **/
-		VEHICLE_DAMAGE_DIAMETER(null, null, 1, DataType.Float, 2),
+		VEHICLE_DAMAGE_DIAMETER(null, null, 1f, DataType.Float, 2),
 		/** 対航空機ダメージ加算値 : int型 **/
 		AIRCRAFT_DAMAGE_ADD(null, null, 0, DataType.Int, 2),
 		/** 対航空機ダメージ倍率 : float型 **/
-		AIRCRAFT_DAMAGE_DIAMETER(null, null, 1, DataType.Float, 2),
+		AIRCRAFT_DAMAGE_DIAMETER(null, null, 1f, DataType.Float, 2),
 		/** 発射音 : Sound型 **/
 		SOUND_SHOOT(null, null, new Sound("sample", 60), DataType.Object),
 		/** リロード音 : Sound型 **/
@@ -124,7 +127,15 @@ public class GunData extends DataBase {
 
 	public GunData() {
 		for (GunDataList data : GunDataList.values()) {
-			Data.put(data.getName(), data.getDefaultValue());
+			//オブジェクトなら別インスタンスを
+			if(data.getType().equals(DataType.Object)&&data.getDefaultValue() instanceof CloneableObj){
+				try {
+					Data.put(data.getName(), ((CloneableObj)data.getDefaultValue()).clone());
+				} catch (CloneNotSupportedException e) {
+				}
+			}else{
+				Data.put(data.getName(), data.getDefaultValue());
+			}
 		}
 	}
 

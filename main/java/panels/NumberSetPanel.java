@@ -7,9 +7,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.math.BigDecimal;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -39,6 +36,8 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 		this.setLayout(null);
 		Data = data;
 		Type = type;
+		Max = type.getMax();
+		Min = type.getMin();
 		this.isFloat = type.getType().equals(DataType.Float);
 		init(type.getName(), data.getDataString(type));
 	}
@@ -49,7 +48,7 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 		// ラベル
 		setting = new JLabel(lore + " :");
 		setting.setHorizontalAlignment(JLabel.RIGHT);
-		setting.setFont(new Font("BOLD", Font.BOLD, 13));
+		setting.setFont(new Font("BOLD", Font.BOLD, 12));
 		setting.setPreferredSize(new Dimension(0, 0));
 		this.add(setting);
 
@@ -67,8 +66,17 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 	/** 文字列設定のパネル */
 	private static final long serialVersionUID = 5973213511879454096L;
 
-	int textFieldWidth = 25;
+	int textFieldWidth = 40;
 	boolean isFloat;
+
+	Float Max = null;
+	Float Min = null;
+
+	/**最小最大の定義*/
+	public void setLimit(Float max,Float min){
+		Max = max;
+		Min = min;
+	}
 
 	/**DataBaseを使用するなら通知を行わない*/
 	@Override
@@ -79,7 +87,7 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 			Data.setData(Type, value);
 		}
 	}
-	
+
 	/** テキストボックスの幅を設定 */
 	public void setTextBoxWidth(int width) {
 		textFieldWidth = width;
@@ -109,12 +117,28 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 
 	/** 単位量増やすor減らす */
 	private void change(int i) {
+
 		if(isFloat){
 			float value = new BigDecimal(nowValue).add(new BigDecimal("0.1").multiply(new BigDecimal(i))).floatValue();
+			//最小 最大の判定
+			if(Max!=null&&Max<value){
+				return;
+			}
+			if(Min!=null&&value<Min){
+				return;
+			}
 			save(value);
 			nowValue = value+"";
+
 		}else{
-			int num = Integer.valueOf(nowValue)+1;
+			int num = Integer.valueOf(nowValue)+i;
+			//最小 最大の判定
+			if(Max!=null&&Max<num){
+				return;
+			}
+			if(Min!=null&&num<Min){
+				return;
+			}
 			save(num);
 			nowValue = num+"";
 		}
@@ -123,23 +147,33 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 
 	@Override
 	public void saveValue() {
-		Pattern p = Pattern.compile("[^\\d\\.]");
-		Matcher m = p.matcher(this.txtField.getText());
-		txtField.setText(m.replaceAll(""));
 		// まずい場合のためにtry
 		try {
 			// 型で場合分け
 			if (isFloat) {
-				save(new Float(m.replaceAll("")));
-				nowValue = m.replaceAll("");
+				Float value = new Float(this.txtField.getText());
+				if(Max!=null&&Max<value){
+					value = Max;
+				}
+				if(Min!=null&&value<Min){
+					value = Min;
+				}
+				save(value);
+				nowValue = value.toString();
 			} else {
-				save(new Integer(m.replaceAll("")));
-				nowValue = m.replaceAll("");
+				Integer value = new Integer(this.txtField.getText());
+				if(Max!=null&&Max<value){
+					value = Max.intValue();
+				}
+				if(Min!=null&&value<Min){
+					value = Min.intValue();
+				}
+				save(value);
+				nowValue =  value.toString();
 			}
 		} catch (NumberFormatException e2) {
-			System.out.println(nowValue);
-			txtField.setText(nowValue);
 		}
+		txtField.setText(nowValue);
 	}
 
 	@Override

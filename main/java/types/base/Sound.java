@@ -1,6 +1,6 @@
 package types.base;
 
-public class Sound {
+public class Sound extends CloneableObj{
 	public String name;
 	public float range;
 	public float vol = 1;

@@ -1,7 +1,7 @@
 package types.base;
 
 
-public class GunRecoil {
+public class GunRecoil extends CloneableObj{
 	public boolean use = false;
 
 	public float yaw_base_max = 0;
