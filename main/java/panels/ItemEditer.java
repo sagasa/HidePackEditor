@@ -59,7 +59,10 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		// サウンドエディタ
 		writeSoundEditer(250, 0, GunDataList.SOUND_SHOOT, ChangeListener.GUN_SOUND_SHOOT);
 		writeSoundEditer(250, 120, GunDataList.SOUND_RELOAD, ChangeListener.GUN_SOUND_RELOAD);
-
+	
+		GraphPanel test = new GraphPanel(null,60);
+		test.setBounds(500, 300, 200, 200);
+		this.add(test);
 	}
 
 	private void writeGunNumberValue(JPanel root, int cate) {
