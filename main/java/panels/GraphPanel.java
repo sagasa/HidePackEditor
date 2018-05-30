@@ -23,12 +23,16 @@ public class GraphPanel extends JPanel {
 	private GunRecoil RecoilData;
 
 	/** リコイルエディタ */
-	public GraphPanel(GunRecoil data, int diameter) {
+	public GraphPanel(int diameter) {
 		d = diameter;
-		RecoilData = data;
 		this.setBorder(new LineBorder(Color.black, 1, false));
 	}
 
+	public void setRecoilData(GunRecoil data){
+		RecoilData = data;
+		this.repaint();
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
@@ -36,10 +40,13 @@ public class GraphPanel extends JPanel {
 		g2.setPaint(Color.white);
 		// 罫線描画
 		writeRuledLine(g2);
-
+		//データが入っていないなら
+		if(RecoilData == null||!RecoilData.use){
+			return;
+		}
 		// グラフ描画 MIN
 		g2.setPaint(Color.BLUE);
-		float[] data = new float[]{1,2,6,3,1.6f,1.6f};
+		float[] data = new float[6];
 		data[0] = RecoilData.pitch_base_min;
 		data[1] = RecoilData.pitch_spread_min;
 		data[2] = RecoilData.yaw_base_min;
@@ -47,8 +54,15 @@ public class GraphPanel extends JPanel {
 		data[4] = RecoilData.pitch_shake_min;
 		data[5] = RecoilData.yaw_shake_min;
 		writeRecoilGraph(g2, data);
-
+		
 		g2.setPaint(Color.ORANGE);
+		data[0] = RecoilData.pitch_base_max;
+		data[1] = RecoilData.pitch_spread_max;
+		data[2] = RecoilData.yaw_base_max;
+		data[3] = RecoilData.yaw_spread_max;
+		data[4] = RecoilData.pitch_shake_max;
+		data[5] = RecoilData.yaw_shake_max;
+		writeRecoilGraph(g2, data);
 	}
 
 	// 罫線描画
