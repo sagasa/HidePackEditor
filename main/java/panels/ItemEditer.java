@@ -19,6 +19,7 @@ import types.GunData.GunDataList;
 import types.base.ChangeListener;
 import types.base.DataBase;
 import types.base.EnumDataList;
+import types.base.GunRecoil;
 import types.base.ItemInfo;
 import types.base.Sound;
 
@@ -59,9 +60,9 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		// サウンドエディタ
 		writeSoundEditer(250, 0, GunDataList.SOUND_SHOOT, ChangeListener.GUN_SOUND_SHOOT);
 		writeSoundEditer(250, 120, GunDataList.SOUND_RELOAD, ChangeListener.GUN_SOUND_RELOAD);
-	
-		GraphPanel test = new GraphPanel(null,60);
-		test.setBounds(500, 300, 200, 200);
+
+		GraphPanel test = new GraphPanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_DEFAULT),10);
+		test.setBounds(500, 300, 300, 300);
 		this.add(test);
 	}
 
@@ -107,18 +108,21 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		int yOffset = 30;
 		NumberSetPanel range = new NumberSetPanel(type.getName() + "_Range", sound.range + "", true, true);
 		range.setTextBoxWidth(40);
+		range.setLimit(null, 0f);
 		range.addChangeListener(this, ChangeListener.SOUND_RANGE | cate);
 		range.setBounds(0, yOffset, 240, 20);
 		infoPanel.add(range);
 		yOffset += 22;
 		NumberSetPanel vol = new NumberSetPanel(type.getName() + "_Volume", sound.vol + "", true, true);
 		vol.setTextBoxWidth(40);
+		vol.setLimit(null, 0f);
 		vol.addChangeListener(this, ChangeListener.SOUND_VOL | cate);
 		vol.setBounds(0, yOffset, 240, 20);
 		infoPanel.add(vol);
 		yOffset += 22;
 		NumberSetPanel pitch = new NumberSetPanel(type.getName() + "_Pitch", sound.pitch + "", true, true);
 		pitch.setTextBoxWidth(40);
+		pitch.setLimit(null, 0f);
 		pitch.addChangeListener(this, ChangeListener.SOUND_PITCH | cate);
 		pitch.setBounds(0, yOffset, 240, 20);
 		infoPanel.add(pitch);
