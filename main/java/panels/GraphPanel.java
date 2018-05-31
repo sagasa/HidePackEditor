@@ -39,7 +39,6 @@ public class GraphPanel extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setPaint(Color.white);
 		// 縮尺調整
-		System.out.println(getScale());
 		d = getScale();
 		// 罫線描画
 		writeRuledLine(g2);

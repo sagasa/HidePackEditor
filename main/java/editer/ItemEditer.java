@@ -67,8 +67,11 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		writeSoundEditer(250, 0, GunDataList.SOUND_SHOOT, ChangeListener.GUN_SOUND_SHOOT);
 		writeSoundEditer(250, 103, GunDataList.SOUND_RELOAD, ChangeListener.GUN_SOUND_RELOAD);
 		//量が多すぎたので別クラス
+		//グラフだけパネル外に配置
+		RecoilEditPanel.Graph.setBounds(255,5, 240, 240);
+		this.add(RecoilEditPanel.Graph);
 		RecoilEditPanel recoilEditer = new RecoilEditPanel((GunData) Data);
-		recoilEditer.setBounds(505,5,250,650);
+		recoilEditer.setBounds(505,5,250,500);
 		this.add(recoilEditer);
 
 	}
