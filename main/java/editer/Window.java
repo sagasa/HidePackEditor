@@ -18,8 +18,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import panels.ItemList;
 import panels.ResourceList;
-import panels.ItemEditer;
-import panels.PackInfoEditer;
 import types.*;
 
 /** メインのフレーム この中にすべて描画 */
@@ -56,7 +54,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		int w = screenSize.width / 4 * 3 < 1190 ? 1190 : screenSize.width / 4 * 3;
 		int h = screenSize.height / 4 * 3 < 625 ? 625 : screenSize.height / 4 * 3;
 		this.setSize(w, h);
-		this.setSize(1300, 750);
+		this.setSize(1200, 750);
 		this.setLocation((screenSize.width - w) / 2, (screenSize.height - h) / 2);
 
 		// メニューバー

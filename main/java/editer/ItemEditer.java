@@ -1,4 +1,4 @@
-package panels;
+package editer;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -12,7 +12,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import editer.Window;
+import panels.GraphPanel;
+import panels.IconPrint;
+import panels.NumberSetPanel;
+import panels.RecoilEditPanel;
+import panels.ResourceList;
+import panels.StringComboPanel;
+import panels.StringSetPanel;
 import types.BulletData;
 import types.GunData;
 import types.GunData.GunDataList;
@@ -47,23 +53,24 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
-		infoPanel.setBounds(5, 200, 240, 0);
+		infoPanel.setBounds(5, 196, 245, 0);
 		writeGunNumberValue(infoPanel, 1);
 		this.add(infoPanel);
 		// ダメージ倍率系
 		JPanel damageChange = new JPanel();
 		damageChange.setLayout(null);
 		damageChange.setBorder(blackBorder);
-		damageChange.setBounds(255, 240, 240, 0);
+		damageChange.setBounds(255, 240, 245, 0);
 		writeGunNumberValue(damageChange, 2);
 		this.add(damageChange);
 		// サウンドエディタ
 		writeSoundEditer(250, 0, GunDataList.SOUND_SHOOT, ChangeListener.GUN_SOUND_SHOOT);
-		writeSoundEditer(250, 120, GunDataList.SOUND_RELOAD, ChangeListener.GUN_SOUND_RELOAD);
+		writeSoundEditer(250, 103, GunDataList.SOUND_RELOAD, ChangeListener.GUN_SOUND_RELOAD);
+		//量が多すぎたので別クラス
+		RecoilEditPanel recoilEditer = new RecoilEditPanel((GunData) Data);
+		recoilEditer.setBounds(505,5,250,650);
+		this.add(recoilEditer);
 
-		GraphPanel test = new GraphPanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_DEFAULT),10);
-		test.setBounds(500, 300, 300, 300);
-		this.add(test);
 	}
 
 	private void writeGunNumberValue(JPanel root, int cate) {
@@ -71,7 +78,7 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		for (GunDataList type : GunDataList.values()) {
 			if (type.getCate() == cate) {
 				NumberSetPanel panel = new NumberSetPanel(Data, type, true);
-				panel.setBounds(0, 0 + yOffset, 240, 20);
+				panel.setBounds(0, 0 + yOffset, 245, 20);
 				root.add(panel);
 				yOffset += 22;
 			}
@@ -93,13 +100,13 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
-		infoPanel.setBounds(x + 5, y + 5, 240, 98);
+		infoPanel.setBounds(x + 5, y + 5, 245, 98);
 
 		Sound sound = (Sound) Data.getDataObject(type);
 
 		StringComboPanel combo = new StringComboPanel(type.getName(),
 				Window.IconMap.keySet().toArray(new String[Window.IconMap.keySet().size()]), true);
-		combo.setBounds(0, 5, 240, 20);
+		combo.setBounds(0, 5, 245, 20);
 		combo.addChangeListener(this, SOUND_NAME | cate);
 		combo.setTextBoxWidth(100);
 		combo.setItem(sound.name);
@@ -110,21 +117,21 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		range.setTextBoxWidth(40);
 		range.setLimit(null, 0f);
 		range.addChangeListener(this, ChangeListener.SOUND_RANGE | cate);
-		range.setBounds(0, yOffset, 240, 20);
+		range.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(range);
 		yOffset += 22;
 		NumberSetPanel vol = new NumberSetPanel(type.getName() + "_Volume", sound.vol + "", true, true);
 		vol.setTextBoxWidth(40);
 		vol.setLimit(null, 0f);
 		vol.addChangeListener(this, ChangeListener.SOUND_VOL | cate);
-		vol.setBounds(0, yOffset, 240, 20);
+		vol.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(vol);
 		yOffset += 22;
 		NumberSetPanel pitch = new NumberSetPanel(type.getName() + "_Pitch", sound.pitch + "", true, true);
 		pitch.setTextBoxWidth(40);
 		pitch.setLimit(null, 0f);
 		pitch.addChangeListener(this, ChangeListener.SOUND_PITCH | cate);
-		pitch.setBounds(0, yOffset, 240, 20);
+		pitch.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(pitch);
 		yOffset += 22;
 
@@ -140,45 +147,45 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
-		infoPanel.setBounds(x + 5, y + 5, 240, 185);
+		infoPanel.setBounds(x + 5, y + 5, 245, 185);
 		ItemInfo info = getItemInfo();
 
 		int yOffset = 3;
 		StringSetPanel display = new StringSetPanel("DisplayName", info.displayName, true);
 		display.addChangeListener(this, ChangeListener.ITEMINFO_DISPLAY);
-		display.setBounds(0, yOffset, 240, 20);
+		display.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(display);
 		yOffset += 22;
 
 		StringSetPanel shortName = new StringSetPanel("ShortName", info.shortName, true);
 		shortName.addChangeListener(this, ChangeListener.ITEMINFO_SHORTNAME);
-		shortName.setBounds(0, yOffset, 240, 20);
+		shortName.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(shortName);
 		yOffset += 22;
 
 		NumberSetPanel attack = new NumberSetPanel("AttackDamageAdd", info.attackDamage+"", true,true);
 		attack.addChangeListener(this, ChangeListener.ITEMINFO_ATTACK);
-		attack.setBounds(0, yOffset, 240, 20);
+		attack.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(attack);
 		yOffset += 22;
 
 		NumberSetPanel speed = new NumberSetPanel("MoveSpeedDiameter", info.movementSpeed+"", true,true);
 		speed.addChangeListener(this, ChangeListener.ITEMINFO_ATTACK);
 		speed.setLimit(null, 0f);
-		speed.setBounds(0, yOffset, 240, 20);
+		speed.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(speed);
 		yOffset += 22;
 
 		NumberSetPanel health = new NumberSetPanel("MaxHealthAdd", info.maxHealth+"", true,true);
 		health.addChangeListener(this, ChangeListener.ITEMINFO_ATTACK);
-		health.setBounds(0, yOffset, 240, 20);
+		health.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(health);
 		yOffset += 22;
 
 		NumberSetPanel knockBack = new NumberSetPanel("KnockbackResistanceAdd", info.knockbackResistance+"", true,true);
 		knockBack.setLimit(1f, -1f);
 		knockBack.addChangeListener(this, ChangeListener.ITEMINFO_ATTACK);
-		knockBack.setBounds(0, yOffset, 240, 20);
+		knockBack.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(knockBack);
 		yOffset += 22;
 
@@ -212,7 +219,7 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		for (String data : Window.IconMap.keySet()) {
 			IconList.addItem(data);
 		}
-		IconList.setBounds(150, yOffset + 28, 85, 18);
+		IconList.setBounds(150, yOffset + 28, 90, 18);
 		IconList.setSelectedItem(info.iconName);
 		IconList.setActionCommand("iconSet");
 		infoPanel.add(IconList);

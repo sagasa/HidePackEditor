@@ -17,31 +17,34 @@ public class GraphPanel extends JPanel {
 	private static final long serialVersionUID = 9205198248352176324L;
 
 	/** 表示スケール */
-	int d = 10;
+	private int d = 10;
 
-	final int radius = 150;
+	private int radius = 150;
 	private GunRecoil RecoilData;
 
 	/** リコイルエディタ */
-	public GraphPanel(int diameter) {
-		d = diameter;
+	public GraphPanel(int radius) {
+		this.radius = radius;
 		this.setBorder(new LineBorder(Color.black, 1, false));
 	}
 
-	public void setRecoilData(GunRecoil data){
+	public void setRecoilData(GunRecoil data) {
 		RecoilData = data;
 		this.repaint();
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setPaint(Color.white);
+		// 縮尺調整
+		System.out.println(getScale());
+		d = getScale();
 		// 罫線描画
 		writeRuledLine(g2);
-		//データが入っていないなら
-		if(RecoilData == null||!RecoilData.use){
+		// データが入っていないなら
+		if (RecoilData == null || !RecoilData.use) {
 			return;
 		}
 		// グラフ描画 MIN
@@ -54,7 +57,7 @@ public class GraphPanel extends JPanel {
 		data[4] = RecoilData.pitch_shake_min;
 		data[5] = RecoilData.yaw_shake_min;
 		writeRecoilGraph(g2, data);
-		
+
 		g2.setPaint(Color.ORANGE);
 		data[0] = RecoilData.pitch_base_max;
 		data[1] = RecoilData.pitch_spread_max;
@@ -63,6 +66,24 @@ public class GraphPanel extends JPanel {
 		data[4] = RecoilData.pitch_shake_max;
 		data[5] = RecoilData.yaw_shake_max;
 		writeRecoilGraph(g2, data);
+	}
+
+	/** 縮尺調整 */
+	private int getScale() {
+		// デフォルトを返す
+		if (RecoilData == null) {
+			return 10;
+		}
+		float maxValue = 0;
+		maxValue = Math.max(maxValue,
+				(Math.abs(RecoilData.pitch_base_min) + RecoilData.pitch_spread_min) * RecoilData.pitch_shake_min);
+		maxValue = Math.max(maxValue,
+				(Math.abs(RecoilData.pitch_base_max) + RecoilData.pitch_spread_max) * RecoilData.pitch_shake_max);
+		maxValue = Math.max(maxValue,
+				(Math.abs(RecoilData.yaw_base_min) + RecoilData.yaw_spread_min) * RecoilData.yaw_shake_min);
+		maxValue = Math.max(maxValue,
+				(Math.abs(RecoilData.yaw_base_max) + RecoilData.yaw_spread_max) * RecoilData.yaw_shake_max);
+		return (int) (radius / (maxValue + 5));
 	}
 
 	// 罫線描画
@@ -75,7 +96,7 @@ public class GraphPanel extends JPanel {
 		g2.draw(new Line2D.Float(0.0f, radius, radius * 2, radius));
 		g2.setStroke(new BasicStroke(1.0f));
 		// 10あたり何ピクセルか
-		for (int i = 0; i < radius; i += d*5) {
+		for (int i = 0; i < radius; i += d * 5) {
 			g2.setPaint(Color.gray);
 			g2.draw(new Line2D.Float(radius - i, radius - i, radius + i, radius - i));
 			g2.draw(new Line2D.Float(radius - i, radius - i, radius - i, radius + i));
@@ -95,7 +116,7 @@ public class GraphPanel extends JPanel {
 	/** グラフ描画 配列の内容[xBase,xSpread,yBase,ySpread,xReturn,yRuturn] */
 	void writeRecoilGraph(Graphics2D g2, float[] data) {
 		for (int i = 0; i < 4; i++) {
-			data[i] = data[i]*d;
+			data[i] = data[i] * d;
 		}
 		data[4] = data[4];
 		data[5] = data[5];

@@ -1,4 +1,4 @@
-package panels;
+package editer;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import editer.Window;
+import panels.StringSetPanel;
 import types.base.ChangeListener;
 
 /**パックインフォ書き換えパネル*/
