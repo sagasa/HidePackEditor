@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +55,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		int w = screenSize.width / 4 * 3 < 1190 ? 1190 : screenSize.width / 4 * 3;
 		int h = screenSize.height / 4 * 3 < 680 ? 680 : screenSize.height / 4 * 3;
 		this.setSize(w, h);
+		this.setSize(1300, 680);
 		this.setLocation((screenSize.width - w) / 2, (screenSize.height - h) / 2);
 
 		// メニューバー
@@ -98,7 +100,6 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 
 		PackInfoEditer = new PackInfoEditer();
 		this.add(PackInfoEditer);
-
 
 		this.setVisible(true);
 	}

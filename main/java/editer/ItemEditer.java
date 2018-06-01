@@ -12,8 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import panels.GraphPanel;
 import panels.IconPrint;
+import panels.ListChooser;
 import panels.NumberSetPanel;
 import panels.RecoilEditPanel;
 import panels.ResourceList;
@@ -25,7 +25,6 @@ import types.GunData.GunDataList;
 import types.base.ChangeListener;
 import types.base.DataBase;
 import types.base.EnumDataList;
-import types.base.GunRecoil;
 import types.base.ItemInfo;
 import types.base.Sound;
 
@@ -53,27 +52,30 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
-		infoPanel.setBounds(5, 196, 245, 0);
+		infoPanel.setBounds(5, 195, 245, 0);
 		writeGunNumberValue(infoPanel, 1);
 		this.add(infoPanel);
 		// ダメージ倍率系
 		JPanel damageChange = new JPanel();
 		damageChange.setLayout(null);
 		damageChange.setBorder(blackBorder);
-		damageChange.setBounds(255, 240, 245, 0);
+		damageChange.setBounds(255, 255, 245, 0);
 		writeGunNumberValue(damageChange, 2);
 		this.add(damageChange);
 		// サウンドエディタ
-		writeSoundEditer(250, 0, GunDataList.SOUND_SHOOT, ChangeListener.GUN_SOUND_SHOOT);
-		writeSoundEditer(250, 103, GunDataList.SOUND_RELOAD, ChangeListener.GUN_SOUND_RELOAD);
+		writeSoundEditer(0, 442, GunDataList.SOUND_SHOOT, ChangeListener.GUN_SOUND_SHOOT);
+		writeSoundEditer(250, 442, GunDataList.SOUND_RELOAD, ChangeListener.GUN_SOUND_RELOAD);
 		//量が多すぎたので別クラス
 		//グラフだけパネル外に配置
 		RecoilEditPanel.Graph.setBounds(255,5, 240, 240);
 		this.add(RecoilEditPanel.Graph);
 		RecoilEditPanel recoilEditer = new RecoilEditPanel((GunData) Data);
-		recoilEditer.setBounds(505,5,250,500);
+		recoilEditer.setBounds(505,5,185,500);
 		this.add(recoilEditer);
-
+		//使用弾薬
+		ListChooser useBullets = new ListChooser(ListChooser.GUN_MAGAZINE_LIST,data);
+		useBullets.setBounds(695, 5, 200, 200);
+		this.add(useBullets);
 	}
 
 	private void writeGunNumberValue(JPanel root, int cate) {

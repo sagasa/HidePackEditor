@@ -17,7 +17,7 @@ public class GraphPanel extends JPanel {
 	private static final long serialVersionUID = 9205198248352176324L;
 
 	/** 表示スケール */
-	private int d = 10;
+	private int d = 15;
 
 	private int radius = 150;
 	private GunRecoil RecoilData;
@@ -74,6 +74,10 @@ public class GraphPanel extends JPanel {
 			return 10;
 		}
 		float maxValue = 0;
+		maxValue = Math.max(maxValue, Math.abs(RecoilData.pitch_base_min) + RecoilData.pitch_spread_min);
+		maxValue = Math.max(maxValue, Math.abs(RecoilData.pitch_base_max) + RecoilData.pitch_spread_max);
+		maxValue = Math.max(maxValue, Math.abs(RecoilData.yaw_base_min) + RecoilData.yaw_spread_min);
+		maxValue = Math.max(maxValue, Math.abs(RecoilData.yaw_base_max) + RecoilData.yaw_spread_max);
 		maxValue = Math.max(maxValue,
 				(Math.abs(RecoilData.pitch_base_min) + RecoilData.pitch_spread_min) * RecoilData.pitch_shake_min);
 		maxValue = Math.max(maxValue,
@@ -82,7 +86,9 @@ public class GraphPanel extends JPanel {
 				(Math.abs(RecoilData.yaw_base_min) + RecoilData.yaw_spread_min) * RecoilData.yaw_shake_min);
 		maxValue = Math.max(maxValue,
 				(Math.abs(RecoilData.yaw_base_max) + RecoilData.yaw_spread_max) * RecoilData.yaw_shake_max);
-		return (int) (radius / (maxValue + 5));
+
+		int scale = (int) (radius / (maxValue));
+		return scale > 15 ? 15 : scale;
 	}
 
 	// 罫線描画
