@@ -28,6 +28,7 @@ import editer.Window;
 import types.BulletData;
 import types.BulletData.BulletDataList;
 import types.ItemInfo;
+import types.base.EnumDataList;
 import types.guns.GunData;
 import types.guns.GunData.GunDataList;
 
@@ -98,7 +99,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 			break;
 		case GUN_FireMode:
 			combo.removeAllItems();
-			
+
 			for(String name:ItemEditer.allFireMode){
 				combo.addItem(name);
 			}
@@ -115,15 +116,19 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 
 	/**削除*/
 	void delete(int index) {
+		Data.setData(getDataType(), helper.ArrayEditer.RemoveFromArray((String[]) Data.getDataObject(getDataType()), listModel.getElementAt(index).name));
+		write();
+	}
+
+	/**EnumDataList取得*/
+	private EnumDataList getDataType(){
 		switch (mode) {
 		case GUN_MAGAZINE_LIST:
-			Data.setData(GunDataList.BULLET_USE, helper.ArrayEditer.RemoveFromArray((String[]) Data.getDataObject(GunDataList.BULLET_USE), listModel.getElementAt(index).name));
-			break;
+			return GunDataList.BULLET_USE;
 		case GUN_FireMode:
-			Data.setData(GunDataList.FIREMODE, helper.ArrayEditer.RemoveFromArray((String[]) Data.getDataObject(GunDataList.FIREMODE), listModel.getElementAt(index).name));
-			break;
+			return GunDataList.FIREMODE;
 		}
-		write();
+		return null;
 	}
 
 	@Override
@@ -156,11 +161,21 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 	public void mousePressed(MouseEvent e) {
 		//要素があれば
 		if(!listModel.isEmpty()){
-			//削除ボタンの位置検出
+			//ボタンの位置検出
 			int index = model.locationToIndex(e.getPoint());
 			//オフセットを除去して送る
-			if(listModel.getElementAt(model.locationToIndex(e.getPoint())).isInDeleteBotton(new Point(e.getX()-model.indexToLocation(index).x,e.getY()-model.indexToLocation(index).y))){
+			ListComponent comp = listModel.getElementAt(model.locationToIndex(e.getPoint()));
+			Point offsetPoint = new Point(e.getX()-model.indexToLocation(index).x,e.getY()-model.indexToLocation(index).y);
+			if(comp.isInDeleteBotton(offsetPoint)){
 				delete(model.locationToIndex(e.getPoint()));
+			}else if(comp.isInUpBotton(offsetPoint)){
+				//上のインデックスと置き換え
+				Data.setData(getDataType() ,helper.ArrayEditer.ChangeArrayIndex((String[])Data.getDataObject(getDataType()), index,index-1));
+				write();
+			}else if(comp.isInDownBotton(offsetPoint)){
+				//上のインデックスと置き換え
+				Data.setData(getDataType() ,helper.ArrayEditer.ChangeArrayIndex((String[])Data.getDataObject(getDataType()), index,index+1));
+				write();
 			}
 		}
 	}
@@ -172,14 +187,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 	public void actionPerformed(ActionEvent e) {
 		//ついか
 		if(combo.getSelectedIndex()!=-1){
-			switch (mode) {
-			case GUN_MAGAZINE_LIST:
-				Data.setData(GunDataList.BULLET_USE ,helper.ArrayEditer.AddToArray((String[])Data.getDataObject(GunDataList.BULLET_USE), combo.getSelectedItem().toString()));
-				break;
-			case GUN_FireMode:
-				Data.setData(GunDataList.FIREMODE ,helper.ArrayEditer.AddToArray((String[])Data.getDataObject(GunDataList.FIREMODE), combo.getSelectedItem().toString()));
-				break;
-			}
+			Data.setData(getDataType() ,helper.ArrayEditer.AddToArray((String[])Data.getDataObject(getDataType()), combo.getSelectedItem().toString()));
 			write();
 		}
 
@@ -195,8 +203,9 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 		int mode;
 
 		JLabel label;
-		
+
 		JLabel upLabel;
+		JLabel downLabel;
 
 		/**
 		 * 銃用インスタンス モード 編集するデータ 名称
@@ -214,14 +223,22 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 			label = new JLabel();
 			label.setBounds(168, 1, 18, 18);
 			label.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/delete.png")));
-			label.setOpaque(true);
+			label.setOpaque(false);
 			this.add(label);
-			
+
 			upLabel = new JLabel();
-			upLabel.setBounds(140, 0, 18, 8);
+			upLabel.setBounds(145, 0, 18, 8);
 			upLabel.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/up.png")));
-			upLabel.setOpaque(true);
+			upLabel.setOpaque(false);
+			upLabel.setVisible(false);
 			this.add(upLabel);
+
+			downLabel = new JLabel();
+			downLabel.setBounds(145, 12, 18, 8);
+			downLabel.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/down.png")));
+			downLabel.setOpaque(false);
+			downLabel.setVisible(false);
+			this.add(downLabel);
 		}
 
 		/**レンダー登録用*/
@@ -232,12 +249,34 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 		public boolean isInDeleteBotton(Point point){
 			return label.getBounds().contains(point);
 		}
+		/**↑ボタンの上か判別*/
+		public boolean isInUpBotton(Point point){
+			return upLabel.getBounds().contains(point)&&upLabel.isVisible();
+		}
+		/**↓ボタンの上か判別*/
+		public boolean isInDownBotton(Point point){
+			return downLabel.getBounds().contains(point)&&downLabel.isVisible();
+		}
 
+		final LineBorder border = new LineBorder(Color.black, 1, false);
 
 		//レンダーメゾット
 		@Override
 		public Component getListCellRendererComponent(JList<? extends ListComponent> list, ListComponent value, int index,
 				boolean isSelected, boolean cellHasFocus) {
+
+			value.upLabel.setVisible(false);
+			value.downLabel.setVisible(false);
+			value.setBorder(null);
+			if(isSelected){
+				value.setBorder(border);
+				if(!(index==0)){
+					value.upLabel.setVisible(true);
+				}
+				if(!(index == list.getModel().getSize()-1)){
+					value.downLabel.setVisible(true);
+				}
+			}
 			return value;
 		}
 	}
