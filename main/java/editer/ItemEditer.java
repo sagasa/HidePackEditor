@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import panels.BooleanSetPanel;
 import panels.IconPrint;
 import panels.ListChooser;
 import panels.NumberSetPanel;
@@ -20,19 +21,21 @@ import panels.ResourceList;
 import panels.StringComboPanel;
 import panels.StringSetPanel;
 import types.BulletData;
-import types.GunData;
-import types.GunData.GunDataList;
+import types.ItemInfo;
+import types.Sound;
 import types.base.ChangeListener;
 import types.base.DataBase;
 import types.base.EnumDataList;
-import types.base.ItemInfo;
-import types.base.Sound;
+import types.guns.GunData;
+import types.guns.GunData.GunDataList;
 
 /** アイテムのデータ編集 */
 public class ItemEditer extends JPanel implements ChangeListener, ActionListener {
 	/** データ編集 */
 	private static final long serialVersionUID = 2597125412794151634L;
-
+	/**射撃モードのリスト*/
+	public static final String[] allFireMode = new String[]{"semiauto","fullauto","burst","minigun"};
+	
 	DataBase Data;
 
 	private static final LineBorder blackBorder = new LineBorder(Color.black, 1, false);
@@ -73,9 +76,24 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		recoilEditer.setBounds(505,5,185,500);
 		this.add(recoilEditer);
 		//使用弾薬
+		JPanel bulletsPanel = new JPanel();
+		bulletsPanel.setLayout(null);
+		bulletsPanel.setBorder(blackBorder);
+		bulletsPanel.setBounds(695, 5, 200, 200);
 		ListChooser useBullets = new ListChooser(ListChooser.GUN_MAGAZINE_LIST,data);
-		useBullets.setBounds(695, 5, 200, 200);
-		this.add(useBullets);
+		useBullets.setBounds(5, 5, 190, 190);
+		bulletsPanel.add(useBullets);
+		this.add(bulletsPanel);
+		//射撃モード
+		JPanel fireModePanel = new JPanel();
+		fireModePanel.setLayout(null);
+		fireModePanel.setBorder(blackBorder);
+		fireModePanel.setBounds(695, 210, 200, 110);
+		ListChooser fireModechooser = new ListChooser(ListChooser.GUN_FireMode,data);
+		fireModechooser.setBounds(5, 5, 190, 105);
+		fireModePanel.add(fireModechooser);
+		this.add(fireModePanel);
+	
 	}
 
 	private void writeGunNumberValue(JPanel root, int cate) {

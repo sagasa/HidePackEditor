@@ -10,7 +10,7 @@ import java.awt.geom.Line2D;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import types.base.GunRecoil;
+import types.guns.GunRecoil;
 
 /** GUIのグラフ描画用 */
 public class GraphPanel extends JPanel {

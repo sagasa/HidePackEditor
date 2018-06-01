@@ -16,9 +16,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import editer.Window;
-import types.GunData;
-import types.GunData.GunDataList;
-import types.base.ItemInfo;
+import types.BulletData;
+import types.BulletData.BulletDataList;
+import types.ItemInfo;
+import types.guns.GunData;
+import types.guns.GunData.GunDataList;
 
 public class ItemList extends JTabbedPane implements ListSelectionListener, MouseListener, ActionListener {
 	/** 左側のパネル */
@@ -39,6 +41,7 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 	JPopupMenu popup = new JPopupMenu();
 
 	private static int gunNum = 0;
+	private static int bulletNum = 0;
 
 	public ItemList() {
 		// ホップアップの追加
@@ -103,6 +106,14 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 				break;
 			case 1:
 				// magazine
+				BulletData newBullet = new BulletData();
+				while (Window.BulletList.containsKey("New Bullet No." + bulletNum)) {
+					bulletNum++;
+				}
+				String bulletName = "New Bullet No." + bulletNum;
+				newBullet.setData(BulletDataList.ITEM_INFO, new ItemInfo("bullet_" + bulletNum, bulletName, "sample"));
+				Window.BulletList.put(bulletName, newBullet);
+				write();
 				break;
 			case 2:
 				// armor
@@ -112,7 +123,7 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 				break;
 			}
 		} else if (e.getActionCommand().equals("refresh")) {
-
+			write();
 		}
 	}
 
@@ -120,9 +131,15 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 		gunModel.removeAllElements();
 		String[] keySet = Window.GunList.keySet().toArray(new String[Window.GunList.keySet().size()]);
 		Arrays.sort(keySet);
-		System.out.println(Arrays.asList(keySet));
 		for (String name : keySet) {
 			gunModel.addElement(((ItemInfo) Window.GunList.get(name).getDataObject(GunDataList.ITEM_INFO)).displayName);
+		}
+	
+		magazineModel.removeAllElements();
+		keySet = Window.BulletList.keySet().toArray(new String[Window.BulletList.keySet().size()]);
+		Arrays.sort(keySet);
+		for (String name : keySet) {
+			magazineModel.addElement(((ItemInfo) Window.BulletList.get(name).getDataObject(BulletDataList.ITEM_INFO)).displayName);
 		}
 	}
 

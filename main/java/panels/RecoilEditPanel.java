@@ -4,10 +4,10 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 
-import types.GunData;
-import types.GunData.GunDataList;
 import types.base.ChangeListener;
-import types.base.GunRecoil;
+import types.guns.GunData;
+import types.guns.GunRecoil;
+import types.guns.GunData.GunDataList;
 
 public class RecoilEditPanel extends JTabbedPane implements ChangeListener, javax.swing.event.ChangeListener{
 

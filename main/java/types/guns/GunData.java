@@ -1,17 +1,16 @@
-package types;
+package types.guns;
 
 import java.util.HashMap;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import types.base.ItemInfo;
-import types.base.Sound;
+import types.ItemInfo;
+import types.Sound;
 import types.base.CloneableObj;
 import types.base.DataBase;
 import types.base.DataType;
 import types.base.EnumDataList;
-import types.base.GunRecoil;
 
 public class GunData extends DataBase {
 	public enum GunDataList implements EnumDataList {

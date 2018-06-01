@@ -1,5 +1,6 @@
-package types.base;
+package types.guns;
 
+import types.base.CloneableObj;
 
 public class GunRecoil extends CloneableObj{
 	public boolean use = false;

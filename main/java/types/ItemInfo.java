@@ -1,4 +1,6 @@
-package types.base;
+package types;
+
+import types.base.CloneableObj;
 
 public class ItemInfo extends CloneableObj{
 	public String shortName;

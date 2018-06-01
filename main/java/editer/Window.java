@@ -20,6 +20,7 @@ import javax.swing.JMenuItem;
 import panels.ItemList;
 import panels.ResourceList;
 import types.*;
+import types.guns.GunData;
 
 /** メインのフレーム この中にすべて描画 */
 public class Window extends JFrame implements ActionListener, ComponentListener {
