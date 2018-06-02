@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import panels.BooleanSetPanel;
 import panels.IconPrint;
 import panels.ListChooser;
 import panels.NumberSetPanel;
@@ -35,7 +34,7 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 	private static final long serialVersionUID = 2597125412794151634L;
 	/**射撃モードのリスト*/
 	public static final String[] allFireMode = new String[]{"semiauto","fullauto","burst","minigun"};
-	
+
 	DataBase Data;
 
 	private static final LineBorder blackBorder = new LineBorder(Color.black, 1, false);
@@ -44,6 +43,11 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		this.setBorder(blackBorder);
 		this.setLayout(null);
 		this.setBackground(Color.WHITE);
+	}
+
+	/**エディタをクリア*/
+	public void clearEditer(){
+		this.removeAll();
 	}
 
 	/** GunDataの内容変更全部 */
@@ -93,7 +97,7 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		fireModechooser.setBounds(5, 5, 190, 105);
 		fireModePanel.add(fireModechooser);
 		this.add(fireModePanel);
-	
+
 	}
 
 	private void writeGunNumberValue(JPanel root, int cate) {

@@ -17,6 +17,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+
+import io.PackIO;
 import panels.ItemList;
 import panels.ResourceList;
 import types.*;
@@ -27,6 +29,8 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	/** メインWindow */
 	private static final long serialVersionUID = -3092968886747656737L;
 
+	/**Windowのインスタンス*/
+	public static Window INSTANCE;
 	/** 銃のMAP GunData */
 	public static Map<String,GunData> GunList = new HashMap<String,GunData>();
 	/** 弾のMAP BulletData */
@@ -106,13 +110,17 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	}
 
 	public static void main(String[] args) {
-		new Window();
+		INSTANCE = new Window();
 	}
 
 	// メニュー操作受付
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals("New")){
 
+		}else if(e.getActionCommand().equals("Open")){
+			PackIO.openPack();
+		}
 	}
 
 	@Override

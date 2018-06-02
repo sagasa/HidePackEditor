@@ -122,7 +122,9 @@ public class GunData extends DataBase {
 		}
 	}
 
-	public String[] useMagazines = new String[0];
+	public ItemInfo getItemInfo(){
+		return (ItemInfo) this.getDataObject(GunDataList.ITEM_INFO);
+	}
 
 	public GunData() {
 		for (GunDataList data : GunDataList.values()) {
@@ -142,7 +144,6 @@ public class GunData extends DataBase {
 	public GunData(String json) {
 		this();
 		Gson gson = new Gson();
-		Data.putAll(gson.fromJson(json, new TypeToken<HashMap<String, Object>>() {
-		}.getType()));
+		Data.putAll(gson.fromJson(json, new TypeToken<HashMap<String, Object>>() {}.getType()));
 	}
 }

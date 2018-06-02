@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import types.base.DataBase;
 import types.base.DataType;
 import types.base.EnumDataList;
+import types.guns.GunData.GunDataList;
 
 public class BulletData extends DataBase{
 
@@ -102,7 +103,7 @@ public class BulletData extends DataBase{
 
 		/** 着弾音 : Sound型 **/
 		SOUND_HIT_GROUND(null,null, new Sound("sample", 8), DataType.Object, 21),
-	
+
 		/** エンティティ着弾音を使用するか : boolean型 **/
 		SOUND_HIT_ENTITY(null,null, new Sound("sample", 8), DataType.Object, 21),
 
@@ -157,7 +158,7 @@ public class BulletData extends DataBase{
 		Object Default;
 		DataType Type;
 		int Cate;
-		
+
 		/**登録名を返す*/
 		public String getName() {
 			return this.toString();
@@ -199,6 +200,10 @@ public class BulletData extends DataBase{
 			return Max;
 		}
 	}
+	public ItemInfo getItemInfo(){
+		return (ItemInfo) this.getDataObject(GunDataList.ITEM_INFO);
+	}
+
 	/** 初期値*/
 	public BulletData() {
 		for (BulletDataList data : BulletDataList.values()) {
