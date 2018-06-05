@@ -33,6 +33,10 @@ public class IconPrint extends JPanel {
 		Image = i;
 	}
 
+	public void setImage(BufferedImage image){
+		Image = image;
+		repaint();
+	}
 
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;

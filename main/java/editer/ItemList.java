@@ -1,28 +1,30 @@
-package panels;
+package editer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import editer.Window;
+import helper.DropFileHandler;
 import types.BulletData;
 import types.BulletData.BulletDataList;
 import types.ItemInfo;
 import types.guns.GunData;
 import types.guns.GunData.GunDataList;
 
-public class ItemList extends JTabbedPane implements ListSelectionListener, MouseListener, ActionListener {
+public class ItemList extends JTabbedPane
+		implements ListSelectionListener, MouseListener, ActionListener, ChangeListener {
 	/** 左側のパネル */
 	private static final long serialVersionUID = 4651249716543985388L;
 
@@ -40,10 +42,11 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 
 	JPopupMenu popup = new JPopupMenu();
 
-	private static int gunNum = 0;
-	private static int bulletNum = 0;
+	static int gunNum = 0;
+	static int bulletNum = 0;
 
 	public ItemList() {
+		this.addChangeListener(this);
 		// ホップアップの追加
 		JMenuItem updateMenuItem = new JMenuItem("add new contents");
 		JMenuItem propertyMenuItem = new JMenuItem("refresh");
@@ -58,6 +61,7 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 		gunModel = new DefaultListModel<String>();
 		gunList.setModel(gunModel);
 		gunList.addMouseListener(this);
+		gunList.setTransferHandler(new DropFileHandler(DropFileHandler.GUNS));
 		gunList.addListSelectionListener(this);
 		JScrollPane gunSp = new JScrollPane();
 		gunSp.getViewport().setView(gunList);
@@ -66,6 +70,7 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 		magazineModel = new DefaultListModel<String>();
 		magazineList.setModel(magazineModel);
 		magazineList.addMouseListener(this);
+		magazineList.setTransferHandler(new DropFileHandler(DropFileHandler.MAGAZINES));
 		magazineList.addListSelectionListener(this);
 		JScrollPane magazineSp = new JScrollPane();
 		magazineSp.getViewport().setView(magazineList);
@@ -134,12 +139,13 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 		for (String name : keySet) {
 			gunModel.addElement(((ItemInfo) Window.GunList.get(name).getDataObject(GunDataList.ITEM_INFO)).displayName);
 		}
-	
+
 		magazineModel.removeAllElements();
 		keySet = Window.BulletList.keySet().toArray(new String[Window.BulletList.keySet().size()]);
 		Arrays.sort(keySet);
 		for (String name : keySet) {
-			magazineModel.addElement(((ItemInfo) Window.BulletList.get(name).getDataObject(BulletDataList.ITEM_INFO)).displayName);
+			magazineModel.addElement(
+					((ItemInfo) Window.BulletList.get(name).getDataObject(BulletDataList.ITEM_INFO)).displayName);
 		}
 	}
 
@@ -147,29 +153,34 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 	public void valueChanged(ListSelectionEvent e) {
 		// エディタ表示
 		if (!e.getValueIsAdjusting()) {
-			switch (this.getSelectedIndex()) {
-			case 0:
-				// gun
-				if (!gunList.isSelectionEmpty()) {
-					Window.ItemEditer.writeGunEditer(Window.GunList.get(gunList.getSelectedValue()));
-				}
-				break;
-			case 1:
-				// magazine
-				break;
-			case 2:
-				// armor
-				break;
-			case 3:
-				// attachment
-				break;
+			showEditer();
+		}
+	}
+
+	/** エディタを表示 */
+	public void showEditer() {
+		switch (this.getSelectedIndex()) {
+		case 0:
+			// gun
+			if (!gunList.isSelectionEmpty()) {
+				Window.ItemEditer.writeGunEditer(Window.GunList.get(gunList.getSelectedValue()));
 			}
+			break;
+		case 1:
+			// magazine
+			break;
+		case 2:
+			// armor
+			break;
+		case 3:
+			// attachment
+			break;
 		}
 	}
 
 	/** マウスイベントを集約 */
 	private void popupMenu(MouseEvent e) {
-	//	if (e.isPopupTrigger()&&Window.Pack!=null) {
+		// if (e.isPopupTrigger()&&Window.Pack!=null) {
 		if (e.isPopupTrigger()) {
 			popup.show(e.getComponent(), e.getX(), e.getY());
 		}
@@ -195,5 +206,12 @@ public class ItemList extends JTabbedPane implements ListSelectionListener, Mous
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		popupMenu(e);
+	}
+
+	/** タブが変わったら */
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		Window.ItemEditer.clearEditer();
+		showEditer();
 	}
 }

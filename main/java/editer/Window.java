@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,8 +18,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import io.PackIO;
-import panels.ItemList;
-import panels.ResourceList;
 import types.*;
 import types.guns.GunData;
 
@@ -29,16 +26,20 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	/** メインWindow */
 	private static final long serialVersionUID = -3092968886747656737L;
 
-	/**Windowのインスタンス*/
+	/** Windowのインスタンス */
 	public static Window INSTANCE;
-	/** 銃のMAP GunData */
-	public static Map<String,GunData> GunList = new HashMap<String,GunData>();
-	/** 弾のMAP BulletData */
-	public static Map<String,BulletData> BulletList = new HashMap<String,BulletData>();
+	/** 銃のMAP DisplayName-GunData */
+	public static Map<String, GunData> GunList = new HashMap<String, GunData>();
+	/** 弾のMAP DisplayName-BulletData */
+	public static Map<String, BulletData> BulletList = new HashMap<String, BulletData>();
 	/** IconのMAP BulletData */
-	public static Map<String,BufferedImage> IconMap = new HashMap<String,BufferedImage>();
+	public static Map<String, BufferedImage> IconMap = new HashMap<String, BufferedImage>();
+	/** SoundのMAP BulletData */
+	public static Map<String, byte[]> SoundMap = new HashMap<String, byte[]>();
 
-	/**パック*/
+	public static String packPath;
+
+	/** パック */
 	public static ContentsPack Pack;
 
 	public static Window MainWindow;
@@ -46,6 +47,22 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	public static ItemEditer ItemEditer;
 	public static ResourceList ResourceList;
 	public static PackInfoEditer PackInfoEditer;
+
+	/** 変数初期化 */
+	public void clear() {
+		packPath = null;
+		Pack = null;
+		BulletList = new HashMap<String, BulletData>();
+		GunList = new HashMap<String, GunData>();
+		IconMap = new HashMap<String, BufferedImage>();
+		IconMap.put("sample", editer.ResourceList.nullImage);
+		SoundMap = new HashMap<String, byte[]>();
+		ItemList.write();
+		editer.ItemList.gunNum = 0;
+		editer.ItemList.bulletNum = 0;
+		PackInfoEditer.write();
+		ItemEditer.clearEditer();
+	}
 
 	/** メニューバーと各パネルを配置 */
 	public Window() {
@@ -72,28 +89,17 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		menubar.add(Box.createRigidArea(new Dimension(5, 1)));
 		menubar.add(edit);
 
-		JMenuItem fileItem1 = new JMenuItem("New");
-		fileItem1.setActionCommand("New");
-		JMenuItem fileItem2 = new JMenuItem("Open");
-		fileItem2.setActionCommand("Open");
-		JMenuItem fileItem3 = new JMenuItem("Save");
-		fileItem3.setActionCommand("Save");
-		JMenuItem fileItem4 = new JMenuItem("Save As...");
-		fileItem4.setActionCommand("SaveAs");
-		JMenuItem fileItem5 = new JMenuItem("Exit");
-		fileItem5.setActionCommand("Exit");
-
-		fileItem1.addActionListener(this);
-		fileItem2.addActionListener(this);
-		fileItem3.addActionListener(this);
-		fileItem4.addActionListener(this);
-		fileItem5.addActionListener(this);
-
-		file.add(fileItem1);
-		file.add(fileItem2);
-		file.add(fileItem3);
-		file.add(fileItem4);
-		file.add(fileItem5);
+		addMenuItem(file, "New", "New");
+		addMenuItem(file, "Open", "Open");
+		addMenuItem(file, "Save", "Save");
+		addMenuItem(file, "Save As...", "SaveAs");
+		JMenu inport = new JMenu("import");
+		file.add(inport);
+		addMenuItem(inport, "Gun", "inGun");
+		addMenuItem(inport, "Magazine", "inMagazine");
+		addMenuItem(inport, "Icon", "inIcon");
+		addMenuItem(inport, "Sound", "inSound");
+		addMenuItem(file, "Exit", "Exit");
 
 		this.setJMenuBar(menubar);
 
@@ -102,11 +108,19 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		ItemList = new ItemList();
 		this.add(ItemList);
 		ResourceList = new ResourceList();
+		this.add(ResourceList);
 
 		PackInfoEditer = new PackInfoEditer();
 		this.add(PackInfoEditer);
 
 		this.setVisible(true);
+	}
+
+	private void addMenuItem(JMenu menu, String name, String cmd) {
+		JMenuItem item = new JMenuItem(name);
+		item.setActionCommand(cmd);
+		item.addActionListener(this);
+		menu.add(item);
 	}
 
 	public static void main(String[] args) {
@@ -116,22 +130,37 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	// メニュー操作受付
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("New")){
-
-		}else if(e.getActionCommand().equals("Open")){
+		if (e.getActionCommand().equals("New")) {
+			PackIO.makePack();
+		} else if (e.getActionCommand().equals("Open")) {
 			PackIO.openPack();
+		} else if (e.getActionCommand().equals("Save") && Pack != null) {
+			PackIO.save();
+		} else if (e.getActionCommand().equals("SaveAs") && Pack != null) {
+			PackIO.saveAs();
+		} else if (e.getActionCommand().equals("inGun")) {
+			PackIO.inportGun();
+		} else if (e.getActionCommand().equals("inMagazine")) {
+			PackIO.inportMagazine();
+		} else if (e.getActionCommand().equals("inIcon")) {
+			PackIO.inportIcon();
+		} else if (e.getActionCommand().equals("inSound")) {
+			PackIO.inportSound();
 		}
 	}
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		if(ItemList!=null){
-			ItemList.setBounds(0, 100, 200, this.getHeight()-160);
+		if (ItemList != null) {
+			ItemList.setBounds(0, 100, 200, this.getHeight() - 160);
 		}
-		if(ItemEditer!=null){
-			ItemEditer.setBounds(200, 0, this.getWidth()-400, this.getHeight()-60);
+		if (ItemEditer != null) {
+			ItemEditer.setBounds(200, 0, this.getWidth() - 400, this.getHeight() - 60);
 		}
-		if(PackInfoEditer!=null){
+		if (ResourceList != null) {
+			ResourceList.setBounds(this.getWidth()-200, 0, 200, this.getHeight() - 60);
+		}
+		if (PackInfoEditer != null) {
 			PackInfoEditer.setBounds(0, 0, 200, 100);
 		}
 	}

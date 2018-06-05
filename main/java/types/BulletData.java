@@ -1,10 +1,6 @@
 package types;
 
-import java.util.HashMap;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
+import helper.JsonWrapper;
 import types.base.DataBase;
 import types.base.DataType;
 import types.base.EnumDataList;
@@ -15,7 +11,7 @@ public class BulletData extends DataBase{
 	/**弾のデータ 初期値も同時に代入*/
 	public enum BulletDataList implements EnumDataList{
 		/** アイテムの名前 : ItemInfo型 */
-		ITEM_INFO(null, null, new ItemInfo("sample", "Sample", "sample"), DataType.Object),
+		ITEM_INFO(null, null, new ItemInfo("sample", "Sample", "sample"), DataType.ItemInfo),
 
 		/** 装弾数 : int型 **/
 		MAGAZINE_SIZE(1f,null,10,DataType.Int,1),
@@ -28,6 +24,9 @@ public class BulletData extends DataBase{
 
 		/**弾の貫通力 : int型**/
 		BULLET_POWER(-1f,null,1,DataType.Int,1),
+
+		/** 発射数 : int型 **/
+		SHOOT_NUM(1f, null, 1, DataType.Int, 1),
 
 		/**リロード時にマガジンが破棄されるか : boolean型**/
 		MAGAZINE_BREAK(null,null,true,DataType.Boolean),
@@ -102,24 +101,23 @@ public class BulletData extends DataBase{
 		DECAY_DAMAGE_MAX_LIVING(null,null,0F,DataType.Float,10),
 
 		/** 着弾音 : Sound型 **/
-		SOUND_HIT_GROUND(null,null, new Sound("sample", 8), DataType.Object, 21),
+		SOUND_HIT_GROUND(null,null, new Sound("sample", 8), DataType.Sound, 21),
 
 		/** エンティティ着弾音を使用するか : boolean型 **/
-		SOUND_HIT_ENTITY(null,null, new Sound("sample", 8), DataType.Object, 21),
+		SOUND_HIT_ENTITY(null,null, new Sound("sample", 8), DataType.Sound, 21),
 
 		/** 通過音を使用するか : boolean型 **/
-		SOUND_PASSING_USE(null,null, new Sound("sample", 8), DataType.Object, 21),
+		SOUND_PASSING_USE(null,null, new Sound("sample", 8), DataType.Sound, 21),
 
 		/**弾道落下を使用するか : boolean型**/
 		GRAVITY_USE(null,null,false,DataType.Boolean),
 
 		/**透過する・ブロック : String[]型*/
-		THROUGH_BLOCK(null,null, new String[] {},DataType.Object),
+		THROUGH_BLOCK(null,null, new String[] {},DataType.StringArray),
 		/**透過するエンティティ : String[]型*/
-		THROUGH_ENTITY(null,null, new String[] {},DataType.Object),
+		THROUGH_ENTITY(null,null, new String[] {},DataType.StringArray),
 
-		/** 使用できるアタッチメントのType 複数設定可能 : String配列型 **/
-		TYPES_ATTACHMENTS(null,null, new String[] {},DataType.Object),
+
 		;
 
 		/*
@@ -214,9 +212,9 @@ public class BulletData extends DataBase{
 	static final String headName = "bullet_";
 	/** JsonStringからデータを読み込む */
 	public BulletData(String json) {
-		this();
-		Gson gson = new Gson();
-		Data.putAll(gson.fromJson(json, new TypeToken<HashMap<String, Object>>() {
-		}.getType()));
+		JsonWrapper wrapper = new JsonWrapper(json);
+		for (BulletDataList data : BulletDataList.values()) {
+			Data.put(data.getName(), wrapper.getObject(data));
+		}
 	}
 }

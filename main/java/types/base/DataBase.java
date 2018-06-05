@@ -1,13 +1,14 @@
 package types.base;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public abstract class DataBase {
 	/**全データ格納*/
-	public HashMap<String,Object> Data = new HashMap<String,Object>();;
+	public Map<String,Object> Data = new LinkedHashMap<String,Object>();;
 	/**データ取得*/
 	public int getDataInt(EnumDataList type){
 		if (type.getType()==DataType.Int){

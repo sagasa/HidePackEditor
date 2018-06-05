@@ -20,6 +20,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
 import editer.ItemEditer;
@@ -67,6 +68,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 	    model.setModel(listModel);
 	    model.setFixedCellHeight(20);
 	    listSP = new JScrollPane();
+	    listSP.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 	    listSP.getViewport().setView(model);
 	    this.add(listSP);
 	    //選択元のコンボボックス
@@ -220,20 +222,20 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 			this.add(name);
 			//削除！のパネル
 			label = new JLabel();
-			label.setBounds(168, 1, 18, 18);
+			label.setBounds(152, 1, 18, 18);
 			label.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/delete.png")));
 			label.setOpaque(false);
 			this.add(label);
 
 			upLabel = new JLabel();
-			upLabel.setBounds(145, 0, 18, 8);
+			upLabel.setBounds(130, 0, 18, 8);
 			upLabel.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/up.png")));
 			upLabel.setOpaque(false);
 			upLabel.setVisible(false);
 			this.add(upLabel);
 
 			downLabel = new JLabel();
-			downLabel.setBounds(145, 12, 18, 8);
+			downLabel.setBounds(130, 12, 18, 8);
 			downLabel.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/down.png")));
 			downLabel.setOpaque(false);
 			downLabel.setVisible(false);
@@ -246,7 +248,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 
 		/**削除ボタンの上か判別*/
 		public boolean isInDeleteBotton(Point point){
-			return label.getBounds().contains(point);
+			return label.getBounds().contains(point)&&label.isVisible();
 		}
 		/**↑ボタンの上か判別*/
 		public boolean isInUpBotton(Point point){
@@ -264,17 +266,12 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 		public Component getListCellRendererComponent(JList<? extends ListComponent> list, ListComponent value, int index,
 				boolean isSelected, boolean cellHasFocus) {
 
-			value.upLabel.setVisible(false);
-			value.downLabel.setVisible(false);
+			value.upLabel.setVisible(!(index==0)&&isSelected);
+			value.downLabel.setVisible(!(index == list.getModel().getSize()-1)&&isSelected);
+			value.label.setVisible(list.getModel().getSize()>1);
 			value.setBorder(null);
 			if(isSelected){
 				value.setBorder(border);
-				if(!(index==0)){
-					value.upLabel.setVisible(true);
-				}
-				if(!(index == list.getModel().getSize()-1)){
-					value.downLabel.setVisible(true);
-				}
 			}
 			return value;
 		}

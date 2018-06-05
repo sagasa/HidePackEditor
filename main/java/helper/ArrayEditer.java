@@ -24,12 +24,6 @@ public class ArrayEditer {
 		Array.add(data);
 		return Array.toArray(new String[Array.size()]);
 	}
-	/**配列から要素を削除*/
-	static public String[] IndexFromArray(String[] array ,String data){
-		ArrayList<String> Array = new ArrayList<String>(Arrays.asList(array));
-		Array.remove(data);
-		return Array.toArray(new String[Array.size()]);
-	}
 	/**配列の要素をインデックス指定で交換*/
 	static public String[] ChangeArrayIndex(String[] array ,int index1,int index2){
 		ArrayList<String> Array = new ArrayList<String>(Arrays.asList(array));
