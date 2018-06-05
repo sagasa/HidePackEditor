@@ -48,9 +48,9 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 		yOffset += 22;
 		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalSpread",recoil.pitch_spread_max+"",true,ChangeListener.RECOIL_PITCH_MAX_SPREAD | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxVerticalShake",recoil.yaw_shake_max+"",true,ChangeListener.RECOIL_YAW_MAX_SHAKE | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MaxVerticalShake",recoil.yaw_shake_max+"",true,ChangeListener.RECOIL_YAW_MAX_SHAKE | cate).setLimit(null, 1f));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalShake",recoil.pitch_shake_max+"",true,ChangeListener.RECOIL_PITCH_MAX_SHAKE | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalShake",recoil.pitch_shake_max+"",true,ChangeListener.RECOIL_PITCH_MAX_SHAKE | cate).setLimit(null, 1f));
 		yOffset += 28;
 
 		infoPanel.add(makeNumPanel(yOffset,"MinVerticalBase",recoil.yaw_base_min+"",true,ChangeListener.RECOIL_YAW_MIN_BASE | cate));
@@ -61,9 +61,9 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 		yOffset += 22;
 		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalSpread",recoil.pitch_spread_min+"",true,ChangeListener.RECOIL_PITCH_MIN_SPREAD | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinVerticalShake",recoil.yaw_shake_min+"",true,ChangeListener.RECOIL_YAW_MIN_SHAKE | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MinVerticalShake",recoil.yaw_shake_min+"",true,ChangeListener.RECOIL_YAW_MIN_SHAKE | cate).setLimit(null, 1f));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalShake",recoil.pitch_shake_min+"",true,ChangeListener.RECOIL_PITCH_MIN_SHAKE | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalShake",recoil.pitch_shake_min+"",true,ChangeListener.RECOIL_PITCH_MIN_SHAKE | cate).setLimit(null, 1f));
 		yOffset += 28;
 
 		infoPanel.add(makeNumPanel(yOffset,"VerticalRecoilTick",recoil.yaw_recoil_tick+"",false,ChangeListener.RECOIL_YAW_TICK | cate));

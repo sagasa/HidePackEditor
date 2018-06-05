@@ -7,22 +7,22 @@ public class GunRecoil extends CloneableObj{
 
 	public float yaw_base_max = 0;
 	public float yaw_spread_max = 0;
-	public float yaw_shake_max = 0;
+	public float yaw_shake_max = 1;
 
 	public float yaw_base_min = 0;
 	public float yaw_spread_min = 0;
-	public float yaw_shake_min = 0;
+	public float yaw_shake_min = 1;
 
 	public int yaw_recoil_tick = 0;
 	public int yaw_return_tick = 0;
 
 	public float pitch_base_max = 0;
 	public float pitch_spread_max = 0;
-	public float pitch_shake_max = 0;
+	public float pitch_shake_max = 1;
 
 	public float pitch_base_min = 0;
 	public float pitch_spread_min = 0;
-	public float pitch_shake_min = 0;
+	public float pitch_shake_min = 1;
 
 	public int pitch_recoil_tick = 0;
 	public int pitch_return_tick = 0;

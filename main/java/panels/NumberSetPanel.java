@@ -73,9 +73,10 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 	Float Min = null;
 
 	/**最小最大の定義*/
-	public void setLimit(Float max,Float min){
+	public NumberSetPanel setLimit(Float max,Float min){
 		Max = max;
 		Min = min;
+		return this;
 	}
 
 	/**DataBaseを使用するなら通知を行わない*/
