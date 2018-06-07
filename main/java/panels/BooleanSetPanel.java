@@ -7,6 +7,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.border.LineBorder;
+
+import types.base.DataBase;
+import types.base.EnumDataList;
 import types.base.ValueSetPanel;
 
 public class BooleanSetPanel  extends ValueSetPanel implements ActionListener{
@@ -17,6 +20,7 @@ public class BooleanSetPanel  extends ValueSetPanel implements ActionListener{
 	/** テキストボックス */
 	private JCheckBox checkBox;
 
+	/**DataBase以外からの利用*/
 	public BooleanSetPanel(String lore,boolean defauletValue, boolean canedit) {
 		super(canedit);
 		LineBorder border = new LineBorder(Color.black, 1, false);
@@ -33,6 +37,27 @@ public class BooleanSetPanel  extends ValueSetPanel implements ActionListener{
 		this.add(checkBox);
 	}
 
+	DataBase Data;
+	EnumDataList Type;
+	/** DataBaseからの利用 */
+	public BooleanSetPanel(DataBase data,EnumDataList type, boolean canedit) {
+		super(canedit);
+		Data = data;
+		Type = type;
+		LineBorder border = new LineBorder(Color.black, 1, false);
+		this.setOpaque(false);
+		this.setLayout(null);
+
+		// テキストボックス
+		checkBox = new JCheckBox(type.getName());
+		checkBox.addActionListener(this);
+		checkBox.setSelected(data.getDataBoolean(type));
+		checkBox.setBorder(border);
+		checkBox.setFont(new Font("BOLD", Font.BOLD, 13));
+		checkBox.setEnabled(canEdit);
+		this.add(checkBox);
+	}
+	
 	@Override
 	public void rePaint() {
 
@@ -42,6 +67,16 @@ public class BooleanSetPanel  extends ValueSetPanel implements ActionListener{
 	public void setEnable(boolean canedit) {
 		if(checkBox!=null){
 			checkBox.setEnabled(canedit);
+		}
+	}
+	
+	/**DataBaseを使用するなら通知を行わない*/
+	@Override
+	public void save(Object value) {
+		if(Data==null){
+			super.save(value);
+		}else{
+			Data.setData(Type, value);
 		}
 	}
 

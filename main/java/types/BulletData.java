@@ -29,7 +29,7 @@ public class BulletData extends DataBase{
 		SHOOT_NUM(1f, null, 1, DataType.Int, 1),
 
 		/**リロード時にマガジンが破棄されるか : boolean型**/
-		MAGAZINE_BREAK(null,null,true,DataType.Boolean),
+		MAGAZINE_BREAK(null,null,true,DataType.Boolean,1),
 
 		/**直撃の対人ダメージ : float型**/
 		HIT_DAMAGE_PLAYER(null,null,0F,DataType.Float,2),

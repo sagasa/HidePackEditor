@@ -168,6 +168,9 @@ public class ItemList extends JTabbedPane
 			break;
 		case 1:
 			// magazine
+			if (!magazineList.isSelectionEmpty()) {
+				Window.ItemEditer.writeMagazineEditer(Window.BulletList.get(magazineList.getSelectedValue()));
+			}
 			break;
 		case 2:
 			// armor

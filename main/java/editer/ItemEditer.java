@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import panels.BooleanSetPanel;
 import panels.IconPrint;
 import panels.ListChooser;
 import panels.NumberSetPanel;
@@ -21,11 +22,14 @@ import panels.RecoilEditPanel;
 import panels.StringComboPanel;
 import panels.StringSetPanel;
 import types.BulletData;
+import types.BulletData.BulletDataList;
 import types.ItemInfo;
 import types.Sound;
 import types.base.ChangeListener;
 import types.base.DataBase;
+import types.base.DataType;
 import types.base.EnumDataList;
+import types.base.ValueSetPanel;
 import types.guns.GunData;
 import types.guns.GunData.GunDataList;
 
@@ -131,8 +135,39 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		root.setBounds(bounds);
 	}
 
+	/** BulletDataの内容変更全部 */
 	public void writeMagazineEditer(BulletData data) {
-
+		this.removeAll();
+		Data = data;
+		writeItemInfo(0, 0);
+		//こまごまとした設定項目
+		JPanel infoPanel = new JPanel();
+		infoPanel.setLayout(null);
+		infoPanel.setBorder(blackBorder);
+		infoPanel.setBounds(5, 195, 245, 0);
+		writeBulletNumberValue(infoPanel, 1);
+		this.add(infoPanel);
+	}
+	
+	private void writeBulletNumberValue(JPanel root, int cate) {
+		int yOffset = 3;
+		for (BulletDataList type : BulletDataList.values()) {
+			if (type.getCate() == cate) {
+				ValueSetPanel panel = null;
+				if(type.getType()==DataType.Int||type.getType()==DataType.Float){
+					panel = new NumberSetPanel(Data, type, true);
+					panel.setBounds(0, 0 + yOffset, 245, 20);
+				}else if(type.getType()==DataType.Boolean){
+					panel = new BooleanSetPanel(Data, type, true);
+					panel.setBounds(60, 0 + yOffset, 180, 20);
+				}
+				root.add(panel);
+				yOffset += 22;
+			}
+		}
+		Rectangle bounds = root.getBounds();
+		bounds.height = yOffset + 2;
+		root.setBounds(bounds);
 	}
 
 	JComboBox<String> SoundList;
@@ -351,6 +386,8 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 	private ItemInfo getItemInfo() {
 		if (Data instanceof GunData) {
 			return (ItemInfo) Data.getDataObject(GunDataList.ITEM_INFO);
+		}else if (Data instanceof BulletData) {
+			return (ItemInfo) Data.getDataObject(BulletDataList.ITEM_INFO);
 		}
 		return null;
 	}
