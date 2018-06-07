@@ -49,21 +49,21 @@ public class GraphPanel extends JPanel {
 		// グラフ描画 MIN
 		g2.setPaint(Color.BLUE);
 		float[] data = new float[6];
-		data[0] = RecoilData.pitch_base_min;
-		data[1] = RecoilData.pitch_spread_min;
-		data[2] = RecoilData.yaw_base_min;
-		data[3] = RecoilData.yaw_spread_min;
-		data[4] = RecoilData.pitch_shake_min;
-		data[5] = RecoilData.yaw_shake_min;
+		data[0] = RecoilData.yaw_base_min;
+		data[1] = RecoilData.yaw_spread_min;
+		data[2] = RecoilData.pitch_base_min;
+		data[3] = RecoilData.pitch_spread_min;
+		data[4] = RecoilData.yaw_shake_min;
+		data[5] = RecoilData.pitch_shake_min;
 		writeRecoilGraph(g2, data);
 
 		g2.setPaint(Color.ORANGE);
-		data[0] = RecoilData.pitch_base_max;
-		data[1] = RecoilData.pitch_spread_max;
-		data[2] = RecoilData.yaw_base_max;
-		data[3] = RecoilData.yaw_spread_max;
-		data[4] = RecoilData.pitch_shake_max;
-		data[5] = RecoilData.yaw_shake_max;
+		data[0] = RecoilData.yaw_base_max;
+		data[1] = RecoilData.yaw_spread_max;
+		data[2] = RecoilData.pitch_base_max;
+		data[3] = RecoilData.pitch_spread_max;
+		data[4] = RecoilData.yaw_shake_max;
+		data[5] = RecoilData.pitch_shake_max;
 		writeRecoilGraph(g2, data);
 	}
 

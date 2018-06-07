@@ -141,4 +141,15 @@ public class GunData extends DataBase {
 			Data.put(data.getName(), wrapper.getObject(data));
 		}
 	}
+
+	/**使用マガジンやアタッチメントなどの名前を更新*//**
+	public void setDomain(String Domain) {
+		ItemInfo item = getItemInfo();
+		item.shortName = item.shortName+PackLoader.DOMAIN_GUN+Domain;
+
+		String[] bullets = (String[]) getDataObject(GunDataList.BULLET_USE);
+		for (int i = 0; i < bullets.length; i++) {
+			bullets[i] = bullets[i]+PackLoader.DOMAIN_MAGAZINE+Domain;
+		}
+	}*/
 }

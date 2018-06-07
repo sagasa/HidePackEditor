@@ -40,40 +40,40 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 		infoPanel.add(use);
 		yOffset += 28;
 
-		infoPanel.add(makeNumPanel(yOffset,"MaxVerticalBase",recoil.yaw_base_max+"",true,ChangeListener.RECOIL_YAW_MAX_BASE | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalBase",recoil.yaw_base_max+"",true,ChangeListener.RECOIL_YAW_MAX_BASE | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalBase",recoil.pitch_base_max+"",true,ChangeListener.RECOIL_PITCH_MAX_BASE | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MaxVerticalBase",recoil.pitch_base_max+"",true,ChangeListener.RECOIL_PITCH_MAX_BASE | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxVerticalSpread",recoil.yaw_spread_max+"",true,ChangeListener.RECOIL_YAW_MAX_SPREAD | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalSpread",recoil.yaw_spread_max+"",true,ChangeListener.RECOIL_YAW_MAX_SPREAD | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalSpread",recoil.pitch_spread_max+"",true,ChangeListener.RECOIL_PITCH_MAX_SPREAD | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MaxVerticalSpread",recoil.pitch_spread_max+"",true,ChangeListener.RECOIL_PITCH_MAX_SPREAD | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxVerticalShake",recoil.yaw_shake_max+"",true,ChangeListener.RECOIL_YAW_MAX_SHAKE | cate).setLimit(null, 1f));
+		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalShake",recoil.yaw_shake_max+"",true,ChangeListener.RECOIL_YAW_MAX_SHAKE | cate).setLimit(null, 1f));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalShake",recoil.pitch_shake_max+"",true,ChangeListener.RECOIL_PITCH_MAX_SHAKE | cate).setLimit(null, 1f));
+		infoPanel.add(makeNumPanel(yOffset,"MaxVerticalShake",recoil.pitch_shake_max+"",true,ChangeListener.RECOIL_PITCH_MAX_SHAKE | cate).setLimit(null, 1f));
 		yOffset += 28;
 
-		infoPanel.add(makeNumPanel(yOffset,"MinVerticalBase",recoil.yaw_base_min+"",true,ChangeListener.RECOIL_YAW_MIN_BASE | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalBase",recoil.yaw_base_min+"",true,ChangeListener.RECOIL_YAW_MIN_BASE | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalBase",recoil.pitch_base_min+"",true,ChangeListener.RECOIL_PITCH_MIN_BASE | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MinVerticalBase",recoil.pitch_base_min+"",true,ChangeListener.RECOIL_PITCH_MIN_BASE | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinVerticalSpread",recoil.yaw_spread_min+"",true,ChangeListener.RECOIL_YAW_MIN_SPREAD | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalSpread",recoil.yaw_spread_min+"",true,ChangeListener.RECOIL_YAW_MIN_SPREAD | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalSpread",recoil.pitch_spread_min+"",true,ChangeListener.RECOIL_PITCH_MIN_SPREAD | cate));
+		infoPanel.add(makeNumPanel(yOffset,"MinVerticalSpread",recoil.pitch_spread_min+"",true,ChangeListener.RECOIL_PITCH_MIN_SPREAD | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinVerticalShake",recoil.yaw_shake_min+"",true,ChangeListener.RECOIL_YAW_MIN_SHAKE | cate).setLimit(null, 1f));
+		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalShake",recoil.yaw_shake_min+"",true,ChangeListener.RECOIL_YAW_MIN_SHAKE | cate).setLimit(null, 1f));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalShake",recoil.pitch_shake_min+"",true,ChangeListener.RECOIL_PITCH_MIN_SHAKE | cate).setLimit(null, 1f));
+		infoPanel.add(makeNumPanel(yOffset,"MinVerticalShake",recoil.pitch_shake_min+"",true,ChangeListener.RECOIL_PITCH_MIN_SHAKE | cate).setLimit(null, 1f));
 		yOffset += 28;
 
-		infoPanel.add(makeNumPanel(yOffset,"VerticalRecoilTick",recoil.yaw_recoil_tick+"",false,ChangeListener.RECOIL_YAW_TICK | cate));
+		infoPanel.add(makeNumPanel(yOffset,"HorizontalRecoilTick",recoil.yaw_recoil_tick+"",false,ChangeListener.RECOIL_YAW_TICK | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"HorizontalReturnTick",recoil.pitch_return_tick+"",false,ChangeListener.RECOIL_PITCH_TICK_RETURN | cate));
+		infoPanel.add(makeNumPanel(yOffset,"VerticalReturnTick",recoil.pitch_return_tick+"",false,ChangeListener.RECOIL_PITCH_TICK_RETURN | cate));
 		yOffset += 28;
 
-		infoPanel.add(makeNumPanel(yOffset,"VerticalReturnTick",recoil.yaw_return_tick+"",false,ChangeListener.RECOIL_YAW_TICK_RETURN | cate));
+		infoPanel.add(makeNumPanel(yOffset,"HorizontalReturnTick",recoil.yaw_return_tick+"",false,ChangeListener.RECOIL_YAW_TICK_RETURN | cate));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"HorizontalRecoilTick",recoil.pitch_recoil_tick+"",false,ChangeListener.RECOIL_PITCH_TICK | cate));
+		infoPanel.add(makeNumPanel(yOffset,"VerticalRecoilTick",recoil.pitch_recoil_tick+"",false,ChangeListener.RECOIL_PITCH_TICK | cate));
 		yOffset += 28;
 
 		infoPanel.add(makeNumPanel(yOffset,"RecoilPower/Shoot",recoil.recoilPower_shoot+"",false,ChangeListener.RECOIL_POWER_SHOOT| cate));
