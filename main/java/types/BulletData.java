@@ -17,7 +17,7 @@ public class BulletData extends DataBase{
 		MAGAZINE_SIZE(1f,null,10,DataType.Int,1),
 
 		/** スタックサイズ : int型 **/
-		STACK_SIZE(1f,null,4,DataType.Int,1),
+		STACK_SIZE(1f,64f,4,DataType.Int,1),
 
 		/**弾の寿命 (tick) : int型**/
 		BULLET_LIFE(1f,null,600,DataType.Int,1),
@@ -48,6 +48,13 @@ public class BulletData extends DataBase{
 		HIT_KNOCKBACK_TANK(null,null,0F,DataType.Float,3),
 		/**直撃の対航空機ノックバック : ノックバック距離(m)=ノックバック/重量 : float型**/
 		HIT_KNOCKBACK_AIR(null,null,0F,DataType.Float,3),
+
+		/** エンティティに当たった時に爆発するか : boolean型 **/
+		EXP_ON_HIT_ENTITY(null, null, false, DataType.Boolean, 4),
+		/** 地面に当たった時に爆発するか : boolean型 **/
+		EXP_ON_HIT_GROUND(null, null, true, DataType.Boolean, 4),
+		/** 時間経過で爆発するか : boolean型 **/
+		EXP_ON_TIMEOUT(null, null, false, DataType.Boolean, 4),
 
 		/**爆風範囲 :int型**/
 		EXP_RANGE(0f,null,0,DataType.Int,4),

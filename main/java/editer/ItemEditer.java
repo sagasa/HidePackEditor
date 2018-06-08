@@ -124,8 +124,14 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		int yOffset = 3;
 		for (GunDataList type : GunDataList.values()) {
 			if (type.getCate() == cate) {
-				NumberSetPanel panel = new NumberSetPanel(Data, type, true);
-				panel.setBounds(0, 0 + yOffset, 245, 20);
+				ValueSetPanel panel = null;
+				if(type.getType()==DataType.Int||type.getType()==DataType.Float){
+					panel = new NumberSetPanel(Data, type, true);
+					panel.setBounds(0, 0 + yOffset, 245, 20);
+				}else if(type.getType()==DataType.Boolean){
+					panel = new BooleanSetPanel(Data, type, true);
+					panel.setBounds(60, 0 + yOffset, 180, 20);
+				}
 				root.add(panel);
 				yOffset += 22;
 			}
@@ -148,7 +154,7 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		writeBulletNumberValue(infoPanel, 1);
 		this.add(infoPanel);
 	}
-	
+
 	private void writeBulletNumberValue(JPanel root, int cate) {
 		int yOffset = 3;
 		for (BulletDataList type : BulletDataList.values()) {
