@@ -125,10 +125,10 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		for (GunDataList type : GunDataList.values()) {
 			if (type.getCate() == cate) {
 				ValueSetPanel panel = null;
-				if(type.getType()==DataType.Int||type.getType()==DataType.Float){
+				if (type.getType() == DataType.Int || type.getType() == DataType.Float) {
 					panel = new NumberSetPanel(Data, type, true);
 					panel.setBounds(0, 0 + yOffset, 245, 20);
-				}else if(type.getType()==DataType.Boolean){
+				} else if (type.getType() == DataType.Boolean) {
 					panel = new BooleanSetPanel(Data, type, true);
 					panel.setBounds(60, 0 + yOffset, 180, 20);
 				}
@@ -146,13 +146,36 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		this.removeAll();
 		Data = data;
 		writeItemInfo(0, 0);
-		//こまごまとした設定項目
+		// こまごまとした設定項目
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
 		infoPanel.setBounds(5, 195, 245, 0);
 		writeBulletNumberValue(infoPanel, 1);
 		this.add(infoPanel);
+		// 直撃間連
+		JPanel hit = new JPanel();
+		hit.setLayout(null);
+		hit.setBorder(blackBorder);
+		hit.setBounds(255, 0, 245, 0);
+		writeBulletNumberValue(hit, 2);
+		this.add(hit);
+		// 爆発関連
+		JPanel exp = new JPanel();
+		exp.setLayout(null);
+		exp.setBorder(blackBorder);
+		exp.setBounds(505, 5, 245, 0);
+		writeBulletNumberValue(exp, 3);
+		this.add(exp);
+		// 減衰関連 
+		JPanel decay = new JPanel();
+		decay.setLayout(null);
+		decay.setBorder(blackBorder);
+		decay.setBounds(255, 230, 245, 0);
+		writeBulletNumberValue(decay, 10);
+		this.add(decay);
+		//サウンド関連
+		writeSoundEditer(0, 350, BulletDataList.SOUND_HIT_ENTITY, cate);
 	}
 
 	private void writeBulletNumberValue(JPanel root, int cate) {
@@ -160,10 +183,10 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		for (BulletDataList type : BulletDataList.values()) {
 			if (type.getCate() == cate) {
 				ValueSetPanel panel = null;
-				if(type.getType()==DataType.Int||type.getType()==DataType.Float){
+				if (type.getType() == DataType.Int || type.getType() == DataType.Float) {
 					panel = new NumberSetPanel(Data, type, true);
 					panel.setBounds(0, 0 + yOffset, 245, 20);
-				}else if(type.getType()==DataType.Boolean){
+				} else if (type.getType() == DataType.Boolean) {
 					panel = new BooleanSetPanel(Data, type, true);
 					panel.setBounds(60, 0 + yOffset, 180, 20);
 				}
@@ -392,7 +415,7 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 	private ItemInfo getItemInfo() {
 		if (Data instanceof GunData) {
 			return (ItemInfo) Data.getDataObject(GunDataList.ITEM_INFO);
-		}else if (Data instanceof BulletData) {
+		} else if (Data instanceof BulletData) {
 			return (ItemInfo) Data.getDataObject(BulletDataList.ITEM_INFO);
 		}
 		return null;

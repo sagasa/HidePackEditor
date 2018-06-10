@@ -136,6 +136,7 @@ public class GunData extends DataBase {
 
 	/** JsonStringからデータを読み込む */
 	public GunData(String json) {
+		this();
 		JsonWrapper wrapper = new JsonWrapper(json);
 		for (GunDataList data : GunDataList.values()) {
 			Data.put(data.getName(), wrapper.getObject(data));
