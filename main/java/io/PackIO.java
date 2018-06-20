@@ -294,7 +294,6 @@ public class PackIO {
 
 	/**
 	 * byte配列とNameからパックの要素の当てはめる
-	 *
 	 * @throws IOException
 	 */
 	static void PackWrapper(byte[] data, String name) throws IOException {

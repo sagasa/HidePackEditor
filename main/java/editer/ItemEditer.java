@@ -167,15 +167,17 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		exp.setBounds(505, 5, 245, 0);
 		writeBulletNumberValue(exp, 3);
 		this.add(exp);
-		// 減衰関連 
+		// 減衰関連
 		JPanel decay = new JPanel();
 		decay.setLayout(null);
 		decay.setBorder(blackBorder);
 		decay.setBounds(255, 230, 245, 0);
 		writeBulletNumberValue(decay, 10);
 		this.add(decay);
-		//サウンド関連
-		writeSoundEditer(0, 350, BulletDataList.SOUND_HIT_ENTITY, cate);
+		// サウンド関連
+		writeSoundEditer(0, 350, BulletDataList.SOUND_HIT_ENTITY, ChangeListener.BULLET_HIT_ENTITY);
+		writeSoundEditer(0, 453, BulletDataList.SOUND_HIT_GROUND, ChangeListener.BULLET_HIT_GROUND);
+		writeSoundEditer(250, 400, BulletDataList.SOUND_PASSING_USE, ChangeListener.BULLET_PASS);
 	}
 
 	private void writeBulletNumberValue(JPanel root, int cate) {
@@ -216,7 +218,7 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		StringComboPanel combo = new StringComboPanel(type.getName(), keySet, true);
 		combo.setBounds(0, 5, 245, 20);
 		combo.addChangeListener(this, SOUND_NAME | cate);
-		combo.setTextBoxWidth(100);
+		combo.setTextBoxWidth(70);
 		combo.setItem(sound.name);
 		infoPanel.add(combo);
 

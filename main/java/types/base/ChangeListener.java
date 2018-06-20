@@ -24,6 +24,8 @@ public interface ChangeListener {
 	static final int GUN_SOUND_RELOAD= 8;
 	
 	static final int BULLET_HIT_ENTITY= 100;
+	static final int BULLET_HIT_GROUND= 101;
+	static final int BULLET_PASS= 102;
 
 	static final int RECOIL_YAW_MAX_BASE = 0x50000;
 	static final int RECOIL_YAW_MAX_SPREAD = 0x60000;
