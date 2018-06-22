@@ -1,14 +1,54 @@
 package types.guns;
 
-import helper.JsonWrapper;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import types.ItemInfo;
 import types.Sound;
-import types.base.CloneableObj;
 import types.base.DataBase;
 import types.base.DataType;
 import types.base.EnumDataList;
 
 public class GunData extends DataBase {
+	/**データ格納*/
+	Map<String, Object> GunData;
+
+	public GunData(String json) {
+		super(json);
+	}
+
+	public GunData() {
+		super();
+	}
+
+	public ItemInfo getItemInfo(){
+		return (ItemInfo) this.getDataObject(GunDataList.ITEM_INFO);
+	}
+
+	@Override
+	protected Map<String, Object> getMap() {
+		return GunData;
+	}
+
+	@Override
+	protected EnumDataList[] getDataList() {
+		return GunDataList.values();
+	}
+	@Override
+	protected void newMap() {
+		GunData = new LinkedHashMap<String,Object>();
+	}
+
+	/**使用マガジンやアタッチメントなどの名前を更新*//**
+	public void setDomain(String Domain) {
+		ItemInfo item = getItemInfo();
+		item.shortName = item.shortName+PackLoader.DOMAIN_GUN+Domain;
+
+		String[] bullets = (String[]) getDataObject(GunDataList.BULLET_USE);
+		for (int i = 0; i < bullets.length; i++) {
+			bullets[i] = bullets[i]+PackLoader.DOMAIN_MAGAZINE+Domain;
+		}
+	}*/
 	public enum GunDataList implements EnumDataList {
 		/** アイテムの名前 : ItemInfo型 */
 		ITEM_INFO(null, null, new ItemInfo("sample", "Sample", "sample"), DataType.ItemInfo),
@@ -115,42 +155,4 @@ public class GunData extends DataBase {
 			return Cate;
 		}
 	}
-
-	public ItemInfo getItemInfo(){
-		return (ItemInfo) this.getDataObject(GunDataList.ITEM_INFO);
-	}
-
-	public GunData() {
-		for (GunDataList data : GunDataList.values()) {
-			//オブジェクトなら別インスタンスを
-			if(data.getType().isObject()&&data.getDefaultValue() instanceof CloneableObj){
-				try {
-					Data.put(data.getName(), ((CloneableObj)data.getDefaultValue()).clone());
-				} catch (CloneNotSupportedException e) {
-				}
-			}else{
-				Data.put(data.getName(), data.getDefaultValue());
-			}
-		}
-	}
-
-	/** JsonStringからデータを読み込む */
-	public GunData(String json) {
-		this();
-		JsonWrapper wrapper = new JsonWrapper(json);
-		for (GunDataList data : GunDataList.values()) {
-			Data.put(data.getName(), wrapper.getObject(data));
-		}
-	}
-
-	/**使用マガジンやアタッチメントなどの名前を更新*//**
-	public void setDomain(String Domain) {
-		ItemInfo item = getItemInfo();
-		item.shortName = item.shortName+PackLoader.DOMAIN_GUN+Domain;
-
-		String[] bullets = (String[]) getDataObject(GunDataList.BULLET_USE);
-		for (int i = 0; i < bullets.length; i++) {
-			bullets[i] = bullets[i]+PackLoader.DOMAIN_MAGAZINE+Domain;
-		}
-	}*/
 }

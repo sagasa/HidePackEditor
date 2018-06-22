@@ -1,17 +1,85 @@
 package types;
 
-import types.base.CloneableObj;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class Sound extends CloneableObj{
-	public String name;
-	public float range;
-	public float vol = 1;
-	public float pitch = 1;
-	public boolean isDecay = true;
-	public boolean isDelay = true;
+import types.base.DataBase;
+import types.base.DataType;
+import types.base.EnumDataList;
+
+public class Sound extends DataBase{
+	/**データ格納*/
+	Map<String, Object> Sound;
 
 	public Sound(String name,float range){
-		this.name = name;
-		this.range = range;
+		setData(SoundDataList.NAME, name);
+		setData(SoundDataList.RANGE, range);
+	}
+
+	@Override
+	protected Map<String, Object> getMap() {
+		return Sound;
+	}
+
+	@Override
+	protected EnumDataList[] getDataList() {
+		return SoundDataList.values();
+	}
+	@Override
+	protected void newMap() {
+		Sound = new LinkedHashMap<String,Object>();
+	}
+
+	public enum SoundDataList implements EnumDataList {
+		/** アイテムの名前 : ItemInfo型 */
+		NAME(null, null, "sample", DataType.String),
+		RANGE(0f, null, 50f, DataType.Float),
+		VOL(0f, null, 1f, DataType.Float),
+		PITCH(0f, null, 1f, DataType.Float),
+		USE_DECAY(null, null, true, DataType.Boolean),
+		USE_DELAY(null, null, true, DataType.Boolean),
+		;
+
+		private SoundDataList(Float min, Float max, Object defaultValue, DataType type) {
+			Max = max;
+			Min = min;
+			Default = defaultValue;
+			Type = type;
+		}
+
+		Float Max;
+		Float Min;
+		Object Default;
+		DataType Type;
+
+		@Override
+		public Float getMin() {
+			return Min;
+		}
+
+		@Override
+		public Float getMax() {
+			return Max;
+		}
+
+		@Override
+		public String getName() {
+			return this.toString();
+		}
+
+		@Override
+		public DataType getType() {
+			return Type;
+		}
+
+		@Override
+		public Object getDefaultValue() {
+			return Default;
+		}
+
+		@Override
+		public int getCate() {
+			return -1;
+		}
 	}
 }

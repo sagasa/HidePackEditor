@@ -1,14 +1,18 @@
 package types;
 
-import helper.JsonWrapper;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import types.base.DataBase;
 import types.base.DataType;
 import types.base.EnumDataList;
 import types.guns.GunData.GunDataList;
 
 public class BulletData extends DataBase{
+	/**データ格納*/
+	LinkedHashMap<String, Object> BulletData = new LinkedHashMap<String,Object>();
 
-	/**弾のデータ 初期値も同時に代入*/
+	/**弾のデータリスト*/
 	public enum BulletDataList implements EnumDataList{
 		/** アイテムの名前 : ItemInfo型 */
 		ITEM_INFO(null, null, new ItemInfo("sample", "Sample", "sample"), DataType.ItemInfo),
@@ -176,14 +180,6 @@ public class BulletData extends DataBase{
 		public DataType getType() {
 			return Type;
 		}
-		/**データを返す*/
-		public Object getData(BulletData d) {
-			return d.Data.get(this.toString());
-		}
-		/**Nameからデータを返す*/
-		public Object getData(BulletData d,String Name) {
-			return d.Data.get(Name);
-		}
 		/**初期値を返す*/
 		public Object getDefaultValue() {
 			return Default;
@@ -191,12 +187,6 @@ public class BulletData extends DataBase{
 		/**カテゴリを返す*/
 		public int getCate() {
 			return Cate;
-		}
-		/**データを設定する nullは上書きしない*/
-		public void setData(BulletData d,Object obj) {
-			if (obj != null){
-				d.Data.replace(this.toString(), obj);
-			}
 		}
 
 		@Override
@@ -209,24 +199,31 @@ public class BulletData extends DataBase{
 			return Max;
 		}
 	}
+	
+	
 	public ItemInfo getItemInfo(){
 		return (ItemInfo) this.getDataObject(GunDataList.ITEM_INFO);
 	}
 
-	/** 初期値*/
 	public BulletData() {
-		for (BulletDataList data : BulletDataList.values()) {
-			Data.put(data.getName(), data.getDefaultValue());
-		}
+		super();
+	}
+	
+	public BulletData(String json) {
+		super(json);
+	}
+	
+	@Override
+	protected Map<String, Object> getMap() {
+		return BulletData;
 	}
 
-	static final String headName = "bullet_";
-	/** JsonStringからデータを読み込む */
-	public BulletData(String json) {
-		this();
-		JsonWrapper wrapper = new JsonWrapper(json);
-		for (BulletDataList data : BulletDataList.values()) {
-			Data.put(data.getName(), wrapper.getObject(data));
-		}
+	@Override
+	protected BulletDataList[] getDataList() {
+		return BulletDataList.values();
+	}
+	@Override
+	protected void newMap() {
+		BulletData = new LinkedHashMap<String,Object>();
 	}
 }
