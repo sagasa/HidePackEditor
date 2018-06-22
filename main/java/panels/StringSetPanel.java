@@ -8,11 +8,25 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import types.base.DataBase;
+import types.base.EnumDataList;
 import types.base.ValueSetPanel;
 
 public class StringSetPanel extends ValueSetPanel{
 	public StringSetPanel(String lore,String defauletValue, boolean canedit) {
 		super(canedit);
+		init(lore, defauletValue);
+	}
+
+	DataBase Data;
+	EnumDataList Type;
+	/** DataBaseからの利用 */
+	public StringSetPanel(DataBase data,EnumDataList type,boolean canedit){
+		super(canedit);
+		init(type.getName(), data.getDataString(type));
+	}
+
+	private void init(String lore, String defauletValue) {
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		this.setOpaque(false);
 		this.setLayout(null);

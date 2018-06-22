@@ -21,8 +21,6 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 	/** DataBase以外からの利用 */
 	public NumberSetPanel(String lore, String defauletValue, boolean canedit, boolean isFloat) {
 		super(canedit);
-		this.setOpaque(false);
-		this.setLayout(null);
 		this.isFloat = isFloat;
 		init(lore, defauletValue);
 	}
@@ -32,8 +30,6 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 	/** DataBaseからの利用 */
 	public NumberSetPanel(DataBase data,EnumDataList type,boolean canedit){
 		super(canedit);
-		this.setOpaque(false);
-		this.setLayout(null);
 		Data = data;
 		Type = type;
 		Max = type.getMax();
@@ -43,6 +39,8 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 	}
 
 	private void init(String lore, String defauletValue) {
+		this.setOpaque(false);
+		this.setLayout(null);
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		nowValue = defauletValue;
 		// ラベル

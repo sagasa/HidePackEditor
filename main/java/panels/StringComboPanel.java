@@ -10,11 +10,31 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
+import types.Sound.SoundDataList;
+import types.base.DataBase;
+import types.base.EnumDataList;
 import types.base.ValueSetPanel;
 
 public class StringComboPanel extends ValueSetPanel implements ActionListener{
+
 	public StringComboPanel(String lore,String[] defauletValue, boolean canedit) {
 		super(canedit);
+		init(lore, defauletValue);
+	}
+
+	DataBase Data;
+	EnumDataList Type;
+	/** DataBaseからの利用 */
+	public StringComboPanel(DataBase data,EnumDataList type,boolean canedit){
+		super(canedit);
+		Data = data;
+		Type = type;
+		init(type.getName(), (String[]) data.getDataObject(type));
+		setItem(data.getDataString(SoundDataList.NAME));
+	}
+
+
+	private void init(String lore, String[] defauletValue) {
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		this.setOpaque(false);
 		this.setLayout(null);
@@ -64,6 +84,16 @@ public class StringComboPanel extends ValueSetPanel implements ActionListener{
 	public void setEnable(boolean canedit) {
 		if(txtCombo!=null){
 			txtCombo.setEnabled(canedit);
+		}
+	}
+
+	/**DataBaseを使用するなら通知を行わない*/
+	@Override
+	public void save(Object value) {
+		if(Data==null){
+			super.save(value);
+		}else{
+			Data.setData(Type, value);
 		}
 	}
 

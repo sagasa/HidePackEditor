@@ -19,6 +19,7 @@ import javax.swing.event.ListSelectionListener;
 import helper.DropFileHandler;
 import types.BulletData;
 import types.BulletData.BulletDataList;
+import types.ItemInfo.ItemDataList;
 import types.ItemInfo;
 import types.guns.GunData;
 import types.guns.GunData.GunDataList;
@@ -137,7 +138,7 @@ public class ItemList extends JTabbedPane
 		String[] keySet = Window.GunList.keySet().toArray(new String[Window.GunList.keySet().size()]);
 		Arrays.sort(keySet);
 		for (String name : keySet) {
-			gunModel.addElement(((ItemInfo) Window.GunList.get(name).getDataObject(GunDataList.ITEM_INFO)).displayName);
+			gunModel.addElement(((ItemInfo) Window.GunList.get(name).getDataObject(GunDataList.ITEM_INFO)).getDataString(ItemDataList.NAME_DISPLAY));
 		}
 
 		magazineModel.removeAllElements();
@@ -145,7 +146,7 @@ public class ItemList extends JTabbedPane
 		Arrays.sort(keySet);
 		for (String name : keySet) {
 			magazineModel.addElement(
-					((ItemInfo) Window.BulletList.get(name).getDataObject(BulletDataList.ITEM_INFO)).displayName);
+					((ItemInfo) Window.BulletList.get(name).getDataObject(BulletDataList.ITEM_INFO)).getDataString(ItemDataList.NAME_DISPLAY));
 		}
 	}
 
