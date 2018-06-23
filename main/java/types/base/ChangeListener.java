@@ -47,7 +47,7 @@ public interface ChangeListener {
 	static final int RECOIL_POWER_TICK = 0x160000;
 	static final int RECOIL_USE = 0x170000;
 
-	static final int GUN_RECOIL_DEFAULT= 9;
+	static final int GRAPH_UPDATE= 9;
 	static final int GUN_RECOIL_SNEAK= 10;
 	static final int GUN_RECOIL_ADS= 11;
 	static final int GUN_RECOIL_SNEAKADS= 12;

@@ -25,14 +25,14 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 	public RecoilEditPanel(GunData data) {
 		Data = data;
 		this.addChangeListener(this);
-		this.addTab("DEFAULT", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_DEFAULT),ChangeListener.GUN_RECOIL_DEFAULT));
-		this.addTab("SNEAK", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_SNEAK),ChangeListener.GUN_RECOIL_SNEAK));
-		this.addTab("ADS", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_ADS),ChangeListener.GUN_RECOIL_ADS));
-		this.addTab("SBEAK+ADS", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_SNEAK_ADS),ChangeListener.GUN_RECOIL_SNEAKADS));
+		this.addTab("DEFAULT", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_DEFAULT)));
+		this.addTab("SNEAK", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_SNEAK)));
+		this.addTab("ADS", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_ADS)));
+		this.addTab("SBEAK+ADS", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_SNEAK_ADS)));
 		updateGraph();
 	}
 
-	private JPanel makePanel(GunRecoil recoil,int cate){
+	private JPanel makePanel(GunRecoil recoil){
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 
@@ -55,32 +55,32 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MAX_PITCH_RETURN));		
 		yOffset += 28;
 
-		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalBase",recoil.yaw_base_min+"",true,ChangeListener.RECOIL_YAW_MIN_BASE | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MIN_YAW_BASE));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinVerticalBase",recoil.pitch_base_min+"",true,ChangeListener.RECOIL_PITCH_MIN_BASE | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MIN_YAW_SPREAD));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalSpread",recoil.yaw_spread_min+"",true,ChangeListener.RECOIL_YAW_MIN_SPREAD | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MIN_PITCH_BASE));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinVerticalSpread",recoil.pitch_spread_min+"",true,ChangeListener.RECOIL_PITCH_MIN_SPREAD | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MIN_PITCH_SPREAD));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalShake",recoil.yaw_shake_min+"",true,ChangeListener.RECOIL_YAW_MIN_SHAKE | cate).setLimit(null, 1f));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MIN_YAW_RETURN));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MinVerticalShake",recoil.pitch_shake_min+"",true,ChangeListener.RECOIL_PITCH_MIN_SHAKE | cate).setLimit(null, 1f));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MIN_PITCH_RETURN));		
 		yOffset += 28;
 
-		infoPanel.add(makeNumPanel(yOffset,"HorizontalRecoilTick",recoil.yaw_recoil_tick+"",false,ChangeListener.RECOIL_YAW_TICK | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.YAW_RECOIL_TICK));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"VerticalReturnTick",recoil.pitch_return_tick+"",false,ChangeListener.RECOIL_PITCH_TICK_RETURN | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.PITCH_RECOIL_TICK));		
 		yOffset += 28;
 
-		infoPanel.add(makeNumPanel(yOffset,"HorizontalReturnTick",recoil.yaw_return_tick+"",false,ChangeListener.RECOIL_YAW_TICK_RETURN | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.YAW_RETURN_TICK));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"VerticalRecoilTick",recoil.pitch_recoil_tick+"",false,ChangeListener.RECOIL_PITCH_TICK | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.PITCH_RETURN_TICK));		
 		yOffset += 28;
 
-		infoPanel.add(makeNumPanel(yOffset,"RecoilPower/Shoot",recoil.recoilPower_shoot+"",false,ChangeListener.RECOIL_POWER_SHOOT| cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.POWER_SHOOT));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"RecoilPower/Tick",recoil.recoilPower_tick+"",false,ChangeListener.RECOIL_POWER_TICK | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.POWER_TICK));		
 		yOffset += 28;
 		return infoPanel;
 	}
@@ -104,6 +104,7 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 
 	private NumberSetPanel makeNumPanel(int yOffset,DataBase data,EnumDataList type){
 		NumberSetPanel panel = new NumberSetPanel(data, type , true);
+		panel.addChangeListener(this, ChangeListener.GRAPH_UPDATE);
 		panel.setTextBoxWidth(40);
 		panel.setBounds(0, yOffset, 180, 20);
 		return panel;
@@ -111,43 +112,6 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 
 	@Override
 	public void ValueChange(int cate, Object value) {
-		GunRecoil data = null;
-		if((cate&ChangeListener.DATA_MASK) == ChangeListener.GUN_RECOIL_DEFAULT){
-			data = (GunRecoil) Data.getDataObject(GunDataList.RECOIL_DEFAULT);
-		}else if((cate&ChangeListener.DATA_MASK) == ChangeListener.GUN_RECOIL_ADS){
-			data = (GunRecoil) Data.getDataObject(GunDataList.RECOIL_ADS);
-		}else if((cate&ChangeListener.DATA_MASK) == ChangeListener.GUN_RECOIL_SNEAK){
-			data = (GunRecoil) Data.getDataObject(GunDataList.RECOIL_SNEAK);
-		}else if((cate&ChangeListener.DATA_MASK) == ChangeListener.GUN_RECOIL_SNEAKADS){
-			data = (GunRecoil) Data.getDataObject(GunDataList.RECOIL_SNEAK_ADS);
-		}
-		if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_PITCH_MAX_BASE){
-			data.pitch_base_max = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_PITCH_MAX_SPREAD){
-			data.pitch_spread_max = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_PITCH_MAX_SHAKE){
-			data.pitch_shake_max = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_YAW_MAX_BASE){
-			data.yaw_base_max = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_YAW_MAX_SPREAD){
-			data.yaw_spread_max = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_YAW_MAX_SHAKE){
-			data.yaw_shake_max = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_PITCH_MIN_BASE){
-			data.pitch_base_min = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_PITCH_MIN_SPREAD){
-			data.pitch_spread_min = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_PITCH_MIN_SHAKE){
-			data.pitch_shake_min = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_YAW_MIN_BASE){
-			data.yaw_base_min = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_YAW_MIN_SPREAD){
-			data.yaw_spread_min = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_YAW_MIN_SHAKE){
-			data.yaw_shake_min = (Float) value;
-		}else if((cate&ChangeListener.DOMAIN_MASK) == ChangeListener.RECOIL_USE){
-			data.use = (Boolean) value;
-		}
 		updateGraph();
 	}
 
