@@ -23,6 +23,8 @@ public class StringSetPanel extends ValueSetPanel{
 	/** DataBaseからの利用 */
 	public StringSetPanel(DataBase data,EnumDataList type,boolean canedit){
 		super(canedit);
+		Data = data;
+		Type = type;
 		init(type.getName(), data.getDataString(type));
 	}
 
@@ -80,8 +82,11 @@ public class StringSetPanel extends ValueSetPanel{
 
 	@Override
 	public void saveValue() {
-		save(txtField.getText());
-
+		if(Data==null){
+			super.save(txtField.getText());
+		}else{
+			Data.setData(Type, txtField.getText());
+		}
 	}
 
 	@Override

@@ -33,9 +33,9 @@ public class Sound extends DataBase{
 	public enum SoundDataList implements EnumDataList {
 		/** アイテムの名前 : ItemInfo型 */
 		NAME(null, null, "sample", DataType.String),
-		RANGE(0f, null, 50f, DataType.Float),
-		VOL(0f, null, 1f, DataType.Float),
-		PITCH(0f, null, 1f, DataType.Float),
+		RANGE(null, 0f, 50f, DataType.Float),
+		VOL(null, 0f, 1f, DataType.Float),
+		PITCH(null, 0f, 1f, DataType.Float),
 		USE_DECAY(null, null, true, DataType.Boolean),
 		USE_DELAY(null, null, true, DataType.Boolean),
 		;

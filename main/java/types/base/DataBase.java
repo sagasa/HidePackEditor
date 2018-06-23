@@ -69,9 +69,9 @@ public abstract class DataBase implements Cloneable {
 		newMap();
 		for (EnumDataList data : getDataList()) {
 			// オブジェクトなら別インスタンスを
-			if (data.getType().isObject() && data.getDefaultValue() instanceof CloneableObj) {
+			if (data.getType().isObject() && data.getDefaultValue() instanceof DataBase) {
 				try {
-					getMap().put(data.getName(), ((CloneableObj) data.getDefaultValue()).clone());
+					getMap().put(data.getName(), ((DataBase) data.getDefaultValue()).clone());
 				} catch (CloneNotSupportedException e) {
 				}
 			} else {
@@ -102,8 +102,8 @@ public abstract class DataBase implements Cloneable {
 		for (EnumDataList data : getDataList()) {
 			Object obj = this.getMap().get(data.toString());
 			// オブジェクトならクローン
-			if (data.getType().isObject() && data.getDefaultValue() instanceof CloneableObj) {
-				obj = ((CloneableObj) obj).clone();
+			if (data.getType().isObject() && data.getDefaultValue() instanceof DataBase) {
+				obj = ((DataBase) obj).clone();
 			}
 			clone.getMap().put(data.getName(), obj);
 		}

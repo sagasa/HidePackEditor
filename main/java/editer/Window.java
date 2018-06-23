@@ -124,13 +124,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	}
 
 	public static void main(String[] args) {
-		try {
-			new GunData().clone();
-		} catch (CloneNotSupportedException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
-	//	INSTANCE = new Window();
+		INSTANCE = new Window();
 	}
 
 	// メニュー操作受付

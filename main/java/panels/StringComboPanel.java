@@ -25,11 +25,11 @@ public class StringComboPanel extends ValueSetPanel implements ActionListener{
 	DataBase Data;
 	EnumDataList Type;
 	/** DataBaseからの利用 */
-	public StringComboPanel(DataBase data,EnumDataList type,boolean canedit){
+	public StringComboPanel(DataBase data,EnumDataList type, String[] defauletValue,boolean canedit){
 		super(canedit);
 		Data = data;
 		Type = type;
-		init(type.getName(), (String[]) data.getDataObject(type));
+		init(type.getName(), defauletValue);
 		setItem(data.getDataString(SoundDataList.NAME));
 	}
 

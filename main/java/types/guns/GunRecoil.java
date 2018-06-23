@@ -1,37 +1,105 @@
 package types.guns;
 
-import types.base.CloneableObj;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class GunRecoil extends CloneableObj{
-	public boolean use = false;
+import types.base.DataBase;
+import types.base.DataType;
+import types.base.EnumDataList;
 
-	public float yaw_base_max = 0;
-	public float yaw_spread_max = 0;
-	public float yaw_shake_max = 1;
-
-	public float yaw_base_min = 0;
-	public float yaw_spread_min = 0;
-	public float yaw_shake_min = 1;
-
-	public int yaw_recoil_tick = 0;
-	public int yaw_return_tick = 0;
-
-	public float pitch_base_max = 0;
-	public float pitch_spread_max = 0;
-	public float pitch_shake_max = 1;
-
-	public float pitch_base_min = 0;
-	public float pitch_spread_min = 0;
-	public float pitch_shake_min = 1;
-
-	public int pitch_recoil_tick = 0;
-	public int pitch_return_tick = 0;
-
-	public int recoilPower_tick = 0;
-	public int recoilPower_shoot = 0;
+public class GunRecoil extends DataBase{
+	/**データ格納*/
+	Map<String, Object> Recoil;
 
 	public GunRecoil setUse(boolean use){
-		this.use = use;
+		setData(RecoilDataList.USE, use);
 		return this;
+	}
+
+	@Override
+	protected void newMap() {
+		Recoil = new LinkedHashMap<String,Object>();
+	}
+
+	@Override
+	protected Map<String, Object> getMap() {
+		return Recoil;
+	}
+
+	@Override
+	protected EnumDataList[] getDataList() {
+		return RecoilDataList.values();
+	}
+
+	public enum RecoilDataList implements EnumDataList {
+
+		MAX_YAW_BASE(null, null, 0f, DataType.Float),
+		MAX_YAW_SPREAD(null, null, 0f, DataType.Float),
+		MAX_YAW_RETURN(1f, 0f, 0f, DataType.Float),
+		MIN_YAW_BASE(null, null, 0f, DataType.Float),
+		MIN_YAW_SPREAD(null, null, 0f, DataType.Float),
+		MIN_YAW_RETURN(1f, 0f, 0f, DataType.Float),
+
+		YAW_RECOIL_TICK(null, 0f, 0f, DataType.Int),
+		YAW_RETURN_TICK(null, 0f, 0f, DataType.Int),
+
+		
+		MAX_PITCH_BASE(null, null, 0f, DataType.Float),
+		MAX_PITCH_SPREAD(null, null, 0f, DataType.Float),
+		MAX_PITCH_RETURN(1f, 0f, 0f, DataType.Float),
+		MIN_PITCH_BASE(null, null, 0f, DataType.Float),
+		MIN_PITCH_SPREAD(null, null, 0f, DataType.Float),
+		MIN_PITCH_RETURN(1f, 0f, 0f, DataType.Float),
+
+		PITCH_RECOIL_TICK(null, 0f, 0f, DataType.Int),
+		PITCH_RETURN_TICK(null, 0f, 0f, DataType.Int),
+		
+		POWER_TICK(null, 0f, 0f, DataType.Int),
+		POWER_SHOOT(null, 0f, 0f, DataType.Int),
+		
+		USE(null, null, true, DataType.Boolean),
+		;
+
+		private RecoilDataList(Float min, Float max, Object defaultValue, DataType type) {
+			Max = max;
+			Min = min;
+			Default = defaultValue;
+			Type = type;
+		}
+
+		Float Max;
+		Float Min;
+		Object Default;
+		DataType Type;
+
+		@Override
+		public Float getMin() {
+			return Min;
+		}
+
+		@Override
+		public Float getMax() {
+			return Max;
+		}
+
+		@Override
+		public String getName() {
+			return this.toString();
+		}
+
+		@Override
+		public DataType getType() {
+			return Type;
+		}
+
+		@Override
+		public Object getDefaultValue() {
+			return Default;
+		}
+
+		@Override
+		public int getCate() {
+			return -1;
+		}
 	}
 }

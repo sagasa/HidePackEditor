@@ -5,8 +5,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 
 import types.base.ChangeListener;
+import types.base.DataBase;
+import types.base.EnumDataList;
 import types.guns.GunData;
 import types.guns.GunRecoil;
+import types.guns.GunRecoil.RecoilDataList;
 import types.guns.GunData.GunDataList;
 
 public class RecoilEditPanel extends JTabbedPane implements ChangeListener, javax.swing.event.ChangeListener{
@@ -34,23 +37,22 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 		infoPanel.setLayout(null);
 
 		int yOffset = 3;
-		BooleanSetPanel use = new BooleanSetPanel("Use This Statas", recoil.use, true);
+		BooleanSetPanel use = new BooleanSetPanel(recoil,RecoilDataList.USE, true);
 		use.setBounds(50, yOffset, 200, 20);
-		use.addChangeListener(this,ChangeListener.RECOIL_USE | cate);
 		infoPanel.add(use);
 		yOffset += 28;
 
-		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalBase",recoil.yaw_base_max+"",true,ChangeListener.RECOIL_YAW_MAX_BASE | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MAX_YAW_BASE));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxVerticalBase",recoil.pitch_base_max+"",true,ChangeListener.RECOIL_PITCH_MAX_BASE | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MAX_YAW_SPREAD));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalSpread",recoil.yaw_spread_max+"",true,ChangeListener.RECOIL_YAW_MAX_SPREAD | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MAX_PITCH_BASE));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxVerticalSpread",recoil.pitch_spread_max+"",true,ChangeListener.RECOIL_PITCH_MAX_SPREAD | cate));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MAX_PITCH_SPREAD));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxHorizontalShake",recoil.yaw_shake_max+"",true,ChangeListener.RECOIL_YAW_MAX_SHAKE | cate).setLimit(null, 1f));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MAX_YAW_RETURN));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,"MaxVerticalShake",recoil.pitch_shake_max+"",true,ChangeListener.RECOIL_PITCH_MAX_SHAKE | cate).setLimit(null, 1f));
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MAX_PITCH_RETURN));		
 		yOffset += 28;
 
 		infoPanel.add(makeNumPanel(yOffset,"MinHorizontalBase",recoil.yaw_base_min+"",true,ChangeListener.RECOIL_YAW_MIN_BASE | cate));
@@ -100,11 +102,9 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 		}
 	}
 
-	private NumberSetPanel makeNumPanel(int yOffset,String lore,String value,boolean isFloat,int cate){
-		NumberSetPanel panel = new NumberSetPanel(lore, value , true, isFloat);
+	private NumberSetPanel makeNumPanel(int yOffset,DataBase data,EnumDataList type){
+		NumberSetPanel panel = new NumberSetPanel(data, type , true);
 		panel.setTextBoxWidth(40);
-		panel.setLimit(null, 0f);
-		panel.addChangeListener(this, cate);
 		panel.setBounds(0, yOffset, 180, 20);
 		return panel;
 	}
