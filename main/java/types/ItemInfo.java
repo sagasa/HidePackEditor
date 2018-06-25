@@ -17,6 +17,14 @@ public class ItemInfo extends DataBase{
 	/**データ格納*/
 	Map<String, Object> ItemInfo;
 
+	public String getDisplayName(){
+		return getDataString(ItemDataList.NAME_DISPLAY);
+	}
+
+	public String getShortName(){
+		return getDataString(ItemDataList.NAME_SHORT);
+	}
+
 	@Override
 	protected Map<String, Object> getMap() {
 		return ItemInfo;

@@ -6,11 +6,36 @@ import java.util.Map;
 import types.base.DataBase;
 import types.base.DataType;
 import types.base.EnumDataList;
-import types.guns.GunData.GunDataList;
 
 public class BulletData extends DataBase{
 	/**データ格納*/
-	LinkedHashMap<String, Object> BulletData = new LinkedHashMap<String,Object>();
+	LinkedHashMap<String, Object> BulletData;
+
+	public ItemInfo getItemInfo(){
+		return (ItemInfo) this.getDataObject(BulletDataList.ITEM_INFO);
+	}
+
+	public BulletData() {
+		super();
+	}
+
+	public BulletData(String json) {
+		super(json);
+	}
+
+	@Override
+	protected Map<String, Object> getMap() {
+		return BulletData;
+	}
+
+	@Override
+	protected BulletDataList[] getDataList() {
+		return BulletDataList.values();
+	}
+	@Override
+	protected void newMap() {
+		BulletData = new LinkedHashMap<String,Object>();
+	}
 
 	/**弾のデータリスト*/
 	public enum BulletDataList implements EnumDataList{
@@ -34,7 +59,7 @@ public class BulletData extends DataBase{
 
 		/**リロード時にマガジンが破棄されるか : boolean型**/
 		MAGAZINE_BREAK(null,null,true,DataType.Boolean,1),
-		
+
 		/**防具貫通 : boolean型**/
 		HIT_IGNORING_ARMOR(null,null,false,DataType.Boolean,2),
 		/**直撃のHSダメージ : float型**/
@@ -198,32 +223,5 @@ public class BulletData extends DataBase{
 		public Float getMax() {
 			return Max;
 		}
-	}
-	
-	
-	public ItemInfo getItemInfo(){
-		return (ItemInfo) this.getDataObject(GunDataList.ITEM_INFO);
-	}
-
-	public BulletData() {
-		super();
-	}
-	
-	public BulletData(String json) {
-		super(json);
-	}
-	
-	@Override
-	protected Map<String, Object> getMap() {
-		return BulletData;
-	}
-
-	@Override
-	protected BulletDataList[] getDataList() {
-		return BulletDataList.values();
-	}
-	@Override
-	protected void newMap() {
-		BulletData = new LinkedHashMap<String,Object>();
 	}
 }
