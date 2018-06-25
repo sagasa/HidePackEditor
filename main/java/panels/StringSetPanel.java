@@ -82,11 +82,10 @@ public class StringSetPanel extends ValueSetPanel{
 
 	@Override
 	public void saveValue() {
-		if(Data==null){
-			super.save(txtField.getText());
-		}else{
+		if(Data!=null){
 			Data.setData(Type, txtField.getText());
 		}
+		super.save(txtField.getText());
 	}
 
 	@Override

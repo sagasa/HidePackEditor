@@ -77,14 +77,13 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 		return this;
 	}
 
-	/**DataBaseを使用するなら通知を行わない*/
+	/**DataBaseを使用しているなら書き換え*/
 	@Override
 	public void save(Object value) {
-		if(Data==null){
-			super.save(value);
-		}else{
+		if(Data!=null){
 			Data.setData(Type, value);
 		}
+		super.save(value);
 	}
 
 	/** テキストボックスの幅を設定 */

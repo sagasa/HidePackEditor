@@ -23,18 +23,7 @@ public class BooleanSetPanel  extends ValueSetPanel implements ActionListener{
 	/**DataBase以外からの利用*/
 	public BooleanSetPanel(String lore,boolean defauletValue, boolean canedit) {
 		super(canedit);
-		LineBorder border = new LineBorder(Color.black, 1, false);
-		this.setOpaque(false);
-		this.setLayout(null);
-
-		// テキストボックス
-		checkBox = new JCheckBox(lore);
-		checkBox.addActionListener(this);
-		checkBox.setSelected(defauletValue);
-		checkBox.setBorder(border);
-		checkBox.setFont(new Font("BOLD", Font.BOLD, 13));
-		checkBox.setEnabled(canEdit);
-		this.add(checkBox);
+		init(lore, defauletValue);
 	}
 
 	DataBase Data;
@@ -44,20 +33,24 @@ public class BooleanSetPanel  extends ValueSetPanel implements ActionListener{
 		super(canedit);
 		Data = data;
 		Type = type;
+		init(type.getName(), data.getDataBoolean(type));
+	}
+
+	private void init(String lore,boolean defaultValue){
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		this.setOpaque(false);
 		this.setLayout(null);
 
 		// テキストボックス
-		checkBox = new JCheckBox(type.getName());
+		checkBox = new JCheckBox(lore);
 		checkBox.addActionListener(this);
-		checkBox.setSelected(data.getDataBoolean(type));
+		checkBox.setSelected(defaultValue);
 		checkBox.setBorder(border);
 		checkBox.setFont(new Font("BOLD", Font.BOLD, 13));
 		checkBox.setEnabled(canEdit);
 		this.add(checkBox);
 	}
-	
+
 	@Override
 	public void rePaint() {
 
@@ -69,13 +62,12 @@ public class BooleanSetPanel  extends ValueSetPanel implements ActionListener{
 			checkBox.setEnabled(canedit);
 		}
 	}
-	
+
 	/**DataBaseを使用するなら通知を行わない*/
 	@Override
 	public void save(Object value) {
-		if(Data==null){
-			super.save(value);
-		}else{
+		super.save(value);
+		if(Data!=null){
 			Data.setData(Type, value);
 		}
 	}

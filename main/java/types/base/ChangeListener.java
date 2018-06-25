@@ -15,42 +15,7 @@ public interface ChangeListener {
 	static final int ITEMINFO_KNOCKBACKRESISTANCE = 5;
 	static final int ITEMINFO_ATTACK = 6;
 
-	static final int SOUND_NAME= 0x10000;
-	static final int SOUND_PITCH= 0x20000;
-	static final int SOUND_VOL= 0x30000;
-	static final int SOUND_RANGE= 0x40000;
-
-	static final int GUN_SOUND_SHOOT= 7;
-	static final int GUN_SOUND_RELOAD= 8;
-	
-	static final int BULLET_HIT_ENTITY= 100;
-	static final int BULLET_HIT_GROUND= 101;
-	static final int BULLET_PASS= 102;
-
-	static final int RECOIL_YAW_MAX_BASE = 0x50000;
-	static final int RECOIL_YAW_MAX_SPREAD = 0x60000;
-	static final int RECOIL_YAW_MAX_SHAKE = 0x70000;
-	static final int RECOIL_PITCH_MAX_BASE = 0x80000;
-	static final int RECOIL_PITCH_MAX_SPREAD = 0x90000;
-	static final int RECOIL_PITCH_MAX_SHAKE = 0xa0000;
-	static final int RECOIL_YAW_MIN_BASE = 0xb0000;
-	static final int RECOIL_YAW_MIN_SPREAD = 0xc0000;
-	static final int RECOIL_YAW_MIN_SHAKE = 0xd0000;
-	static final int RECOIL_PITCH_MIN_BASE = 0xe0000;
-	static final int RECOIL_PITCH_MIN_SPREAD = 0xf0000;
-	static final int RECOIL_PITCH_MIN_SHAKE = 0x100000;
-	static final int RECOIL_YAW_TICK = 0x110000;
-	static final int RECOIL_YAW_TICK_RETURN = 0x120000;
-	static final int RECOIL_PITCH_TICK = 0x130000;
-	static final int RECOIL_PITCH_TICK_RETURN = 0x140000;
-	static final int RECOIL_POWER_SHOOT = 0x150000;
-	static final int RECOIL_POWER_TICK = 0x160000;
-	static final int RECOIL_USE = 0x170000;
-
 	static final int GRAPH_UPDATE= 9;
-	static final int GUN_RECOIL_SNEAK= 10;
-	static final int GUN_RECOIL_ADS= 11;
-	static final int GUN_RECOIL_SNEAKADS= 12;
 
 
 	void ValueChange(int cate,Object value);
