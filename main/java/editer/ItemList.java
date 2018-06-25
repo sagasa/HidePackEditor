@@ -113,6 +113,7 @@ public class ItemList extends JTabbedPane
 			case 1:
 				// magazine
 				BulletData newBullet = new BulletData();
+				System.out.println(newBullet);
 				while (Window.BulletList.containsKey("New Bullet No." + bulletNum)) {
 					bulletNum++;
 				}

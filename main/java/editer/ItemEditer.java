@@ -36,7 +36,7 @@ import types.guns.GunData;
 import types.guns.GunData.GunDataList;
 
 /** アイテムのデータ編集 */
-public class ItemEditer extends JPanel implements ChangeListener, ActionListener {
+public class ItemEditer extends JPanel implements ActionListener, ChangeListener {
 	/** データ編集 */
 	private static final long serialVersionUID = 2597125412794151634L;
 	/** 射撃モードのリスト */
@@ -78,8 +78,8 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		writeGunNumberValue(damageChange, 2);
 		this.add(damageChange);
 		// サウンドエディタ
-		writeSoundEditer(690, 240, GunDataList.SOUND_SHOOT, ChangeListener.GUN_SOUND_SHOOT);
-		writeSoundEditer(690, 360, GunDataList.SOUND_RELOAD, ChangeListener.GUN_SOUND_RELOAD);
+		writeSoundEditer(690, 240, GunDataList.SOUND_SHOOT);
+		writeSoundEditer(690, 360, GunDataList.SOUND_RELOAD);
 		// 量が多すぎたので別クラス
 		// グラフだけパネル外に配置
 		RecoilEditPanel.Graph.setBounds(255, 5, 240, 240);
@@ -177,9 +177,9 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		writeBulletNumberValue(decay, 10);
 		this.add(decay);
 		// サウンド関連
-		writeSoundEditer(0, 350, BulletDataList.SOUND_HIT_ENTITY, ChangeListener.BULLET_HIT_ENTITY);
-		writeSoundEditer(0, 453, BulletDataList.SOUND_HIT_GROUND, ChangeListener.BULLET_HIT_GROUND);
-		writeSoundEditer(250, 400, BulletDataList.SOUND_PASSING_USE, ChangeListener.BULLET_PASS);
+		writeSoundEditer(0, 350, BulletDataList.SOUND_HIT_ENTITY);
+		writeSoundEditer(0, 453, BulletDataList.SOUND_HIT_GROUND);
+		writeSoundEditer(250, 400, BulletDataList.SOUND_PASSING_USE);
 	}
 
 	private void writeBulletNumberValue(JPanel root, int cate) {
@@ -206,45 +206,47 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 	JComboBox<String> SoundList;
 
 	/** Soundをと通知用カテゴリを渡す */
-	private void writeSoundEditer(int x, int y, EnumDataList type, int cate) {
+	private void writeSoundEditer(int x, int y, EnumDataList type) {
 		// 枠
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
-		infoPanel.setBounds(x + 5, y + 5, 200, 120);
+		infoPanel.setBounds(x + 5, y + 5, 200, 114);
+
+		JLabel label = new JLabel(type.getName(), JLabel.CENTER);
+		label.setBounds(15, 3, 170, 20);
+		label.setFont(new Font("BOLD", Font.BOLD, 13));
+		infoPanel.add(label);
 
 		Sound sound = (Sound) Data.getDataObject(type);
-		System.out.println(sound+" "+Data);
-		
+
 		String[] keySet = Window.SoundMap.keySet().toArray(new String[Window.SoundMap.keySet().size()]);
 		Arrays.sort(keySet);
-		StringComboPanel combo = new StringComboPanel(sound,SoundDataList.NAME,keySet, true);
-		combo.setBounds(0, 5, 200, 20);
-		combo.setTextBoxWidth(70);
+		StringComboPanel combo = new StringComboPanel(sound, SoundDataList.NAME, keySet, true);
+		combo.setBounds(0, 26, 200, 18);
+		combo.setTextBoxWidth(120);
 		infoPanel.add(combo);
 
 		int yOffset = 48;
-		NumberSetPanel range = new NumberSetPanel(sound,SoundDataList.RANGE, true);
-		range.addChangeListener(this, ChangeListener.SOUND_RANGE | cate);
+		NumberSetPanel range = new NumberSetPanel(sound, SoundDataList.RANGE, true);
 		range.setBounds(0, yOffset, 200, 20);
 		infoPanel.add(range);
-		NumberSetPanel vol = new NumberSetPanel(sound,SoundDataList.VOL, true);
-		vol.addChangeListener(this, ChangeListener.SOUND_VOL | cate);
+		NumberSetPanel vol = new NumberSetPanel(sound, SoundDataList.VOL, true);
 		vol.setBounds(0, yOffset, 100, 20);
 		infoPanel.add(vol);
 		yOffset += 22;
-		NumberSetPanel pitch = new NumberSetPanel(sound,SoundDataList.PITCH, true);
+		NumberSetPanel pitch = new NumberSetPanel(sound, SoundDataList.PITCH, true);
 		pitch.setBounds(0, yOffset, 100, 20);
 		infoPanel.add(pitch);
 		yOffset += 22;
-		BooleanSetPanel delay = new BooleanSetPanel(sound,SoundDataList.USE_DELAY, true);
+		BooleanSetPanel delay = new BooleanSetPanel(sound, SoundDataList.USE_DELAY, true);
 		delay.setBounds(0, yOffset, 100, 20);
 		infoPanel.add(delay);
-		BooleanSetPanel decay = new BooleanSetPanel(sound,SoundDataList.USE_DECAY, true);
+		BooleanSetPanel decay = new BooleanSetPanel(sound, SoundDataList.USE_DECAY, true);
 		decay.setBounds(100, yOffset, 100, 20);
 		infoPanel.add(decay);
 		this.add(infoPanel);
-		
+
 		this.repaint();
 	}
 
@@ -261,33 +263,34 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 		ItemInfo info = getItemInfo();
 
 		int yOffset = 3;
-		StringSetPanel display = new StringSetPanel(info,ItemDataList.NAME_DISPLAY, true);
+		StringSetPanel display = new StringSetPanel(ItemDataList.NAME_DISPLAY.getName(),info.getDataString(ItemDataList.NAME_DISPLAY) , true);
+		display.addChangeListener(this, ChangeListener.ITEMINFO_DISPLAY);
 		display.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(display);
 		yOffset += 22;
 
-		StringSetPanel shortName = new StringSetPanel(info,ItemDataList.NAME_SHORT, true);
+		StringSetPanel shortName = new StringSetPanel(info, ItemDataList.NAME_SHORT, true);
 		shortName.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(shortName);
 		yOffset += 22;
 
-		NumberSetPanel attack = new NumberSetPanel(info,ItemDataList.ATTACK_DAMAGE, true);
+		NumberSetPanel attack = new NumberSetPanel(info, ItemDataList.ATTACK_DAMAGE, true);
 		attack.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(attack);
 		yOffset += 22;
 
-		NumberSetPanel speed = new NumberSetPanel(info,ItemDataList.KNOCKBACK_RESISTANCE, true);
+		NumberSetPanel speed = new NumberSetPanel(info, ItemDataList.KNOCKBACK_RESISTANCE, true);
 		speed.setLimit(null, 0f);
 		speed.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(speed);
 		yOffset += 22;
 
-		NumberSetPanel health = new NumberSetPanel(info,ItemDataList.MAX_HEALTH, true);
+		NumberSetPanel health = new NumberSetPanel(info, ItemDataList.MAX_HEALTH, true);
 		health.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(health);
 		yOffset += 22;
 
-		NumberSetPanel knockBack = new NumberSetPanel(info,ItemDataList.MOVE_SPEED,true);
+		NumberSetPanel knockBack = new NumberSetPanel(info, ItemDataList.MOVE_SPEED, true);
 		knockBack.setLimit(1f, -1f);
 		knockBack.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(knockBack);
@@ -335,62 +338,13 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 
 	@Override
 	public void ValueChange(int cate, Object value) {
-		// System.out.println(Integer.toHexString(cate) + " " + value);
-	/*	if (cate == ChangeListener.ITEMINFO_SHORTNAME) {
+		if (cate == ChangeListener.ITEMINFO_DISPLAY) {
 			ItemInfo info = getItemInfo();
-			info.shortName = (String) value;
-			setItemInfo(info);
-		} else if (cate == ChangeListener.ITEMINFO_DISPLAY) {
-			ItemInfo info = getItemInfo();
-			Window.GunList.remove(info.displayName);
+			Window.GunList.remove(info.getDataString(ItemDataList.NAME_DISPLAY));
 			Window.GunList.put((String) value, (GunData) Data);
-			info.displayName = (String) value;
-			setItemInfo(info);
+			info.setData(ItemDataList.NAME_DISPLAY, value);
 			Window.ItemList.write();
-		} else if (cate == ChangeListener.ITEMINFO_ICON && !value.equals("")) {
-			ItemInfo info = getItemInfo();
-			info.iconName = (String) value;
-			setItemInfo(info);
-			icon1.setImage(Window.IconMap.get(value));
-		} else if (cate == ChangeListener.ITEMINFO_ATTACK && !value.equals("")) {
-			ItemInfo info = getItemInfo();
-			info.attackDamage = (Float) value;
-			setItemInfo(info);
-		} else if (cate == ChangeListener.ITEMINFO_MAXHEALTH && !value.equals("")) {
-			ItemInfo info = getItemInfo();
-			info.maxHealth = (Float) value;
-			setItemInfo(info);
-		} else if (cate == ChangeListener.ITEMINFO_KNOCKBACKRESISTANCE && !value.equals("")) {
-			ItemInfo info = getItemInfo();
-			info.knockbackResistance = (Float) value;
-			setItemInfo(info);
-		} else if (cate == ChangeListener.ITEMINFO_SPEED && !value.equals("")) {
-			ItemInfo info = getItemInfo();
-			info.movementSpeed = (Float) value;
-			setItemInfo(info);
-		} else if ((cate & ChangeListener.DATA_MASK) == ChangeListener.GUN_SOUND_SHOOT
-				|| (cate & ChangeListener.DATA_MASK) == ChangeListener.GUN_SOUND_RELOAD) {
-			Sound sound;
-			if ((cate & ChangeListener.DATA_MASK) == ChangeListener.GUN_SOUND_SHOOT) {
-				sound = (Sound) Data.getDataObject(GunDataList.SOUND_SHOOT);
-			} else {
-				sound = (Sound) Data.getDataObject(GunDataList.SOUND_RELOAD);
-			}
-			if ((cate & ChangeListener.DOMAIN_MASK) == ChangeListener.SOUND_NAME) {
-				sound.name = (String) value;
-			} else if ((cate & ChangeListener.DOMAIN_MASK) == ChangeListener.SOUND_RANGE) {
-				sound.range = (Float) value;
-			} else if ((cate & ChangeListener.DOMAIN_MASK) == ChangeListener.SOUND_VOL) {
-				sound.vol = (Float) value;
-			} else if ((cate & ChangeListener.DOMAIN_MASK) == ChangeListener.SOUND_PITCH) {
-				sound.pitch = (Float) value;
-			}
-			if ((cate & ChangeListener.DATA_MASK) == ChangeListener.GUN_SOUND_SHOOT) {
-				Data.setData(GunDataList.SOUND_SHOOT, sound);
-			} else {
-				Data.setData(GunDataList.SOUND_RELOAD, sound);
-			}
-		}*/
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -398,9 +352,13 @@ public class ItemEditer extends JPanel implements ChangeListener, ActionListener
 	public void actionPerformed(ActionEvent e) {
 		// アイコン変更
 		if (e.getActionCommand().equals("iconSet")) {
-			this.ValueChange(ChangeListener.ITEMINFO_ICON, ((JComboBox<String>) e.getSource()).getSelectedItem());
+			ItemInfo info = getItemInfo();
+			String value = (String) ((JComboBox<String>) e.getSource()).getSelectedItem();
+			info.setData(ItemDataList.NAME_ICON, value);
+			setItemInfo(info);
+			icon1.setImage(Window.IconMap.get(value));
 		} else if (e.getActionCommand().equals("gunDelete")) {
-			Window.GunList.remove(((GunData) Data).getItemInfo().getDataInt(ItemDataList.NAME_DISPLAY));
+			Window.GunList.remove(((GunData) Data).getItemInfo().getDataString(ItemDataList.NAME_DISPLAY));
 			clearEditer();
 			Window.ItemList.write();
 		}

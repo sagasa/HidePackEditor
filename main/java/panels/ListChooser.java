@@ -91,7 +91,7 @@ public class ListChooser extends JPanel implements ComponentListener, MouseListe
 			combo.removeAllItems();
 			//System.out.println(GunDataList.TYPES_BULLETS.getData(gunData));
 			for(BulletData data:Window.BulletList.values()){
-				combo.addItem(((ItemInfo)data.getDataObject(BulletDataList.ITEM_INFO)).getDataString(ItemDataList.NAME_SHORT));
+				combo.addItem(data.getItemInfo().getShortName());
 			}
 			listModel.clear();
 			for(String str: (String[])Data.getDataObject(GunDataList.BULLET_USE)){

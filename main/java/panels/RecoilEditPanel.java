@@ -38,6 +38,7 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 
 		int yOffset = 3;
 		BooleanSetPanel use = new BooleanSetPanel(recoil,RecoilDataList.USE, true);
+		use.addChangeListener(this, ChangeListener.GRAPH_UPDATE);
 		use.setBounds(50, yOffset, 200, 20);
 		infoPanel.add(use);
 		yOffset += 28;
@@ -52,7 +53,7 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 		yOffset += 22;
 		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MAX_YAW_RETURN));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MAX_PITCH_RETURN));		
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MAX_PITCH_RETURN));
 		yOffset += 28;
 
 		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MIN_YAW_BASE));
@@ -65,22 +66,22 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 		yOffset += 22;
 		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MIN_YAW_RETURN));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MIN_PITCH_RETURN));		
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.MIN_PITCH_RETURN));
 		yOffset += 28;
 
 		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.YAW_RECOIL_TICK));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.PITCH_RECOIL_TICK));		
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.PITCH_RECOIL_TICK));
 		yOffset += 28;
 
 		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.YAW_RETURN_TICK));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.PITCH_RETURN_TICK));		
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.PITCH_RETURN_TICK));
 		yOffset += 28;
 
 		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.POWER_SHOOT));
 		yOffset += 22;
-		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.POWER_TICK));		
+		infoPanel.add(makeNumPanel(yOffset,recoil,RecoilDataList.POWER_TICK));
 		yOffset += 28;
 		return infoPanel;
 	}

@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import io.PackIO;
 import types.*;
@@ -73,7 +76,8 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		this.addComponentListener(this);
 		// 画面の中央に適当なサイズで出現
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowClosing());
 		int w = screenSize.width / 4 * 3 < 1190 ? 1190 : screenSize.width / 4 * 3;
 		int h = screenSize.height / 4 * 3 < 680 ? 680 : screenSize.height / 4 * 3;
 		this.setSize(w, h);
@@ -158,7 +162,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 			ItemEditer.setBounds(200, 0, this.getWidth() - 400, this.getHeight() - 60);
 		}
 		if (ResourceList != null) {
-			ResourceList.setBounds(this.getWidth()-200, 0, 200, this.getHeight() - 60);
+			ResourceList.setBounds(this.getWidth() - 200, 0, 200, this.getHeight() - 60);
 		}
 		if (PackInfoEditer != null) {
 			PackInfoEditer.setBounds(0, 0, 200, 100);
@@ -175,5 +179,17 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 
 	@Override
 	public void componentMoved(ComponentEvent arg0) {
+	}
+
+	class WindowClosing extends WindowAdapter {
+		public void windowClosing(WindowEvent e) {
+			int ans = JOptionPane.showConfirmDialog(INSTANCE, "save before closing?");
+			if (ans == JOptionPane.YES_OPTION) {
+				PackIO.save();
+				System.exit(0);
+			}else if (ans == JOptionPane.NO_OPTION){
+				System.exit(0);
+			}
+		}
 	}
 }
