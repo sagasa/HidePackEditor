@@ -62,7 +62,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 	public void writeGunEditer(GunData data) {
 		this.removeAll();
 		Data = data;
-		writeItemInfo(0, 0);
+		writeItemInfo(0, 0,ChangeListener.DOMAIN_GUN);
 		// 細かいパラメータ描画
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
@@ -147,7 +147,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 	public void writeMagazineEditer(BulletData data) {
 		this.removeAll();
 		Data = data;
-		writeItemInfo(0, 0);
+		writeItemInfo(0, 0,ChangeListener.DOMAIN_MAGAZINE);
 		// こまごまとした設定項目
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
@@ -254,7 +254,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 	IconPrint icon1;
 
 	/** ItemInfo用 */
-	private void writeItemInfo(int x, int y) {
+	private void writeItemInfo(int x, int y,int domain) {
 		// 枠
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
@@ -264,7 +264,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 
 		int yOffset = 3;
 		StringSetPanel display = new StringSetPanel(ItemDataList.NAME_DISPLAY.getName(),info.getDataString(ItemDataList.NAME_DISPLAY) , true);
-		display.addChangeListener(this, ChangeListener.ITEMINFO_DISPLAY);
+		display.addChangeListener(this, ChangeListener.ITEMINFO_DISPLAY|domain);
 		display.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(display);
 		yOffset += 22;
@@ -338,10 +338,16 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 
 	@Override
 	public void ValueChange(int cate, Object value) {
-		if (cate == ChangeListener.ITEMINFO_DISPLAY) {
+		//表示名が変わっていたなら
+		if ((cate&ChangeListener.DATA_MASK) == ChangeListener.ITEMINFO_DISPLAY) {
 			ItemInfo info = getItemInfo();
-			Window.GunList.remove(info.getDataString(ItemDataList.NAME_DISPLAY));
-			Window.GunList.put((String) value, (GunData) Data);
+			if((cate&ChangeListener.DOMAIN_MASK)==ChangeListener.DOMAIN_GUN){
+				Window.GunList.remove(info.getDataString(ItemDataList.NAME_DISPLAY));
+				Window.GunList.put((String) value, (GunData) Data);
+			}else if((cate&ChangeListener.DOMAIN_MASK)==ChangeListener.DOMAIN_MAGAZINE){
+				Window.BulletList.remove(info.getDataString(ItemDataList.NAME_DISPLAY));
+				Window.BulletList.put((String) value, (BulletData) Data);
+			}
 			info.setData(ItemDataList.NAME_DISPLAY, value);
 			Window.ItemList.write();
 		}

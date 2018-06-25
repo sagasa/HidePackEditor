@@ -113,7 +113,6 @@ public class ItemList extends JTabbedPane
 			case 1:
 				// magazine
 				BulletData newBullet = new BulletData();
-				System.out.println(newBullet);
 				while (Window.BulletList.containsKey("New Bullet No." + bulletNum)) {
 					bulletNum++;
 				}
@@ -164,13 +163,14 @@ public class ItemList extends JTabbedPane
 		switch (this.getSelectedIndex()) {
 		case 0:
 			// gun
-			if (!gunList.isSelectionEmpty()) {
+			if (!gunList.isSelectionEmpty()&&Window.GunList.containsKey(gunList.getSelectedValue())) {
 				Window.ItemEditer.writeGunEditer(Window.GunList.get(gunList.getSelectedValue()));
 			}
 			break;
 		case 1:
 			// magazine
-			if (!magazineList.isSelectionEmpty()) {
+			if (!magazineList.isSelectionEmpty()&&Window.BulletList.containsKey(magazineList.getSelectedValue())) {
+				
 				Window.ItemEditer.writeMagazineEditer(Window.BulletList.get(magazineList.getSelectedValue()));
 			}
 			break;
