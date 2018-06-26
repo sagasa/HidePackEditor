@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import types.Explosion;
 import types.ItemInfo;
 import types.Sound;
 import types.base.EnumDataList;
@@ -45,6 +46,10 @@ public class JsonWrapper {
 			return o.getAsString();
 		case StringArray:
 			return gson.fromJson(o,new TypeToken<String[]>() {}.getType());
+		case Explosion:
+			return gson.fromJson(o, Explosion.class);
+		default:
+			break;
 		}
 		return key.getDefaultValue();
 	}

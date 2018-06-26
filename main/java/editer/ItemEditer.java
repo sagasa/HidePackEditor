@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import panels.BooleanSetPanel;
+import panels.ExplosionEditPanel;
 import panels.IconPrint;
 import panels.ListChooser;
 import panels.NumberSetPanel;
@@ -152,34 +153,31 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
-		infoPanel.setBounds(5, 195, 245, 0);
+		infoPanel.setBounds(255, 235, 225, 0);
 		writeBulletNumberValue(infoPanel, 1);
 		this.add(infoPanel);
 		// 直撃間連
 		JPanel hit = new JPanel();
 		hit.setLayout(null);
 		hit.setBorder(blackBorder);
-		hit.setBounds(255, 0, 245, 0);
+		hit.setBounds(255, 5, 225, 0);
 		writeBulletNumberValue(hit, 2);
 		this.add(hit);
 		// 爆発関連
-		JPanel exp = new JPanel();
-		exp.setLayout(null);
-		exp.setBorder(blackBorder);
-		exp.setBounds(505, 5, 245, 0);
-		writeBulletNumberValue(exp, 3);
-		this.add(exp);
+		ExplosionEditPanel expentity = new ExplosionEditPanel(data);
+		expentity.setBounds(485, 5, 205, 500);
+		this.add(expentity);
 		// 減衰関連
 		JPanel decay = new JPanel();
 		decay.setLayout(null);
 		decay.setBorder(blackBorder);
-		decay.setBounds(255, 230, 245, 0);
+		decay.setBounds(5, 195, 245, 0);
 		writeBulletNumberValue(decay, 10);
 		this.add(decay);
 		// サウンド関連
-		writeSoundEditer(0, 350, BulletDataList.SOUND_HIT_ENTITY);
-		writeSoundEditer(0, 453, BulletDataList.SOUND_HIT_GROUND);
-		writeSoundEditer(250, 400, BulletDataList.SOUND_PASSING_USE);
+		writeSoundEditer(690, 0, BulletDataList.SOUND_HIT_ENTITY);
+		writeSoundEditer(690, 250, BulletDataList.SOUND_HIT_GROUND);
+		writeSoundEditer(690, 500, BulletDataList.SOUND_PASSING_USE);
 	}
 
 	private void writeBulletNumberValue(JPanel root, int cate) {
@@ -189,10 +187,10 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 				ValueSetPanel panel = null;
 				if (type.getType() == DataType.Int || type.getType() == DataType.Float) {
 					panel = new NumberSetPanel(Data, type, true);
-					panel.setBounds(0, 0 + yOffset, 245, 20);
+					panel.setBounds(0, 0 + yOffset, root.getWidth(), 20);
 				} else if (type.getType() == DataType.Boolean) {
 					panel = new BooleanSetPanel(Data, type, true);
-					panel.setBounds(60, 0 + yOffset, 180, 20);
+					panel.setBounds(20, 0 + yOffset, root.getWidth()-20, 20);
 				}
 				root.add(panel);
 				yOffset += 22;

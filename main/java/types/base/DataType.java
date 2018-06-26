@@ -9,6 +9,7 @@ public enum DataType{
 	GunRecoil(true),
 	Sound(true),
 	ItemInfo(true),
+	Explosion(true),
 	StringArray(true);
 
 	boolean isObject;
