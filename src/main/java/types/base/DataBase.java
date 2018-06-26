@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import helper.JsonWrapper;
+import io.PackIO;
 
 public abstract class DataBase implements Cloneable {
 
@@ -62,22 +63,32 @@ public abstract class DataBase implements Cloneable {
 			data = Math.round((Float) data);
 		}
 		getMap().replace(type.toString(), data);
+		// セーブの確認をフラグ
+		PackIO.isChanged = true;
 	}
 
 	/** デフォルト値代入 */
 	public DataBase() {
 		newMap();
+		fillDefault();
+	}
+
+	public DataBase fillDefault() {
 		for (EnumDataList data : getDataList()) {
-			// オブジェクトなら別インスタンスを
-			if (data.getType().isObject() && data.getDefaultValue() instanceof DataBase) {
-				try {
-					getMap().put(data.getName(), ((DataBase) data.getDefaultValue()).clone());
-				} catch (CloneNotSupportedException e) {
+			// 値がなければ
+			if (!getMap().containsKey(data.getName())) {
+				// オブジェクトなら別インスタンスを
+				if (data.getType().isObject() && data.getDefaultValue() instanceof DataBase) {
+					try {
+						getMap().put(data.getName(), ((DataBase) data.getDefaultValue()).clone());
+					} catch (CloneNotSupportedException e) {
+					}
+				} else {
+					getMap().put(data.getName(), data.getDefaultValue());
 				}
-			} else {
-				getMap().put(data.getName(), data.getDefaultValue());
 			}
 		}
+		return this;
 	}
 
 	/** JsonStringからデータを読み込む */

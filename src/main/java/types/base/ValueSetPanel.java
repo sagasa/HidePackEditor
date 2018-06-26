@@ -9,8 +9,6 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 
-import io.PackIO;
-
 public abstract class ValueSetPanel extends JPanel implements ComponentListener, KeyListener, FocusListener {
 	private static final long serialVersionUID = -4980380877478474178L;
 
@@ -20,12 +18,31 @@ public abstract class ValueSetPanel extends JPanel implements ComponentListener,
 	ChangeListener target;
 	int cate;
 	
+	DataBase Data;
+	EnumDataList Type;
+	
+	public ValueSetPanel() {
+		this(true);
+	}
+	
 	public ValueSetPanel(boolean canedit) {
 		this.canEdit = canedit;
 		this.addKeyListener(this);
 		this.addFocusListener(this);
 		this.addComponentListener(this);
 		repaint();
+	}
+	
+	public ValueSetPanel(DataBase data,EnumDataList type,boolean canedit){
+		this(canedit);
+		Data = data;
+		Type = type;
+	}
+	
+	public ValueSetPanel(DataBase data,EnumDataList type){
+		this();
+		Data = data;
+		Type = type;
 	}
 
 	/** 変更通知リスナーを設定 */
@@ -94,8 +111,9 @@ public abstract class ValueSetPanel extends JPanel implements ComponentListener,
 		if(target!=null){
 			target.ValueChange(cate, value);
 		}
-		//セーブの確認をフラグ
-		PackIO.isChanged = true;
+		if(Data!=null){
+			Data.setData(Type, value);
+		}
 	}
 
 	@Override

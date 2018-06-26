@@ -26,13 +26,9 @@ public class BooleanSetPanel  extends ValueSetPanel implements ActionListener{
 		init(lore, defauletValue);
 	}
 
-	DataBase Data;
-	EnumDataList Type;
 	/** DataBaseからの利用 */
 	public BooleanSetPanel(DataBase data,EnumDataList type, boolean canedit) {
-		super(canedit);
-		Data = data;
-		Type = type;
+		super(data,type,canedit);
 		init(type.getName(), data.getDataBoolean(type));
 	}
 
@@ -60,15 +56,6 @@ public class BooleanSetPanel  extends ValueSetPanel implements ActionListener{
 	public void setEnable(boolean canedit) {
 		if(checkBox!=null){
 			checkBox.setEnabled(canedit);
-		}
-	}
-
-	/**DataBaseを使用するなら通知を行わない*/
-	@Override
-	public void save(Object value) {
-		super.save(value);
-		if(Data!=null){
-			Data.setData(Type, value);
 		}
 	}
 

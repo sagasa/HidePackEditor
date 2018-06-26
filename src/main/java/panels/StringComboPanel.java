@@ -22,14 +22,10 @@ public class StringComboPanel extends ValueSetPanel implements ActionListener {
 		super(canedit);
 		init(lore, defauletValue);
 	}
-	DataBase Data;
-	EnumDataList Type;
 
 	/** DataBaseからの利用 */
 	public StringComboPanel(DataBase data, EnumDataList type, String[] defauletValue, boolean canedit) {
-		super(canedit);
-		Data = data;
-		Type = type;
+		super(data,type,canedit);
 		String selected = data.getDataString(SoundDataList.NAME);
 		//もしコンボ一覧に含まれていない値が初期値なら
 		if(!Arrays.asList(defauletValue).contains(selected)){
@@ -89,15 +85,6 @@ public class StringComboPanel extends ValueSetPanel implements ActionListener {
 		if (txtCombo != null) {
 			txtCombo.setEnabled(canedit);
 		}
-	}
-
-	/** DataBaseを使用するなら通知を行わない */
-	@Override
-	public void save(Object value) {
-		if (Data != null) {
-			Data.setData(Type, value);
-		}
-		super.save(value);
 	}
 
 	@Override

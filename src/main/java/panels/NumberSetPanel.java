@@ -25,13 +25,9 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 		init(lore, defauletValue);
 	}
 
-	DataBase Data;
-	EnumDataList Type;
 	/** DataBaseからの利用 */
 	public NumberSetPanel(DataBase data,EnumDataList type,boolean canedit){
-		super(canedit);
-		Data = data;
-		Type = type;
+		super(data,type,canedit);
 		Max = type.getMax();
 		Min = type.getMin();
 		this.isFloat = type.getType().equals(DataType.Float);
@@ -75,15 +71,6 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 		Max = max;
 		Min = min;
 		return this;
-	}
-
-	/**DataBaseを使用しているなら書き換え*/
-	@Override
-	public void save(Object value) {
-		if(Data!=null){
-			Data.setData(Type, value);
-		}
-		super.save(value);
 	}
 
 	/** テキストボックスの幅を設定 */
