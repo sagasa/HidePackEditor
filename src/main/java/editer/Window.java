@@ -183,13 +183,19 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 
 	class WindowClosing extends WindowAdapter {
 		public void windowClosing(WindowEvent e) {
-			int ans = JOptionPane.showConfirmDialog(INSTANCE, "save before closing?");
-			if (ans == JOptionPane.YES_OPTION) {
-				PackIO.save();
-				System.exit(0);
-			}else if (ans == JOptionPane.NO_OPTION){
+			// 変更があったなら
+			if (PackIO.isChanged) {
+				int ans = JOptionPane.showConfirmDialog(INSTANCE, "save before closing?");
+				if (ans == JOptionPane.YES_OPTION) {
+					PackIO.save();
+					System.exit(0);
+				} else if (ans == JOptionPane.NO_OPTION) {
+					System.exit(0);
+				}
+			}else{
 				System.exit(0);
 			}
+
 		}
 	}
 }

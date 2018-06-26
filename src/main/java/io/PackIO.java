@@ -29,6 +29,8 @@ import types.ItemInfo.ItemDataList;
 import types.guns.GunData;
 
 public class PackIO {
+	public static boolean isChanged = false;
+	
 	/** 新しいパックを作る */
 	public static void makePack() {
 		Window.INSTANCE.clear();
