@@ -3,6 +3,7 @@ package panels;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import editer.ItemEditer;
 import types.BulletData;
 import types.BulletData.BulletDataList;
 import types.Explosion;
@@ -64,6 +65,7 @@ public class ExplosionEditPanel extends JTabbedPane{
 		yOffset += 22;
 		infoPanel.add(makeNumPanel(yOffset, exp, ExplosionDataList.KNOCKBACK_COE_AIR));
 		yOffset += 22;
+		ItemEditer.writeSoundEditer(0, yOffset, ExplosionDataList.SOUND,exp,infoPanel);
 		return infoPanel;
 	}
 
@@ -71,7 +73,7 @@ public class ExplosionEditPanel extends JTabbedPane{
 	private NumberSetPanel makeNumPanel(int yOffset, DataBase data, EnumDataList type) {
 		NumberSetPanel panel = new NumberSetPanel(data, type, true);
 		panel.setTextBoxWidth(30);
-		panel.setBounds(0, yOffset, 200, 20);
+		panel.setBounds(0, yOffset, 210, 20);
 		return panel;
 	}
 }

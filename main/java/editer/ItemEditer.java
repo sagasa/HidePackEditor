@@ -79,8 +79,8 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		writeGunNumberValue(damageChange, 2);
 		this.add(damageChange);
 		// サウンドエディタ
-		writeSoundEditer(690, 240, GunDataList.SOUND_SHOOT);
-		writeSoundEditer(690, 360, GunDataList.SOUND_RELOAD);
+		writeSoundEditer(690, 240, GunDataList.SOUND_SHOOT,Data,this);
+		writeSoundEditer(690, 360, GunDataList.SOUND_RELOAD,Data,this);
 		// 量が多すぎたので別クラス
 		// グラフだけパネル外に配置
 		RecoilEditPanel.Graph.setBounds(255, 5, 240, 240);
@@ -153,19 +153,19 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
-		infoPanel.setBounds(255, 235, 225, 0);
+		infoPanel.setBounds(255, 235, 215, 0);
 		writeBulletNumberValue(infoPanel, 1);
 		this.add(infoPanel);
 		// 直撃間連
 		JPanel hit = new JPanel();
 		hit.setLayout(null);
 		hit.setBorder(blackBorder);
-		hit.setBounds(255, 5, 225, 0);
+		hit.setBounds(255, 5, 215, 0);
 		writeBulletNumberValue(hit, 2);
 		this.add(hit);
 		// 爆発関連
 		ExplosionEditPanel expentity = new ExplosionEditPanel(data);
-		expentity.setBounds(485, 5, 205, 500);
+		expentity.setBounds(475, 5, 215, 600);
 		this.add(expentity);
 		// 減衰関連
 		JPanel decay = new JPanel();
@@ -175,9 +175,9 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		writeBulletNumberValue(decay, 10);
 		this.add(decay);
 		// サウンド関連
-		writeSoundEditer(690, 0, BulletDataList.SOUND_HIT_ENTITY);
-		writeSoundEditer(690, 250, BulletDataList.SOUND_HIT_GROUND);
-		writeSoundEditer(690, 500, BulletDataList.SOUND_PASSING_USE);
+		writeSoundEditer(690, 0, BulletDataList.SOUND_HIT_ENTITY,Data,this);
+		writeSoundEditer(690, 120, BulletDataList.SOUND_HIT_GROUND,Data,this);
+		writeSoundEditer(690, 240, BulletDataList.SOUND_PASSING_USE,Data,this);
 	}
 
 	private void writeBulletNumberValue(JPanel root, int cate) {
@@ -204,7 +204,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 	JComboBox<String> SoundList;
 
 	/** Soundをと通知用カテゴリを渡す */
-	private void writeSoundEditer(int x, int y, EnumDataList type) {
+	public static void writeSoundEditer(int x, int y, EnumDataList type,DataBase data,JPanel root) {
 		// 枠
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
@@ -216,13 +216,13 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		label.setFont(new Font("BOLD", Font.BOLD, 13));
 		infoPanel.add(label);
 
-		Sound sound = (Sound) Data.getDataObject(type);
+		Sound sound = (Sound) data.getDataObject(type);
 
 		String[] keySet = Window.SoundMap.keySet().toArray(new String[Window.SoundMap.keySet().size()]);
 		Arrays.sort(keySet);
 		StringComboPanel combo = new StringComboPanel(sound, SoundDataList.NAME, keySet, true);
 		combo.setBounds(0, 26, 200, 18);
-		combo.setTextBoxWidth(120);
+		combo.setTextBoxWidth(150);
 		infoPanel.add(combo);
 
 		int yOffset = 48;
@@ -243,9 +243,8 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		BooleanSetPanel decay = new BooleanSetPanel(sound, SoundDataList.USE_DECAY, true);
 		decay.setBounds(100, yOffset, 100, 20);
 		infoPanel.add(decay);
-		this.add(infoPanel);
-
-		this.repaint();
+		root.add(infoPanel);
+		root.repaint();
 	}
 
 	/** アイテムアイコン */

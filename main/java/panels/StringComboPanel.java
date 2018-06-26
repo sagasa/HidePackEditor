@@ -4,11 +4,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
+import helper.ArrayEditer;
 import types.Sound.SoundDataList;
 import types.base.DataBase;
 import types.base.EnumDataList;
@@ -20,7 +22,6 @@ public class StringComboPanel extends ValueSetPanel implements ActionListener {
 		super(canedit);
 		init(lore, defauletValue);
 	}
-
 	DataBase Data;
 	EnumDataList Type;
 
@@ -29,8 +30,13 @@ public class StringComboPanel extends ValueSetPanel implements ActionListener {
 		super(canedit);
 		Data = data;
 		Type = type;
+		String selected = data.getDataString(SoundDataList.NAME);
+		//もしコンボ一覧に含まれていない値が初期値なら
+		if(!Arrays.asList(defauletValue).contains(selected)){
+			defauletValue = ArrayEditer.AddToArray(defauletValue, selected);
+		}
 		init(type.getName(), defauletValue);
-		setItem(data.getDataString(SoundDataList.NAME));
+		setItem(selected);
 	}
 
 	private void init(String lore, String[] defauletValue) {
