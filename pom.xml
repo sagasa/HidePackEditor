@@ -2,6 +2,62 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>HideMod</groupId>
   <artifactId>PackEditer</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>HidePackEditer</name>
+  <version>0.0.1</version>
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>1.8</java.version>
+</properties>
+
+<!-- E½vE½E½E½OE½CE½E½E½ÌÝ’ï¿½ -->
+<build>
+    <plugins>
+       <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <version>3.0.0</version>
+    <configuration>
+        <finalName>test</finalName>
+        <descriptorRefs>
+            <!-- 依存するリソースをすべてjarに同梱する -->
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+        <archive>
+            <manifest>
+                <mainClass>editer.Window</mainClass>
+            </manifest>
+        </archive>
+    </configuration>
+    <executions>
+        <execution>
+            <!-- idタグは任意の文字列であれば何でもよい -->
+            <id>HideEditer</id>
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+    </plugins>
+</build>
+<!-- E½E½E½E½E½E½E½Ü‚ï¿½ -->
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl.lwjgl</groupId>
+			<artifactId>lwjgl</artifactId>
+			<version>2.9.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl.lwjgl</groupId>
+			<artifactId>lwjgl-platform</artifactId>
+			<version>2.9.1</version>
+			<classifier>natives-linux</classifier>
+		</dependency>
+	</dependencies>
 </project>
