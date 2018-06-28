@@ -40,10 +40,10 @@ public class GunRecoil extends DataBase{
 		MIN_YAW_SPREAD(null, null, 0f, DataType.Float),
 		MIN_YAW_RETURN(1f, 0f, 0f, DataType.Float),
 
-		YAW_RECOIL_TICK(null, 0f, 0f, DataType.Int),
-		YAW_RETURN_TICK(null, 0f, 0f, DataType.Int),
+		YAW_RECOIL_TICK(null, 0f, 0, DataType.Int),
+		YAW_RETURN_TICK(null, 0f, 0, DataType.Int),
 
-		
+
 		MAX_PITCH_BASE(null, null, 0f, DataType.Float),
 		MAX_PITCH_SPREAD(null, null, 0f, DataType.Float),
 		MAX_PITCH_RETURN(1f, 0f, 0f, DataType.Float),
@@ -51,16 +51,16 @@ public class GunRecoil extends DataBase{
 		MIN_PITCH_SPREAD(null, null, 0f, DataType.Float),
 		MIN_PITCH_RETURN(1f, 0f, 0f, DataType.Float),
 
-		PITCH_RECOIL_TICK(null, 0f, 0f, DataType.Int),
-		PITCH_RETURN_TICK(null, 0f, 0f, DataType.Int),
-		
-		POWER_TICK(null, 0f, 0f, DataType.Int),
-		POWER_SHOOT(null, 0f, 0f, DataType.Int),
-		
+		PITCH_RECOIL_TICK(null, 0f, 0, DataType.Int),
+		PITCH_RETURN_TICK(null, 0f, 0, DataType.Int),
+
+		POWER_TICK(null, 0f, 0, DataType.Int),
+		POWER_SHOOT(null, 0f, 0, DataType.Int),
+
 		USE(null, null, true, DataType.Boolean),
 		;
 
-		private RecoilDataList(Float min, Float max, Object defaultValue, DataType type) {
+		private RecoilDataList(Float max, Float min, Object defaultValue, DataType type) {
 			Max = max;
 			Min = min;
 			Default = defaultValue;

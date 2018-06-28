@@ -27,7 +27,7 @@ public class Explosion extends DataBase{
 
 	public enum ExplosionDataList implements EnumDataList {
 		/**爆風範囲 :int型**/
-		RANGE(0f,null,0,DataType.Int),
+		RANGE(0f,null,0,DataType.Float),
 
 		/**爆風の対人ダメージ底値 : 爆風ダメージ=底値-距離(m)*係数 : float型**/
 		DAMAGE_BASE_PLAYER(null,null,0F,DataType.Float),

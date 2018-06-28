@@ -107,9 +107,11 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 			float value = new BigDecimal(nowValue).add(new BigDecimal("0.1").multiply(new BigDecimal(i))).floatValue();
 			//最小 最大の判定
 			if(Max!=null&&Max<value){
+				txtField.setText(Max.toString());
 				return;
 			}
 			if(Min!=null&&value<Min){
+				txtField.setText(Min.toString());
 				return;
 			}
 			save(value);
@@ -119,9 +121,11 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 			int num = Integer.valueOf(nowValue)+i;
 			//最小 最大の判定
 			if(Max!=null&&Max<num){
+				txtField.setText(Math.round(Max)+"");
 				return;
 			}
 			if(Min!=null&&num<Min){
+				txtField.setText(Math.round(Min)+"");
 				return;
 			}
 			save(num);
