@@ -106,7 +106,7 @@ public class ItemList extends JTabbedPane
 					gunNum++;
 				}
 				String displayName = "New Gun No." + gunNum;
-				newGun.setData(GunDataList.ITEM_INFO, new ItemInfo("gun_" + gunNum, displayName, "sample"));
+				newGun. = new ItemInfo("gun_" + gunNum, displayName, "sample");
 				Window.GunList.put(displayName, newGun);
 				write();
 				break;

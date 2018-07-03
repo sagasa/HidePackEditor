@@ -1,128 +1,131 @@
 package types.base;
 
-import java.util.Map;
-
+import java.lang.reflect.Field;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import helper.JsonWrapper;
-import io.PackIO;
-
+/**
+ * EnumDataInfoを利用してデータを取得できるクラス クローン可能 publicフィールドはすべてクローン可能なクラスにしてください
+ */
 public abstract class DataBase implements Cloneable {
 
-	/** MAP初期化 */
-	abstract protected void newMap();
-
-	/** MAP取得 */
-	abstract protected Map<String, Object> getMap();
-
-	/** DataList取得 */
-	abstract protected EnumDataList[] getDataList();
-
-	/** データ取得 */
-	public int getDataInt(EnumDataList type) {
-		if (type.getType() == DataType.Int) {
-			return new Integer(getMap().get(type.toString()).toString()).intValue();
-		}
-		return 0;
+	/**
+	 * Field取得
+	 * 
+	 * @throws SecurityException
+	 * @throws NoSuchFieldException
+	 */
+	public Field getField(EnumDataInfo type) throws NoSuchFieldException, SecurityException {
+		// ベースクラスじゃないほうからリフレクション
+		return super.getClass().getField(type.toString());
 	}
 
-	/** データ取得 */
-	public float getDataFloat(EnumDataList type) {
-		if (type.getType() == DataType.Float) {
-			return new Float(getMap().get(type.toString()).toString()).floatValue();
+	/** 型確認 */
+	public boolean isType(EnumDataInfo type, Class<?> clazz) {
+		try {
+			return getField(type).getType().isAssignableFrom(clazz);
+		} catch (NoSuchFieldException | SecurityException e) {
+			return false;
 		}
-		return 0;
-	}
-
-	/** データ取得 */
-	public String getDataString(EnumDataList type) {
-		if (type.getType() == DataType.String || type.getType() == DataType.Int || type.getType() == DataType.Float) {
-			return getMap().get(type.toString()).toString();
-		}
-		return "";
-	}
-
-	/** データ取得 */
-	public boolean getDataBoolean(EnumDataList type) {
-		if (type.getType() == DataType.Boolean) {
-			return new Boolean(getMap().get(type.toString()).toString()).booleanValue();
-		}
-		return false;
-	}
-
-	/** データ取得 */
-	public Object getDataObject(EnumDataList type) {
-		return getMap().get(type.toString());
-	}
-
-	/** データ上書き */
-	public void setData(EnumDataList type, Object data) {
-		// intへのキャスト
-		if (type.getType() == DataType.Int && data instanceof Float) {
-			data = Math.round((Float) data);
-		}
-		getMap().replace(type.toString(), data);
-		// セーブの確認をフラグ
-		PackIO.isChanged = true;
 	}
 
 	/** デフォルト値代入 */
 	public DataBase() {
-		newMap();
-		fillDefault();
-	}
 
-	public DataBase fillDefault() {
-		for (EnumDataList data : getDataList()) {
-			// 値がなければ
-			if (!getMap().containsKey(data.getName())) {
-				// オブジェクトなら別インスタンスを
-				if (data.getType().isObject() && data.getDefaultValue() instanceof DataBase) {
-					try {
-						getMap().put(data.getName(), ((DataBase) data.getDefaultValue()).clone());
-					} catch (CloneNotSupportedException e) {
-					}
-				} else {
-					getMap().put(data.getName(), data.getDefaultValue());
-				}
-			}
-		}
-		return this;
 	}
 
 	/** JsonStringからデータを読み込む */
 	public DataBase(String json) {
-		this();
-		JsonWrapper wrapper = new JsonWrapper(json);
-		for (EnumDataList data : getDataList()) {
-			getMap().put(data.getName(), wrapper.getObject(data));
-		}
+		Gson gson = new Gson();
+		System.out.println(gson.fromJson(json, this.getClass()));
 	}
 
 	/** JsonObjectを作成 */
 	public String MakeJsonData() {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		return gson.toJson(getMap());
+		return gson.toJson(this);
+	}
+
+	/**
+	 * 全てのパブリックフィールドを上書き 成功したらtrue クローンはされません！！
+	 */
+	public boolean overwrite(DataBase data) {
+		// 型を比較
+		if (!data.getClass().isAssignableFrom(this.getClass())) {
+			return false;
+		}
+		Class<? extends DataBase> clazz = data.getClass();
+		// 全てのパブリックフィールドを上書き
+		try {
+			for (Field f : clazz.getFields()) {
+				f.set(this, f.get(data));
+			}
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			return false;
+		}
+		return true;
+	}
+
+	/** 全てのパブリックフィールドに引数の各フィールドの値を加算 */
+	public boolean overadd(DataBase data) {
+		// 型を比較
+		if (!data.getClass().isAssignableFrom(this.getClass())) {
+			return false;
+		}
+		Class<? extends DataBase> clazz = data.getClass();
+		// フィールドが数値型なら加算 DataBaseならoveradd実行
+		try {
+			for (Field f : clazz.getFields()) {
+				if (f.getType().isAssignableFrom(float.class) || f.getType().isAssignableFrom(Float.class)) {
+					f.set(this, f.getFloat(data) + f.getFloat(this));
+				} else if (f.getType().isAssignableFrom(int.class) || f.getType().isAssignableFrom(Integer.class)) {
+					f.set(this, f.getInt(data) + f.getInt(this));
+				} else if (f.getType().isAssignableFrom(DataBase.class)) {
+					((DataBase) f.get(this)).overadd((DataBase) f.get(data));
+				}
+			}
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			return false;
+		}
+		return true;
+	}
+
+	/** 全てのパブリックフィールドに引数の各フィールドの値を加算 */
+	public boolean overcoe(DataBase data) {
+		// 型を比較
+		if (!data.getClass().isAssignableFrom(this.getClass())) {
+			return false;
+		}
+		Class<? extends DataBase> clazz = data.getClass();
+		// フィールドが数値型なら加算 DataBaseならoveradd実行
+		try {
+			for (Field f : clazz.getFields()) {
+				if (f.getType().isAssignableFrom(float.class) || f.getType().isAssignableFrom(Float.class)) {
+					f.set(this, f.getFloat(data) * f.getFloat(this));
+				} else if (f.getType().isAssignableFrom(int.class) || f.getType().isAssignableFrom(Integer.class)) {
+					f.set(this, f.getInt(data) + f.getInt(this));
+				} else if (f.getType().isAssignableFrom(DataBase.class)) {
+					((DataBase) f.get(this)).overcoe((DataBase) f.get(data));
+				}
+			}
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		DataBase clone = (DataBase) super.clone();
-		clone.newMap();
-		for (EnumDataList data : getDataList()) {
-			Object obj = this.getMap().get(data.toString());
-			// オブジェクトならクローン
-			if (data.getType().isObject() && data.getDefaultValue() instanceof DataBase) {
-				obj = ((DataBase) obj).clone();
+		for (Field f : super.getClass().getFields()) {
+			if (!f.getType().isPrimitive()) {
+				try {
+					f.set(clone, f.get(this));
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
 			}
-			clone.getMap().put(data.getName(), obj);
 		}
 		return clone;
-	}
-
-	@Override
-	public String toString() {
-		return super.toString() + getMap().toString();
 	}
 }
