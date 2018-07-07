@@ -23,18 +23,18 @@ import panels.RecoilEditPanel;
 import panels.StringComboPanel;
 import panels.StringSetPanel;
 import types.BulletData;
-import types.BulletData.BulletDataList;
-import types.Sound.SoundDataList;
+import editer.ValueInfo.BulletDataList;
+import editer.ValueInfo.SoundDataList;
 import types.ItemInfo;
-import types.ItemInfo.ItemDataList;
+import editer.ValueInfo.ItemDataList;
 import types.Sound;
 import types.base.ChangeListener;
 import types.base.DataBase;
 import types.base.DataType;
-import types.base.EnumDataList;
+import types.base.EnumDataInfo;
 import types.base.ValueSetPanel;
 import types.guns.GunData;
-import types.guns.GunData.GunDataList;
+import editer.ValueInfo.GunDataList;
 
 /** アイテムのデータ編集 */
 public class ItemEditer extends JPanel implements ActionListener, ChangeListener {
@@ -63,24 +63,24 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 	public void writeGunEditer(GunData data) {
 		this.removeAll();
 		Data = data;
-		writeItemInfo(0, 0,ChangeListener.DOMAIN_GUN);
+		writeItemInfo(0, 0, ChangeListener.DOMAIN_GUN);
 		// 細かいパラメータ描画
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
 		infoPanel.setBounds(5, 195, 245, 0);
-		writeGunNumberValue(infoPanel, 1);
+		writeNumberValue(infoPanel, GunDataList.values(), 1);
 		this.add(infoPanel);
 		// ダメージ倍率系
 		JPanel damageChange = new JPanel();
 		damageChange.setLayout(null);
 		damageChange.setBorder(blackBorder);
 		damageChange.setBounds(255, 255, 245, 0);
-		writeGunNumberValue(damageChange, 2);
+		writeNumberValue(damageChange, GunDataList.values(), 2);
 		this.add(damageChange);
 		// サウンドエディタ
-		writeSoundEditer(690, 240, GunDataList.SOUND_SHOOT,Data,this);
-		writeSoundEditer(690, 360, GunDataList.SOUND_RELOAD,Data,this);
+		writeSoundEditer(690, 240, GunDataList.SOUND_SHOOT, Data, this);
+		writeSoundEditer(690, 360, GunDataList.SOUND_RELOAD, Data, this);
 		// 量が多すぎたので別クラス
 		// グラフだけパネル外に配置
 		RecoilEditPanel.Graph.setBounds(255, 5, 240, 240);
@@ -123,16 +123,17 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		this.add(deletePanel);
 	}
 
-	private void writeGunNumberValue(JPanel root, int cate) {
+	private void writeNumberValue(JPanel root, EnumDataInfo[] infoes, int cate) {
 		int yOffset = 3;
-		for (GunDataList type : GunDataList.values()) {
-			if (type.getCate() == cate) {
+		for (EnumDataInfo info : infoes) {
+			if (info.getCate() == cate) {
 				ValueSetPanel panel = null;
-				if (type.getType() == DataType.Int || type.getType() == DataType.Float) {
-					panel = new NumberSetPanel(Data, type, true);
+				DataType type = DataType.getType(Data, info);
+				if (type == DataType.Int || type == DataType.Float) {
+					panel = new NumberSetPanel(Data, info, true);
 					panel.setBounds(0, 0 + yOffset, 245, 20);
-				} else if (type.getType() == DataType.Boolean) {
-					panel = new BooleanSetPanel(Data, type, true);
+				} else if (type == DataType.Boolean) {
+					panel = new BooleanSetPanel(Data, info, true);
 					panel.setBounds(60, 0 + yOffset, 180, 20);
 				}
 				root.add(panel);
@@ -148,20 +149,20 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 	public void writeMagazineEditer(BulletData data) {
 		this.removeAll();
 		Data = data;
-		writeItemInfo(0, 0,ChangeListener.DOMAIN_MAGAZINE);
+		writeItemInfo(0, 0, ChangeListener.DOMAIN_MAGAZINE);
 		// こまごまとした設定項目
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
 		infoPanel.setBounds(255, 235, 215, 0);
-		writeBulletNumberValue(infoPanel, 1);
+		writeNumberValue(infoPanel, BulletDataList.values(), 1);
 		this.add(infoPanel);
 		// 直撃間連
 		JPanel hit = new JPanel();
 		hit.setLayout(null);
 		hit.setBorder(blackBorder);
 		hit.setBounds(255, 5, 215, 0);
-		writeBulletNumberValue(hit, 2);
+		writeNumberValue(hit, BulletDataList.values(), 2);
 		this.add(hit);
 		// 爆発関連
 		ExplosionEditPanel expentity = new ExplosionEditPanel(data);
@@ -172,51 +173,30 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		decay.setLayout(null);
 		decay.setBorder(blackBorder);
 		decay.setBounds(5, 195, 245, 0);
-		writeBulletNumberValue(decay, 10);
+		writeNumberValue(decay, BulletDataList.values(), 10);
 		this.add(decay);
 		// サウンド関連
-		writeSoundEditer(690, 0, BulletDataList.SOUND_HIT_ENTITY,Data,this);
-		writeSoundEditer(690, 120, BulletDataList.SOUND_HIT_GROUND,Data,this);
-		writeSoundEditer(690, 240, BulletDataList.SOUND_PASSING_USE,Data,this);
-	}
-
-	private void writeBulletNumberValue(JPanel root, int cate) {
-		int yOffset = 3;
-		for (BulletDataList type : BulletDataList.values()) {
-			if (type.getCate() == cate) {
-				ValueSetPanel panel = null;
-				if (type.getType() == DataType.Int || type.getType() == DataType.Float) {
-					panel = new NumberSetPanel(Data, type, true);
-					panel.setBounds(0, 0 + yOffset, root.getWidth(), 20);
-				} else if (type.getType() == DataType.Boolean) {
-					panel = new BooleanSetPanel(Data, type, true);
-					panel.setBounds(20, 0 + yOffset, root.getWidth()-20, 20);
-				}
-				root.add(panel);
-				yOffset += 22;
-			}
-		}
-		Rectangle bounds = root.getBounds();
-		bounds.height = yOffset + 2;
-		root.setBounds(bounds);
+		writeSoundEditer(690, 0, BulletDataList.SOUND_HIT_ENTITY, Data, this);
+		writeSoundEditer(690, 120, BulletDataList.SOUND_HIT_GROUND, Data, this);
+		writeSoundEditer(690, 240, BulletDataList.SOUND_PASSING_USE, Data, this);
 	}
 
 	JComboBox<String> SoundList;
 
 	/** Soundをと通知用カテゴリを渡す */
-	public static void writeSoundEditer(int x, int y, EnumDataList type,DataBase data,JPanel root) {
+	public static void writeSoundEditer(int x, int y, EnumDataInfo type, DataBase data, JPanel root) {
 		// 枠
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
 		infoPanel.setBounds(x + 5, y + 5, 200, 114);
 
-		JLabel label = new JLabel(type.getName(), JLabel.CENTER);
+		JLabel label = new JLabel(type.getUnlocalizedName(), JLabel.CENTER);
 		label.setBounds(15, 3, 170, 20);
 		label.setFont(new Font("BOLD", Font.BOLD, 13));
 		infoPanel.add(label);
 
-		Sound sound = (Sound) data.getDataObject(type);
+		Sound sound = (Sound) ValueInfo.getData(data, type);
 
 		String[] keySet = Window.SoundMap.keySet().toArray(new String[Window.SoundMap.keySet().size()]);
 		Arrays.sort(keySet);
@@ -251,7 +231,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 	IconPrint icon1;
 
 	/** ItemInfo用 */
-	private void writeItemInfo(int x, int y,int domain) {
+	private void writeItemInfo(int x, int y, int domain) {
 		// 枠
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
@@ -260,8 +240,8 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		ItemInfo info = getItemInfo();
 
 		int yOffset = 3;
-		StringSetPanel display = new StringSetPanel(ItemDataList.NAME_DISPLAY.getName(),info.getDataString(ItemDataList.NAME_DISPLAY) , true);
-		display.addChangeListener(this, ChangeListener.ITEMINFO_DISPLAY|domain);
+		StringSetPanel display = new StringSetPanel(ValueInfo.getLocalizedName(ItemDataList.NAME_DISPLAY),info.NAME_DISPLAY, true);
+		display.addChangeListener(this, ChangeListener.ITEMINFO_DISPLAY | domain);
 		display.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(display);
 		yOffset += 22;
@@ -296,8 +276,8 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		BufferedImage image;
 
 		// 見つかれば設定された画像見つからなければnullImage
-		if (Window.IconMap.containsKey(info.getDataString(ItemDataList.NAME_ICON))) {
-			image = Window.IconMap.get(info.getDataString(ItemDataList.NAME_ICON));
+		if (Window.IconMap.containsKey(info.NAME_ICON)) {
+			image = Window.IconMap.get(info.NAME_ICON);
 		} else {
 			image = ResourceList.nullImage;
 		}
@@ -325,7 +305,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 			IconList.addItem(data);
 		}
 		IconList.setBounds(150, yOffset + 28, 90, 18);
-		IconList.setSelectedItem(info.getDataString(ItemDataList.NAME_ICON));
+		IconList.setSelectedItem(info.NAME_ICON);
 		IconList.setActionCommand("iconSet");
 		infoPanel.add(IconList);
 
@@ -335,17 +315,17 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 
 	@Override
 	public void ValueChange(int cate, Object value) {
-		//表示名が変わっていたなら
-		if ((cate&ChangeListener.DATA_MASK) == ChangeListener.ITEMINFO_DISPLAY) {
+		// 表示名が変わっていたなら
+		if ((cate & ChangeListener.DATA_MASK) == ChangeListener.ITEMINFO_DISPLAY) {
 			ItemInfo info = getItemInfo();
-			if((cate&ChangeListener.DOMAIN_MASK)==ChangeListener.DOMAIN_GUN){
-				Window.GunList.remove(info.getDataString(ItemDataList.NAME_DISPLAY));
+			if ((cate & ChangeListener.DOMAIN_MASK) == ChangeListener.DOMAIN_GUN) {
+				Window.GunList.remove(info.NAME_DISPLAY);
 				Window.GunList.put((String) value, (GunData) Data);
-			}else if((cate&ChangeListener.DOMAIN_MASK)==ChangeListener.DOMAIN_MAGAZINE){
-				Window.BulletList.remove(info.getDataString(ItemDataList.NAME_DISPLAY));
+			} else if ((cate & ChangeListener.DOMAIN_MASK) == ChangeListener.DOMAIN_MAGAZINE) {
+				Window.BulletList.remove(info.NAME_DISPLAY);
 				Window.BulletList.put((String) value, (BulletData) Data);
 			}
-			info.setData(ItemDataList.NAME_DISPLAY, value);
+			info.NAME_DISPLAY = (String) value;
 			Window.ItemList.write();
 		}
 	}
@@ -357,11 +337,11 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		if (e.getActionCommand().equals("iconSet")) {
 			ItemInfo info = getItemInfo();
 			String value = (String) ((JComboBox<String>) e.getSource()).getSelectedItem();
-			info.setData(ItemDataList.NAME_ICON, value);
+			info.NAME_ICON=value;
 			setItemInfo(info);
 			icon1.setImage(Window.IconMap.get(value));
 		} else if (e.getActionCommand().equals("gunDelete")) {
-			Window.GunList.remove(((GunData) Data).getItemInfo().getDataString(ItemDataList.NAME_DISPLAY));
+			Window.GunList.remove(getItemInfo().NAME_DISPLAY);
 			clearEditer();
 			Window.ItemList.write();
 		}
@@ -369,16 +349,18 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 
 	private ItemInfo getItemInfo() {
 		if (Data instanceof GunData) {
-			return (ItemInfo) Data.getDataObject(GunDataList.ITEM_INFO);
+			return (ItemInfo) ValueInfo.getData(Data, GunDataList.ITEM_INFO);
 		} else if (Data instanceof BulletData) {
-			return (ItemInfo) Data.getDataObject(BulletDataList.ITEM_INFO);
+			return (ItemInfo) ValueInfo.getData(Data, BulletDataList.ITEM_INFO);
 		}
 		return null;
 	}
 
 	private void setItemInfo(ItemInfo info) {
 		if (Data instanceof GunData) {
-			Data.setData(GunDataList.ITEM_INFO, info);
+			ValueInfo.setData(Data, GunDataList.ITEM_INFO,info);
+		} else if (Data instanceof BulletData) {
+			ValueInfo.setData(Data, BulletDataList.ITEM_INFO,info);
 		}
 	}
 }

@@ -8,8 +8,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import editer.ValueInfo;
 import types.base.DataBase;
-import types.base.EnumDataList;
+import types.base.EnumDataInfo;
 import types.base.ValueSetPanel;
 
 public class StringSetPanel extends ValueSetPanel{
@@ -19,9 +20,9 @@ public class StringSetPanel extends ValueSetPanel{
 	}
 
 	/** DataBaseからの利用 */
-	public StringSetPanel(DataBase data,EnumDataList type,boolean canedit){
+	public StringSetPanel(DataBase data,EnumDataInfo type,boolean canedit){
 		super(data,type,canedit);
-		init(type.getName(), data.getDataString(type));
+		init(ValueInfo.getLocalizedName(type),(String) ValueInfo.getData(data, type));
 	}
 
 	private void init(String lore, String defauletValue) {
@@ -66,7 +67,7 @@ public class StringSetPanel extends ValueSetPanel{
 
 	@Override
 	public void rePaint() {
-
+		txtField.setText((String) ValueInfo.getData(Data, Type));
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public class StringSetPanel extends ValueSetPanel{
 
 	@Override
 	public void saveValue() {
-		super.save(txtField.getText());
+		save(txtField.getText());
 	}
 
 	@Override
@@ -86,4 +87,5 @@ public class StringSetPanel extends ValueSetPanel{
 		txtField.setBounds(this.getWidth() - textFieldWidth - 3, 0, textFieldWidth, this.getHeight());
 		setting.setBounds(0, 0, this.getWidth() - textFieldWidth-8, this.getHeight());
 	}
+
 }

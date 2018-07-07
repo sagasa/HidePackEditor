@@ -8,8 +8,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import javax.swing.border.LineBorder;
 
+import editer.ValueInfo;
 import types.base.DataBase;
-import types.base.EnumDataList;
+import types.base.EnumDataInfo;
 import types.base.ValueSetPanel;
 
 public class BooleanSetPanel  extends ValueSetPanel implements ActionListener{
@@ -27,9 +28,9 @@ public class BooleanSetPanel  extends ValueSetPanel implements ActionListener{
 	}
 
 	/** DataBaseからの利用 */
-	public BooleanSetPanel(DataBase data,EnumDataList type, boolean canedit) {
+	public BooleanSetPanel(DataBase data,EnumDataInfo type, boolean canedit) {
 		super(data,type,canedit);
-		init(type.getName(), data.getDataBoolean(type));
+		init(type.getUnlocalizedName(), (boolean) ValueInfo.getData(data, type));
 	}
 
 	private void init(String lore,boolean defaultValue){

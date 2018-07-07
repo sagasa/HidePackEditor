@@ -4,13 +4,14 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 
+import editer.ValueInfo;
+import editer.ValueInfo.GunDataList;
+import editer.ValueInfo.RecoilDataList;
 import types.base.ChangeListener;
 import types.base.DataBase;
-import types.base.EnumDataList;
+import types.base.EnumDataInfo;
 import types.guns.GunData;
-import types.guns.GunRecoil;
-import types.guns.GunRecoil.RecoilDataList;
-import types.guns.GunData.GunDataList;
+import types.guns.Recoil;
 
 public class RecoilEditPanel extends JTabbedPane implements ChangeListener, javax.swing.event.ChangeListener{
 
@@ -25,14 +26,14 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 	public RecoilEditPanel(GunData data) {
 		Data = data;
 		this.addChangeListener(this);
-		this.addTab("DEFAULT", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_DEFAULT)));
-		this.addTab("SNEAK", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_SNEAK)));
-		this.addTab("ADS", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_ADS)));
-		this.addTab("SBEAK+ADS", makePanel((GunRecoil) Data.getDataObject(GunDataList.RECOIL_SNEAK_ADS)));
+		this.addTab("DEFAULT", makePanel((Recoil) ValueInfo.getData(Data, GunDataList.RECOIL_DEFAULT)));
+		this.addTab("SNEAK", makePanel((Recoil) ValueInfo.getData(Data, GunDataList.RECOIL_SNEAK)));
+		this.addTab("ADS", makePanel((Recoil) ValueInfo.getData(Data, GunDataList.RECOIL_ADS)));
+		this.addTab("SBEAK+ADS", makePanel((Recoil) ValueInfo.getData(Data, GunDataList.RECOIL_SNEAK_ADS)));
 		updateGraph();
 	}
 
-	private JPanel makePanel(GunRecoil recoil){
+	private JPanel makePanel(Recoil recoil){
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(null);
 
@@ -89,21 +90,21 @@ public class RecoilEditPanel extends JTabbedPane implements ChangeListener, java
 	private void updateGraph(){
 		switch (this.getSelectedIndex()) {
 		case 0:
-			Graph.setRecoilData((GunRecoil) Data.getDataObject(GunDataList.RECOIL_DEFAULT));
+			Graph.setRecoilData((Recoil) ValueInfo.getData(Data, GunDataList.RECOIL_DEFAULT));
 			break;
 		case 1:
-			Graph.setRecoilData((GunRecoil) Data.getDataObject(GunDataList.RECOIL_SNEAK));
+			Graph.setRecoilData((Recoil) ValueInfo.getData(Data, GunDataList.RECOIL_SNEAK));
 			break;
 		case 2:
-			Graph.setRecoilData((GunRecoil) Data.getDataObject(GunDataList.RECOIL_ADS));
+			Graph.setRecoilData((Recoil) ValueInfo.getData(Data, GunDataList.RECOIL_ADS));
 			break;
 		case 3:
-			Graph.setRecoilData((GunRecoil) Data.getDataObject(GunDataList.RECOIL_SNEAK_ADS));
+			Graph.setRecoilData((Recoil) ValueInfo.getData(Data, GunDataList.RECOIL_SNEAK_ADS));
 			break;
 		}
 	}
 
-	private NumberSetPanel makeNumPanel(int yOffset,DataBase data,EnumDataList type){
+	private NumberSetPanel makeNumPanel(int yOffset,DataBase data,EnumDataInfo type){
 		NumberSetPanel panel = new NumberSetPanel(data, type , true);
 		panel.addChangeListener(this, ChangeListener.GRAPH_UPDATE);
 		panel.setTextBoxWidth(40);

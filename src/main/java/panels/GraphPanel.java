@@ -10,8 +10,8 @@ import java.awt.geom.Line2D;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import types.guns.GunRecoil;
-import types.guns.GunRecoil.RecoilDataList;
+import types.guns.Recoil;
+
 
 /** GUIのグラフ描画用 */
 public class GraphPanel extends JPanel {
@@ -21,7 +21,7 @@ public class GraphPanel extends JPanel {
 	private int d = 15;
 
 	private int radius = 150;
-	private GunRecoil RecoilData;
+	private Recoil RecoilData;
 
 	/** リコイルエディタ */
 	public GraphPanel(int radius) {
@@ -29,7 +29,7 @@ public class GraphPanel extends JPanel {
 		this.setBorder(new LineBorder(Color.black, 1, false));
 	}
 
-	public void setRecoilData(GunRecoil data) {
+	public void setRecoilData(Recoil data) {
 		RecoilData = data;
 		this.repaint();
 	}
@@ -44,27 +44,27 @@ public class GraphPanel extends JPanel {
 		// 罫線描画
 		writeRuledLine(g2);
 		// データが入っていないなら
-		if (RecoilData == null || !RecoilData.getDataBoolean(RecoilDataList.USE)) {
+		if (RecoilData == null || !RecoilData.USE) {
 			return;
 		}
 		// グラフ描画 MIN
 		g2.setPaint(Color.BLUE);
 		float[] data = new float[6];
-		data[0] = RecoilData.getDataFloat(RecoilDataList.MIN_YAW_BASE);
-		data[1] = RecoilData.getDataFloat(RecoilDataList.MIN_YAW_SPREAD);
-		data[2] = RecoilData.getDataFloat(RecoilDataList.MIN_PITCH_BASE);
-		data[3] = RecoilData.getDataFloat(RecoilDataList.MIN_PITCH_SPREAD);
-		data[4] = RecoilData.getDataFloat(RecoilDataList.MIN_YAW_RETURN);
-		data[5] = RecoilData.getDataFloat(RecoilDataList.MIN_PITCH_RETURN);
+		data[0] = RecoilData.MIN_YAW_BASE;
+		data[1] = RecoilData.MIN_YAW_SPREAD;
+		data[2] = RecoilData.MIN_PITCH_BASE;
+		data[3] = RecoilData.MIN_PITCH_SPREAD;
+		data[4] = RecoilData.MIN_YAW_RETURN;
+		data[5] = RecoilData.MIN_PITCH_RETURN;
 		writeRecoilGraph(g2, data);
 
 		g2.setPaint(Color.ORANGE);
-		data[0] = RecoilData.getDataFloat(RecoilDataList.MAX_YAW_BASE);
-		data[1] = RecoilData.getDataFloat(RecoilDataList.MAX_YAW_SPREAD);
-		data[2] = RecoilData.getDataFloat(RecoilDataList.MAX_PITCH_BASE);
-		data[3] = RecoilData.getDataFloat(RecoilDataList.MAX_PITCH_SPREAD);
-		data[4] = RecoilData.getDataFloat(RecoilDataList.MAX_YAW_RETURN);
-		data[5] = RecoilData.getDataFloat(RecoilDataList.MAX_PITCH_RETURN);
+		data[0] = RecoilData.MAX_YAW_BASE;
+		data[1] = RecoilData.MAX_YAW_SPREAD;
+		data[2] = RecoilData.MAX_PITCH_BASE;
+		data[3] = RecoilData.MAX_PITCH_SPREAD;
+		data[4] = RecoilData.MAX_YAW_RETURN;
+		data[5] = RecoilData.MAX_PITCH_RETURN;
 		writeRecoilGraph(g2, data);
 	}
 
@@ -75,10 +75,10 @@ public class GraphPanel extends JPanel {
 			return 10;
 		}
 		float maxValue = 0;
-		maxValue = Math.max(maxValue, Math.abs(RecoilData.getDataFloat(RecoilDataList.MIN_PITCH_BASE)) + RecoilData.getDataFloat(RecoilDataList.MIN_PITCH_SPREAD));
-		maxValue = Math.max(maxValue, Math.abs(RecoilData.getDataFloat(RecoilDataList.MAX_PITCH_BASE)) + RecoilData.getDataFloat(RecoilDataList.MAX_PITCH_SPREAD));
-		maxValue = Math.max(maxValue, Math.abs(RecoilData.getDataFloat(RecoilDataList.MIN_YAW_BASE)) + RecoilData.getDataFloat(RecoilDataList.MIN_YAW_SPREAD));
-		maxValue = Math.max(maxValue, Math.abs(RecoilData.getDataFloat(RecoilDataList.MAX_YAW_BASE)) + RecoilData.getDataFloat(RecoilDataList.MAX_YAW_SPREAD));
+		maxValue = Math.max(maxValue, Math.abs(RecoilData.MIN_PITCH_BASE) + RecoilData.MIN_PITCH_SPREAD);
+		maxValue = Math.max(maxValue, Math.abs(RecoilData.MAX_PITCH_BASE) + RecoilData.MAX_PITCH_SPREAD);
+		maxValue = Math.max(maxValue, Math.abs(RecoilData.MIN_YAW_BASE) + RecoilData.MIN_YAW_SPREAD);
+		maxValue = Math.max(maxValue, Math.abs(RecoilData.MAX_YAW_BASE) + RecoilData.MAX_YAW_SPREAD);
 		int scale = (int) (radius / (maxValue));
 		return scale > 15 ? 15 : scale;
 	}

@@ -9,6 +9,8 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 
+import editer.ValueInfo;
+
 public abstract class ValueSetPanel extends JPanel implements ComponentListener, KeyListener, FocusListener {
 	private static final long serialVersionUID = -4980380877478474178L;
 
@@ -17,14 +19,14 @@ public abstract class ValueSetPanel extends JPanel implements ComponentListener,
 	/** 通知先の保存 */
 	ChangeListener target;
 	int cate;
-	
-	DataBase Data;
-	EnumDataList Type;
-	
+
+	protected DataBase Data;
+	protected EnumDataInfo Type;
+
 	public ValueSetPanel() {
 		this(true);
 	}
-	
+
 	public ValueSetPanel(boolean canedit) {
 		this.canEdit = canedit;
 		this.addKeyListener(this);
@@ -32,21 +34,21 @@ public abstract class ValueSetPanel extends JPanel implements ComponentListener,
 		this.addComponentListener(this);
 		repaint();
 	}
-	
-	public ValueSetPanel(DataBase data,EnumDataList type,boolean canedit){
+
+	public ValueSetPanel(DataBase data, EnumDataInfo type, boolean canedit) {
 		this(canedit);
 		Data = data;
 		Type = type;
 	}
-	
-	public ValueSetPanel(DataBase data,EnumDataList type){
+
+	public ValueSetPanel(DataBase data, EnumDataInfo type) {
 		this();
 		Data = data;
 		Type = type;
 	}
 
 	/** 変更通知リスナーを設定 */
-	public void addChangeListener(ChangeListener l,int cate) {
+	public void addChangeListener(ChangeListener l, int cate) {
 		this.cate = cate;
 		target = l;
 	}
@@ -73,7 +75,9 @@ public abstract class ValueSetPanel extends JPanel implements ComponentListener,
 	public void repaint() {
 		super.repaint();
 		setEnable(canEdit);
-		rePaint();
+		if (Data != null) {
+			rePaint();
+		}
 	}
 
 	@Override
@@ -107,19 +111,21 @@ public abstract class ValueSetPanel extends JPanel implements ComponentListener,
 		}
 	}
 
-	public void save(Object value){
-		if(target!=null){
+	public void save(Object value) {
+		if (target != null) {
 			target.ValueChange(cate, value);
 		}
-		if(Data!=null){
-			Data.setData(Type, value);
+		if (Data != null) {
+			ValueInfo.setData(Data, Type, value);
 		}
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
 		saveValue();
-		repaint();
+		if (Data != null) {
+			repaint();
+		}
 	}
 
 	@Override

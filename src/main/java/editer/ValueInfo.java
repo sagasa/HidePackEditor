@@ -1,6 +1,10 @@
 package editer;
 
+import java.lang.reflect.Field;
+
+import helper.LocalizeHandler;
 import types.base.DataBase;
+import types.base.DataType;
 import types.base.EnumDataInfo;
 
 /***/
@@ -25,73 +29,83 @@ public class ValueInfo {
 			return false;
 		}
 	}
+	
+	/**ローカライズした名前を取得*/
+	public static String getLocalizedName(EnumDataInfo info){
+		return LocalizeHandler.getLocalizedName(info.getUnlocalizedName());
+	}
 
 	/** 銃 */
 	public enum GunDataList implements EnumDataInfo {
 		/** アイテムの名前 : ItemInfo型 */
-		ITEM_INFO(null, null, "gun."),
+		ITEM_INFO(null, null),
 		/** 弾速 1秒の移動距離(m)=弾速 : float型 **/
-		BULLET_SPEED(0f, 128f, "gun."),
+		BULLET_SPEED(0f, 128f,1),
 		/** 持ってから撃てるまで ; tickかかる : int型 **/
-		PREPARE_TICK(0f, null, "gun."),
+		PREPARE_TICK(0f, null,1),
 		/** リロード ; リロードにtickかかる : int型 **/
-		RELOAD_TICK(0f, null, "gun."),
+		RELOAD_TICK(0f, null,1),
 		/** レート ; レートtick間隔で発射する : int型 **/
-		RATE_TICK(0f, null, "gun."),
+		RATE_TICK(0f, null,1),
 		/** 射撃モード : String配列型 **/
-		FIREMODE(null, null, "gun."),
+		FIREMODE(null, null),
 		/** 貫通力 貫通力体のMOBにダメージが与えられる -1で∞ : int型 **/
-		BULLET_POWER(-1f, null, "gun."),
+		BULLET_POWER(-1f, null,1),
 		/** バーストのレート : int型 **/
-		BURST_RATE_TICK(0f, null, "gun."),
+		BURST_RATE_TICK(0f, null),
 		/** バーストの発射数 : int型 **/
-		BURST_BULLET_NUM(1f, null, "gun."),
+		BURST_BULLET_NUM(1f, null),
 		/** 装填数 : int型 **/
-		LOAD_NUM(1f, null, "gun."),
+		LOAD_NUM(1f, null,1),
 		/** 精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
-		ACCURACY(0f, null, "gun."),
+		ACCURACY(0f, null,1),
 		/** ADS精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
-		ACCURACY_ADS(0f, null, "gun."),
+		ACCURACY_ADS(0f, null,1),
 		/** デフォルトリコイル : GunRecoil型 */
-		RECOIL_DEFAULT(null, null, "gun."),
+		RECOIL_DEFAULT(null, null),
 		/** ADSリコイル : GunRecoil型 */
-		RECOIL_ADS(null, null, "gun."),
+		RECOIL_ADS(null, null),
 		/** スニークリコイル : GunRecoil型 */
-		RECOIL_SNEAK(null, null, "gun."),
+		RECOIL_SNEAK(null, null),
 		/** スニークADSリコイル : GunRecoil型 */
-		RECOIL_SNEAK_ADS(null, null, "gun."),
+		RECOIL_SNEAK_ADS(null, null),
 		/** 対人ダメージ加算値 : float型 **/
-		PLAYER_DAMAGE_ADD(null, null, "gun."),
+		PLAYER_DAMAGE_ADD(null, null),
 		/** 対人ダメージ倍率 : float型 **/
-		PLAYER_DAMAGE_DIAMETER(null, null, "gun."),
+		PLAYER_DAMAGE_DIAMETER(null, null),
 		/** 対MOBダメージ加算値 : float型 **/
-		LIVING_DAMAGE_ADD(null, null, "gun."),
+		LIVING_DAMAGE_ADD(null, null),
 		/** 対MOBダメージ倍率 : float型 **/
-		LIVING_DAMAGE_DIAMETER(null, null, "gun."),
+		LIVING_DAMAGE_DIAMETER(null, null),
 		/** 対地上兵器ダメージ加算値 : int型 **/
-		VEHICLE_DAMAGE_ADD(null, null, "gun."),
+		VEHICLE_DAMAGE_ADD(null, null),
 		/** 対地上兵器ダメージ倍率 : float型 **/
-		VEHICLE_DAMAGE_DIAMETER(null, null, "gun."),
+		VEHICLE_DAMAGE_DIAMETER(null, null),
 		/** 対航空機ダメージ加算値 : int型 **/
-		AIRCRAFT_DAMAGE_ADD(null, null, "gun."),
+		AIRCRAFT_DAMAGE_ADD(null, null),
 		/** 対航空機ダメージ倍率 : float型 **/
-		AIRCRAFT_DAMAGE_DIAMETER(null, null, "gun."),
+		AIRCRAFT_DAMAGE_DIAMETER(null, null),
 		/** 発射音 : Sound型 **/
-		SOUND_SHOOT(null, null, "gun."),
+		SOUND_SHOOT(null, null),
 		/** リロード音 : Sound型 **/
-		SOUND_RELOAD(null, null, "gun."),
+		SOUND_RELOAD(null, null),
 		/** 使用する弾 : StringArray型 */
-		BULLET_USE(null, null, "gun."),;
+		BULLET_USE(null, null),;
 
-		private GunDataList(Float min, Float max, String unlocalizedname) {
-			this(min, max, unlocalizedname, -1);
+		public static final int GUN_INFO = 1;
+		
+		private static final String Domain = "GUN.";
+
+		private GunDataList(Float min, Float max) {
+			this(min, max, -1);
 		}
 
-		private GunDataList(Float min, Float max, String unlocalizedname, int cate) {
+		private GunDataList(Float min, Float max, int cate) {
 			Max = max;
 			Min = min;
 			Cate = cate;
-			UnlocalizedName = unlocalizedname;
+			UnlocalizedName = (Domain + this.toString()).replaceAll("_", ".").toLowerCase();
+			LocalizeHandler.addName(UnlocalizedName);
 		}
 
 		Float Max;
@@ -124,50 +138,53 @@ public class ValueInfo {
 	public enum RecoilDataList implements EnumDataInfo {
 
 		/** リコイルパワー最小時のリコイル */
-		MAX_YAW_BASE(null, null, "recoil."),
+		MAX_YAW_BASE(null, null),
 		/** リコイルパワー最小時のリコイル */
-		MAX_YAW_SPREAD(null, null, "recoil."),
+		MAX_YAW_SPREAD(null, null),
 		/** リコイルパワー最小時のリコイル */
-		MAX_YAW_RETURN(1f, 0f, "recoil."),
+		MAX_YAW_RETURN(1f, 0f),
 		/** リコイルパワー最小時のリコイル */
-		MIN_YAW_BASE(null, null, "recoil."),
+		MIN_YAW_BASE(null, null),
 		/** リコイルパワー最小時のリコイル */
-		MIN_YAW_SPREAD(null, null, "recoil."),
+		MIN_YAW_SPREAD(null, null),
 		/** リコイルパワー最小時のリコイル */
-		MIN_YAW_RETURN(1f, 0f, "recoil."),
+		MIN_YAW_RETURN(1f, 0f),
 		/** リコイルが適応される時間 */
-		YAW_RECOIL_TICK(null, 0f, "recoil."),
+		YAW_RECOIL_TICK(null, 0f),
 		/** リコイルが適応される時間 */
-		YAW_RETURN_TICK(null, 0f, "recoil."),
+		YAW_RETURN_TICK(null, 0f),
 
 		/** リコイルパワー最大時のリコイル */
-		MAX_PITCH_BASE(null, null, "recoil."),
+		MAX_PITCH_BASE(null, null),
 		/** リコイルパワー最大時のリコイル */
-		MAX_PITCH_SPREAD(null, null, "recoil."),
+		MAX_PITCH_SPREAD(null, null),
 		/** リコイルパワー最大時のリコイル */
-		MAX_PITCH_RETURN(1f, 0f, "recoil."),
+		MAX_PITCH_RETURN(1f, 0f),
 		/** リコイルパワー最大時のリコイル */
-		MIN_PITCH_BASE(null, null, "recoil."),
+		MIN_PITCH_BASE(null, null),
 		/** リコイルパワー最大時のリコイル */
-		MIN_PITCH_SPREAD(null, null, "recoil."),
+		MIN_PITCH_SPREAD(null, null),
 		/** リコイルパワー最大時のリコイル */
-		MIN_PITCH_RETURN(1f, 0f, "recoil."),
+		MIN_PITCH_RETURN(1f, 0f),
 		/** リコイルが適応される時間 */
-		PITCH_RECOIL_TICK(null, 0f, "recoil."),
+		PITCH_RECOIL_TICK(null, 0f),
 		/** リコイルが適応される時間 */
-		PITCH_RETURN_TICK(null, 0f, "recoil."),
+		PITCH_RETURN_TICK(null, 0f),
 		/** tickあたりの減少量 */
-		POWER_TICK(null, 0f, "recoil."),
+		POWER_TICK(null, 0f),
 		/** 射撃ごとの増加量 */
-		POWER_SHOOT(null, 0f, "recoil."),
+		POWER_SHOOT(null, 0f),
 
 		/** 使用しない場合はより下位のリコイル外用される */
-		USE(null, null, "recoil."),;
+		USE(null, null),;
 
-		private RecoilDataList(Float min, Float max, String unlocalizedname) {
+		private static final String Domain = "RECOIL.";
+		
+		private RecoilDataList(Float min, Float max) {
 			Max = max;
 			Min = min;
-			UnlocalizedName = unlocalizedname;
+			UnlocalizedName = (Domain + this.toString()).replaceAll("_", ".").toLowerCase();
+			LocalizeHandler.addName(UnlocalizedName);
 		}
 
 		Float Max;
@@ -198,54 +215,66 @@ public class ValueInfo {
 	/** 爆発用info */
 	public enum ExplosionDataList implements EnumDataInfo {
 		/** 爆風範囲 :int型 **/
-		RANGE(0f, null, "exp.range"),
+		RANGE(0f, null),
 
 		/** 爆風の対人ダメージ底値 : 爆風ダメージ=底値-距離(m)*係数 : float型 **/
-		DAMAGE_BASE_PLAYER(null, null, "exp.damage.player.base"),
+		DAMAGE_BASE_PLAYER(null, null,1),
 		/** 爆風の対人ダメージ係数 : 爆風ダメージ=底値-距離(m)*係数 : float型 **/
-		DAMAGE_COE_PLAYER(null, null, "exp.damage.player.coe"),
+		DAMAGE_COE_PLAYER(null, null,1),
 		/** 爆風のMOBダメージ底値 : 爆風ダメージ=底値-距離(m)*係数 : float型 **/
-		DAMAGE_BASE_LIVING(null, null, "exp.damage.living.base"),
+		DAMAGE_BASE_LIVING(null, null,1),
 		/** 爆風のMOBダメージ係数 : 爆風ダメージ=底値-距離(m)*係数 : float型 **/
-		DAMAGE_COE_LIVING(null, null, "exp.damage.living.coe"),
+		DAMAGE_COE_LIVING(null, null,1),
 		/** 爆風の対地上兵器ダメージ底値 : 爆風ダメージ=底値-距離(m)*係数 : int型 **/
-		DAMAGE_BASE_TANK(null, null, "exp.damage.tank.base"),
+		DAMAGE_BASE_TANK(null, null,1),
 		/** 爆風の対地上兵器ダメージ係数:爆風ダメージ=底値-距離(m)*係数 : int型 **/
-		DAMAGE_COE_TANK(null, null, "exp.damage.tank.coe"),
+		DAMAGE_COE_TANK(null, null,1),
 		/** 爆風の対航空機ダメージ底値 : 爆風ダメージ=底値-距離(m)*係数 : int型 **/
-		DAMAGE_BASE_AIR(null, null, "exp.damage.air.base"),
+		DAMAGE_BASE_AIR(null, null,1),
 		/** 爆風の対航空機ダメージ係数 : 爆風ダメージ=底値-距離(m)*係数 : int型 **/
-		DAMAGE_COE_AIR(null, null, "exp.damage.air.coe"),
+		DAMAGE_COE_AIR(null, null,1),
 
 		/** 爆風の対人ノックバック底値 : ノックバック距離(m)=底値-距離(m)*係数 : float型 **/
-		KNOCKBACK_BASE_PLAYER(null, null, "exp."),
+		KNOCKBACK_BASE_PLAYER(null, null,2),
 		/** 爆風の対人ノックバック係数 : ノックバック距離(m)=底値-距離(m)*係数 : float型 **/
-		KNOCKBACK_COE_PLAYER(null, null, "exp."),
+		KNOCKBACK_COE_PLAYER(null, null,2),
 		/** 爆風のMOBノックバック底値 : ノックバック距離(m)=底値-距離(m)*係数 : float型 **/
-		KNOCKBACK_BASE_LIVING(null, null, "exp."),
+		KNOCKBACK_BASE_LIVING(null, null,2),
 		/** 爆風のMOBノックバック係数 : ノックバック距離(m)=底値-距離(m)*係数 : float型 **/
-		KNOCKBACK_COE_LIVING(null, null, "exp."),
+		KNOCKBACK_COE_LIVING(null, null,2),
 		/** 爆風の対地上兵器ノックバック底値 : ノックバック距離(m)=(底値-距離(m)*係数)/重量 : float型 **/
-		KNOCKBACK_BASE_TANK(null, null, "exp."),
+		KNOCKBACK_BASE_TANK(null, null,2),
 		/** 爆風の対地上兵器ノックバック係数 : ノックバック距離(m)=(底値-距離(m)*係数)/重量 : float型 **/
-		KNOCKBACK_COE_TANK(null, null, "exp."),
+		KNOCKBACK_COE_TANK(null, null,2),
 		/** 爆風の対航空機ノックバック底値 : ノックバック距離(m)=(底値-距離(m)*係数)/重量 : float型 **/
-		KNOCKBACK_BASE_AIR(null, null, "exp."),
+		KNOCKBACK_BASE_AIR(null, null,2),
 		/** 爆風の対航空機ノックバック係数 : ノックバック距離(m)=(底値-距離(m)*係数)/重量 : float型 **/
-		KNOCKBACK_COE_AIR(null, null, "exp."),
+		KNOCKBACK_COE_AIR(null, null,2),
 
 		/** 使用する音 : Sound型 **/
-		SOUND(null, null, "exp."),;
+		SOUND(null, null),;
+		
+		public static final int DAMAGE = 1;
+		public static final int KNOCKBACK = 2;
+		
+		private static final String Domain = "EXPlOSION.";
 
-		private ExplosionDataList(Float min, Float max, String unlocalizedname) {
+		private ExplosionDataList(Float min, Float max) {
+			this(min, max, -1);
+		}
+		
+		private ExplosionDataList(Float min, Float max,int cate) {
 			Max = max;
 			Min = min;
-			UnlocalizedName = unlocalizedname;
+			Cate = cate;
+			UnlocalizedName = (Domain + this.toString()).replaceAll("_", ".").toLowerCase();
+			LocalizeHandler.addName(UnlocalizedName);
 		}
 
 		Float Max;
 		Float Min;
 		String UnlocalizedName;
+		int Cate;
 
 		@Override
 		public Float getMin() {
@@ -264,11 +293,11 @@ public class ValueInfo {
 
 		@Override
 		public int getCate() {
-			return 0;
+			return Cate;
 		}
 	}
 
-	/** Sound用info */
+	/** item用info */
 	public enum ItemDataList implements EnumDataInfo {
 		/** アイテムの名前 : レジスタ登録用 半角小文字英数のみ */
 		NAME_SHORT(null, null, "item.shortname", 0),
@@ -285,11 +314,14 @@ public class ValueInfo {
 		/***/
 		ATTACK_DAMAGE(null, null, "item.change.damage", 0),;
 
+		private static final String Domain = "ITEM.";
+		
 		private ItemDataList(Float min, Float max, String unlocalizedname, int cate) {
 			Max = max;
 			Min = min;
 			Cate = cate;
-			UnlocalizedName = unlocalizedname;
+			UnlocalizedName = (Domain + this.toString()).replaceAll("_", ".").toLowerCase();
+			LocalizeHandler.addName(UnlocalizedName);
 		}
 
 		Float Max;
@@ -324,10 +356,13 @@ public class ValueInfo {
 		NAME(null, null, "sound.name"), RANGE(0f, null, "sound.range"), VOL(0f, null, "sound.vol"), PITCH(0f, null,
 				"sound.pitch"), USE_DECAY(null, null, "sound.decay"), USE_DELAY(null, null, "sound.delay"),;
 
+		private static final String Domain = "SOUND.";
+		
 		private SoundDataList(Float min, Float max, String unlocalizedname) {
 			Max = max;
 			Min = min;
-			UnlocalizedName = unlocalizedname;
+			UnlocalizedName = (Domain + this.toString()).replaceAll("_", ".").toLowerCase();
+			LocalizeHandler.addName(UnlocalizedName);
 		}
 
 		Float Max;
@@ -447,6 +482,8 @@ public class ValueInfo {
 		 * 誘導：true/false・手動/ロックオン/継続ロックオン・反応するエンティティ
 		 */
 
+		private static final String Domain = "MAGAZINE.";
+		
 		public static final int BULLET_INFO = 1;
 		public static final int BULLET_HIT_DAMAGE = 2;
 		public static final int BULLET_HIT_KNOCKBACK = 3;
@@ -462,7 +499,8 @@ public class ValueInfo {
 		private BulletDataList(Float min, Float max, String unlocalizedname, int cate) {
 			Max = max;
 			Min = min;
-			UnlocalizedName = unlocalizedname;
+			UnlocalizedName = (Domain + this.toString()).replaceAll("_", ".").toLowerCase();
+			LocalizeHandler.addName(UnlocalizedName);
 			Cate = cate;
 		}
 

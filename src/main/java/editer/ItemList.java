@@ -18,11 +18,8 @@ import javax.swing.event.ListSelectionListener;
 
 import helper.DropFileHandler;
 import types.BulletData;
-import types.BulletData.BulletDataList;
-import types.ItemInfo.ItemDataList;
 import types.ItemInfo;
 import types.guns.GunData;
-import types.guns.GunData.GunDataList;
 
 public class ItemList extends JTabbedPane
 		implements ListSelectionListener, MouseListener, ActionListener, ChangeListener {
@@ -106,7 +103,7 @@ public class ItemList extends JTabbedPane
 					gunNum++;
 				}
 				String displayName = "New Gun No." + gunNum;
-				newGun. = new ItemInfo("gun_" + gunNum, displayName, "sample");
+				newGun.ITEM_INFO = new ItemInfo("gun_" + gunNum, displayName, "sample");
 				Window.GunList.put(displayName, newGun);
 				write();
 				break;
@@ -117,7 +114,7 @@ public class ItemList extends JTabbedPane
 					bulletNum++;
 				}
 				String bulletName = "New Bullet No." + bulletNum;
-				newBullet.setData(BulletDataList.ITEM_INFO, new ItemInfo("bullet_" + bulletNum, bulletName, "sample"));
+				newBullet.ITEM_INFO = new ItemInfo("bullet_" + bulletNum, bulletName, "sample");
 				Window.BulletList.put(bulletName, newBullet);
 				write();
 				break;
@@ -138,15 +135,14 @@ public class ItemList extends JTabbedPane
 		String[] keySet = Window.GunList.keySet().toArray(new String[Window.GunList.keySet().size()]);
 		Arrays.sort(keySet);
 		for (String name : keySet) {
-			gunModel.addElement(((ItemInfo) Window.GunList.get(name).getDataObject(GunDataList.ITEM_INFO)).getDataString(ItemDataList.NAME_DISPLAY));
+			gunModel.addElement(Window.GunList.get(name).ITEM_INFO.NAME_DISPLAY);
 		}
 
 		magazineModel.removeAllElements();
 		keySet = Window.BulletList.keySet().toArray(new String[Window.BulletList.keySet().size()]);
 		Arrays.sort(keySet);
 		for (String name : keySet) {
-			magazineModel.addElement(
-					((ItemInfo) Window.BulletList.get(name).getDataObject(BulletDataList.ITEM_INFO)).getDataString(ItemDataList.NAME_DISPLAY));
+			magazineModel.addElement(Window.BulletList.get(name).ITEM_INFO.NAME_DISPLAY);
 		}
 	}
 
@@ -163,14 +159,14 @@ public class ItemList extends JTabbedPane
 		switch (this.getSelectedIndex()) {
 		case 0:
 			// gun
-			if (!gunList.isSelectionEmpty()&&Window.GunList.containsKey(gunList.getSelectedValue())) {
+			if (!gunList.isSelectionEmpty() && Window.GunList.containsKey(gunList.getSelectedValue())) {
 				Window.ItemEditer.writeGunEditer(Window.GunList.get(gunList.getSelectedValue()));
 			}
 			break;
 		case 1:
 			// magazine
-			if (!magazineList.isSelectionEmpty()&&Window.BulletList.containsKey(magazineList.getSelectedValue())) {
-				
+			if (!magazineList.isSelectionEmpty() && Window.BulletList.containsKey(magazineList.getSelectedValue())) {
+
 				Window.ItemEditer.writeMagazineEditer(Window.BulletList.get(magazineList.getSelectedValue()));
 			}
 			break;

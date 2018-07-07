@@ -20,6 +20,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import helper.LocalizeHandler;
+import helper.ReflectHelper;
 import io.PackIO;
 import types.*;
 import types.guns.GunData;
@@ -86,24 +88,24 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 
 		// メニューバー
 		JMenuBar menubar = new JMenuBar();
-		JMenu file = new JMenu("File");
-		JMenu edit = new JMenu("Edit");
+		JMenu file = new JMenu(LocalizeHandler.getLocalizedName(LocalizeHandler.File));
+		JMenu edit = new JMenu(LocalizeHandler.getLocalizedName(LocalizeHandler.Edit));
 
 		menubar.add(file);
 		menubar.add(Box.createRigidArea(new Dimension(5, 1)));
 		menubar.add(edit);
 
-		addMenuItem(file, "New", "New");
-		addMenuItem(file, "Open", "Open");
-		addMenuItem(file, "Save", "Save");
-		addMenuItem(file, "Save As...", "SaveAs");
-		JMenu inport = new JMenu("import");
+		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.New), "New");
+		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.Open), "Open");
+		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.Save), "Save");
+		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.SaveAs), "SaveAs");
+		JMenu inport = new JMenu(LocalizeHandler.getLocalizedName(LocalizeHandler.Import));
 		file.add(inport);
-		addMenuItem(inport, "Gun", "inGun");
-		addMenuItem(inport, "Magazine", "inMagazine");
-		addMenuItem(inport, "Icon", "inIcon");
-		addMenuItem(inport, "Sound", "inSound");
-		addMenuItem(file, "Exit", "Exit");
+		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Gun), "inGun");
+		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Magazine), "inMagazine");
+		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Icon), "inIcon");
+		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Sound), "inSound");
+		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.Exit), "Exit");
 
 		this.setJMenuBar(menubar);
 
@@ -128,6 +130,9 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	}
 
 	public static void main(String[] args) {
+		//ReflectHelper.get();
+		LocalizeHandler.init();
+		LocalizeHandler.loadLang();
 		INSTANCE = new Window();
 	}
 

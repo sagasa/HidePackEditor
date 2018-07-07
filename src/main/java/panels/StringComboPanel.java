@@ -10,32 +10,32 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
+import editer.ValueInfo;
 import helper.ArrayEditer;
-import types.Sound.SoundDataList;
 import types.base.DataBase;
-import types.base.EnumDataList;
+import types.base.EnumDataInfo;
 import types.base.ValueSetPanel;
 
 public class StringComboPanel extends ValueSetPanel implements ActionListener {
 
-	public StringComboPanel(String lore, String[] defauletValue, boolean canedit) {
+	public StringComboPanel(String lore, String[] defauletValue, String selected, boolean canedit) {
 		super(canedit);
-		init(lore, defauletValue);
+		init(lore, defauletValue, selected);
 	}
 
 	/** DataBaseからの利用 */
-	public StringComboPanel(DataBase data, EnumDataList type, String[] defauletValue, boolean canedit) {
-		super(data,type,canedit);
-		String selected = data.getDataString(SoundDataList.NAME);
-		//もしコンボ一覧に含まれていない値が初期値なら
-		if(!Arrays.asList(defauletValue).contains(selected)){
-			defauletValue = ArrayEditer.AddToArray(defauletValue, selected);
-		}
-		init(type.getName(), defauletValue);
-		setItem(selected);
+	public StringComboPanel(DataBase data, EnumDataInfo type, String[] defauletValue, boolean canedit) {
+		super(data, type, canedit);
+		init(ValueInfo.getLocalizedName(type), defauletValue, (String) ValueInfo.getData(data, type));
+
 	}
 
-	private void init(String lore, String[] defauletValue) {
+	private void init(String lore, String[] defauletValue, String selected) {
+		// もしコンボ一覧に含まれていない値が初期値なら
+		if (!Arrays.asList(defauletValue).contains(selected)) {
+			defauletValue = ArrayEditer.AddToArray(defauletValue, selected);
+		}
+
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		this.setOpaque(false);
 		this.setLayout(null);
@@ -54,6 +54,7 @@ public class StringComboPanel extends ValueSetPanel implements ActionListener {
 			txtCombo.addItem(data);
 		}
 		this.add(txtCombo);
+		setItem(selected);
 	}
 
 	/** 文字列設定のパネル */

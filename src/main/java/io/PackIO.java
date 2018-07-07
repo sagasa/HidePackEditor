@@ -25,12 +25,11 @@ import editer.Window;
 import helper.ArrayEditer;
 import types.BulletData;
 import types.ContentsPack;
-import types.ItemInfo.ItemDataList;
 import types.guns.GunData;
 
 public class PackIO {
 	public static boolean isChanged = false;
-	
+
 	/** 新しいパックを作る */
 	public static void makePack() {
 		Window.INSTANCE.clear();
@@ -99,7 +98,7 @@ public class PackIO {
 	public static void inportGun(File file) {
 		try {
 			GunData data = new GunData(Files.lines(file.toPath()).collect(Collectors.joining()));
-			Window.GunList.put(data.getItemInfo().getDataString(ItemDataList.NAME_DISPLAY), data);
+			Window.GunList.put(data.ITEM_INFO.NAME_DISPLAY, data);
 			Window.ItemList.write();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -122,7 +121,7 @@ public class PackIO {
 	public static void inportMagazine(File file) {
 		try {
 			BulletData data = new BulletData(Files.lines(file.toPath()).collect(Collectors.joining()));
-			Window.BulletList.put(data.getItemInfo().getDataString(ItemDataList.NAME_DISPLAY), data);
+			Window.BulletList.put(data.ITEM_INFO.NAME_DISPLAY, data);
 			Window.ItemList.write();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -207,12 +206,12 @@ public class PackIO {
 			HashMap<String, ByteArrayInputStream> dataList = new HashMap<String, ByteArrayInputStream>();
 			// 銃のデータ
 			for (GunData d : Window.GunList.values()) {
-				dataList.put("guns/" + d.getItemInfo().getDataString(ItemDataList.NAME_DISPLAY) + ".json",
+				dataList.put("guns/" + d.ITEM_INFO.NAME_DISPLAY + ".json",
 						new ByteArrayInputStream(d.MakeJsonData().getBytes()));
 			}
 			// 弾のデータ
 			for (BulletData d : Window.BulletList.values()) {
-				dataList.put("bullets/" + d.getItemInfo().getDataString(ItemDataList.NAME_DISPLAY) + ".json",
+				dataList.put("bullets/" + d.ITEM_INFO.NAME_DISPLAY + ".json",
 						new ByteArrayInputStream(d.MakeJsonData().getBytes()));
 			}
 
@@ -297,6 +296,7 @@ public class PackIO {
 
 	/**
 	 * byte配列とNameからパックの要素の当てはめる
+	 * 
 	 * @throws IOException
 	 */
 	static void PackWrapper(byte[] data, String name) throws IOException {
@@ -305,13 +305,13 @@ public class PackIO {
 		// Gun認識
 		if (name.matches("^(.*)guns/(.*).json")) {
 			GunData newGun = new GunData(new String(data, Charset.forName("UTF-8")));
-			Window.GunList.put(newGun.getItemInfo().getDataString(ItemDataList.NAME_DISPLAY), newGun);
+			Window.GunList.put(newGun.ITEM_INFO.NAME_DISPLAY, newGun);
 			System.out.println("gun");
 		}
 		// bullet認識
 		else if (name.matches("^(.*)bullets/(.*).json")) {
 			BulletData newBullet = new BulletData(new String(data, Charset.forName("UTF-8")));
-			Window.BulletList.put(newBullet.getItemInfo().getDataString(ItemDataList.NAME_DISPLAY), newBullet);
+			Window.BulletList.put(newBullet.ITEM_INFO.NAME_DISPLAY, newBullet);
 			System.out.println("bullet");
 		}
 		// packInfo認識

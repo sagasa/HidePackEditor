@@ -11,9 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import editer.ValueInfo;
 import types.base.DataBase;
-import types.base.DataType;
-import types.base.EnumDataList;
+import types.base.EnumDataInfo;
 import types.base.ValueSetPanel;
 
 public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener {
@@ -26,12 +26,17 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 	}
 
 	/** DataBaseからの利用 */
-	public NumberSetPanel(DataBase data,EnumDataList type,boolean canedit){
+	public NumberSetPanel(DataBase data,EnumDataInfo type,boolean canedit){
 		super(data,type,canedit);
 		Max = type.getMax();
 		Min = type.getMin();
-		this.isFloat = type.getType().equals(DataType.Float);
-		init(type.getName(), data.getDataString(type));
+		try {
+			this.isFloat = data.getField(type).getType().isAssignableFrom(float.class)||data.getField(type).getType().isAssignableFrom(Float.class);
+		} catch (NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
+		System.out.println(type+" "+ValueInfo.getLocalizedName(type));
+		init(ValueInfo.getLocalizedName(type), ValueInfo.getData(data, type).toString());
 	}
 
 	private void init(String lore, String defauletValue) {
