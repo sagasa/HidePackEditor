@@ -35,7 +35,6 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 		} catch (NoSuchFieldException | SecurityException e) {
 			e.printStackTrace();
 		}
-		System.out.println(type+" "+ValueInfo.getLocalizedName(type));
 		init(ValueInfo.getLocalizedName(type), ValueInfo.getData(data, type).toString());
 	}
 

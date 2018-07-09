@@ -23,5 +23,5 @@ public class Explosion extends DataBase {
 	public float KNOCKBACK_BASE_TANK = 0;
 	public float KNOCKBACK_COE_TANK = 0;
 	public float KNOCKBACK_BASE_AIR = 0;
-	public float KNOCKBACKDAMAGE_COE_AIR = 0;
+	public float KNOCKBACK_COE_AIR = 0;
 }

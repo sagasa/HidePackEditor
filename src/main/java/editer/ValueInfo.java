@@ -29,7 +29,7 @@ public class ValueInfo {
 			return false;
 		}
 	}
-	
+
 	/**ローカライズした名前を取得*/
 	public static String getLocalizedName(EnumDataInfo info){
 		return LocalizeHandler.getLocalizedName(info.getUnlocalizedName());
@@ -52,9 +52,9 @@ public class ValueInfo {
 		/** 貫通力 貫通力体のMOBにダメージが与えられる -1で∞ : int型 **/
 		BULLET_POWER(-1f, null,1),
 		/** バーストのレート : int型 **/
-		BURST_RATE_TICK(0f, null),
+		BURST_RATE_TICK(0f, null,3),
 		/** バーストの発射数 : int型 **/
-		BURST_BULLET_NUM(1f, null),
+		BURST_BULLET_NUM(1f, null,3),
 		/** 装填数 : int型 **/
 		LOAD_NUM(1f, null,1),
 		/** 精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
@@ -70,21 +70,21 @@ public class ValueInfo {
 		/** スニークADSリコイル : GunRecoil型 */
 		RECOIL_SNEAK_ADS(null, null),
 		/** 対人ダメージ加算値 : float型 **/
-		PLAYER_DAMAGE_ADD(null, null),
+		PLAYER_DAMAGE_ADD(null, null,2),
 		/** 対人ダメージ倍率 : float型 **/
-		PLAYER_DAMAGE_DIAMETER(null, null),
+		PLAYER_DAMAGE_DIAMETER(null, null,2),
 		/** 対MOBダメージ加算値 : float型 **/
-		LIVING_DAMAGE_ADD(null, null),
+		LIVING_DAMAGE_ADD(null, null,2),
 		/** 対MOBダメージ倍率 : float型 **/
-		LIVING_DAMAGE_DIAMETER(null, null),
+		LIVING_DAMAGE_DIAMETER(null, null,2),
 		/** 対地上兵器ダメージ加算値 : int型 **/
-		VEHICLE_DAMAGE_ADD(null, null),
+		VEHICLE_DAMAGE_ADD(null, null,2),
 		/** 対地上兵器ダメージ倍率 : float型 **/
-		VEHICLE_DAMAGE_DIAMETER(null, null),
+		VEHICLE_DAMAGE_DIAMETER(null, null,2),
 		/** 対航空機ダメージ加算値 : int型 **/
-		AIRCRAFT_DAMAGE_ADD(null, null),
+		AIRCRAFT_DAMAGE_ADD(null, null,2),
 		/** 対航空機ダメージ倍率 : float型 **/
-		AIRCRAFT_DAMAGE_DIAMETER(null, null),
+		AIRCRAFT_DAMAGE_DIAMETER(null, null,2),
 		/** 発射音 : Sound型 **/
 		SOUND_SHOOT(null, null),
 		/** リロード音 : Sound型 **/
@@ -93,7 +93,7 @@ public class ValueInfo {
 		BULLET_USE(null, null),;
 
 		public static final int GUN_INFO = 1;
-		
+
 		private static final String Domain = "GUN.";
 
 		private GunDataList(Float min, Float max) {
@@ -140,13 +140,13 @@ public class ValueInfo {
 		/** リコイルパワー最小時のリコイル */
 		MAX_YAW_BASE(null, null),
 		/** リコイルパワー最小時のリコイル */
-		MAX_YAW_SPREAD(null, null),
+		MAX_YAW_SPREAD(null, 0f),
 		/** リコイルパワー最小時のリコイル */
 		MAX_YAW_RETURN(1f, 0f),
 		/** リコイルパワー最小時のリコイル */
 		MIN_YAW_BASE(null, null),
 		/** リコイルパワー最小時のリコイル */
-		MIN_YAW_SPREAD(null, null),
+		MIN_YAW_SPREAD(null, 0f),
 		/** リコイルパワー最小時のリコイル */
 		MIN_YAW_RETURN(1f, 0f),
 		/** リコイルが適応される時間 */
@@ -157,13 +157,13 @@ public class ValueInfo {
 		/** リコイルパワー最大時のリコイル */
 		MAX_PITCH_BASE(null, null),
 		/** リコイルパワー最大時のリコイル */
-		MAX_PITCH_SPREAD(null, null),
+		MAX_PITCH_SPREAD(null, 0f),
 		/** リコイルパワー最大時のリコイル */
 		MAX_PITCH_RETURN(1f, 0f),
 		/** リコイルパワー最大時のリコイル */
 		MIN_PITCH_BASE(null, null),
 		/** リコイルパワー最大時のリコイル */
-		MIN_PITCH_SPREAD(null, null),
+		MIN_PITCH_SPREAD(null, 0f),
 		/** リコイルパワー最大時のリコイル */
 		MIN_PITCH_RETURN(1f, 0f),
 		/** リコイルが適応される時間 */
@@ -179,7 +179,7 @@ public class ValueInfo {
 		USE(null, null),;
 
 		private static final String Domain = "RECOIL.";
-		
+
 		private RecoilDataList(Float min, Float max) {
 			Max = max;
 			Min = min;
@@ -253,16 +253,16 @@ public class ValueInfo {
 
 		/** 使用する音 : Sound型 **/
 		SOUND(null, null),;
-		
+
 		public static final int DAMAGE = 1;
 		public static final int KNOCKBACK = 2;
-		
+
 		private static final String Domain = "EXPlOSION.";
 
 		private ExplosionDataList(Float min, Float max) {
 			this(min, max, -1);
 		}
-		
+
 		private ExplosionDataList(Float min, Float max,int cate) {
 			Max = max;
 			Min = min;
@@ -315,7 +315,7 @@ public class ValueInfo {
 		ATTACK_DAMAGE(null, null, "item.change.damage", 0),;
 
 		private static final String Domain = "ITEM.";
-		
+
 		private ItemDataList(Float min, Float max, String unlocalizedname, int cate) {
 			Max = max;
 			Min = min;
@@ -357,7 +357,7 @@ public class ValueInfo {
 				"sound.pitch"), USE_DECAY(null, null, "sound.decay"), USE_DELAY(null, null, "sound.delay"),;
 
 		private static final String Domain = "SOUND.";
-		
+
 		private SoundDataList(Float min, Float max, String unlocalizedname) {
 			Max = max;
 			Min = min;
@@ -483,7 +483,7 @@ public class ValueInfo {
 		 */
 
 		private static final String Domain = "MAGAZINE.";
-		
+
 		public static final int BULLET_INFO = 1;
 		public static final int BULLET_HIT_DAMAGE = 2;
 		public static final int BULLET_HIT_KNOCKBACK = 3;
