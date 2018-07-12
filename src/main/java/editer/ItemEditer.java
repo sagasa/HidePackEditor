@@ -131,10 +131,10 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 				DataType type = DataType.getType(Data, info);
 				if (type == DataType.Int || type == DataType.Float) {
 					panel = new NumberSetPanel(Data, info, true);
-					panel.setBounds(0, 0 + yOffset, 245, 20);
+					panel.setBounds(0, 0 + yOffset, root.getWidth(), 20);
 				} else if (type == DataType.Boolean) {
 					panel = new BooleanSetPanel(Data, info, true);
-					panel.setBounds(60, 0 + yOffset, 180, 20);
+					panel.setBounds(60, 0 + yOffset, root.getWidth()-60, 20);
 				}
 				root.add(panel);
 				yOffset += 22;
@@ -155,14 +155,14 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		infoPanel.setLayout(null);
 		infoPanel.setBorder(blackBorder);
 		infoPanel.setBounds(255, 235, 215, 0);
-		writeNumberValue(infoPanel, BulletDataList.values(), 1);
+		writeNumberValue(infoPanel, BulletDataList.values(), BulletDataList.BULLET_INFO);
 		this.add(infoPanel);
 		// 直撃間連
 		JPanel hit = new JPanel();
 		hit.setLayout(null);
 		hit.setBorder(blackBorder);
 		hit.setBounds(255, 5, 215, 0);
-		writeNumberValue(hit, BulletDataList.values(), 2);
+		writeNumberValue(hit, BulletDataList.values(), BulletDataList.BULLET_HIT);
 		this.add(hit);
 		// 爆発関連
 		ExplosionEditPanel expentity = new ExplosionEditPanel(data);
@@ -173,7 +173,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		decay.setLayout(null);
 		decay.setBorder(blackBorder);
 		decay.setBounds(5, 195, 245, 0);
-		writeNumberValue(decay, BulletDataList.values(), 10);
+		writeNumberValue(decay, BulletDataList.values(), BulletDataList.BULLET_DECAY);
 		this.add(decay);
 		// サウンド関連
 		writeSoundEditer(690, 0, BulletDataList.SOUND_HIT_ENTITY, Data, this);
