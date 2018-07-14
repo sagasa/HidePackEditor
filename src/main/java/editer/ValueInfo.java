@@ -177,7 +177,7 @@ public class ValueInfo {
 
 		private static final String Domain = "RECOIL.";
 
-		private RecoilDataList(Float min, Float max) {
+		private RecoilDataList(Float max, Float min) {
 			Max = max;
 			Min = min;
 			UnlocalizedName = (Domain + this.toString()).replaceAll("_", ".").toLowerCase();

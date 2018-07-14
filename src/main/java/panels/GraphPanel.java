@@ -140,13 +140,13 @@ public class GraphPanel extends JPanel {
 		g2.draw(new Line2D.Float(radius + data[0] - data[1], radius - data[2] + data[3], radius + data[0] - data[1],
 				radius - data[2] - data[3]));
 		// 戻った後の拡散範囲
-		g2.draw(new Line2D.Float(radius + (data[0] + data[1]) * data[4], radius - (data[2] + data[3]) * data[5],
-				radius + (data[0] - data[1]) * data[4], radius - (data[2] + data[3]) * data[5]));
-		g2.draw(new Line2D.Float(radius + (data[0] + data[1]) * data[4], radius - (data[2] - data[3]) * data[5],
-				radius + (data[0] - data[1]) * data[4], radius - (data[2] - data[3]) * data[5]));
-		g2.draw(new Line2D.Float(radius + (data[0] + data[1]) * data[4], radius - (data[2] + data[3]) * data[5],
-				radius + (data[0] + data[1]) * data[4], radius - (data[2] - data[3]) * data[5]));
-		g2.draw(new Line2D.Float(radius + (data[0] - data[1]) * data[4], radius - (data[2] + data[3]) * data[5],
-				radius + (data[0] - data[1]) * data[4], radius - (data[2] - data[3]) * data[5]));
+		g2.draw(new Line2D.Float(radius + (data[0] + data[1]) * (1-data[4]), radius - (data[2] + data[3]) * (1-data[5]),
+				radius + (data[0] - data[1]) * (1-data[4]), radius - (data[2] + data[3]) * (1-data[5])));
+		g2.draw(new Line2D.Float(radius + (data[0] + data[1]) * (1-data[4]), radius - (data[2] - data[3]) * (1-data[5]),
+				radius + (data[0] - data[1]) * (1-data[4]), radius - (data[2] - data[3]) * (1-data[5])));
+		g2.draw(new Line2D.Float(radius + (data[0] + data[1]) * (1-data[4]), radius - (data[2] + data[3]) * (1-data[5]),
+				radius + (data[0] + data[1]) * (1-data[4]), radius - (data[2] - data[3]) * (1-data[5])));
+		g2.draw(new Line2D.Float(radius + (data[0] - data[1]) * (1-data[4]), radius - (data[2] + data[3]) * (1-data[5]),
+				radius + (data[0] - data[1]) * (1-data[4]), radius - (data[2] - data[3]) * (1-data[5])));
 	}
 }

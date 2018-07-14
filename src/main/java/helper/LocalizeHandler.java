@@ -36,17 +36,20 @@ public class LocalizeHandler {
 
 	/** ここですべての登録するlangを追加する */
 	public static void init() {
+		addName(File);
+		addName(Edit);
+
 		addName(New);
 		addName(Open);
 		addName(Save);
 		addName(SaveAs);
 		addName(Import);
 
-		addName("Gun");
-		addName("Magazine");
-		addName("Icon");
-		addName("Sound");
-		addName("Exit");
+		addName(Gun);
+		addName(Magazine);
+		addName(Icon);
+		addName(Sound);
+		addName(Exit);
 		// enumをノックしてインスタンスを作らせる
 		ValueInfo.BulletDataList.values();
 		ValueInfo.ExplosionDataList.values();

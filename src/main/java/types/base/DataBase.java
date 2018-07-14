@@ -11,7 +11,7 @@ public abstract class DataBase implements Cloneable {
 
 	/**
 	 * Field取得
-	 * 
+	 *
 	 * @throws SecurityException
 	 * @throws NoSuchFieldException
 	 */
@@ -37,7 +37,9 @@ public abstract class DataBase implements Cloneable {
 	/** JsonStringからデータを読み込む */
 	public DataBase(String json) {
 		Gson gson = new Gson();
-		System.out.println(gson.fromJson(json, this.getClass()));
+		System.out.println(gson.fromJson(json, this.getClass()).MakeJsonData());
+		System.out.println(this.overwrite(gson.fromJson(json, this.getClass())));
+		//System.out.println(this.MakeJsonData());
 	}
 
 	/** JsonObjectを作成 */
@@ -59,6 +61,7 @@ public abstract class DataBase implements Cloneable {
 		try {
 			for (Field f : clazz.getFields()) {
 				f.set(this, f.get(data));
+				System.out.println("overwrite"+f.getName());
 			}
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			return false;
