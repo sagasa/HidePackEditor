@@ -129,12 +129,6 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	}
 
 	public static void main(String[] args) {
-		//ReflectHelper.get();
-		GunData data = new GunData();
-		data.ITEM_INFO.NAME_DISPLAY = "AR";
-
-		System.out.println(new GunData(data.MakeJsonData()).MakeJsonData());
-
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
 		INSTANCE = new Window();

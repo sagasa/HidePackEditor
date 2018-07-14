@@ -34,14 +34,6 @@ public abstract class DataBase implements Cloneable {
 
 	}
 
-	/** JsonStringからデータを読み込む */
-	public DataBase(String json) {
-		Gson gson = new Gson();
-		System.out.println(gson.fromJson(json, this.getClass()).MakeJsonData());
-		System.out.println(this.overwrite(gson.fromJson(json, this.getClass())));
-		//System.out.println(this.MakeJsonData());
-	}
-
 	/** JsonObjectを作成 */
 	public String MakeJsonData() {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();

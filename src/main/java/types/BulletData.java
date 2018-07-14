@@ -6,9 +6,6 @@ public class BulletData extends DataBase{
 	public BulletData() {
 		super();
 	}
-	public BulletData(String json) {
-		super(json);
-	}
 	/** アイテムの名前 : ItemInfo型 */
 	public ItemInfo ITEM_INFO = new ItemInfo("sample", "Sample", "sample");
 

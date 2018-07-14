@@ -5,10 +5,6 @@ import types.Sound;
 import types.base.DataBase;
 
 public class GunData extends DataBase {
-	public GunData(String json) {
-		super(json);
-	}
-
 	public GunData() {
 		super();
 	}

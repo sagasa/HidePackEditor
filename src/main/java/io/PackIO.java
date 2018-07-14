@@ -21,6 +21,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.google.gson.Gson;
+
 import editer.Window;
 import helper.ArrayEditer;
 import types.BulletData;
@@ -29,6 +31,7 @@ import types.guns.GunData;
 
 public class PackIO {
 	public static boolean isChanged = false;
+	private static Gson gson = new Gson();
 
 	/** 新しいパックを作る */
 	public static void makePack() {
@@ -97,7 +100,7 @@ public class PackIO {
 	/** GunDataをインポート */
 	public static void inportGun(File file) {
 		try {
-			GunData data = new GunData(Files.lines(file.toPath()).collect(Collectors.joining()));
+			GunData data = gson.fromJson(Files.lines(file.toPath()).collect(Collectors.joining()), GunData.class);
 			Window.GunList.put(data.ITEM_INFO.NAME_DISPLAY, data);
 			Window.ItemList.write();
 		} catch (IOException e) {
@@ -120,7 +123,7 @@ public class PackIO {
 	/** Magazineをインポート */
 	public static void inportMagazine(File file) {
 		try {
-			BulletData data = new BulletData(Files.lines(file.toPath()).collect(Collectors.joining()));
+			BulletData data = gson.fromJson(Files.lines(file.toPath()).collect(Collectors.joining()), BulletData.class);
 			Window.BulletList.put(data.ITEM_INFO.NAME_DISPLAY, data);
 			Window.ItemList.write();
 		} catch (IOException e) {
@@ -304,13 +307,13 @@ public class PackIO {
 		// data.length)), JsonObject.class);
 		// Gun認識
 		if (name.matches("^(.*)guns/(.*).json")) {
-			GunData newGun = new GunData(new String(data, Charset.forName("UTF-8")));
+			GunData newGun = gson.fromJson(new String(data, Charset.forName("UTF-8")), GunData.class);
 			Window.GunList.put(newGun.ITEM_INFO.NAME_DISPLAY, newGun);
 			System.out.println("gun");
 		}
 		// bullet認識
 		else if (name.matches("^(.*)bullets/(.*).json")) {
-			BulletData newBullet = new BulletData(new String(data, Charset.forName("UTF-8")));
+			BulletData newBullet = gson.fromJson(new String(data, Charset.forName("UTF-8")), BulletData.class);
 			Window.BulletList.put(newBullet.ITEM_INFO.NAME_DISPLAY, newBullet);
 			System.out.println("bullet");
 		}
