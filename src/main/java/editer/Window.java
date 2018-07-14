@@ -19,6 +19,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import helper.LocalizeHandler;
 import io.PackIO;
@@ -132,6 +133,20 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
 		INSTANCE = new Window();
+	}
+	
+	JPanel openedEditer = null;
+	/**エディター操作*/
+	public void showEditer(JPanel editer){
+		//今出ているのを隠す
+		if(openedEditer != null&&!openedEditer.equals(editer)){
+			openedEditer.setVisible(false);
+		}
+		//標示する
+		if(editer!= null){
+			openedEditer = editer;
+			editer.setVisible(true);
+		}
 	}
 
 	// メニュー操作受付

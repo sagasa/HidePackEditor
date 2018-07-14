@@ -62,6 +62,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 	/** GunDataの内容変更全部 */
 	public void writeGunEditer(GunData data) {
 		this.removeAll();
+		Window.INSTANCE.showEditer(this);
 		Data = data;
 		writeItemInfo(0, 0, ChangeListener.DOMAIN_GUN);
 		// 細かいパラメータ描画
@@ -144,7 +145,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		bounds.height = yOffset + 2;
 		root.setBounds(bounds);
 	}
-
+	
 	/** BulletDataの内容変更全部 */
 	public void writeMagazineEditer(BulletData data) {
 		this.removeAll();
