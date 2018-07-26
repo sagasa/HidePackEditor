@@ -37,9 +37,11 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	public static Map<String, GunData> GunList = new HashMap<String, GunData>();
 	/** 弾のMAP DisplayName-BulletData */
 	public static Map<String, BulletData> BulletList = new HashMap<String, BulletData>();
-	/** IconのMAP BulletData */
+	/** IconのMAP Name - BufferedImage */
 	public static Map<String, BufferedImage> IconMap = new HashMap<String, BufferedImage>();
-	/** SoundのMAP BulletData */
+	/** ScopeのMAP Name - BufferedImage */
+	public static Map<String, BufferedImage> ScopeMap = new HashMap<String, BufferedImage>();
+	/** SoundのMAP Name - byte[] */
 	public static Map<String, byte[]> SoundMap = new HashMap<String, byte[]>();
 
 	public static String packPath;
@@ -105,6 +107,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Magazine), "inMagazine");
 		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Icon), "inIcon");
 		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Sound), "inSound");
+		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Scope), "inScope");
 		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.Exit), "Exit");
 
 		this.setJMenuBar(menubar);
@@ -134,19 +137,24 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		LocalizeHandler.loadLang();
 		INSTANCE = new Window();
 	}
-	
-	JPanel openedEditer = null;
+
+	Editer openedEditer = null;
 	/**エディター操作*/
-	public void showEditer(JPanel editer){
+	public void showEditer(Editer editer){
 		//今出ているのを隠す
 		if(openedEditer != null&&!openedEditer.equals(editer)){
-			openedEditer.setVisible(false);
+			openedEditer.setVisibleEditer(false);
 		}
 		//標示する
 		if(editer!= null){
 			openedEditer = editer;
-			editer.setVisible(true);
+			editer.setVisibleEditer(true);
 		}
+	}
+	/**エディター操作*/
+	public void rewriteEditer(){
+		//今出ているのを隠す
+
 	}
 
 	// メニュー操作受付

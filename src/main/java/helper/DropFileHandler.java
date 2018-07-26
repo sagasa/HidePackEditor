@@ -21,6 +21,7 @@ public class DropFileHandler extends TransferHandler {
 	public static final int MAGAZINES = 2;
 	public static final int ICONS = 3;
 	public static final int SOUNDS = 4;
+	public static final int SCOPE = 5;
 
 	int Mode;
 	/**モードを指定する*/
@@ -71,6 +72,8 @@ public class DropFileHandler extends TransferHandler {
 				}else if (file.getName().endsWith(".png")||file.getName().endsWith(".bmp")||file.getName().endsWith(".jpg")) {
 					if(Mode== ICONS){
 						PackIO.inportIcon(file);
+					}else if(Mode== SCOPE){
+						PackIO.inportScope(file);
 					}
 				}else if (file.getName().endsWith(".ogg")) {
 					if(Mode== SOUNDS){

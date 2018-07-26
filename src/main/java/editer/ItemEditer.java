@@ -37,7 +37,7 @@ import types.guns.GunData;
 import editer.ValueInfo.GunDataList;
 
 /** アイテムのデータ編集 */
-public class ItemEditer extends JPanel implements ActionListener, ChangeListener {
+public class ItemEditer extends JPanel implements ActionListener, ChangeListener ,Editer{
 	/** データ編集 */
 	private static final long serialVersionUID = 2597125412794151634L;
 	/** 射撃モードのリスト */
@@ -51,6 +51,16 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		this.setBorder(blackBorder);
 		this.setLayout(null);
 		this.setBackground(Color.WHITE);
+	}
+
+	@Override
+	public void write() {
+
+	}
+
+	@Override
+	public void setVisibleEditer(boolean value) {
+		setVisible(value);
 	}
 
 	/** エディタをクリア */
@@ -136,6 +146,9 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 				} else if (type == DataType.Boolean) {
 					panel = new BooleanSetPanel(Data, info, true);
 					panel.setBounds(60, 0 + yOffset, root.getWidth()-60, 20);
+				} else if (type == DataType.String) {
+					panel = new StringSetPanel(Data, info, true);
+					panel.setBounds(0, 0 + yOffset, root.getWidth(), 20);
 				}
 				root.add(panel);
 				yOffset += 22;
@@ -145,7 +158,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		bounds.height = yOffset + 2;
 		root.setBounds(bounds);
 	}
-	
+
 	/** BulletDataの内容変更全部 */
 	public void writeMagazineEditer(BulletData data) {
 		this.removeAll();

@@ -32,6 +32,7 @@ public class LocalizeHandler {
 	public static final String Magazine = "magazine";
 	public static final String Icon = "icon";
 	public static final String Sound = "sound";
+	public static final String Scope = "scope";
 	public static final String Exit = "exit";
 
 	/** ここですべての登録するlangを追加する */

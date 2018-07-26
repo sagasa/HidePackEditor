@@ -22,7 +22,7 @@ public class GunData extends DataBase {
 	/** 射撃モード : String配列型 **/
 	public String[] FIREMODE=new String[] { "semiauto" };
 	/** 貫通力 貫通力体のMOBにダメージが与えられる -1で∞ : int型 **/
-	public int BULLET_POWER = 1;
+	public int BULLET_POWER = 0;
 	/** バーストのレート : int型 **/
 	public int BURST_RATE_TICK = 1;
 	/** バーストの発射数 : int型 **/
@@ -57,6 +57,8 @@ public class GunData extends DataBase {
 	public int AIRCRAFT_DAMAGE_ADD=0;
 	/** 対航空機ダメージ倍率 : float型 **/
 	public float AIRCRAFT_DAMAGE_DIAMETER=1f;
+	/**スコープのテクスチャ名 空白でスコープなし : String型*/
+	public String SCOPE_NAME;
 	/** 発射音 : Sound型 **/
 	public Sound SOUND_SHOOT=new Sound("sample", 60);
 	/** リロード音 : Sound型 **/
@@ -74,5 +76,5 @@ public class GunData extends DataBase {
 			bullets[i] = bullets[i]+PackLoader.DOMAIN_MAGAZINE+Domain;
 		}
 	}*/
-	
+
 }

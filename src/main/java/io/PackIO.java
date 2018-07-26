@@ -155,6 +155,30 @@ public class PackIO {
 		}
 	}
 
+	/** Scopeをインポート */
+	public static void inportScope() {
+		JFileChooser filechooser = makeFileChooser(new FileNameExtensionFilter("Image", "png", "jpg", "bmp"));
+		int selected = filechooser.showOpenDialog(null);
+
+		if (selected == 0) {
+			for (File file : filechooser.getSelectedFiles()) {
+				inportScope(file);
+			}
+		}
+	}
+
+	/** Scopeをインポート */
+	public static void inportScope(File file) {
+		try {
+			Window.ScopeMap.put(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
+			// Window.ItemList.write();
+			Window.ResourceList.write();
+			Window.ItemList.showEditer();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/** Soundをインポート */
 	public static void inportSound() {
 		JFileChooser filechooser = makeFileChooser(new FileNameExtensionFilter("Sound", "ogg"));
@@ -299,7 +323,7 @@ public class PackIO {
 
 	/**
 	 * byte配列とNameからパックの要素の当てはめる
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	static void PackWrapper(byte[] data, String name) throws IOException {
