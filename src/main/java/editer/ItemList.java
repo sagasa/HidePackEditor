@@ -160,13 +160,14 @@ public class ItemList extends JTabbedPane
 		case 0:
 			// gun
 			if (!gunList.isSelectionEmpty() && Window.GunList.containsKey(gunList.getSelectedValue())) {
-				Window.INSTANCE.showEditer(new ItemEditer((Window.GunList.get(gunList.getSelectedValue()))));
+				Window.ItemEditer.writeGunEditer(Window.GunList.get(gunList.getSelectedValue()));
 			}
 			break;
 		case 1:
 			// magazine
 			if (!magazineList.isSelectionEmpty() && Window.BulletList.containsKey(magazineList.getSelectedValue())) {
-				Window.INSTANCE.showEditer(new ItemEditer(Window.BulletList.get(magazineList.getSelectedValue())));
+
+				Window.ItemEditer.writeMagazineEditer(Window.BulletList.get(magazineList.getSelectedValue()));
 			}
 			break;
 		case 2:
@@ -211,6 +212,7 @@ public class ItemList extends JTabbedPane
 	/** タブが変わったら */
 	@Override
 	public void stateChanged(ChangeEvent e) {
+		Window.ItemEditer.clearEditer();
 		showEditer();
 	}
 }

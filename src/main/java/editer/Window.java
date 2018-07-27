@@ -51,11 +51,10 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 
 	public static Window MainWindow;
 	public static ItemList ItemList;
+	public static ItemEditer ItemEditer;
 	public static ResourceList ResourceList;
 	public static PackInfoEditer PackInfoEditer;
-	/**画面中央のエディタ*/
-	private static JPanel Editer;
-	
+
 	/** 変数初期化 */
 	public void clear() {
 		packPath = null;
@@ -69,7 +68,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		editer.ItemList.gunNum = 0;
 		editer.ItemList.bulletNum = 0;
 		PackInfoEditer.write();
-		
+		ItemEditer.clearEditer();
 	}
 
 	/** メニューバーと各パネルを配置 */
@@ -113,6 +112,8 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 
 		this.setJMenuBar(menubar);
 
+		ItemEditer = new ItemEditer();
+		this.add(ItemEditer);
 		ItemList = new ItemList();
 		this.add(ItemList);
 		ResourceList = new ResourceList();
@@ -137,18 +138,23 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		INSTANCE = new Window();
 	}
 
+	Editer openedEditer = null;
 	/**エディター操作*/
-	public void showEditer(JPanel editer){
+	public void showEditer(Editer editer){
 		//今出ているのを隠す
-		if(Editer != null&&!Editer.equals(editer)){
-			this.remove(Editer);
+		if(openedEditer != null&&!openedEditer.equals(editer)){
+			openedEditer.setVisibleEditer(false);
 		}
 		//標示する
 		if(editer!= null){
-			this.add(editer);
-			Editer = editer;
+			openedEditer = editer;
+			editer.setVisibleEditer(true);
 		}
-		this.repaint();
+	}
+	/**エディター操作*/
+	public void rewriteEditer(){
+		//今出ているのを隠す
+
 	}
 
 	// メニュー操作受付
@@ -178,8 +184,8 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		if (ItemList != null) {
 			ItemList.setBounds(0, 100, 200, this.getHeight() - 160);
 		}
-		if (Editer != null) {
-			Editer.setBounds(200, 0, this.getWidth() - 400, this.getHeight() - 60);
+		if (ItemEditer != null) {
+			ItemEditer.setBounds(200, 0, this.getWidth() - 400, this.getHeight() - 60);
 		}
 		if (ResourceList != null) {
 			ResourceList.setBounds(this.getWidth() - 200, 0, 200, this.getHeight() - 60);
