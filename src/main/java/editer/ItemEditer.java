@@ -37,7 +37,7 @@ import types.guns.GunData;
 import editer.ValueInfo.GunDataList;
 
 /** アイテムのデータ編集 */
-public class ItemEditer extends JPanel implements ActionListener, ChangeListener ,Editer{
+public class ItemEditer extends JPanel implements ActionListener, ChangeListener{
 	/** データ編集 */
 	private static final long serialVersionUID = 2597125412794151634L;
 	/** 射撃モードのリスト */
@@ -47,32 +47,17 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 
 	private static final LineBorder blackBorder = new LineBorder(Color.black, 1, false);
 
-	public ItemEditer() {
+	private ItemEditer() {
 		this.setBorder(blackBorder);
 		this.setLayout(null);
 		this.setBackground(Color.WHITE);
-	}
-
-	@Override
-	public void write() {
-
-	}
-
-	@Override
-	public void setVisibleEditer(boolean value) {
-		setVisible(value);
-	}
-
-	/** エディタをクリア */
-	public void clearEditer() {
-		this.removeAll();
-		repaint();
-	}
-
-	/** GunDataの内容変更全部 */
-	public void writeGunEditer(GunData data) {
-		this.removeAll();
+		this.setBounds(200, 0, Window.INSTANCE.getWidth() - 400,  Window.INSTANCE.getHeight() - 60);
 		Window.INSTANCE.showEditer(this);
+	}
+
+	/** GunDataの内容変更全部  自動でエディタ表示*/
+	public ItemEditer(GunData data) {
+		this();
 		Data = data;
 		writeItemInfo(0, 0, ChangeListener.DOMAIN_GUN);
 		// 細かいパラメータ描画
@@ -132,6 +117,8 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		delete.setBackground(Color.RED);
 		deletePanel.add(delete);
 		this.add(deletePanel);
+		this.list();
+		repaint();
 	}
 
 	private void writeNumberValue(JPanel root, EnumDataInfo[] infoes, int cate) {
@@ -159,9 +146,9 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		root.setBounds(bounds);
 	}
 
-	/** BulletDataの内容変更全部 */
-	public void writeMagazineEditer(BulletData data) {
-		this.removeAll();
+	/** BulletDataの内容変更全部  自動でエディタ表示 */
+	public ItemEditer(BulletData data) {
+		this();
 		Data = data;
 		writeItemInfo(0, 0, ChangeListener.DOMAIN_MAGAZINE);
 		// こまごまとした設定項目
@@ -260,6 +247,11 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		infoPanel.add(display);
 		yOffset += 22;
 
+		JLabel label = new JLabel();
+		label.setBackground(Color.BLACK);
+		label.setBounds(0, 10, 1000, 1000);
+		this.add(label);
+		
 		StringSetPanel shortName = new StringSetPanel(info, ItemDataList.NAME_SHORT, true);
 		shortName.setBounds(0, yOffset, 245, 20);
 		infoPanel.add(shortName);
@@ -356,7 +348,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 			icon1.setImage(Window.IconMap.get(value));
 		} else if (e.getActionCommand().equals("gunDelete")) {
 			Window.GunList.remove(getItemInfo().NAME_DISPLAY);
-			clearEditer();
+			Window.INSTANCE.showEditer(null);
 			Window.ItemList.write();
 		}
 	}

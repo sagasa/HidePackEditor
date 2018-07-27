@@ -29,9 +29,8 @@ public class ResourceList extends JTabbedPane
 	private static final long serialVersionUID = -1038244099915798138L;
 
 	DefaultListModel<String> iconModel;
-	JList<String> iconList;
 	DefaultListModel<String> soundModel;
-	JList<String> soundList;
+	DefaultListModel<String> scopeModel;
 
 	JPopupMenu popup = new JPopupMenu();
 
@@ -54,29 +53,27 @@ public class ResourceList extends JTabbedPane
 		propertyMenuItem.addActionListener(this);
 		popup.add(updateMenuItem);
 		popup.add(propertyMenuItem);
-		// リスト
-		iconList = new JList<String>();
-		iconModel = new DefaultListModel<String>();
-		iconList.setModel(iconModel);
-		iconList.addMouseListener(this);
-		iconList.setTransferHandler(new DropFileHandler(DropFileHandler.ICONS));
-		iconList.addListSelectionListener(this);
-		JScrollPane iconSp = new JScrollPane();
-		iconSp.getViewport().setView(iconList);
-		this.addTab("Icons", iconSp);
-		// サウンド
-		soundList = new JList<String>();
-		soundModel = new DefaultListModel<String>();
-		soundList.setModel(soundModel);
-		soundList.addMouseListener(this);
-		soundList.setTransferHandler(new DropFileHandler(DropFileHandler.SOUNDS));
-		soundList.addListSelectionListener(this);
-		JScrollPane soundSp = new JScrollPane();
-		soundSp.getViewport().setView(soundList);
-		this.addTab("Sound", soundSp);
+		// タブ追加
+		iconModel = addTab("Icons",DropFileHandler.ICONS);
+		soundModel = addTab("Sound",DropFileHandler.SOUNDS);
+		scopeModel = addTab("Scope",DropFileHandler.SCOPE);
 		write();
 	}
 
+	/**タブ追加*/
+	private DefaultListModel<String> addTab(String name,int mode){
+		JList<String> list = new JList<String>();
+		DefaultListModel<String> model = new DefaultListModel<String>();
+		list.setModel(model);
+		list.addMouseListener(this);
+		list.setTransferHandler(new DropFileHandler(mode));
+		list.addListSelectionListener(this);
+		JScrollPane soundSp = new JScrollPane();
+		soundSp.getViewport().setView(list);
+		this.addTab(name, soundSp);
+		return model;
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -98,6 +95,7 @@ public class ResourceList extends JTabbedPane
 		}
 	}
 
+	//リスト更新
 	public void write() {
 		iconModel.removeAllElements();
 		String[] keySet = Window.IconMap.keySet().toArray(new String[Window.IconMap.keySet().size()]);
@@ -110,6 +108,12 @@ public class ResourceList extends JTabbedPane
 		Arrays.sort(keySet);
 		for (String name : keySet) {
 			soundModel.addElement(name);
+		}
+		scopeModel.removeAllElements();
+		keySet = Window.ScopeMap.keySet().toArray(new String[Window.SoundMap.keySet().size()]);
+		Arrays.sort(keySet);
+		for (String name : keySet) {
+			scopeModel.addElement(name);
 		}
 	}
 
@@ -126,6 +130,12 @@ public class ResourceList extends JTabbedPane
 		switch (this.getSelectedIndex()) {
 		case 0:
 			// icon
+			break;
+		case 1:
+			// sound
+			break;
+		case 2:
+			// scope
 			break;
 		}
 	}
