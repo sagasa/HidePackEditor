@@ -22,6 +22,8 @@ public class DropFileHandler extends TransferHandler {
 	public static final int ICONS = 3;
 	public static final int SOUNDS = 4;
 	public static final int SCOPE = 5;
+	public static final int ARMOR = 6;
+	public static final int ATTACHMENT = 7;
 
 	int Mode;
 	/**モードを指定する*/

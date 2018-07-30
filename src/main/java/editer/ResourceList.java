@@ -21,6 +21,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import helper.DropFileHandler;
+import helper.LocalizeHandler;
+import helper.LocalizeHandler.Lang;
 import io.PackIO;
 
 public class ResourceList extends JTabbedPane
@@ -53,10 +55,10 @@ public class ResourceList extends JTabbedPane
 		propertyMenuItem.addActionListener(this);
 		popup.add(updateMenuItem);
 		popup.add(propertyMenuItem);
-		// タブ追加
-		iconModel = addTab("Icons",DropFileHandler.ICONS);
-		soundModel = addTab("Sound",DropFileHandler.SOUNDS);
-		scopeModel = addTab("Scope",DropFileHandler.SCOPE);
+		// タブ追加 順番が重要
+		iconModel = addTab(LocalizeHandler.getLocalizedName(Lang.Icon),DropFileHandler.ICONS);
+		soundModel = addTab(LocalizeHandler.getLocalizedName(Lang.Sound),DropFileHandler.SOUNDS);
+		scopeModel = addTab(LocalizeHandler.getLocalizedName(Lang.Scope),DropFileHandler.SCOPE);
 		write();
 	}
 

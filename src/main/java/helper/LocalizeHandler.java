@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import editer.ValueInfo;
 
-/** langの読み込みと表示用 */
+/** langの読み込みと表示用  + 説明書きも対応*/
 public class LocalizeHandler {
 	/** UnlocalizedNameのリスト */
 	static private ArrayList<String> UnlocalizedNames = new ArrayList<String>();
@@ -20,40 +20,11 @@ public class LocalizeHandler {
 	/** 現在使用中のLang */
 	static private String nowLang = "default";
 
-	// メニュー用Lang
-	public static final String File = "file";
-	public static final String Edit = "edit";
-	public static final String New = "new";
-	public static final String Open = "open";
-	public static final String Save = "save";
-	public static final String SaveAs = "saveas";
-	public static final String Import = "import";
-	public static final String Gun = "gun";
-	public static final String Magazine = "magazine";
-	public static final String Icon = "icon";
-	public static final String Sound = "sound";
-	public static final String Scope = "scope";
-	public static final String Lang = "lang";
-	public static final String Exit = "exit";
-
 	/** ここですべての登録するlangを追加する */
 	public static void init() {
-		addName(File);
-		addName(Edit);
-
-		addName(New);
-		addName(Open);
-		addName(Save);
-		addName(SaveAs);
-		addName(Import);
-
-		addName(Gun);
-		addName(Magazine);
-		addName(Icon);
-		addName(Sound);
-		addName(Scope);
-		addName(Lang);
-		addName(Exit);
+		for(Lang lang:Lang.values()){
+			addName(lang.toString().toLowerCase());
+		}
 		// enumをノックしてインスタンスを作らせる
 		ValueInfo.BulletDataList.values();
 		ValueInfo.ExplosionDataList.values();
@@ -96,29 +67,31 @@ public class LocalizeHandler {
 				try {
 					// Mapを用意
 					HashMap<String, String> lang = new HashMap<>();
-					//不足分を確認
+					// 不足分を確認
 					@SuppressWarnings("unchecked")
-					ArrayList<String> list  = (ArrayList<String>) UnlocalizedNames.clone();
+					ArrayList<String> list = (ArrayList<String>) UnlocalizedNames.clone();
 					FileReader r = new FileReader(file);
 					BufferedReader reader = new BufferedReader(r);
 					// 読み込む
 					String line;
 					while ((line = reader.readLine()) != null) {
-						String[] split = line.split("=",2);
+						String[] split = line.split("=", 2);
 						if (1 < split.length) {
 							String key = split[0].trim();
+							String value = split[1].trim();
 							if (UnlocalizedNames.contains(key)) {
-								lang.put(key, split[0].trim());
-								list.remove(split[1]);
+								lang.put(key, value);
+								list.remove(key);
 							}
 						}
 					}
 					reader.close();
 					r.close();
-					//ファイル末尾に足りない分を記述
-					FileWriter writer = new FileWriter(file,true);
+					// ファイル末尾に足りない分を記述 + 登録
+					FileWriter writer = new FileWriter(file, true);
 					for (String name : list) {
 						writer.write(name + " = " + name + "\n");
+						lang.put(name, name);
 					}
 					writer.close();
 					// Mapを登録
@@ -140,6 +113,11 @@ public class LocalizeHandler {
 		return LangMap.keySet().toArray(new String[LangMap.keySet().size()]);
 	}
 
+	/** 今のLang名を取得 */
+	public static String getLang() {
+		return nowLang;
+	}
+
 	/** Langをセット できなければfalse */
 	public static boolean setLang(String name) {
 		if (LangMap.keySet().contains(name)) {
@@ -155,5 +133,14 @@ public class LocalizeHandler {
 			return lang.get(unlocalizedName);
 		}
 		return null;
+	}
+
+	public static String getLocalizedName(Lang lang) {
+		return getLocalizedName(lang.toString().toLowerCase());
+	}
+	
+	/** メニュー用Lang */
+	public enum Lang {
+		File, Edit, New, Open, Save, SaveAs, Import, Gun, Magazine, Armor, Attachment, Icon, Sound, Scope, Lang, Exit,
 	}
 }

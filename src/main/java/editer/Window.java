@@ -13,13 +13,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
+
 import helper.LocalizeHandler;
+import helper.LocalizeHandler.Lang;
 import io.PackIO;
 import types.*;
 import types.guns.GunData;
@@ -88,24 +92,24 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 
 		// メニューバー
 		JMenuBar menubar = new JMenuBar();
-		JMenu file = new JMenu(LocalizeHandler.getLocalizedName(LocalizeHandler.File));
-		JMenu edit = new JMenu(LocalizeHandler.getLocalizedName(LocalizeHandler.Edit));
+		JMenu file = new JMenu(LocalizeHandler.getLocalizedName(Lang.File));
+		JMenu edit = new JMenu(LocalizeHandler.getLocalizedName(Lang.Edit));
 
 		menubar.add(file);
 		menubar.add(Box.createRigidArea(new Dimension(5, 1)));
 		menubar.add(edit);
 
-		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.New), "New");
-		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.Open), "Open");
-		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.Save), "Save");
-		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.SaveAs), "SaveAs");
-		JMenu inport = new JMenu(LocalizeHandler.getLocalizedName(LocalizeHandler.Import));
+		addMenuItem(file, LocalizeHandler.getLocalizedName(Lang.New), "New");
+		addMenuItem(file, LocalizeHandler.getLocalizedName(Lang.Open), "Open");
+		addMenuItem(file, LocalizeHandler.getLocalizedName(Lang.Save), "Save");
+		addMenuItem(file, LocalizeHandler.getLocalizedName(Lang.SaveAs), "SaveAs");
+		JMenu inport = new JMenu(LocalizeHandler.getLocalizedName(Lang.Import));
 		file.add(inport);
-		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Gun), "inGun");
-		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Magazine), "inMagazine");
-		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Icon), "inIcon");
-		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Sound), "inSound");
-		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Scope), "inScope");
+		addMenuItem(inport, LocalizeHandler.getLocalizedName(Lang.Gun), "inGun");
+		addMenuItem(inport, LocalizeHandler.getLocalizedName(Lang.Magazine), "inMagazine");
+		addMenuItem(inport, LocalizeHandler.getLocalizedName(Lang.Icon), "inIcon");
+		addMenuItem(inport, LocalizeHandler.getLocalizedName(Lang.Sound), "inSound");
+		addMenuItem(inport, LocalizeHandler.getLocalizedName(Lang.Scope), "inScope");
 
 		ItemEditer = new ItemEditer();
 		ItemList = new ItemList();
@@ -118,15 +122,22 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		this.add(PackInfoEditer);
 
 		// 言語
-		JMenu lang = new JMenu(LocalizeHandler.getLocalizedName(LocalizeHandler.Lang));
+		JMenu lang = new JMenu(LocalizeHandler.getLocalizedName(Lang.Lang));
 		file.add(lang);
+		ButtonGroup group = new ButtonGroup();
+	
 		for (String name : LocalizeHandler.getLangList()) {
 			if (!name.equals("default")) {
-				addMenuItem(lang, name, "Lang_" + name);
+				JRadioButtonMenuItem item = new JRadioButtonMenuItem(name);
+				item.setSelected(name.equals(LocalizeHandler.getLang()));
+				item.addActionListener(this);
+				item.setActionCommand("Lang_" + name);
+				group.add(item);
+				lang.add(item);
 			}
 		}
 
-		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.Exit), "Exit");
+		addMenuItem(file, LocalizeHandler.getLocalizedName(Lang.Exit), "Exit");
 
 		this.setJMenuBar(menubar);
 		this.setVisible(true);
@@ -146,6 +157,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	public static void main(String[] args) {
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
+		LocalizeHandler.setLang("en");
 		new Window();
 	}
 
@@ -191,6 +203,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 			PackIO.inportSound();
 		} else if (e.getActionCommand().startsWith("Lang_")) {
 			String cmd = e.getActionCommand();
+			System.out.println(cmd);
 			LocalizeHandler.setLang(cmd.replaceAll("Lang_", ""));
 			this.dispose();
 			new Window();

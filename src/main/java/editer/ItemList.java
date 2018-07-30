@@ -17,6 +17,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import helper.DropFileHandler;
+import helper.LocalizeHandler;
+import helper.LocalizeHandler.Lang;
 import types.BulletData;
 import types.ItemInfo;
 import types.guns.GunData;
@@ -27,16 +29,12 @@ public class ItemList extends JTabbedPane
 	private static final long serialVersionUID = 4651249716543985388L;
 
 	DefaultListModel<String> gunModel;
-	JList<String> gunList;
 
 	DefaultListModel<String> magazineModel;
-	JList<String> magazineList;
 
 	DefaultListModel<String> armorModel;
-	JList<String> armorList;
 
 	DefaultListModel<String> attachmentModel;
-	JList<String> attachmentList;
 
 	JPopupMenu popup = new JPopupMenu();
 
@@ -55,42 +53,26 @@ public class ItemList extends JTabbedPane
 		popup.add(updateMenuItem);
 		popup.add(propertyMenuItem);
 		// リスト
-		gunList = new JList<String>();
-		gunModel = new DefaultListModel<String>();
-		gunList.setModel(gunModel);
-		gunList.addMouseListener(this);
-		gunList.setTransferHandler(new DropFileHandler(DropFileHandler.GUNS));
-		gunList.addListSelectionListener(this);
-		JScrollPane gunSp = new JScrollPane();
-		gunSp.getViewport().setView(gunList);
-		this.addTab("Guns", gunSp);
-		magazineList = new JList<String>();
-		magazineModel = new DefaultListModel<String>();
-		magazineList.setModel(magazineModel);
-		magazineList.addMouseListener(this);
-		magazineList.setTransferHandler(new DropFileHandler(DropFileHandler.MAGAZINES));
-		magazineList.addListSelectionListener(this);
-		JScrollPane magazineSp = new JScrollPane();
-		magazineSp.getViewport().setView(magazineList);
-		this.addTab("Magazines", magazineSp);
-		armorList = new JList<String>();
-		armorModel = new DefaultListModel<String>();
-		armorList.setModel(armorModel);
-		armorList.addMouseListener(this);
-		armorList.addListSelectionListener(this);
-		JScrollPane armorSp = new JScrollPane();
-		armorSp.getViewport().setView(armorList);
-		this.addTab("Armors", armorSp);
-		attachmentList = new JList<String>();
-		attachmentModel = new DefaultListModel<String>();
-		attachmentList.setModel(attachmentModel);
-		attachmentList.addMouseListener(this);
-		attachmentList.addListSelectionListener(this);
-		JScrollPane attachmentSp = new JScrollPane();
-		attachmentSp.getViewport().setView(attachmentList);
-		this.addTab("Attachments", attachmentSp);
+		gunModel = addTab(LocalizeHandler.getLocalizedName(Lang.Gun), DropFileHandler.GUNS);
+		magazineModel = addTab(LocalizeHandler.getLocalizedName(Lang.Magazine), DropFileHandler.MAGAZINES);
+		armorModel = addTab(LocalizeHandler.getLocalizedName(Lang.Armor), DropFileHandler.ARMOR);
+		attachmentModel = addTab(LocalizeHandler.getLocalizedName(Lang.Attachment), DropFileHandler.ATTACHMENT);
 	}
 
+	/**タブ追加*/
+	private DefaultListModel<String> addTab(String name,int mode){
+		JList<String> list = new JList<String>();
+		DefaultListModel<String> model = new DefaultListModel<String>();
+		list.setModel(model);
+		list.addMouseListener(this);
+		list.setTransferHandler(new DropFileHandler(mode));
+		list.addListSelectionListener(this);
+		JScrollPane sp = new JScrollPane();
+		sp.getViewport().setView(list);
+		this.addTab(name, sp);
+		return model;
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -156,26 +138,30 @@ public class ItemList extends JTabbedPane
 
 	/** エディタを表示 */
 	public void showEditer() {
-		switch (this.getSelectedIndex()) {
-		case 0:
-			// gun
-			if (!gunList.isSelectionEmpty() && Window.GunList.containsKey(gunList.getSelectedValue())) {
-				Window.ItemEditer.writeGunEditer(Window.GunList.get(gunList.getSelectedValue()));
+		@SuppressWarnings("unchecked")
+		JList<String> source = (JList<String>) ((JScrollPane)getSelectedComponent()).getViewport().getView();
+		if (!source.isSelectionEmpty()) {
+			String value = source.getSelectedValue();
+			switch (this.getSelectedIndex()) {
+			case 0:
+				// gun
+				if (Window.GunList.containsKey(value)) {
+					Window.ItemEditer.writeGunEditer(Window.GunList.get(value));
+				}
+				break;
+			case 1:
+				// magazine
+				if (Window.BulletList.containsKey(value)) {
+					Window.ItemEditer.writeMagazineEditer(Window.BulletList.get(value));
+				}
+				break;
+			case 2:
+				// armor
+				break;
+			case 3:
+				// attachment
+				break;
 			}
-			break;
-		case 1:
-			// magazine
-			if (!magazineList.isSelectionEmpty() && Window.BulletList.containsKey(magazineList.getSelectedValue())) {
-
-				Window.ItemEditer.writeMagazineEditer(Window.BulletList.get(magazineList.getSelectedValue()));
-			}
-			break;
-		case 2:
-			// armor
-			break;
-		case 3:
-			// attachment
-			break;
 		}
 	}
 
