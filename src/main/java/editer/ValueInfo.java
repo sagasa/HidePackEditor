@@ -83,7 +83,7 @@ public class ValueInfo {
 		/** 対航空機ダメージ倍率 : float型 **/
 		AIRCRAFT_DAMAGE_DIAMETER(null, null, 2),
 		/**スコープのテクスチャ名 空白でスコープなし : String型*/
-		SCOPE_NAME(null,null,1),
+		SCOPE_NAME(null,null),
 		/** 発射音 : Sound型 **/
 		SOUND_SHOOT(null, null),
 		/** リロード音 : Sound型 **/

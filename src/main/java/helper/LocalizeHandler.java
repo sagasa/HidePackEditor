@@ -33,6 +33,7 @@ public class LocalizeHandler {
 	public static final String Icon = "icon";
 	public static final String Sound = "sound";
 	public static final String Scope = "scope";
+	public static final String Lang = "lang";
 	public static final String Exit = "exit";
 
 	/** ここですべての登録するlangを追加する */
@@ -50,6 +51,8 @@ public class LocalizeHandler {
 		addName(Magazine);
 		addName(Icon);
 		addName(Sound);
+		addName(Scope);
+		addName(Lang);
 		addName(Exit);
 		// enumをノックしてインスタンスを作らせる
 		ValueInfo.BulletDataList.values();
@@ -92,23 +95,32 @@ public class LocalizeHandler {
 			if (file.getName().endsWith(".lang")) {
 				try {
 					// Mapを用意
-					HashMap<String, String> lang = new HashMap<String, String>();
-
+					HashMap<String, String> lang = new HashMap<>();
+					//不足分を確認
+					@SuppressWarnings("unchecked")
+					ArrayList<String> list  = (ArrayList<String>) UnlocalizedNames.clone();
 					FileReader r = new FileReader(file);
 					BufferedReader reader = new BufferedReader(r);
 					// 読み込む
 					String line;
 					while ((line = reader.readLine()) != null) {
-						String[] split = line.split("=");
+						String[] split = line.split("=",2);
 						if (1 < split.length) {
 							String key = split[0].trim();
 							if (UnlocalizedNames.contains(key)) {
-								lang.put(key, split[1].trim());
+								lang.put(key, split[0].trim());
+								list.remove(split[1]);
 							}
 						}
 					}
 					reader.close();
 					r.close();
+					//ファイル末尾に足りない分を記述
+					FileWriter writer = new FileWriter(file,true);
+					for (String name : list) {
+						writer.write(name + " = " + name + "\n");
+					}
+					writer.close();
 					// Mapを登録
 					LangMap.put(file.getName().replace(".lang", ""), lang);
 				} catch (IOException e) {

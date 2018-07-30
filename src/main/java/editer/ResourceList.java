@@ -73,7 +73,7 @@ public class ResourceList extends JTabbedPane
 		this.addTab(name, soundSp);
 		return model;
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -110,7 +110,8 @@ public class ResourceList extends JTabbedPane
 			soundModel.addElement(name);
 		}
 		scopeModel.removeAllElements();
-		keySet = Window.ScopeMap.keySet().toArray(new String[Window.SoundMap.keySet().size()]);
+		keySet = Window.ScopeMap.keySet().toArray(new String[Window.ScopeMap.keySet().size()]);
+		System.out.println(keySet.length);
 		Arrays.sort(keySet);
 		for (String name : keySet) {
 			scopeModel.addElement(name);

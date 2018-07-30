@@ -246,16 +246,26 @@ public class PackIO {
 			dataList.put("pack.json", new ByteArrayInputStream(Window.Pack.MakeJsonData().getBytes()));
 
 			// リソース
-			for (String name : Window.IconMap.keySet()) {
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				try {
-					ImageIO.write(Window.IconMap.get(name), "png", out);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				dataList.put("icon/" + name + ".png", new ByteArrayInputStream(out.toByteArray()));
-			}
+			try {
+				// Icon
+				for (String name : Window.IconMap.keySet()) {
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
 
+					ImageIO.write(Window.IconMap.get(name), "png", out);
+
+					dataList.put("icon/" + name + ".png", new ByteArrayInputStream(out.toByteArray()));
+				}
+				// Scope
+				for (String name : Window.ScopeMap.keySet()) {
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+					ImageIO.write(Window.ScopeMap.get(name), "png", out);
+
+					dataList.put("scope/" + name + ".png", new ByteArrayInputStream(out.toByteArray()));
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			for (String name : Window.SoundMap.keySet()) {
 				dataList.put("sounds/" + name + ".ogg", new ByteArrayInputStream(Window.SoundMap.get(name)));
 			}
@@ -353,6 +363,12 @@ public class PackIO {
 			String n = name.replaceAll(".png", "").replaceAll("^(.*)icon/", "");
 			Window.IconMap.put(n, ImageIO.read(new ByteArrayInputStream(data)));
 			System.out.println("icon");
+		}
+		// Scope
+		if (name.matches("^(.*)scope/(.*).png")) {
+			String n = name.replaceAll(".png", "").replaceAll("^(.*)scope/", "");
+			Window.ScopeMap.put(n, ImageIO.read(new ByteArrayInputStream(data)));
+			System.out.println("scope");
 		}
 		// model
 		if (name.matches("^(.*)model/(.*).json")) {

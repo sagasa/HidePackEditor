@@ -81,6 +81,13 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		infoPanel.setBorder(blackBorder);
 		infoPanel.setBounds(5, 195, 245, 0);
 		writeNumberValue(infoPanel, GunDataList.values(), 1);
+		//1番下にスコープネーム
+		Rectangle rect = infoPanel.getBounds();
+		StringComboPanel scope = new StringComboPanel(data, GunDataList.SCOPE_NAME,Window.ScopeMap.keySet().toArray(new String[Window.ScopeMap.keySet().size()]) , true);
+		scope.setBounds(0, rect.height-2, infoPanel.getWidth(), 20);
+		infoPanel.add(scope);
+		rect.height+=22;
+		infoPanel.setBounds(rect);
 		this.add(infoPanel);
 		// ダメージ倍率系
 		JPanel damageChange = new JPanel();

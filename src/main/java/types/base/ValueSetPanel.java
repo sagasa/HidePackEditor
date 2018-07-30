@@ -10,6 +10,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JPanel;
 
 import editer.ValueInfo;
+import io.PackIO;
 
 public abstract class ValueSetPanel extends JPanel implements ComponentListener, KeyListener, FocusListener {
 	private static final long serialVersionUID = -4980380877478474178L;
@@ -112,6 +113,7 @@ public abstract class ValueSetPanel extends JPanel implements ComponentListener,
 	}
 
 	public void save(Object value) {
+		PackIO.isChanged = true;
 		if (target != null) {
 			target.ValueChange(cate, value);
 		}

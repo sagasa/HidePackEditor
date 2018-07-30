@@ -19,8 +19,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
 import helper.LocalizeHandler;
 import io.PackIO;
 import types.*;
@@ -49,7 +47,6 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	/** パック */
 	public static ContentsPack Pack;
 
-	public static Window MainWindow;
 	public static ItemList ItemList;
 	public static ItemEditer ItemEditer;
 	public static ResourceList ResourceList;
@@ -62,6 +59,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		BulletList = new HashMap<String, BulletData>();
 		GunList = new HashMap<String, GunData>();
 		IconMap = new HashMap<String, BufferedImage>();
+		ScopeMap = new HashMap<String, BufferedImage>();
 		IconMap.put("sample", editer.ResourceList.nullImage);
 		SoundMap = new HashMap<String, byte[]>();
 		ItemList.write();
@@ -73,7 +71,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 
 	/** メニューバーと各パネルを配置 */
 	public Window() {
-		MainWindow = this;
+		INSTANCE = this;
 		this.setTitle("HidePackEditer");
 		this.setIconImage(new ImageIcon(ClassLoader.getSystemResource("icon/M14_scope.png")).getImage());
 		this.setLayout(null);
@@ -108,21 +106,34 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Icon), "inIcon");
 		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Sound), "inSound");
 		addMenuItem(inport, LocalizeHandler.getLocalizedName(LocalizeHandler.Scope), "inScope");
+
+		ItemEditer = new ItemEditer();
+		ItemList = new ItemList();
+		PackInfoEditer = new PackInfoEditer();
+		ResourceList = new ResourceList();
+
+		this.add(ItemEditer);
+		this.add(ItemList);
+		this.add(ResourceList);
+		this.add(PackInfoEditer);
+
+		// 言語
+		JMenu lang = new JMenu(LocalizeHandler.getLocalizedName(LocalizeHandler.Lang));
+		file.add(lang);
+		for (String name : LocalizeHandler.getLangList()) {
+			if (!name.equals("default")) {
+				addMenuItem(lang, name, "Lang_" + name);
+			}
+		}
+
 		addMenuItem(file, LocalizeHandler.getLocalizedName(LocalizeHandler.Exit), "Exit");
 
 		this.setJMenuBar(menubar);
-
-		ItemEditer = new ItemEditer();
-		this.add(ItemEditer);
-		ItemList = new ItemList();
-		this.add(ItemList);
-		ResourceList = new ResourceList();
-		this.add(ResourceList);
-
-		PackInfoEditer = new PackInfoEditer();
-		this.add(PackInfoEditer);
-
 		this.setVisible(true);
+		// パックがないなら作っとく
+		if (Pack == null) {
+			PackIO.makePack();
+		}
 	}
 
 	private void addMenuItem(JMenu menu, String name, String cmd) {
@@ -135,25 +146,27 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	public static void main(String[] args) {
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
-		INSTANCE = new Window();
+		new Window();
 	}
 
 	Editer openedEditer = null;
-	/**エディター操作*/
-	public void showEditer(Editer editer){
-		//今出ているのを隠す
-		if(openedEditer != null&&!openedEditer.equals(editer)){
+
+	/** エディター操作 */
+	public void showEditer(Editer editer) {
+		// 今出ているのを隠す
+		if (openedEditer != null && !openedEditer.equals(editer)) {
 			openedEditer.setVisibleEditer(false);
 		}
-		//標示する
-		if(editer!= null){
+		// 標示する
+		if (editer != null) {
 			openedEditer = editer;
 			editer.setVisibleEditer(true);
 		}
 	}
-	/**エディター操作*/
-	public void rewriteEditer(){
-		//今出ているのを隠す
+
+	/** エディター操作 */
+	public void rewriteEditer() {
+		// 今出ているのを隠す
 
 	}
 
@@ -176,6 +189,11 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 			PackIO.inportIcon();
 		} else if (e.getActionCommand().equals("inSound")) {
 			PackIO.inportSound();
+		} else if (e.getActionCommand().startsWith("Lang_")) {
+			String cmd = e.getActionCommand();
+			LocalizeHandler.setLang(cmd.replaceAll("Lang_", ""));
+			this.dispose();
+			new Window();
 		}
 	}
 
@@ -218,7 +236,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 				} else if (ans == JOptionPane.NO_OPTION) {
 					System.exit(0);
 				}
-			}else{
+			} else {
 				System.exit(0);
 			}
 

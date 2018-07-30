@@ -58,7 +58,7 @@ public class GunData extends DataBase {
 	/** 対航空機ダメージ倍率 : float型 **/
 	public float AIRCRAFT_DAMAGE_DIAMETER=1f;
 	/**スコープのテクスチャ名 空白でスコープなし : String型*/
-	public String SCOPE_NAME;
+	public String SCOPE_NAME = "";
 	/** 発射音 : Sound型 **/
 	public Sound SOUND_SHOOT=new Sound("sample", 60);
 	/** リロード音 : Sound型 **/
