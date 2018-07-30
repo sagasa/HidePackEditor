@@ -16,7 +16,7 @@ public class LocalizeHandler {
 	/** UnlocalizedNameのリスト */
 	static private ArrayList<String> UnlocalizedNames = new ArrayList<String>();
 	/** ロードされたlangリスト */
-	static private LinkedHashMap<String, HashMap<String, String>> LangMap = new LinkedHashMap<String, HashMap<String, String>>();
+	static private LinkedHashMap<String, HashMap<String, LangCell>> LangMap = new LinkedHashMap<String, HashMap<String, LangCell>>();
 	/** 現在使用中のLang */
 	static private String nowLang = "default";
 
@@ -66,7 +66,7 @@ public class LocalizeHandler {
 			if (file.getName().endsWith(".lang")) {
 				try {
 					// Mapを用意
-					HashMap<String, String> lang = new HashMap<>();
+					HashMap<String, LangCell> lang = new HashMap<>();
 					// 不足分を確認
 					@SuppressWarnings("unchecked")
 					ArrayList<String> list = (ArrayList<String>) UnlocalizedNames.clone();
@@ -91,7 +91,7 @@ public class LocalizeHandler {
 					FileWriter writer = new FileWriter(file, true);
 					for (String name : list) {
 						writer.write(name + " = " + name + "\n");
-						lang.put(name, name);
+						lang.put(name, new LangCell(name, null));
 					}
 					writer.close();
 					// Mapを登録
@@ -142,5 +142,14 @@ public class LocalizeHandler {
 	/** メニュー用Lang */
 	public enum Lang {
 		File, Edit, New, Open, Save, SaveAs, Import, Gun, Magazine, Armor, Attachment, Icon, Sound, Scope, Lang, Exit,
+	}
+	/**説明とローカライズネームのセット*/
+	class LangCell{
+		public LangCell(String Localname,String lore) {
+			LocalName = Localname;
+			Lore = lore;
+		}
+		String LocalName;
+		String Lore;
 	}
 }
