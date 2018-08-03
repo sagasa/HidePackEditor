@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import editer.ValueInfo;
+import types.LangCell;
 
 /** langの読み込みと表示用  + 説明書きも対応*/
 public class LocalizeHandler {
@@ -79,8 +80,12 @@ public class LocalizeHandler {
 						if (1 < split.length) {
 							String key = split[0].trim();
 							String value = split[1].trim();
+							split = value.split("$", 2);
+							String name = split[0].trim();
+							String lore = split[1]==null?"":split[0].trim();
+
 							if (UnlocalizedNames.contains(key)) {
-								lang.put(key, value);
+								lang.put(key,new LangCell(name,lore) );
 								list.remove(key);
 							}
 						}
@@ -128,9 +133,17 @@ public class LocalizeHandler {
 	}
 
 	static public String getLocalizedName(String unlocalizedName) {
-		Map<String, String> lang = LangMap.get(nowLang);
+		Map<String, LangCell> lang = LangMap.get(nowLang);
 		if (lang.containsKey(unlocalizedName)) {
-			return lang.get(unlocalizedName);
+			return lang.get(unlocalizedName).LocalName;
+		}
+		return null;
+	}
+
+	static public String getLocalizedLore(String unlocalizedName) {
+		Map<String, LangCell> lang = LangMap.get(nowLang);
+		if (lang.containsKey(unlocalizedName)) {
+			return lang.get(unlocalizedName).Lore;
 		}
 		return null;
 	}
@@ -138,18 +151,9 @@ public class LocalizeHandler {
 	public static String getLocalizedName(Lang lang) {
 		return getLocalizedName(lang.toString().toLowerCase());
 	}
-	
+
 	/** メニュー用Lang */
 	public enum Lang {
 		File, Edit, New, Open, Save, SaveAs, Import, Gun, Magazine, Armor, Attachment, Icon, Sound, Scope, Lang, Exit,
-	}
-	/**説明とローカライズネームのセット*/
-	class LangCell{
-		public LangCell(String Localname,String lore) {
-			LocalName = Localname;
-			Lore = lore;
-		}
-		String LocalName;
-		String Lore;
 	}
 }
