@@ -8,7 +8,6 @@
     <java.version>1.8</java.version>
 </properties>
 
-<!-- E½vE½E½E½OE½CE½E½E½ÌÝ’ï¿½ -->
 <build>
     <plugins>
        <plugin>
@@ -40,8 +39,6 @@
 </plugin>
     </plugins>
 </build>
-<!-- E½E½E½E½E½E½E½Ü‚ï¿½ -->
-
 	<dependencies>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

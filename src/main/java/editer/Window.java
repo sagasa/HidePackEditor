@@ -22,9 +22,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 
+import helper.FlanModelLoader;
 import helper.LocalizeHandler;
 import helper.LocalizeHandler.Lang;
 import io.PackIO;
+import panels.LWJGLPanel;
 import types.*;
 import types.guns.GunData;
 
@@ -125,7 +127,7 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 		JMenu lang = new JMenu(LocalizeHandler.getLocalizedName(Lang.Lang));
 		file.add(lang);
 		ButtonGroup group = new ButtonGroup();
-	
+
 		for (String name : LocalizeHandler.getLangList()) {
 			if (!name.equals("default")) {
 				JRadioButtonMenuItem item = new JRadioButtonMenuItem(name);
@@ -155,6 +157,11 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	}
 
 	public static void main(String[] args) {
+		FlanModelLoader.loadFlanModel("pc12.ModelR1918");
+		//LWJGLテスト
+		//LWJGLPanel modelWindow = new LWJGLPanel();
+		//modelWindow.model = FlanModelLoader.loadFlanModel("pc12.ModelR1918");
+
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
 		LocalizeHandler.setLang("en");

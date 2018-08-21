@@ -85,14 +85,14 @@ public abstract class DataBase implements Cloneable {
 		return true;
 	}
 
-	/** 全てのパブリックフィールドに引数の各フィールドの値を加算 */
+	/** 全てのパブリックフィールドに引数の各フィールドの値を乗算 */
 	public boolean overcoe(DataBase data) {
 		// 型を比較
 		if (!data.getClass().isAssignableFrom(this.getClass())) {
 			return false;
 		}
 		Class<? extends DataBase> clazz = data.getClass();
-		// フィールドが数値型なら加算 DataBaseならoveradd実行
+		// フィールドが数値型なら加算 DataBaseならovercoe実行
 		try {
 			for (Field f : clazz.getFields()) {
 				if (f.getType().isAssignableFrom(float.class) || f.getType().isAssignableFrom(Float.class)) {
