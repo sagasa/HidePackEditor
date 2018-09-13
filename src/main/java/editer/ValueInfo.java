@@ -42,14 +42,14 @@ public class ValueInfo {
 		PREPARE_TICK(0f, null, 1),
 		/** リロード ; リロードにtickかかる : int型 **/
 		RELOAD_TICK(0f, null, 1),
-		/** レート ; レートtick間隔で発射する : int型 **/
-		RATE_TICK(0f, null, 1),
+		/** 分間発射数 : int型 **/
+		RPM(0f, null, 1),
 		/** 射撃モード : String配列型 **/
 		FIREMODE(null, null),
 		/** 貫通力 貫通力体のMOBにダメージが与えられる -1で∞ : int型 **/
 		BULLET_POWER(-1f, null, 1),
-		/** バーストのレート : int型 **/
-		BURST_RATE_TICK(0f, null, 1),
+		/** バーストの分間発射数 : int型 **/
+		BURST_RPM(0f, null, 1),
 		/** バーストの発射数 : int型 **/
 		BURST_BULLET_NUM(1f, null, 1),
 		/** 装填数 : int型 **/
@@ -89,7 +89,11 @@ public class ValueInfo {
 		/** リロード音 : Sound型 **/
 		SOUND_RELOAD(null, null),
 		/** 使用する弾 : StringArray型 */
-		BULLET_USE(null, null),;
+		BULLET_USE(null, null),
+		/** セカンダリにできるか*/
+		USE_SECONDARY(null, null,1),
+		/** 両手持ちできるか*/
+		USE_DUALWIELD(null, null,1),;
 
 		public static final int GUN_INFO = 1;
 
@@ -471,7 +475,7 @@ public class ValueInfo {
 		SOUND_HIT_ENTITY(null, null),
 
 		/** 通過音 : Sound型 **/
-		SOUND_PASSING_USE(null, null),
+		SOUND_PASSING(null, null),
 
 		/** 弾道落下を使用するか : boolean型 **/
 		GRAVITY_USE(null, null),

@@ -77,7 +77,7 @@ public class BulletData extends DataBase{
 	public Sound SOUND_HIT_ENTITY = new Sound("sample", 8);
 
 	/** 通過音 : Sound型 **/
-	public Sound SOUND_PASSING_USE = new Sound("sample", 8);
+	public Sound SOUND_PASSING = new Sound("sample", 8);
 
 	/**透過する・ブロック : String[]型*/
 	public String[] THROUGH_BLOCK = new String[0];

@@ -199,7 +199,7 @@ public class ItemEditer extends JPanel implements ActionListener, ChangeListener
 		// サウンド関連
 		writeSoundEditer(690, 0, BulletDataList.SOUND_HIT_ENTITY, Data, this);
 		writeSoundEditer(690, 120, BulletDataList.SOUND_HIT_GROUND, Data, this);
-		writeSoundEditer(690, 240, BulletDataList.SOUND_PASSING_USE, Data, this);
+		writeSoundEditer(690, 240, BulletDataList.SOUND_PASSING, Data, this);
 	}
 
 	JComboBox<String> SoundList;

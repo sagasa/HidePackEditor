@@ -124,3 +124,8 @@ sound.use.decay = sound.use.decay
 sound.use.delay = sound.use.delayfile = file
 armor = armor
 attachment = attachment
+magazine.sound.passing = magazine.sound.passing
+gun.use.secondary = gun.use.secondary
+gun.use.dualwield = gun.use.dualwield
+gun.rpm = gun.rpm
+gun.burst.rpm = gun.burst.rpm
