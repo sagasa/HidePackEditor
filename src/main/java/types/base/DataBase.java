@@ -53,7 +53,7 @@ public abstract class DataBase implements Cloneable {
 		try {
 			for (Field f : clazz.getFields()) {
 				f.set(this, f.get(data));
-				System.out.println("overwrite"+f.getName());
+				System.out.println("overwrite" + f.getName());
 			}
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			return false;
@@ -109,18 +109,23 @@ public abstract class DataBase implements Cloneable {
 		return true;
 	}
 
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		DataBase clone = (DataBase) super.clone();
-		for (Field f : super.getClass().getFields()) {
-			if (!f.getType().isPrimitive()) {
-				try {
-					f.set(clone, f.get(this));
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					e.printStackTrace();
+	public DataBase dataBaseClone() {
+		DataBase clone;
+		try {
+			clone = (DataBase) super.clone();
+			for (Field f : super.getClass().getFields()) {
+				if (!f.getType().isPrimitive()) {
+					try {
+						f.set(clone, f.get(this));
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						e.printStackTrace();
+					}
 				}
 			}
+			return clone;
+		} catch (CloneNotSupportedException e1) {
+			e1.printStackTrace();
 		}
-		return clone;
+		return null;
 	}
 }
