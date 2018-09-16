@@ -1,0 +1,259 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [SPG2]Hummel
+ShortName hummel
+Description Placeable on sponge._CoreHP 5000_[APHE][SPG2]Heavy Howitzer Shell_[HE][SPG2]Heavy Howitzer Shell
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon Icon_WW2_Vehicle_PanzerhaubitzeHummel_1A
+Model Manus_WW2.Vehicle.WW2_Vehicle_PanzerhaubitzeHummel_1
+Texture Skin_WW2_Vehicle_PanzerhaubitzeHummel_1A
+RotateWheels True
+//Third Person Camera Distance
+CameraDistance 9.0
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 1.45
+MaxNegativeThrottle 0.6
+//Steering modifiers
+TurnLeftSpeed 0.4
+TurnRightSpeed 0.4
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.5
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -35 -8 -28
+WheelPosition 1 -35 -8 28
+WheelPosition 2 46 -8 28
+WheelPosition 3 46 -8 -28
+WheelSpringStrength 0.5
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank true
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary 
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 255
+ShootDelayPrimary 255
+ReloadTimePrimary 255
+PlaceTimeSecondary 
+ShootDelaySecondary 
+ReloadTimeSecondary 
+BulletSpeed 6.00
+BulletSpread 1.00
+//Whether to alternate or fire all together
+AlternatePrimary False
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary -1 35 0 turret 
+ShootPointSecondary 
+ShootParticlesPrimary largeexplode 7 0 0
+ShootParticlesPrimary hugeexplosion 9 0 0
+ShootParticlesPrimary explode 6 0 0
+ShootParticlesPrimary explode 6 0 0
+ShootParticlesPrimary explode 6 0 0
+ShootParticlesPrimary explode 6 0 0
+ShootParticlesPrimary explode 6 0 0
+ShootParticlesPrimary explode 6 1 0
+ShootParticlesPrimary explode 6 1 0
+ShootParticlesPrimary explode 6 1 0
+ShootParticlesPrimary explode 6 1 0
+ShootParticlesPrimary explode 6 1 0
+ShootParticlesPrimary explode 6 -1 0
+ShootParticlesPrimary explode 6 -1 0
+ShootParticlesPrimary explode 6 -1 0
+ShootParticlesPrimary explode 6 -1 0
+ShootParticlesPrimary explode 6 -1 0
+ShootParticlesPrimary explode 6 0 1
+ShootParticlesPrimary explode 6 0 1
+ShootParticlesPrimary explode 6 0 1
+ShootParticlesPrimary explode 6 0 1
+ShootParticlesPrimary explode 6 0 1
+ShootParticlesPrimary explode 6 0 -1
+ShootParticlesPrimary explode 6 0 -1
+ShootParticlesPrimary explode 6 0 -1
+ShootParticlesPrimary explode 6 0 -1
+ShootParticlesPrimary explode 6 0 -1
+ShootParticlesPrimary explode 7 0 0
+ShootParticlesPrimary explode 7 0 0
+ShootParticlesPrimary explode 7 0 0
+ShootParticlesPrimary explode 7 0 0
+ShootParticlesPrimary explode 7 0 0
+ShootParticlesPrimary explode 7 1 0
+ShootParticlesPrimary explode 7 1 0
+ShootParticlesPrimary explode 7 1 0
+ShootParticlesPrimary explode 7 1 0
+ShootParticlesPrimary explode 7 1 0
+ShootParticlesPrimary explode 7 1 1
+ShootParticlesPrimary explode 7 1 1
+ShootParticlesPrimary explode 7 1 1
+ShootParticlesPrimary explode 7 1 1
+ShootParticlesPrimary explode 7 1 1
+ShootParticlesPrimary explode 7 1 -1
+ShootParticlesPrimary explode 7 1 -1
+ShootParticlesPrimary explode 7 1 -1
+ShootParticlesPrimary explode 7 1 -1
+ShootParticlesPrimary explode 7 1 -1
+ShootParticlesPrimary explode 7 -1 0
+ShootParticlesPrimary explode 7 -1 0
+ShootParticlesPrimary explode 7 -1 0
+ShootParticlesPrimary explode 7 -1 0
+ShootParticlesPrimary explode 7 -1 0
+ShootParticlesPrimary explode 7 -1 -1
+ShootParticlesPrimary explode 7 -1 -1
+ShootParticlesPrimary explode 7 -1 -1
+ShootParticlesPrimary explode 7 -1 -1
+ShootParticlesPrimary explode 7 -1 -1
+ShootParticlesPrimary explode 7 -1 1
+ShootParticlesPrimary explode 7 -1 1
+ShootParticlesPrimary explode 7 -1 1
+ShootParticlesPrimary explode 7 -1 1
+ShootParticlesPrimary explode 7 -1 1
+ShootParticlesPrimary explode 7 0 1
+ShootParticlesPrimary explode 7 0 1
+ShootParticlesPrimary explode 7 0 1
+ShootParticlesPrimary explode 7 0 1
+ShootParticlesPrimary explode 7 0 1
+ShootParticlesPrimary explode 7 0 -1
+ShootParticlesPrimary explode 7 0 -1
+ShootParticlesPrimary explode 7 0 -1
+ShootParticlesPrimary explode 7 0 -1
+ShootParticlesPrimary explode 7 0 -1
+ShootParticlesPrimary cloud 6 0 0
+ShootParticlesPrimary cloud 6 0 0
+ShootParticlesPrimary cloud 6 0 0
+ShootParticlesPrimary cloud 6 0 0
+ShootParticlesPrimary cloud 6 0 0
+ShootParticlesPrimary cloud 6 1 0
+ShootParticlesPrimary cloud 6 1 0
+ShootParticlesPrimary cloud 6 1 0
+ShootParticlesPrimary cloud 6 1 0
+ShootParticlesPrimary cloud 6 1 0
+ShootParticlesPrimary cloud 6 -1 0
+ShootParticlesPrimary cloud 6 -1 0
+ShootParticlesPrimary cloud 6 -1 0
+ShootParticlesPrimary cloud 6 -1 0
+ShootParticlesPrimary cloud 6 -1 0
+ShootParticlesPrimary cloud 6 0 1
+ShootParticlesPrimary cloud 6 0 1
+ShootParticlesPrimary cloud 6 0 1
+ShootParticlesPrimary cloud 6 0 1
+ShootParticlesPrimary cloud 6 0 1
+ShootParticlesPrimary cloud 6 0 -1
+ShootParticlesPrimary cloud 6 0 -1
+ShootParticlesPrimary cloud 6 0 -1
+ShootParticlesPrimary cloud 6 0 -1
+ShootParticlesPrimary cloud 6 0 -1
+ShootParticlesPrimary cloud 7 0 0
+ShootParticlesPrimary cloud 7 0 0
+ShootParticlesPrimary cloud 7 0 0
+ShootParticlesPrimary cloud 7 0 0
+ShootParticlesPrimary cloud 7 0 0
+ShootParticlesPrimary cloud 7 1 0
+ShootParticlesPrimary cloud 7 1 0
+ShootParticlesPrimary cloud 7 1 0
+ShootParticlesPrimary cloud 7 1 0
+ShootParticlesPrimary cloud 7 1 0
+ShootParticlesPrimary cloud 7 1 1
+ShootParticlesPrimary cloud 7 1 1
+ShootParticlesPrimary cloud 7 1 1
+ShootParticlesPrimary cloud 7 1 1
+ShootParticlesPrimary cloud 7 1 1
+ShootParticlesPrimary cloud 7 1 -1
+ShootParticlesPrimary cloud 7 1 -1
+ShootParticlesPrimary cloud 7 1 -1
+ShootParticlesPrimary cloud 7 1 -1
+ShootParticlesPrimary cloud 7 1 -1
+ShootParticlesPrimary cloud 7 -1 0
+ShootParticlesPrimary cloud 7 -1 0
+ShootParticlesPrimary cloud 7 -1 0
+ShootParticlesPrimary cloud 7 -1 0
+ShootParticlesPrimary cloud 7 -1 0
+ShootParticlesPrimary cloud 7 -1 -1
+ShootParticlesPrimary cloud 7 -1 -1
+ShootParticlesPrimary cloud 7 -1 -1
+ShootParticlesPrimary cloud 7 -1 -1
+ShootParticlesPrimary cloud 7 -1 -1
+ShootParticlesPrimary cloud 7 -1 1
+ShootParticlesPrimary cloud 7 -1 1
+ShootParticlesPrimary cloud 7 -1 1
+ShootParticlesPrimary cloud 7 -1 1
+ShootParticlesPrimary cloud 7 -1 1
+ShootParticlesPrimary cloud 7 0 1
+ShootParticlesPrimary cloud 7 0 1
+ShootParticlesPrimary cloud 7 0 1
+ShootParticlesPrimary cloud 7 0 1
+ShootParticlesPrimary cloud 7 0 1
+ShootParticlesPrimary cloud 7 0 -1
+ShootParticlesPrimary cloud 7 0 -1
+ShootParticlesPrimary cloud 7 0 -1
+ShootParticlesPrimary cloud 7 0 -1
+ShootParticlesPrimary cloud 7 0 -1
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 0
+BombSlots 0
+MissileSlots 2
+AllowAllAmmo False
+AddAmmo aphe_spg2_shell
+AddAmmo he_spg2_shell
+AddAmmo dummyammo
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 1000
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver 0 30 0 -15 15 -4 45
+RotatedDriverOffset 0 0 -11
+//DriverAimSpeed yaw pitch z
+DriverAimSpeed 0.8 0.8 0
+//This would pertain to yaw speeds of 9.6 degrees/second and pitch speeds of 10 degrees/second
+DriverLegacyAiming false
+//Yaw before Pitch: Boolean toggle to force the turret to finish yaw movement before adjusting pitch. Disabled by default.
+DriverYawBeforePitch false
+//Toggle traverse sounds: Boolean toggle to enable traversing sounds. Disabled by default.
+DriverTraverseSounds true
+//Assign traverse sounds: Designates yawing/pitching sounds for the driver. Works the same way as engine sounds.
+YawSound Turret4
+YawSoundLength 8
+PitchSound Turret4
+PitchSoundLength 8
+Passengers 1
+Passenger 1 -5 33 13 turret -45 90 -10 30 hmg MG42
+GunOrigin 1 4 28 21
+PassengerLegacyAiming 1 true
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound Pz3_Idle
+StartSoundLength 30
+EngineSound Hummel_EngineSound
+EngineSoundLength 90
+StartSoundRange 50
+EngineSoundRange 50
+BackSoundRange 50
+BackSoundLength 
+BackSound 
+PlaceSoundPrimary PlaceSound2
+ShootSoundPrimary Hummel_fire
+ReloadSoundPrimary Hunmmel_reload
+PlaceSoundSecondary None
+ShootSoundSecondary None
+ReloadSoundSecondary None
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+AddRecipeParts core 32 iron
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+SetupPart core 5000 -55 -10 -30 118 53 60
+BulletDetection 5
+BrakeSound Truck_Stop
+BrakeSoundRange 10
+BrakeSoundLength 120
+IsExplosionWhenDestroyed true
+PlaceableOnLand false
+PlaceableOnSponge true
+CollisionDamageEnable true
+CollisionDamageThrottle 0.21
+CollisionDamageTimes 5

@@ -1,0 +1,131 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [AAG]8.8cm FlaK18
+ShortName flak18
+Description Placeable on sponge._CoreHP 800_[AA]8.8cm AAGun Shell_[HE][HT1]HeavyTank Shell
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon Icon_WW2_AAGun_Flak88_1A
+Model cvts.Flak88aKai
+Texture AAGun_8.8cm_Flak18
+RotateWheels False
+//Third Person Camera Distance
+CameraDistance 5.0
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 0.0
+MaxNegativeThrottle 0.0
+//Steering modifiers
+TurnLeftSpeed 0.0
+TurnRightSpeed 0.0
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.5
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -32 -8 -32
+WheelPosition 1 -32 -8 32
+WheelPosition 2 32 -8 32
+WheelPosition 3 32 -8 -32
+WheelSpringStrength 0.5
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank true
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary 
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 80
+ShootDelayPrimary 80
+ReloadTimePrimary 80
+PlaceTimeSecondary 
+ShootDelaySecondary 
+ReloadTimeSecondary 
+BulletSpeed 15.0
+BulletSpread 1.25
+//Whether to alternate or fire all together
+AlternatePrimary False
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 50 18 0 turret 
+ShootPointSecondary 
+ShootParticlesPrimary largeexplode 4 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 5 0 0
+ShootParticlesPrimary explode 5 0 0
+ShootParticlesPrimary explode 5 0 0
+ShootParticlesPrimary explode 5 0 0
+ShootParticlesPrimary explode 5 0 0
+ShootParticlesPrimary explode 5 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 5 0 0
+ShootParticlesPrimary cloud 5 0 0
+ShootParticlesPrimary cloud 5 0 0
+ShootParticlesPrimary cloud 5 0 0
+ShootParticlesPrimary cloud 5 0 0
+ShootParticlesPrimary cloud 5 0 0
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 0
+BombSlots 0
+MissileSlots 2
+AllowAllAmmo False
+AddAmmo aa_flak18_shell
+AddAmmo he_ht1_shell
+AddAmmo dummyammo
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 0
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver 0 2 0 -360 360 -3 85
+RotatedDriverOffset 0 0 17
+//DriverAimSpeed yaw pitch z
+DriverAimSpeed 6.0 6.0 0
+//This would pertain to yaw speeds of 9.6 degrees/second and pitch speeds of 10 degrees/second
+DriverLegacyAiming false
+//Yaw before Pitch: Boolean toggle to force the turret to finish yaw movement before adjusting pitch. Disabled by default.
+DriverYawBeforePitch false
+//Toggle traverse sounds: Boolean toggle to enable traversing sounds. Disabled by default.
+DriverTraverseSounds true
+//Assign traverse sounds: Designates yawing/pitching sounds for the driver. Works the same way as engine sounds.
+YawSound Turret2
+YawSoundLength 20
+PitchSound Turret4
+PitchSoundLength 8
+Passengers 0
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound 
+StartSoundLength 
+EngineSound 
+EngineSoundLength 
+PlaceSoundPrimary PlaceSound1
+ShootSoundPrimary AAGun_8,8cm_FlaK18Fire
+ReloadSoundPrimary AAGun_8,8cm_FlaK18Reload
+PlaceSoundSecondary None
+ShootSoundSecondary None
+ReloadSoundSecondary None
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+AddRecipeParts turret 2 iron 2 iron_nugget
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+SetupPart core 800 -16 -10 -16 32 40 32
+BulletDetection 5
+IsExplosionWhenDestroyed true
+PlaceableOnLand false
+PlaceableOnSponge true
+CollisionDamageEnable false
+CollisionDamageThrottle 0.75
+CollisionDamageTimes 0

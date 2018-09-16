@@ -1,0 +1,103 @@
+//Naming
+Name [GB]BKA-1125 mod.1942
+ShortName bkaboat
+//Visuals
+Icon bkaboat
+Model serik4.BKA_Boat
+Texture BKABoat
+//Third Person Camera Distance
+CameraDistance 25
+//Throttle
+MaxThrottle 1.4
+MaxNegativeThrottle 0.25
+//Steering modifiers
+TurnLeftSpeed 0.5
+TurnRightSpeed 0.5
+Acceleration 2 2
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.0
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -150 10 -18
+WheelPosition 1 -150 10 18
+WheelPosition 2 150 10 18
+WheelPosition 3 150 10 -18
+WheelSpringStrength 0.5
+//Bouncy bouncy
+Bounciness 0.3
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank false
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 2000
+//Inventory Slots
+CargoSlots 10
+ShellSlots 3
+BarrelPosition 3 35 0
+//Driver and passenger positions
+Driver 0 45 0 -150 150 -10 85
+Passengers 3
+Passenger 1 101 8 0 core -360 360 -1 50 hmg 7.62mmMG
+Passenger 2 61 27 0 core -360 360 -2 20 gunboat_maingun 76mmGun
+Passenger 3 -105 27 0 core -360 360 -2 50 bm-8 Katyusha
+RotatedPassengerOffset 1 0 0 0
+RotatedPassengerOffset 2 0 0 0
+RotatedPassengerOffset 3 0 -1 -15
+PassengerAimSpeed 1 5.0 5.0 0
+PassengerAimSpeed 2 1.8 1.8 0
+PassengerAimSpeed 3 2.0 2.0 0
+GunOrigin 1 103 0 0
+GunOrigin 2 62 0 1
+GunOrigin 3 -80 10 0
+//Secondary gun
+AllowAllAmmo False
+AddAmmo hmg_ammo
+//Delays are in ticks or 1/20ths of seconds
+PlaceTimePrimary 160
+ShootDelayPrimary 3
+ReloadTimePrimary 180
+BulletSpeed 9
+//Sounds
+StartSound ptboatidle
+StartSoundLength 10
+EngineSound SBoot_Engine
+EngineSoundLength 15
+ShootSoundPrimary HMG_BrowningM1919A4_fire2
+ShootSoundSecondary BrenShoot
+//Recipe
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+//AddRecipeParts core 28 iron
+AddRecipeParts core 28 iron 1 bedrock
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//Health and collision
+SetupPart core 7000 -247 -25 -42 561 86 84
+BulletDetection 7
+ModelScale 1
+Boat
+PlaceableOnLand False
+PlaceableOnWater True
+FloatOnWater True
+WheelStepHeight 0
+Buoyancy 0.08
+Description Placeable on water._CoreHP 7000_Driver_ [VG]MG1Ammo_No.1Turret_ [VG]MG1Ammo_No.2Turret_ [APHE][MT1]MediumTank Shell_ [HE][MT1]MediumTank Shell_No.3Turret_ [HE]BM-8 Rocket
+FancyCollision true
+AddCollisionMeshRaw -41 -12 12 180 22 24 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 //box 0
+AddCollisionMeshRaw -41 1 12 180 9 14 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -9 0 0 -9 //box 5
+AddCollisionMeshRaw -41 1 -26 180 9 14 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -9 0 0 -9 0 0 0 0 0 0 //box 6
+AddCollisionMeshRaw -125 1 -12 84 9 24 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -4 0 0 0 0 0 0 0 0 -4 0 //box 7
+AddCollisionMeshRaw -143 1 12 102 9 14 0 -4 0 0 0 0 0 0 0 0 -8 0 0 -7 -4 0 0 0 0 0 0 -9 -11 -4 -9 //box 8
+AddCollisionMeshRaw -41 -12 -28 180 13 16 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 -2 0 0 0 0 0 0 //box 10
+AddCollisionMeshRaw -41 -12 12 180 13 16 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 -2 //box 11
+AddCollisionMeshRaw -135 -12 -28 94 13 56 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 -2 0 0 -2 0 0 -2 // Box 12
+AddCollisionMeshRaw 139 -12 -12 8 13 56 0 0 0 -28 0 0 0 0 0 0 0 0 -28 0 0 -28 0 0 -2 0 0 -2 0 0 -28 // Box 13
+AddCollisionMeshRaw -143 1 -26 102 9 14 0 -8 0 0 0 0 0 0 0 0 -4 0 0 -11 -4 -9 0 0 -9 0 0 0 -7 -4 0 // Box 14
+AddCollisionMeshRaw 139 -12 -12 75 13 12 0 0 0 0 -9 0 0 0 0 0 0 0 0 0 0 0 -17 0 0 -8 0 0 0 0 0 // Box 15
+AddCollisionMeshRaw 139 -12 -28 66 13 16 0 0 0 0 -39 0 -2 0 0 0 0 0 0 0 0 -2 -47 0 -4 -8 0 0 0 0 0 // Box 16
+AddCollisionMeshRaw 139 -12 12 66 13 16 0 0 0 0 0 0 0 -39 0 -2 0 0 0 0 0 0 -8 0 0 -47 0 -4 0 0 -2 //box 17
+AddCollisionMeshRaw 139 -12 0 75 13 12 0 0 0 0 0 0 0 -9 0 0 0 0 0 0 0 0 -8 0 0 -17 0 0 0 0 0 // Box 18
+AddCollisionMeshRaw 139 1 -12 67 9 12 0 0 0 0 -9 0 0 0 0 0 0 0 0 0 0 0 -27 0 0 -18 0 0 0 0 0 // Box 19
+AddCollisionMeshRaw 139 1 -26 58 9 14 0 0 0 0 -39 0 -2 0 0 0 0 0 0 0 0 -9 -48 0 -11 -18 0 0 0 0 0 // Box 20
+AddCollisionMeshRaw 139 1 12 58 9 14 0 0 0 0 0 0 0 -39 0 -2 0 0 0 0 0 0 -18 0 0 -48 0 -11 0 0 -9 // Box 21
+AddCollisionMeshRaw 139 1 0 67 9 12 0 0 0 0 0 0 0 -9 0 0 0 0 0 0 0 0 -18 0 0 -27 0 0 0 0 0 // Box 22

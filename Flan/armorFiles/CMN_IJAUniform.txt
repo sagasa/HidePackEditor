@@ -1,0 +1,9 @@
+Name Imperial Japanese Army Uniform
+ShortName ijauniform
+ItemID 23661
+Icon JapaneseHelmet
+Colour 255 255 255
+Type Helmet
+Defence 0.1
+Model yuque.JapaneseUniform
+ArmourTexture JapaneseUniform

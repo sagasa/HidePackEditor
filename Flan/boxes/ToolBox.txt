@@ -1,0 +1,27 @@
+Name ToolBox
+ShortName toolbox
+TopTexture tooltop
+SideTexture tooltop
+BottomTexture bottom
+//Recipe I iron G dyePowder.2
+//III
+//GGG
+//III
+//AddGun shortName amountOf item
+//AddAmmo must come immediately after AddGun for them to be in the same slot
+//The names of the items / blocks are those in the code, with some exceptions such as iron _ingotIron_ and gunpowder _sulphur_
+//And with parts from this mod, they are the shortName of the item
+//Guns cannot yet have multiple ammo types in the same slot. For now, just list them under two seperate guns that are the same
+//NumGuns must come before all the addGun lines and must be correct.
+//iron blockIron ingotGold diamond log glass gunpowder redstone
+
+NumGuns 4
+
+AddGun wrench 2 iron nugget
+AddAmmo wrench_ammo 1 stone
+AddGun repairtorch 2 iron
+AddAmmo repair_ammo 3 gunpowder
+AddGun syringe 3 iron 3 gunpowder 2 glass
+AddGun parachute 2 stick
+AddGun binoculars 1 iron
+AddAmmo sound_horn 1 stick

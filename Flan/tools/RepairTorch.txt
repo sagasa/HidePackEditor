@@ -1,0 +1,12 @@
+Name RepairTorch
+ShortName repairtorch_
+Icon Tool_RepairTorch
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10103
+Heal false
+Repair true
+HealAmount 45
+ToolLife 10000
+DestroyOnEmpty false
+StackSize 1

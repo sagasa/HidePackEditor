@@ -1,0 +1,29 @@
+Name LMGBox
+ShortName lmgbox
+TopTexture lmgtop
+SideTexture lmgtop
+BottomTexture bottom
+//Recipe I iron G dyePowder.2
+//III
+//GGG
+//III
+//AddGun shortName amountOf item
+//AddAmmo must come immediately after AddGun for them to be in the same slot
+//The names of the items / blocks are those in the code, with some exceptions such as iron _ingotIron_ and gunpowder _sulphur_
+//And with parts from this mod, they are the shortName of the item
+//Guns cannot yet have multiple ammo types in the same slot. For now, just list them under two seperate guns that are the same
+//NumGuns must come before all the addGun lines and must be correct.
+//iron blockIron ingotGold diamond log glass gunpowder redstone
+
+NumGuns 5
+
+AddGun dp28 12 iron
+AddAmmo lmg1_ammo 1 iron 2 gunpowder
+AddGun lewis 12 iron
+AddAmmo lmg1_ammo 1 iron 2 gunpowder
+AddGun mg34 12 iron
+AddAmmo lmg2_ammo 1 iron 2 gunpowder
+AddGun m1919lmg 12 iron
+AddAmmo lmg2_ammo 1 iron 2 gunpowder
+AddGun type11 12 iron
+AddAmmo ticket_br_clip 1 iron 2 gunpowder

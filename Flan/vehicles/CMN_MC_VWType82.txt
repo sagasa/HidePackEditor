@@ -1,0 +1,83 @@
+//---Standard Config for Flans Mod----------------
+
+
+//---Standard-------------------------------------
+// Naming
+Name [MC]Kubelwagen
+ShortName kubelwagen
+
+// Visuals
+Model Manus_WW2.Vehicle.WW2_Vehicle_VWType82_1
+Icon Icon_WW2_Vehicle_VWType82_1A
+ModelScale 1.05
+
+//Misc
+
+//------------------------------------------------
+
+//---Driveables-----------------------------------
+//Visuals
+Texture Skin_WW2_Vehicle_VWType82_1A
+
+//Movement
+MaxThrottle 1.2
+MaxNegativeThrottle 0.85
+Acceleration 2.5 2.5
+//Wheels
+NumWheels 4
+WheelPosition 0 -21 -11 -15
+WheelPosition 1 -21 -11 15
+WheelPosition 2 21 -11 15
+WheelPosition 3 21 -11 -15
+WheelRadius 1
+SpringStrength 0.5
+
+Bounciness 0.3
+
+//Inventory Slots
+FuelTankSize 1000
+CargoSlots 18
+
+//Recipe
+AddRecipeParts core 4 iron
+
+//Driver and Passengers
+Driver 5 -2 -7
+Passengers 3
+Passenger 1 5 -2 7 core -360 360 -89 89 dummygun DummyGun
+Passenger 2 -10 -2 -7 core
+Passenger 3 -10 -2 7 core
+
+
+//Sounds
+StartSound Jeep_EngineSound
+StartSoundLength 90
+EngineSound Jeep_EngineSound
+EngineSoundLength 90
+
+//Health and collision
+SetupPart core 775 -33 -10 -13 63 25 26
+BulletDetection 5
+
+//Misc
+CameraDistance 5
+//------------------------------------------------
+
+//---Vehicle--------------------------------------
+//Visuals
+RotateWheels True
+
+//Movement
+FourWheelDrive True
+TurnLeftSpeed 0.5
+TurnRightSpeed 0.5
+
+PlaceableOnLand true
+//PlaceableOnSponge true
+IsExplosionWhenDestroyed true
+
+Description Placeable on sponge._CoreHP 775
+
+//Misc
+//SquashMobs True
+//------------------------------------------------

@@ -1,0 +1,11 @@
+Name German Waffen-SS Uniform 
+ShortName ssuniform
+ItemID 23581
+Icon GermanHelmet
+Colour 255 255 255
+Type Helmet
+Defence 0.1
+NegateFallDamage false
+Model yuque.GermanUniform2
+ModelScale 1.0
+ArmourTexture GermanUniform2

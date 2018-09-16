@@ -1,0 +1,11 @@
+Name [GER]Stahlhelm M42
+ShortName m42helmet
+ItemID 23581
+Icon GermanHelmet
+Colour 255 255 255
+Type Helmet
+Defence 0.1
+Model yuque.GermanUniform
+ModelScale 0.95
+ArmourTexture GermanUniform
+KnockbackModifier 0.75

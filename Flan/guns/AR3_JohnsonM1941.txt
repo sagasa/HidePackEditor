@@ -1,0 +1,62 @@
+Name [AR3]M1941 Johnson LMG
+ShortName m1941lmg
+Description [AR2]AR 20Round Magazine [DamageVsLiving 4.4]_ShootDelay 2_EquipPoint 7
+//The ammo this gun uses (shortName)
+Ammo dummyammo
+Ammo ar3_ammo
+Icon m1941lmg
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10100
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 60
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 5.75
+RandomRecoilRange 1.5
+RandomRecoilYawRange 1.0
+DecreaseRecoil 4.0
+DecreaseRecoilYaw 10.0
+//Damage in half hearts
+Damage 0.88
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.85
+//The higher this value, the more the bullets spread
+//AccuracyInADS 2
+Accuracy 2.5
+//Time in ticks between rounds
+ShootDelay 2
+ShootSound JohnsonLMG_Fire
+ReloadSound M14reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode FullAuto
+//Default scope settings. Usually for aiming down sights. In which case, use FOVZoomLevel, not ZoomLevel
+ZoomLevel 1.00
+FOVZoomLevel 1.5
+Deployable False
+DeployedModel None
+BulletSpeed 23
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Model settings
+Model yuque.M1941LMG
+//ModelScale 0.19
+ModelScale 0.25
+Texture M1941LMG
+Scope None
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+//AllowAttachments
+AllowAttachments flanmosSuppressor flanmosAimPoint_H1 flanmosAimPoint_T2 flanmosKnightsForeGrip flanmosnxs flanMWFlashlight flanMWSingleFire flanMWBurstFire flanMWAutoFire
+AllowBarrelAttachments true
+AllowScopeAttachments true
+AllowStockAttachments false
+AllowGripAttachments true
+NumGenericAttachmentSlots 0
+//Paintjob Settings
+//Format is "Paintjob iconName textureName requiredDyeAmount requiredDyeColour" Multiple colours may be listed in order, seperated by a space
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"

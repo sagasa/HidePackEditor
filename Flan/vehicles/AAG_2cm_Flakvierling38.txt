@@ -1,0 +1,108 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [AAG]2cm Flakvierling38
+ShortName flakvierling38
+Description CoreHP 800_[AA]2cm AAGun 120Round Ammo
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon Icon_WW2_AAGun_Flak20mmVierling_1A
+Model cvts.FlakvierlingKai
+Texture AAGun_2cm_Flakvierling38
+RotateWheels False
+//Third Person Camera Distance
+CameraDistance 5.0
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 0.0
+MaxNegativeThrottle 0.0
+//Steering modifiers
+TurnLeftSpeed 0.0
+TurnRightSpeed 0.0
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.5
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -8 -8 -8
+WheelPosition 1 -8 -8 8
+WheelPosition 2 8 -8 8
+WheelPosition 3 8 -8 -8
+WheelSpringStrength 0.5
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank true
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary Shell
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 80
+ShootDelayPrimary 4
+ReloadTimePrimary 20
+PlaceTimeSecondary 
+ShootDelaySecondary 
+ReloadTimeSecondary 
+BulletSpeed 11.00
+BulletSpread 1.25
+//Whether to alternate or fire all together
+AlternatePrimary True
+AlternateSecondary True
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 20 4 -4 turret 
+ShootPointPrimary 20 -4 4 turret 
+ShootPointPrimary 20 4 4 turret 
+ShootPointPrimary 20 -4 -4 turret 
+ShootPointSecondary 
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 0
+BombSlots 0
+MissileSlots 5
+AllowAllAmmo False
+AddAmmo aa_flakvierling_ammo
+AddAmmo dummyammo
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 0
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver 0 0 0 -360 360 -10 85
+RotatedDriverOffset -6 0 -10
+//DriverAimSpeed yaw pitch z
+DriverAimSpeed 7.06 3.53 0
+//This would pertain to yaw speeds of 9.6 degrees/second and pitch speeds of 10 degrees/second
+DriverLegacyAiming false
+//Yaw before Pitch: Boolean toggle to force the turret to finish yaw movement before adjusting pitch. Disabled by default.
+DriverYawBeforePitch false
+//Toggle traverse sounds: Boolean toggle to enable traversing sounds. Disabled by default.
+DriverTraverseSounds true
+//Assign traverse sounds: Designates yawing/pitching sounds for the driver. Works the same way as engine sounds.
+YawSound Turret4
+YawSoundLength 8
+PitchSound Turret4
+PitchSoundLength 8
+Passengers 0
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound 
+StartSoundLength 
+EngineSound 
+EngineSoundLength 
+PlaceSoundPrimary PlaceSound1
+ShootSoundPrimary 2cmKwK30_Shoot
+ReloadSoundPrimary AAgun_2cm_Flakvierling38_freload
+PlaceSoundSecondary None
+ShootSoundSecondary None
+ReloadSoundSecondary None
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+AddRecipeParts turret 1 iron 2 iron_nugget
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+SetupPart core 800 -20 -10 -20 40 26 40
+BulletDetection 5
+IsExplosionWhenDestroyed true
+CollisionDamageEnable false
+CollisionDamageThrottle 0.75
+CollisionDamageTimes 1
+PlaceableOnLand true
+PlaceableOnSponge false

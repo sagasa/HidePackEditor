@@ -1,0 +1,16 @@
+Name Detonator
+ShortName detonator
+Description Dynamite Detonator
+Icon detonator
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+//ItemID 
+Model serik4.Detonator
+Texture Detonator
+Heal false
+Repair false
+ExplosiveRemote true
+HealAmount 0
+ToolLife 0
+DestroyOnEmpty true
+StackSize 1

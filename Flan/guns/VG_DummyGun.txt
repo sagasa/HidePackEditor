@@ -1,0 +1,36 @@
+Name DummyGun
+ShortName dummygun
+//The ammo this gun uses _shortName_
+Ammo sound_horn
+Icon dummygun
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+//ItemID 
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 100
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 0
+//Number of bullets to create on firing the weapon. If you set this to 2 knockback and Damage doubles, and multiplies 1 time per added shot.
+NumBullets 1
+//Damage in half hearts
+Damage 0
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+MeleeDamage 1
+//The higher this value, the more the bullets spread
+Accuracy 0
+//Time in ticks between rounds
+ShootDelay 40
+ShootSound CheckYourSix
+//The length of the sound. 0 for a single shot sound. Other values are for looping sounds
+//SoundLength 15
+DistortSound False
+ReloadSound None
+Mode FullAuto SemiAuto
+Scope None
+ZoomLevel 1.00
+FOVZoomLevel 1.00
+//Deployable Settings
+Deployable False
+DeployedModel None
+BulletSpeed 0.0

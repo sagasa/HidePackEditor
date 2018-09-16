@@ -1,0 +1,11 @@
+Name Finland Winter War Uniform
+ShortName finland_uniform
+ItemID 23581
+Icon GermanHelmet
+Colour 255 255 255
+Type Helmet
+Defence 0.1
+Model pc12.FinnishUniform
+ModelScale 1.0
+ArmourTexture FinnishUniform
+KnockbackModifier 0.75

@@ -1,0 +1,11 @@
+Name [US]M1 Helmet
+ShortName m1helmet
+ItemID 23641
+Icon AmericanHelmet
+Colour 255 255 255
+Type Helmet
+Defence 0.1
+Model yuque.AmericanUniform
+ModelScale 0.95
+ArmourTexture AmericanUniform
+KnockbackModifier 0.75

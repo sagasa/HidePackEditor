@@ -1,0 +1,42 @@
+Name [AR2]AR 25Round Magazine
+ShortName ar2_ammo
+Description DamagevsLiving 4.25_DamagevsVehicles 5_DamagevsPlanes 5_Explosion 0
+Model Bullet
+//Colour of icon and model
+Colour 255 255 255
+ItemID 10113
+Icon type99lmgammo
+//How affected by gravity the bullet is
+FallSpeed 0.45
+//The maximum stack size
+MaxStackSize 6
+//The number of rounds each item has. Limited to 32000.
+RoundsPerItem 25
+//The damage multiplier caused by the bullet on hitting an entity
+DamageVsLiving 4.25
+DamageVsVehicles 5
+DamageVsPlanes 5
+IgnoreArmorProbability 100
+IgnoreArmorDamageFactor 1.0
+//Size of explosion caused
+Explosion 0
+//True if bullet explodes on hitting anything. Fuse denotes the maximum time it may spend in the air before detonating
+ExplodeOnImpact False
+FlakParticles 0
+//Amount of fire to spread on exploding; for each increment, it will increase the dimensions of the burning area by 2. i.e. 1 will burn a 3x3 square, 2 will burn a 5x5 square
+Fuse 100
+BreaksGlass True
+//Size of box to check for entities to hit / detonate
+HitBoxSize 0.05
+HitSound grassimpact2
+HitSoundRange 10
+HitSoundEnable true
+EntityHitSoundEnable true
+//Whether or not the bullet can travel through an entity having hit it
+Penetrates False
+SmokeTrail False
+RecipeOutput 2
+ShapelessRecipe ticket_ar2_ammo
+
+Attenuation 0.035
+Knockback 0.4

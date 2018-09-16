@@ -1,0 +1,99 @@
+//---Standard Config for Flans Mod----------------
+
+
+//---Standard-------------------------------------
+// Naming
+Name [APC]Type98 So-Da
+ShortName soda
+Icon soda
+
+// Visuals
+Model siberia.Type98SoDa
+ModelScale 0.65
+
+//Misc
+
+//------------------------------------------------
+
+//---Driveables-----------------------------------
+//Visuals
+Texture SoDa
+
+//Movement
+MaxThrottle 1.95
+MaxNegativeThrottle 0.85
+TurnLeftSpeed 0.55
+TurnRightSpeed 0.55
+
+CameraDistance 7.5
+
+//Wheels
+NumWheels 4
+WheelPosition 0 -30 -12 -18
+WheelPosition 1 -30 -12 18
+WheelPosition 2 30 -12 18
+WheelPosition 3 30 -12 -18
+WheelSpringStrength 0.5
+WheelRadius 1
+
+Bounciness 0.3
+
+//Inventory Slots
+FuelTankSize 1000
+CargoSlots 0
+
+//Recipe
+AddRecipeParts core 8 iron
+
+//Driver and Passengers
+Driver 1 9 -8 -360 360 -89 89
+Passengers 4
+Passenger 1 -10 8 -9 core -360 360 -10 60 lightmtr Grenade
+GunOrigin 1 -10 8 -9
+PassengerLegacyAiming 1 true
+Passenger 2 -10 8 8 core -360 360 -10 60 lightmtr Grenade
+GunOrigin 2 -10 8 8
+PassengerLegacyAiming 2 true
+Passenger 3 -25 8 -9 core -360 360 -10 60 lightmtr Grenade
+GunOrigin 3 -25 8 -9
+PassengerLegacyAiming 3 true
+Passenger 4 -25 8 8 core -360 360 -10 60 lightmtr Grenade
+GunOrigin 4 -25 8 8
+PassengerLegacyAiming 4 true
+
+//Sounds
+StartSound Pz2_Idle
+StartSoundLength 40
+EngineSound Pz2_Engine
+EngineSoundLength 40
+StartSoundRange 50
+EngineSoundRange 50
+
+//Health and collision
+SetupPart core 2750 -41 -10 -20 77 49 41
+BulletDetection 5
+
+//Misc
+CameraDistance 5
+//------------------------------------------------
+
+//---Vehicle--------------------------------------
+//Visuals
+RotateWheels True
+
+//Movement
+FourWheelDrive False
+
+Tank True
+
+PlaceableOnLand false
+PlaceableOnSponge true
+IsExplosionWhenDestroyed true
+
+Size 10 5
+
+Description Placeable on sponge._CoreHP 2750_PassengerGun_ [GL][HEAT]GranadeLauncher Shell_ [GL][HE]GranadeLauncher Shell_ [ATM]TMi42_ [APM]M2A3
+
+//Misc
+//SquashMobs True
+//------------------------------------------------

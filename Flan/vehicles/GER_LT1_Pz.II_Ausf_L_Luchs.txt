@@ -1,0 +1,124 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [LT1]Pz.II Ausf.L Luchs
+ShortName luchs
+Description Placeable on sponge._CoreHP 5000_DriverGun_ [HE][LT1]Low-Caliber LightTank Shell_ [VG]MG1Ammo_PassengerGun_ [GL][HEAT]GranadeLauncher Shell_ [GL][HE]GranadeLauncher Shell_ [ATM]TMi42_ [APM]M2A3
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon II-Lluchs
+Model ww2.Luchs
+Texture SkinLuchs
+ModelScale 0.9
+RotateWheels True
+//Third Person Camera Distance
+CameraDistance 7.5
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 1.75
+MaxNegativeThrottle 0.6
+//Steering modifiers
+TurnLeftSpeed 0.5
+TurnRightSpeed 0.5
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.5
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -42 -8 -12
+WheelPosition 1 -42 -8 19
+WheelPosition 2 30 -8 19
+WheelPosition 3 30 -8 -12
+WheelSpringStrength 0.5
+//Bouncy bouncy
+Bounciness 0.3
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank true
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary Missile
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 160
+ShootDelayPrimary 2
+ReloadTimePrimary 80
+PlaceTimeSecondary 160
+ShootDelaySecondary 2
+ReloadTimeSecondary 140
+BulletSpeed 7.00
+BulletSpread 2.0
+//DamageModifierPrimary 0.8
+//Whether to alternate or fire all together
+AlternatePrimary False
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 15 21 0 turret 
+ShootPointSecondary 15 21 -5 turret 
+ShootParticlesPrimary explode 5 0 0
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 0
+BombSlots 0
+MissileSlots 4
+AllowAllAmmo false
+AddAmmo he_lt1_shell
+AddAmmo mg1_ammo
+AddAmmo dummyammo
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 1000
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver 0 15 0 -360 360 -5 30
+RotatedDriverOffset -2 9 2
+//DriverAimSpeed yaw pitch z
+DriverAimSpeed 1.7 1.5 0
+//This would pertain to yaw speeds of 9.6 degrees/second and pitch speeds of 10 degrees/second
+DriverLegacyAiming false
+//Yaw before Pitch: Boolean toggle to force the turret to finish yaw movement before adjusting pitch. Disabled by default.
+DriverYawBeforePitch false
+//Toggle traverse sounds: Boolean toggle to enable traversing sounds. Disabled by default.
+DriverTraverseSounds true
+//Assign traverse sounds: Designates yawing/pitching sounds for the driver. Works the same way as engine sounds.
+YawSound TurretTraverse1
+YawSoundLength 21
+PitchSound Turret4
+PitchSoundLength 8
+Passengers 1
+Passenger 1 -21 10 0 core -360 360 -10 60 lightmtr Grenade
+GunOrigin 1 -31 14 0
+PassengerLegacyAiming 1 true
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound Pz2_Idle
+StartSoundLength 40
+EngineSound Pz2_Engine
+EngineSoundLength 40
+StartSoundRange 50
+EngineSoundRange 50
+BackSoundRange 50
+BackSoundLength 
+BackSound 
+PlaceSoundPrimary Pz,IIF_PlaceSound
+ShootSoundPrimary 2cmKwK30_Shoot
+ReloadSoundPrimary Pz,IIF_reload
+PlaceSoundSecondary None
+ShootSoundSecondary HMG_BrowningM1919A4_fire2
+ReloadSoundSecondary HMG_BrowningM1919A4Reload2
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Recipe
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+AddRecipeParts core 12 iron
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+Size 10 5
+SetupPart core 5000 -38 -10 -24 70 36 50
+BulletDetection 5
+BrakeSound Truck_Stop
+BrakeSoundRange 10
+BrakeSoundLength 120
+IsExplosionWhenDestroyed true
+PlaceableOnLand false
+PlaceableOnSponge true
+CollisionDamageEnable true
+CollisionDamageThrottle 0.21
+CollisionDamageTimes 5

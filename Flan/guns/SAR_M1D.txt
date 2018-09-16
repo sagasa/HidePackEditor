@@ -1,0 +1,62 @@
+Name [SAR]M1D Garand
+ShortName m1d
+Description [SAR]SAR 10Round Magazine [DamageVsPlayer 7.35]_ShootDelay 2_EquipPoint 6
+//The ammo this gun uses (shortName)
+Ammo sar_ammo
+Ammo dummyammo
+Icon m1d
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10018
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 60
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 12
+RandomRecoilRange 4.0
+RandomRecoilYawRange 1.25
+DecreaseRecoil 7
+DecreaseRecoilYaw 100
+//Damage in half hearts
+NumBullets 1
+Damage 1.05
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.8
+//The higher this value, the more the bullets spread
+Accuracy 0.5
+//Time in ticks between rounds
+ShootDelay 2
+ShootSound M1Garand_Fire
+ReloadSound M1Garand_Reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode SemiAuto
+//Bullet speed, default 3.0
+BulletSpeed 24
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Default Scope Settings
+Scope SARScope
+ZoomLevel 2.5
+FOVZoomLevel 1.0
+//Deployable Settings
+Deployable False
+DeployedModel None
+//Model Settings
+Model heka.M1D
+Texture SkinM1D
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+AllowAttachments flanMWSilencer flanMWRedDot flanMWACOG flanMW4xScope
+AllowBarrelAttachments true
+AllowScopeAttachments true
+AllowStockAttachments false
+AllowGripAttachments false
+NumGenericAttachmentSlots 0
+//Paintjob Settings
+//Format is "Paintjob iconName textureName requiredDyeAmount requiredDyeColour" Multiple colours may be listed in order, seperated by a space
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+Paintjob Icon_AWP_SnakeCamo SkinAWPSnakeCamo yellow 0

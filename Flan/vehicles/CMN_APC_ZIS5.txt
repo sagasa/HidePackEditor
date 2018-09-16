@@ -1,0 +1,106 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [APC]ZIS-5
+ShortName zis5
+Description Placeable on sponge._CoreHP 800_Passengers 5_CargoSlots 16
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon zis5
+Model siberia.ZIS5
+ModelScale 0.8
+Texture ZIS5
+RotateWheels True
+//Third Person Camera Distance
+CameraDistance 7.5
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 1.275
+MaxNegativeThrottle 0.8
+//Steering modifiers
+TurnLeftSpeed 0.675
+TurnRightSpeed 0.675
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 0.5
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -36 -18 -14
+WheelPosition 1 -36 -18 14
+WheelPosition 2 29 -18 14
+WheelPosition 3 29 -18 -14
+WheelSpringStrength 0.5
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank false
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary Shell
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 160
+ShootDelayPrimary 40
+ReloadTimePrimary 40
+PlaceTimeSecondary 160
+ShootDelaySecondary 40
+ReloadTimeSecondary 40
+//Whether to alternate or fire all together
+AlternatePrimary False
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 24 0 0 core
+ShootPointSecondary 24 0 0 core
+ShootParticlesPrimary note 0 1 0
+ShootParticlesPrimary note 0 2 0
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 16
+BombSlots 0
+MissileSlots 1
+AllowAllAmmo False
+AddAmmo sound_horn
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 1500
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver 1 -5 1 -360 360 -89 89
+RotatedDriverOffset 0 0 0
+Passengers 5
+Passenger 1 1 -5 -10 core -360 360 -89 89 dummygun DummyGun
+Passenger 2 -26 -2 -16 core 60 160 -45 45
+Passenger 3 -26 -2 7 core -160 -60 -45 45
+Passenger 4 -46 -2 -16 core 60 160 -45 45
+Passenger 5 -46 -2 7 core -160 -60 -45 45
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound GMC_EngineSound
+StartSoundLength 90
+EngineSound GMC_EngineSound
+EngineSoundLength 90
+StartSoundRange 50
+EngineSoundRange 50
+BackSoundRange 50
+BackSoundLength 
+BackSound 
+PlaceSoundPrimary GMC_PlaceSound
+ShootSoundPrimary horn
+ReloadSoundPrimary PG_reload
+PlaceSoundSecondary None
+ShootSoundSecondary GetIn
+ReloadSoundSecondary None
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+AddRecipeParts core 4 iron
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+SetupPart core 800 -67 -18 -24 100 43 38
+BulletDetection 5
+SquashMobs false
+BrakeSound Truck_Stop
+BrakeSoundRange 10
+BrakeSoundLength 120
+IsExplosionWhenDestroyed true
+PlaceableOnLand false
+PlaceableOnSponge true
+CollisionDamageEnable true
+CollisionDamageThrottle 0.50
+CollisionDamageTimes 5

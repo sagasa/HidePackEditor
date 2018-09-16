@@ -1,0 +1,40 @@
+Name SAR/CRBox
+ShortName sarbox
+TopTexture sartop
+SideTexture sartop
+BottomTexture bottom
+//Recipe I iron G dyePowder.2
+//III
+//GGG
+//III
+//AddGun shortName amountOf item
+//AddAmmo must come immediately after AddGun for them to be in the same slot
+//The names of the items / blocks are those in the code, with some exceptions such as iron _ingotIron_ and gunpowder _sulphur_
+//And with parts from this mod, they are the shortName of the item
+//Guns cannot yet have multiple ammo types in the same slot. For now, just list them under two seperate guns that are the same
+//NumGuns must come before all the addGun lines and must be correct.
+//iron blockIron ingotGold diamond log glass gunpowder redstone
+
+NumGuns 10
+
+AddGun gewehr43 5 iron
+AddAmmo ticket_sar_ammo 1 iron 1 gunpowder
+AddGun gewehr43scoped 6 iron
+AddAmmo ticket_sar_ammo 1 iron 1 gunpowder
+AddGun m1garand 5 iron
+AddAmmo ticket_sar_ammo 1 iron 1 gunpowder
+AddGun m1d 6 iron
+AddAmmo ticket_sar_ammo 1 iron 1 gunpowder
+AddGun svt40 5 iron
+AddAmmo ticket_sar_ammo 1 iron 1 gunpowder
+AddGun svt40_scoped 6 iron
+AddAmmo ticket_sar_ammo 1 iron 1 gunpowder
+AddGun type4 5 iron
+AddAmmo ticket_sar_ammo 1 iron 1 gunpowder
+AddGun type4_scoped 6 iron
+AddAmmo ticket_sar_ammo 1 iron 1 gunpowder
+
+AddGun sks 4 iron
+AddAmmo ticket_sar_ammo 1 iron 1 gunpowder
+AddGun junglecarbine 3 iron
+AddAmmo ticket_br_clip 1 iron 2 gunpowder

@@ -1,0 +1,10 @@
+Name [USSR]SSh-40
+ShortName ssh40helmet
+ItemID 23691
+Icon RussianHelmet
+Colour 255 255 255
+Type Helmet
+Defence 0.1
+Model yuque.SovietHelmet
+ArmorTexture SovietHelmet
+KnockbackModifier 0.75

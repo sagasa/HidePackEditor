@@ -1,0 +1,33 @@
+Name [12x]Binoculars
+ShortName binoculars
+Description Sound Horn_ShootDelay 40
+//The ammo this gun uses _shortName_
+Ammo sound_horn
+Icon bunoculars
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 60
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 0
+//Number of bullet entities to create, useful for shotguns, defaults to 1
+NumBullets 0
+//Damage in half hearts
+Damage 0
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//The higher this value, the more the bullets spread
+Accuracy 0
+//Time in ticks between rounds
+ShootDelay 40
+DistortSound False
+ShootSound Submarine
+ReloadSound Unit
+ReloadSoundRange 25
+GunSoundRange 25
+Mode SemiAuto
+Scope Tool_Binoculars[12X]Scope
+ZoomLevel 12.0
+FOVZoomLevel 1.0
+Deployable False
+DeployedModel None

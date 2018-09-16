@@ -1,0 +1,205 @@
+item.2cm_hanomag.name=[APC]2cm Sd.Kfz.251/23
+item.hanomag.name=[APC]Sd.Kfz.251
+item.gmccckw.name=[APC]GMC CCKW
+item.opelblitz.name=[APC]Opel Blitz
+item.zis5.name=[APC]ZIS-5
+item.m3ht.name=[APC]M3 Halftrack
+item.gaz-67.name=[MC]GAZ-67
+item.willysmb.name=[MC]Willy's MB Jeep
+item.kubelwagen.name=[MC]VW Type 82 Kubelwagen
+item.bmwr75.name=[MC]BMW R75
+item.greyhound.name=[AC]M8 Greyhound
+item.sdkfz222.name=[AC]Sd.Kfz.222
+
+item.soda.name=[JPN][APC]Type98 So-Da
+
+item.tks.name=[LT1]TKS
+item.ft-17.name=[LT1]FT-17
+
+item.tase.name=[JPN][SPAAG1]Ta-Se
+item.flakpanzer1.name=[GER][SPAAG1]Flakpanzer I
+item.t-90.name=[USSR][SPAAG1]T-90
+item.m5spaag.name=[US][SPAAG1]M5 SPAAG
+item.mkviaa.name=[UK][SPAAG1]Mk.VI AA
+
+item.crusaderaa.name=[UK][SPAAG2]Crusader AA Mk.I
+item.flakpanzer4.name=[SPAAG2]Flakpanzer IV Wirbelwind
+
+item.s100.name=[GB]S-100 Schnellboot
+item.bkaboat.name=[GB]BKA 1125 mod.1943
+item.ptboat.name=[GB]PTBoat
+
+item.lvt(a)-1.name=[AMT]LVT(A)-1
+
+item.t-60-1.name=[USSR][LT1]T-60
+item.pz2-f.name=[GER][LT1]Pz.Kpfw.II Ausf.F
+item.m2a4.name=[US][LT2]M2A4
+item.tetrarch.name=[UK][LT2]Mk.VII Tetrarch
+
+item.m5.name=[US][LT2]M5 Stuart
+item.hago.name=[JPN][LT2]Type95 Ha-Go
+item.t-70.name=[USSR][LT2]T-70
+item.pz38t.name=[GER][LT2]Pz.Kpfw.38(t)
+item.crusader.name=[UK][LT2]Cruiser Crusader Mk.III
+item.b1.name=[FR][LT2]B1.bis HeavyTank
+
+item.cromwellmk4.name=[UK][MT1]Cruiser Cromwell Mk.IV
+item.luchs.name=[GER][LT1]Pz.Kpfw.II Ausf.L Luchs
+item.luchs5cm.name=[GER][LT2]Pz.Kpfw.II Ausf.L Luchs (5cm Gun)
+item.chaffee.name=[US][IT2]M24 Chaffee
+item.pz3n.name=[GER][IT2]Pz.Kpfw.III Ausf.N
+item.chiha.name=[JPN][IT1]Type97 Chi-Ha
+
+item.t-34-76.name=[USSR][MT1]T-34-76
+item.pz4h.name=[GER][MT1]Pz.Kpfw.IV Ausf.H
+item.chihakai.name=[JPN][LT2]Type97 Chi-Ha Kai
+item.chihe.name=[JPN][LT3]Type1 Chi-He
+item.m4a2.name=[US][MT1]M4A2 Sherman
+item.calliope.name=[SPG3]T34E2 Calliope
+item.valentine.name=[IT1]Infantry Valentine Mk.X
+item.achilles.name=[UK][TD]SPG Achilles
+
+item.p40ht.name=[ITL][MT1]P26/40
+item.t-34-85.name=[USSR][MT2]T-34-85
+item.panther.name=[GER][MT2]Pz.Kpfw.Panther Ausf.G
+item.chinu.name=[JPN][MT1]Type3 Chi-Nu
+item.chinukai.name=[JPN][MT2]Type3 Chi-Nu Kai
+item.m10.name=[US][TD]M10 GMC
+item.m4a3e8.name=[US][MT2]M4A3E8 Sherman
+
+item.hoi2.name=[JPN][TD]Type2 Ho-I(5.7cm Gun)
+item.kv-1.name=[USSR][MT1]KV-1
+item.hoi.name=[JPN][IT2]Type2 Ho-I
+item.honi2.name=[JPN][SPG1]Type1 Ho-Ni II
+
+item.churchill.name=[UK][MT1]Infantry Churchill Mk.VII
+item.pz6e.name=[GER][HT1]Pz.Kpfw.VI Tiger Ausf.E
+item.centmk1.name=[UK][HT1]Cruiser A41 Centurion
+item.t26e3.name=[US][HT1]T26E3
+item.t-44-100.name=[USSR][HT1]T-44-100
+
+item.tiger2.name=[GER][HT2]Pz.kpfw.VI Ausf.B TigerII
+item.is-2.name=[USSR][HT2]IS-2
+item.tortoise.name=[UK][HT2]A39 Tortoise
+
+item.maus.name=[GER][SHT]Pz.Kpfw.VIII Maus
+
+item.t-35.name=[HT]T-35
+
+item.kv-2.name=[USSR][SPG2]KV-2
+item.hummel.name=[USSR][SPG2]Hummel
+
+
+item.toooog.name=[UK][SHT]TOG II
+
+item.su85.name=[USSR][TD]SU-85
+item.stug4.name=[GER][TD]StuG IV
+
+item.m18.name=[US][TD]M18 GMC
+
+item.naval12cmspg.name=[JPN][HT2]Naval 12cm SPG
+item.short12cmspg.name=[SPG1]Short Barrel 12cm Gun Tank
+item.sturmtiger.name=[SPG3]SturmTiger
+item.su-122.name=[USSR][SPG1]SU-122
+
+item.flakvierling38.name=[AAG]2cm Flakvierling38
+item.bofors.name=[AAG]40mm Bofors
+item.flak18.name=[AAG]8.8cm FlaK18
+
+item.zis-3.name=[USSR][FG]ZiS-3
+item.type90.name=[JPN][FG]Type90
+item.m1897a5.name=[US][FG]M1897A5
+item.fk7m85.name=[GER][FG]7.5cm FK 7M85
+
+item.lg40.name=[RCLG]10.5cm LG40
+
+item.wurfgerat40.name=[MRL]28cm Wurfgerat40
+item.he_wurfgerat40_rocket.name=[HE]28cm Wurfgerat40 Rocket
+
+item.28cm_hanomag.name=[SPG]28cm Sd.Kfz.251/1 Wurfrahmen 40
+
+item.ml20.name=[HZ]ML-30
+
+item.m-30.name=[USSR][HZ]M-30
+item.type91.name=[JPN][HZ]Type91
+
+item.81mm_m1.name=[MRT]81mm M1
+
+item.mg42_dep.name=[HMG]MG42
+item.type92hmg.name=[HMG]Type92HMG
+item.dp28_dep.name=[HMG]DP28
+
+#------------Shell------------
+item.aphe_lt1_shell.name=[APHE][LT1]Low-Caliber LightTank Shell
+item.he_lt1_shell.name=[HE][LT1]Low-Caliber LightTank Shell
+
+item.aa_gunboat_shell.name=[AA][GB]Gunboat AAGun Shell
+
+item.he_bofors_ammo.name=Baby,Please Craft Me.(40mm AAGun Ammo)
+item.aa_bofors_ammo.name=[AA]40mm AAGun 20Round Shell
+
+item.aphe_lt2_shell.name=[APHE][LT2]LightTank Shell
+item.he_lt2_shell.name=[HE][LT2]LightTank Shell
+
+item.aphe_lt3_shell.name=[APHE][LT3]High-Caliber LightTank Shell
+item.he_lt3_shell.name=[HE][LT3]High-Caliber LightTank Shell
+
+item.aphe_mt1_shell.name=[APHE][MT1]MediumTank Shell
+item.he_mt1_shell.name=[HE][MT1]MediumTank Shell
+item.heat_mt1_shell.name=[HEAT][MT1]MediumTank Shell
+
+item.aphe_mt2_shell.name=[APHE][MT2]High-Caliber MediumTank Shell
+item.he_mt2_shell.name=[HE][MT2]High-Caliber MediumTank Shell
+item.apcr_mt2_shell.name=[APCR][MT2]High-Caliber MediumTank Shell
+
+item.aphe_ht1_shell.name=[APHE][HT1]HeavyTank Shell
+item.he_ht1_shell.name=[HE][HT1]HeavyTank Shell
+
+item.aphe_ht2_shell.name=[APHE][HT2]High-Caliber HeavyTank Shell
+item.he_ht2_shell.name=[HE][HT2]High-Caliber HeavyTank Shell
+
+item.aphe_ht2_shell.name=[APHE][HT2]High-Caliber HeavyTank Shell
+item.he_ht2_shell.name=[HE][HT2]High-Caliber HeavyTank Shell
+
+item.aphe_sht_shell.name=[APHE][SHT]SuperHeavyTank Shell
+item.he_sht_shell.name=[HE][SHT]SuperHeavyTank Shell
+
+item.aa_flak18_shell.name=[AA]8.8cm AAGun Shell
+
+item.heat_it1_shell.name=[HEAT][IT1]InfantryTank Shell
+item.he_it1_shell.name=[HE][IT1]InfantryTank Shell
+
+item.heat_it2_shell.name=[HEAT][IT2]High-Caliber InfantryTank Shell
+item.he_it2_shell.name=[HE][IT2]High-Caliber InfantryTank Shell
+
+item.he_spg1_shell.name=[HE][SPG1]Howitzer Shell
+
+item.aphe_spg2_shell.name=[APHE][SPG2]Heavy Howitzer Shell
+item.he_spg2_shell.name=[HE][SPG2]Heavy Howitzer Shell
+
+item.aa_flakvierling_ammo.name=[AA]2cm AAGun 120Round Ammo
+
+item.he_sturmtiger_rocket.name=[HE]38cm SturmTiger Rocket
+
+item.he_bm-8_rocket.name=[HE]BM-8 Rocket
+
+item.t1spaag_ammo.name=[AP]SPAAG1 Ammo
+
+item.mg1_ammo.name=[VG]MG1Ammo
+
+item.hmg_ammo.name=[VG]HeavyMachineGun Ammo
+
+item.lightmtr.name=[VG]VehicleGrenadeLauncher
+
+item.m1mrt.name=[MRT]81mm M1
+
+item.he_mrt2_shell.name=[MRT][HE]Mortar Shell
+
+item.he_lt_apm.name=[HE]Vehicle Grenade Launcher A.P.Mine
+item.he_lt_atm.name=[HE]Vehicle Grenade Launcher A.T.Mine
+item.he_lt_grenade.name=[HE]Vehicle Grenade Launcher Grenade
+item.heat_lt_grenade.name=[HEAT]Vehicle Grenade Launcher A.T.Grenade
+
+#-------------------------------
+
+tile.v_shellbox.name=VehicleShellBox

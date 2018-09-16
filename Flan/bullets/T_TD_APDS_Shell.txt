@@ -1,0 +1,48 @@
+Name [APDS][TD]TankDestroyer Shell
+ShortName apds_td_shell
+Description RoundPerItem 10_DamageVsPlayer 50_DamageVsVehicles 3000_DamageVsPlanes 150_Explosion 1.0_ExplosionDamageVsPlayer 0.25_ExplosionDamageVsPlane 0.5_ExplosionDamageVsVehicle 0.5
+Model cvts.MGBullet2
+Texture MGBullet2_Yellow
+//Colour of icon and model
+Colour 255 255 255
+Icon t_apcr_td
+//How affected by gravity the bullet is
+FallSpeed 0.075
+//The maximum stack size
+MaxStackSize 1
+//The number of rounds each item has. Limited to 32000.
+RoundsPerItem 10
+//The damage multiplier caused by the bullet on hitting an entity
+DamageVsLiving 50
+DamageVsVehicles 3000
+DamageVsPlanes 150
+//Size of explosion caused
+ExplosionRadius 1.0
+ExplosionDamageVsLiving 0.25
+ExplosionDamageVsPlane 0.5
+ExplosionDamageVsVehicle 0.5
+//True if bullet explodes on hitting anything. Fuse denotes the maximum time it may spend in the air before detonating
+ExplodeOnImpact True
+Fuse 400
+FlakParticles 20
+//Amount of fire to spread on exploding; for each increment, it will increase the dimensions of the burning area by 2. i.e. 1 will burn a 3x3 square, 2 will burn a 5x5 square
+Fire 0
+BreaksGlass False
+//Size of box to check for entities to hit / detonate
+HitBoxSize 0.0
+HitSound explcls1
+HitSoundRange 400
+HitSoundEnable true
+EntityHitSoundEnable true
+//Whether or not the bullet can travel through an entity having hit it
+Penetrates False
+SmokeTrail True
+HasLight True
+//True if this is a bomb
+Bomb False
+Shell False
+WeaponType Shell
+DragInWater 1.00
+DragInAir 1.0
+
+AttenuationVsVehicles 20

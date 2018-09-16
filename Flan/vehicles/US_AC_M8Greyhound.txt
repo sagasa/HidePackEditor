@@ -1,0 +1,92 @@
+//---Standard Config for Flans Mod----------------
+
+
+//---Standard-------------------------------------
+// Naming
+Name [AC]M8 Greyhound
+ShortName greyhound
+Icon greyhound
+
+// Visuals
+Model lwpack.Greyhound
+ModelScale 0.95
+
+//Misc
+
+//------------------------------------------------
+
+//---Driveables-----------------------------------
+//Visuals
+Texture SkinGreyhound
+
+//Movement
+MaxThrottle 1.15
+MaxNegativeThrottle 0.85
+TurnLeftSpeed 0.425
+TurnRightSpeed 0.425
+
+CameraDistance 7.5
+
+//Wheels
+NumWheels 4
+WheelPosition 0 -30 -12 -18
+WheelPosition 1 -30 -12 18
+WheelPosition 2 30 -12 18
+WheelPosition 3 30 -12 -18
+WheelSpringStrength 0.5
+WheelRadius 1
+
+Bounciness 0.3
+
+//Inventory Slots
+FuelTankSize 1000
+CargoSlots 0
+
+//Recipe
+AddRecipeParts core 8 iron
+
+//Driver and Passengers
+Driver 24 2 8 -360 360 -89 89
+Passengers 3
+Passenger 1 0 20 0 core -360 360 -5 20 lightatgun 37mmGun
+Passenger 2 24 0 -8 core -360 360 -89 89
+Passenger 3 -32 16 12 core -360 360 -89 89
+
+GunOrigin 1 0 16 0
+
+//Sounds
+StartSound Jeep_EngineSound
+StartSoundLength 90
+EngineSound Jeep_EngineSound
+EngineSoundLength 90
+StartSoundRange 50
+EngineSoundRange 50
+
+//Health and collision
+SetupPart core 3250 -47 -10 -25 90 45 50
+BulletDetection 5
+
+Size 10 10
+
+//Misc
+CameraDistance 5
+//------------------------------------------------
+
+//---Vehicle--------------------------------------
+//Visuals
+RotateWheels True
+
+//Movement
+FourWheelDrive True
+
+PlaceableOnLand false
+PlaceableOnSponge true
+IsExplosionWhenDestroyed true
+
+Description Placeable on sponge._CoreHP 3250_PassengerGun_ [APHE][LT2]LightTank Shell_ [HE][LT2]LightTank Shell
+
+Size 10 5
+
+//Misc
+//SquashMobs True
+//------------------------------------------------

@@ -1,0 +1,92 @@
+//---Standard Config for Flans Mod----------------
+
+
+//---Standard-------------------------------------
+// Naming
+Name [AC]Sd.Kfz.222
+ShortName sdkfz222
+Icon Sdkfz222
+
+// Visuals
+Model lwpack.SdKfz222
+ModelScale 1.35
+
+//Misc
+
+//------------------------------------------------
+
+//---Driveables-----------------------------------
+//Visuals
+Texture SdkFz222
+
+//Movement
+MaxThrottle 1.15
+MaxNegativeThrottle 0.85
+TurnLeftSpeed 0.425
+TurnRightSpeed 0.425
+
+CameraDistance 7.5
+
+//Wheels
+NumWheels 4
+WheelPosition 0 -30 -12 -18
+WheelPosition 1 -30 -12 18
+WheelPosition 2 30 -12 18
+WheelPosition 3 30 -12 -18
+WheelSpringStrength 0.5
+WheelRadius 1
+
+Bounciness 0.3
+
+//Inventory Slots
+FuelTankSize 1000
+CargoSlots 0
+
+//Recipe
+AddRecipeParts core 8 iron
+
+//Driver and Passengers
+Driver 23 -1 -4 -360 360 -89 89
+Passengers 2
+Passenger 1 0 15 0 core -360 360 -5 80 gunboat_20mm 20mmGun
+RotatedPassengerOffset 1 -2 0 -4
+Passenger 2 -37 8 0 core -360 360 -89 89
+
+GunOrigin 1 0 5 0
+
+//Sounds
+StartSound Jeep_EngineSound
+StartSoundLength 90
+EngineSound Jeep_EngineSound
+EngineSoundLength 90
+StartSoundRange 50
+EngineSoundRange 50
+
+//Health and collision
+SetupPart core 3250 -46 -10 -18 91 38 36
+BulletDetection 5
+
+Size 10 10
+
+//Misc
+CameraDistance 5
+//------------------------------------------------
+
+//---Vehicle--------------------------------------
+//Visuals
+RotateWheels True
+
+//Movement
+FourWheelDrive True
+
+PlaceableOnLand false
+PlaceableOnSponge true
+IsExplosionWhenDestroyed true
+
+Description Placeable on sponge._CoreHP 3250_PassengerGun_ [HE][LT1]Low-Caliber LightTank Shell_ [AA]2cm AAGun 120Round Ammo
+
+Size 10 5
+
+//Misc
+//SquashMobs True
+//------------------------------------------------

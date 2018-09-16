@@ -1,0 +1,155 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [HT2]A39 Tortoise
+ShortName tortoise
+Description CoreHP 10000_[APHE][HT2]High-Caliber HeavyTank Shell_[HE][HT2]High-Caliber HeavyTank Shell_Gunner [VG]MG1Ammo
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon A39Tortoise
+Model evp2.A39
+Texture A39
+RotateWheels True
+//Third Person Camera 
+Distance
+CameraDistance 8.0
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 1.1
+MaxNegativeThrottle 1.0
+//Steering modifiers
+TurnLeftSpeed 0.40
+TurnRightSpeed 0.40
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.0
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -72 -8 -24
+WheelPosition 1 -72 -8 24
+WheelPosition 2 16 -8 24
+WheelPosition 3 16 -8 -24
+WheelSpringStrength 0.5
+//Bouncy bouncy
+Bounciness 0.3
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank true
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary 
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 160
+ShootDelayPrimary 130
+ReloadTimePrimary 130
+//PlaceTimeSecondary 160
+//ShootDelaySecondary 2
+//ReloadTimeSecondary 140
+BulletSpeed 11.50
+BulletSpread 0.25
+//Whether to alternate or fire all together
+AlternatePrimary False
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 20 20 0 turret
+ShootPointSecondary 
+ShootParticlesPrimary largeexplode 4 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 3 0 1
+ShootParticlesPrimary cloud 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 3 0 1
+ShootParticlesPrimary cloud 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 3 0 1
+ShootParticlesPrimary cloud 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 3 0 1
+ShootParticlesPrimary cloud 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 3 0 1
+ShootParticlesPrimary cloud 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 0
+BombSlots 0
+MissileSlots 2
+AllowAllAmmo False
+AddAmmo aphe_ht2_shell
+AddAmmo he_ht2_shell
+AddAmmo dummyammo
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 1000
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver -37 17 -21 -20 20 -10 30
+RotatedDriverOffset 0 0 0
+Passengers 3
+Passenger 1 -41 23 21 core -360 360 -10 40 hmg Browning
+GunOrigin 1 -39 13 22
+PassengerLegacyAiming 1 true
+Passenger 2 -72 12 16 core -360 360 -89 89
+Passenger 3 -72 12 -16 core -360 360 -89 89
+//Secondary gun
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound Hetzer_Idle
+StartSoundLength 40
+EngineSound Hetzer_Engine
+EngineSoundLength 40
+StartSoundRange 50
+EngineSoundRange 50
+BackSoundRange 50
+BackSoundLength 
+BackSound 
+PlaceSoundPrimary A15_PlaceSound
+ShootSoundPrimary A39Tortoise_fire
+ReloadSoundPrimary A39Tortoise_reload
+PlaceSoundSecondary None
+ShootSoundSecondary None
+ReloadSoundSecondary None
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Recipe
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+AddRecipeParts core 36 iron
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "ora//AddDye 0 graynge", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+SetupPart core 10000 -85 -10 -31 115 41 62
+BulletDetection 5
+SquashMobs false
+BrakeSound Truck_Stop
+BrakeSoundRange 10
+BrakeSoundLength 120
+IsExplosionWhenDestroyed true
+PlaceableOnLand false
+PlaceableOnSponge true
+CollisionDamageEnable true
+CollisionDamageThrottle 0.21
+CollisionDamageTimes 5

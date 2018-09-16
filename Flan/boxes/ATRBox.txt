@@ -1,0 +1,27 @@
+Name ATRBox
+ShortName atrbox
+TopTexture atrtop
+SideTexture atrtop
+BottomTexture bottom
+//Recipe I iron G dyePowder.2
+//III
+//GGG
+//III
+//AddGun shortName amountOf item
+//AddAmmo must come immediately after AddGun for them to be in the same slot
+//The names of the items / blocks are those in the code, with some exceptions such as iron _ingotIron_ and gunpowder _sulphur_
+//And with parts from this mod, they are the shortName of the item
+//Guns cannot yet have multiple ammo types in the same slot. For now, just list them under two seperate guns that are the same
+//NumGuns must come before all the addGun lines and must be correct.
+//iron blockIron ingotGold diamond log glass gunpowder redstone
+
+NumGuns 4
+
+AddGun ptrd-41 5 iron
+AddAmmo ticket_atr2_ammo 2 iron 1 gunpowder
+AddGun pvgm42 5 iron
+AddAmmo ticket_atr2_ammo 2 iron 1 gunpowder
+AddGun ptrs41 10 iron
+AddAmmo atr_ammo 1 iron 1 gunpowder
+AddGun type97at 10 iron
+AddAmmo atr_ammo 1 iron 1 gunpowder

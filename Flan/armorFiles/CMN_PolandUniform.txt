@@ -1,0 +1,10 @@
+Name Poland Uniform
+ShortName poland_uniform
+ItemID 23581
+Icon GermanHelmet
+Colour 255 255 255
+Type Helmet
+Defence 0.05
+Model yuque.PolandUniform
+ModelScale 1.0
+ArmourTexture PolandUniform

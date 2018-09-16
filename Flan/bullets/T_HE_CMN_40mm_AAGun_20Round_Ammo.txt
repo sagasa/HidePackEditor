@@ -1,0 +1,53 @@
+Name [HE]40mm AAGun 20Round Shell
+ShortName he_bofors_ammo
+Description DamageVsPlayer 2_DamageVsVehicles 10_DamageVsPlanes 50_Explosion 3_ExplosionDamageVsPlayer 0.25_ExplosionDamageVsPlane 2.0_ExplosionDamageVsVehicle 0.5
+Model cvts.MGBullet2
+Texture MGBullet2_Yellow
+//Colour of icon and model
+Colour 255 255 255
+Icon he_40mm_shell
+//How affected by gravity the bullet is
+FallSpeed 0.5
+//The maximum stack size
+MaxStackSize 2
+//The number of rounds each item has. Limited to 32000.
+RoundsPerItem 20
+//The damage multiplier caused by the bullet on hitting an entity
+DamageVsLiving 2
+DamageVsVehicles 10
+DamageVsPlanes 50
+//Size of explosion caused
+ExplosionRadius 2.5
+ExplosionDamageVsLiving 0.2
+ExplosionDamageVsPlayer 0.2
+ExplosionDamageVsPlanes 2.0
+ExplosionDamageVsVehicles 0.5
+
+//VehicleProximityTrigger 2.0
+//LivingProximityTrigger 2.0
+
+ExplodeOnImpact True
+Fuse 400
+PrimeDelay 5
+FlakParticles 20
+//Amount of fire to spread on exploding; for each increment, it will increase the dimensions of the burning area by 2. i.e. 1 will burn a 3x3 square, 2 will burn a 5x5 square
+Fire 0
+BreaksGlass False
+//Size of box to check for entities to hit / detonate
+HitBoxSize 0.5
+HitSound explcls1
+HitSoundRange 400
+HitSoundEnable true
+EntityHitSoundEnable true
+//Whether or not the bullet can travel through an entity having hit it
+Penetrates False
+SmokeTrail True
+HasLight True
+//True if this is a bomb
+Bomb False
+Shell False
+WeaponType Shell
+DragInWater 1.00
+DragInAir 1.00
+TrailParticles True
+TrailParticleType fireworksSpark

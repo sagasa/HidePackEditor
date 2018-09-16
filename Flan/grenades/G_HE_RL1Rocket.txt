@@ -1,0 +1,52 @@
+////Name and icon
+Name [RL1][HE]RocketLauncher Rocket
+ShortName he_rl1_rocket
+Icon m1bazookahe
+//Colour in Red, Green, Blue, each going up to 255
+Colour 255 255 255
+////Item and recipe
+StackSize 4
+////Visuals
+Model heka.Mk2
+Texture mk2
+TrailParticles true
+//TrailParticleType <particleType>
+ExplodeParticles 0
+//ExplodeParticleType <particleType>
+SmokeTime 0
+//SmokeParticleType <particleType>
+SpinWhenThrown true
+////Throwing
+CanThrow False
+ThrowDelay 10
+//ThrowSound <sound>
+//DropItemOnThrow <itemID.damage>
+////Physics
+DetonateOnImpact false
+Bounciness 0.4
+HitEntityDamage 1
+ThrowSpeed 3.25
+FallSpeed 0.25
+BreaksGlass true
+PenetratesBlocks false
+HitBoxSize 0.5
+Sticky false
+//BounceSound <sound>
+////Detonation conditions
+Fuse 60
+DetonateWhenShot true
+Remote false
+//DespawnTime 0
+PrimeDelay 0
+////Detonation
+FireRadius 0.0
+ExplosionRadius 3.5
+ExplosionDamageVsLiving 0.4
+ExplosionDamageVsPlayer 0.4
+ExplosionDamageVsPlane 10.0
+ExplosionDamageVsVehicle 0.25
+ExplosionBreaksBlocks true
+//DropItemOnDetonate <itemID.damage>
+//Detonate Sound <sound>
+////Misc
+MeleeDamage 1

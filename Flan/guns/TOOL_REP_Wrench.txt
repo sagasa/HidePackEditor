@@ -1,0 +1,55 @@
+Name Wrench
+ShortName wrench
+Description Wrench Oil_FlyingDistance 10_ShootDelay 50
+//The ammo this gun uses _shortName_
+Ammo wrench_ammo
+Icon wrench
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 1
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 0
+//DecreaseRecoil 1.00
+//DecreaseRecoilYaw 1.00
+//Number of bullets to create on firing the weapon. If you set this to 2 knockback and Damage doubles, and multiplies 1 time per added shot.
+NumBullets 1
+//Damage in half hearts
+Damage 1
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 1.0
+//The higher this value, the more the bullets spread
+Accuracy 0
+//Time in ticks between rounds
+ShootDelay 10
+DistortSound False
+ShootSound Repair_2
+ReloadSound 
+ReloadSoundRange 5
+GunSoundRange 400
+Mode FullAuto
+//NumBurstRounds 2
+//Scope.png name or None
+Scope None
+ZoomLevel 1.0
+FOVZoomLevel 1.0
+//Deployable Settings
+Deployable False
+DeployedModel None
+//Model evp2.Panzerfaust100
+//ModelScale 1.00
+//Texture PanzerFaust100
+MeleeDamage 4
+BulletSpeed 4
+ShowRecoil true
+ShowAccuracy true
+AllowAllAttachments false
+AllowAttachments flanMWSilencer flanMWRedDot flanMWACOG
+AllowBarrelAttachments false
+AllowScopeAttachments false
+AllowStockAttachments false
+AllowGripAttachments false
+NumGenericAttachmentSlots 0
+ShowReloadTime true

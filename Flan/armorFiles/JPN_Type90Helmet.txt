@@ -1,0 +1,10 @@
+Name [JPN]Type90 Helmet
+ShortName type90helmet
+ItemID 23661
+Icon JapaneseHelmet
+Colour 255 255 255
+Type Helmet
+Defence 0.1
+Model yuque.Type90
+ArmourTexture Type90
+KnockbackModifier 0.75

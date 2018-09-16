@@ -1,0 +1,46 @@
+Name [ATR1]ATR 5Round Magazine
+ShortName atr_ammo
+Description DamageVsLiving 14_DamageVsVehicles 400_DamageVsPlanes 50_Explosion 0
+Model cvts.MGBullet
+Texture MGBulletRed
+//Colour of icon and model
+Colour 255 255 255
+ItemID 10020
+Icon ptrsammo
+//How affected by gravity the bullet is
+FallSpeed 0.5
+//The maximum stack size
+MaxStackSize 4
+//The number of rounds each item has. Limited to 32000.
+RoundsPerItem 5
+//The damage multiplier caused by the bullet on hitting an entity
+DamageVsLiving 14
+DamageVsVehicles 425
+DamageVsPlanes 50
+//Size of explosion caused
+Explosion 0
+//True if bullet explodes on hitting anything. Fuse denotes the maximum time it may spend in the air before detonating
+ExplodeOnImpact True
+Fuse 100
+FlakParticles 0
+//Amount of fire to spread on exploding; for each increment, it will increase the dimensions of the burning area by 2. i.e. 1 will burn a 3x3 square, 2 will burn a 5x5 square
+Fire 0
+BreaksGlass True
+//Size of box to check for entities to hit / detonate
+HitBoxSize 0.05
+HitSound stoneimpact8
+HitSoundRange 10
+HitSoundEnable true
+EntityHitSoundEnable false
+//Whether or not the bullet can travel through an entity having hit it
+Penetrates False
+SmokeTrail True
+HasLight true
+TrailParticles false
+TrailParticleType fireworksSpark
+//DragInAir 0.9
+RecipeOutput 2
+ShapelessRecipe ticket_atr_ammo
+
+AttenuationVsVehicles 2
+AttenuationVsPlanes 0

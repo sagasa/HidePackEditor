@@ -1,0 +1,11 @@
+Name Vichy France Uniform
+ShortName vichy_france_uniform
+ItemID 23581
+Icon GermanHelmet
+Colour 255 255 255
+Type Helmet
+Defence 0.1
+Model yuque.VichyFranceUniform
+ModelScale 1.0
+ArmourTexture VichyFranceUniform
+KnockbackModifier 0.25

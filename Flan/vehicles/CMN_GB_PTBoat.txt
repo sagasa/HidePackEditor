@@ -1,0 +1,377 @@
+//Naming
+Name [GB]PTBoat
+ShortName ptboat
+//Visuals
+Icon ptboat
+Model pon.PT_Boat
+Texture PTBoat
+//Third Person Camera Distance
+CameraDistance 25
+//Throttle
+MaxThrottle 1.4
+MaxNegativeThrottle 0.25
+//Steering modifiers
+TurnLeftSpeed 0.5
+TurnRightSpeed 0.5
+Acceleration 2 2
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.0
+//Wheel positions for collision handling. Tanks still have 4 wheels they are just the corner ones.
+WheelPosition 0 -150 10 -18
+WheelPosition 1 -150 10 18
+WheelPosition 2 150 10 18
+WheelPosition 3 150 10 -18
+WheelSpringStrength 0.5
+//Bouncy bouncy
+Bounciness 0.3
+//If true then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank false
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 2000
+//Inventory Slots
+CargoSlots 10
+ShellSlots 3
+BarrelPosition 250 0 -20
+BarrelPosition 250 0 20
+//Driver and passenger positions
+Driver 25 46 -15 -360 360 -10 85
+RotatedDriverOffset 0 0 0
+Passengers 3
+Passenger 1 29 64 21 core -360 360 -2 40 gunboat_20mm 20mmMG
+Passenger 2 -140 50 0 core -360 360 -2 80 gunboat_aagun 40mmBofors
+Passenger 3 113 46 0 core -200 200 -2 30 bm-8 RocketLauncher
+//RotatedPassengerOffset 1 0 0 0
+//RotatedPassengerOffset 2 -10 0 -10
+//RotatedPassengerOffset 3 -10 0 0
+PassengerAimSpeed 1 5.0 5.0 0
+PassengerAimSpeed 2 4.0 4.0 0
+PassengerAimSpeed 3 5.0 5.0 0
+GunOrigin 1 29 55 21
+GunOrigin 2 -140 45 0
+GunOrigin 3 113 40 0
+//Secondary gun
+AllowAllAmmo False
+AddAmmo torpedo
+//Delays are in ticks or 1/20ths of seconds
+PlaceTimePrimary 160
+ShootDelayPrimary 20
+ReloadTimePrimary 180
+BulletSpeed 4
+//Sounds
+StartSound ptboatidle
+StartSoundLength 10
+EngineSound SBoot_Engine
+EngineSoundLength 15
+ShootSoundPrimary Tank4Shoot
+ShootSoundSecondary BrenShoot
+//Recipe
+//Each section of the plane may have many parts
+//The sections are tailWheel tail bay topWing leftWingWheel leftWing rightWingWheel
+//rightWing nose turret coreWheel core
+//AddRecipeParts core 28 iron
+AddRecipeParts core 28 iron 1 bedrock
+//Dye colours are "black" "red" "green" "brown" "blue" "purple" "cyan" "silver" "gray" "pink" "lime" "yellow" "lightBlue" "magenta" "orange" "white"
+//Health and collision
+SetupPart core 7000 -247 -25 -42 561 86 84
+BulletDetection 7
+ModelScale 1
+Boat
+PlaceableOnLand False
+PlaceableOnWater True
+FloatOnWater True
+WheelStepHeight 0
+Buoyancy 0.08
+Description Placeable on water._CoreHP 7000_No.1Turret_ [HE]BM-8 Rocket_No.2Turret_ [APHE][LT1]Low-Caliber LightTank Shell_ [HE][LT1]Low-Caliber LightTank Shell_No.3Turret_ [APHE][LT2]LightTank Shell_ [HE][LT2]LightTank Shell_ [AA][GB]Gunboat AAGun Shell
+FancyCollision true
+
+AddCollisionMeshRaw -166 -15 0 62 10 36 0 0 0 0 0 0 0 0 0 0 0 0 -2 -2 0 0 0 1 0 0 1 -24 -2 0 -24 // Box 0
+
+
+AddCollisionMeshRaw -11 -37 0 28 13 47 0 0 1 0 0 2 0 0 2 2 0 2 0 0 0 0 0 0 0 0 0 2 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 64 -38 -49 26 14 49 0 0 1 0 0 2 -1 0 2 0 0 1 0 0 0 0 0 0 -3 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 64 -15 -49 26 14 49 0 0 0 -2 0 0 -5 0 0 0 0 0 0 0 0 -37 0 0 -37 0 0 0 0 0 0 // Box 101
+
+
+AddCollisionMeshRaw 90 -40 -48 26 16 48 0 0 0 0 0 0 -5 0 0 0 0 0 0 0 0 -2 0 0 -10 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 116 -40 -43 14 16 43 0 0 0 0 0 0 -4 0 0 0 0 0 0 0 0 -5 0 0 -11 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 130 -40 -39 13 16 39 0 0 0 0 0 0 -8 0 0 0 0 0 0 0 0 -7 0 0 -13 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw -49 -24 -45 38 9 45 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 -2 0 0 0 0 0 0 0 0 0 // Box 107
+
+
+AddCollisionMeshRaw -11 -24 -47 28 9 47 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 -2 0 0 0 0 0 0 0 0 0 // Box 108
+
+
+AddCollisionMeshRaw 17 -24 -49 19 9 49 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 -2 0 0 0 0 0 0 // Box 109
+
+
+AddCollisionMeshRaw 17 -39 0 19 15 49 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 36 -24 -49 28 9 49 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 -2 0 0 0 0 0 0 // Box 110
+
+
+AddCollisionMeshRaw 64 -24 -49 26 9 49 0 0 0 0 0 0 -3 0 0 0 0 0 0 0 0 -2 0 0 -5 0 0 0 0 0 0 // Box 111
+
+
+AddCollisionMeshRaw 90 -24 -46 26 8 46 0 0 0 0 0 0 -8 0 0 0 0 0 0 0 1 -2 0 -2 -10 0 -2 0 0 1 0 // Box 112
+
+
+AddCollisionMeshRaw 116 -24 -38 14 6 38 0 0 0 0 0 0 -6 0 0 0 0 0 0 0 0 -2 0 -2 -8 0 -2 0 0 0 0 // Box 113
+
+
+AddCollisionMeshRaw 130 -24 -32 13 2 32 0 0 0 0 0 0 -6 0 0 0 0 0 0 0 2 -2 0 0 -7 0 0 0 0 2 0 // Box 114
+
+
+AddCollisionMeshRaw 143 -40 -31 13 16 31 0 0 0 0 0 0 -9 0 0 0 0 0 0 0 0 -5 0 -2 -13 0 -2 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 143 -24 -27 13 2 27 0 0 0 -1 0 2 -9 0 2 0 0 0 0 0 0 -2 0 -3 -9 0 -3 0 0 0 0 // Box 116
+
+
+AddCollisionMeshRaw 156 -26 -20 4 2 20 0 0 0 -2 1 2 -8 7 2 0 0 0 0 0 -1 -2 0 -1 -8 5 -1 0 0 -1 0 // Box 117
+
+
+AddCollisionMeshRaw 156 -40 -22 12 14 22 0 0 0 0 2 0 -10 8 0 0 0 0 0 0 0 -4 -7 -2 -10 -1 -2 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 90 -15 -44 26 14 44 0 0 0 0 0 0 -10 0 0 0 0 0 0 0 0 -32 0 -1 -32 0 -1 0 0 0 0 // Box 119
+
+
+AddCollisionMeshRaw 17 -15 0 19 13 49 0 0 0 0 0 0 0 0 0 -2 0 0 -2 0 0 0 0 0 0 0 0 -37 0 0 -37 // Box 12
+
+
+AddCollisionMeshRaw 90 -16 -44 26 1 44 0 0 -1 0 0 2 -8 0 2 0 0 -1 -2 0 0 0 0 0 -10 0 0 0 0 0 0 // Box 120
+
+
+AddCollisionMeshRaw 116 -20 -37 14 5 37 0 0 -2 -1 0 0 -7 0 0 0 0 0 0 0 0 -3 0 0 -9 0 0 0 0 0 0 // Box 121
+
+
+AddCollisionMeshRaw 130 -20 -30 13 5 30 0 0 0 0 0 2 -5 0 2 0 0 0 0 0 0 -2 0 0 -7 0 0 0 0 0 0 // Box 122
+
+
+AddCollisionMeshRaw 143 -22 -25 13 7 25 0 0 0 0 0 3 -7 0 3 0 0 0 0 0 0 -2 -7 0 -7 -7 0 0 0 0 0 // Box 123
+
+
+AddCollisionMeshRaw 156 -25 -18 4 10 18 0 0 0 0 0 0 -6 5 0 0 0 0 0 7 0 0 -9 0 -6 -9 0 0 7 0 0 // Box 124
+
+
+AddCollisionMeshRaw 116 -15 -34 14 13 34 0 0 0 0 0 0 -6 0 0 0 0 0 0 0 0 -22 0 -2 -22 0 -2 0 0 0 0 // Box 125
+
+
+AddCollisionMeshRaw 130 -15 -28 13 11 28 0 0 0 0 0 0 -5 0 0 0 0 0 0 0 0 -16 0 -6 -16 0 -6 0 0 0 0 // Box 126
+
+
+AddCollisionMeshRaw 143 -15 -23 6 5 23 0 0 0 0 0 0 -5 0 0 0 0 0 0 0 0 -11 0 -5 -5 0 -5 0 0 0 0 // Box 127
+
+
+AddCollisionMeshRaw 149 -15 -18 2 5 18 0 0 0 0 0 0 -6 0 0 0 0 0 0 6 0 -6 0 -5 -6 0 -5 0 6 0 0 // Box 128
+
+
+AddCollisionMeshRaw 36 -15 0 28 13 49 0 0 0 0 0 0 0 0 0 -2 0 0 -2 0 0 0 0 1 0 0 1 -37 0 0 -37 // Box 13
+
+
+AddCollisionMeshRaw 36 -38 0 28 14 49 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 64 -38 0 26 14 49 0 0 1 0 0 2 0 0 2 -1 0 1 0 0 0 0 0 0 0 0 0 -3 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 64 -15 0 26 14 49 0 0 0 0 0 0 0 0 0 -5 0 0 -2 0 0 0 0 0 0 0 0 -37 0 0 -37 // Box 16
+
+
+AddCollisionMeshRaw 49 -53 1 5 14 23 0 // Collision
+
+
+AddCollisionMeshRaw 54 -53 -26 10 14 24 0 0 0 0 -9 0 0 -8 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 54 -53 1 10 14 24 0 0 0 0 -8 0 0 -9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 18 -57 24 31 4 1 0 0 0 0 -3 0 0 -3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 17 -53 -26 37 14 24 0 // Collision
+
+
+AddCollisionMeshRaw 90 -40 0 26 16 48 0 0 0 0 0 0 0 0 0 -5 0 0 0 0 0 0 0 0 0 0 0 -10 0 0 -2 // Collision
+
+
+AddCollisionMeshRaw 18 -53 24 36 14 1 0 // Collision
+
+
+AddCollisionMeshRaw 39 -57 -2 10 4 11 0 0 0 0 -3 0 0 -3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 39 -57 9 10 4 15 0 -3 0 0 -3 0 0 -3 0 0 -3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 17 -61 9 1 22 16 0 // Box 175
+
+
+AddCollisionMeshRaw 17 -57 -3 32 4 1 0 0 0 0 -3 0 0 -3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 116 -40 0 14 16 43 0 0 0 0 0 0 0 0 0 -4 0 0 0 0 0 0 0 0 0 0 0 -11 0 0 -5 // Collision
+
+
+AddCollisionMeshRaw -169 -31 0 65 7 36 0 1 2 0 0 2 0 0 2 4 1 2 0 -1 0 0 0 0 0 0 0 4 -1 0 0 // Collision
+
+
+AddCollisionMeshRaw 130 -40 0 13 16 39 0 0 0 0 0 0 0 0 0 -8 0 0 0 0 0 0 0 0 0 0 0 -13 0 0 -7 // Collision
+
+
+AddCollisionMeshRaw 54 -53 -2 2 14 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 8 0 0 8 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 49 -53 -2 5 14 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw -169 -31 -36 65 7 36 0 1 2 0 0 2 4 0 2 0 1 2 0 -1 0 0 0 0 4 0 0 0 -1 0 0 // Collision
+
+
+AddCollisionMeshRaw -104 -30 -38 55 6 38 0 0 3 2 0 5 7 0 5 0 0 3 0 0 0 2 0 0 7 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw -168 -24 -36 64 9 36 0 0 0 0 0 0 4 0 0 0 0 0 0 -2 0 -2 0 0 0 0 0 0 -2 0 0 // Box 345
+
+
+AddCollisionMeshRaw -104 -24 -38 55 9 38 0 0 0 2 0 0 7 0 0 0 0 0 0 0 0 -2 0 0 5 0 0 0 0 0 0 // Box 346
+
+
+AddCollisionMeshRaw 41 -61 -3 1 4 1 0 // Collision
+
+
+AddCollisionMeshRaw 41 -61 24 1 4 1 0 // Collision
+
+
+AddCollisionMeshRaw 17 -61 -3 1 4 1 0 // Collision
+
+
+AddCollisionMeshRaw -104 -15 0 55 11 38 0 0 0 0 0 0 0 0 0 5 0 0 -2 0 0 0 0 1 0 0 1 -26 0 0 -26 // Box 4
+
+
+AddCollisionMeshRaw -104 -30 0 55 6 38 0 0 3 0 0 5 0 0 5 7 0 3 2 0 0 0 0 0 0 0 0 7 0 0 2 // Collision
+
+
+AddCollisionMeshRaw -168 -24 0 64 9 36 0 0 0 0 0 0 0 0 0 4 0 0 0 -2 0 0 0 0 0 0 0 0 -2 0 -2 // Box 62
+
+
+AddCollisionMeshRaw -104 -24 0 55 9 38 0 0 0 0 0 0 0 0 0 7 0 0 2 0 0 0 0 0 0 0 0 5 0 0 -2 // Box 63
+
+
+AddCollisionMeshRaw -49 -24 0 38 9 45 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 // Box 64
+
+
+AddCollisionMeshRaw -11 -24 0 28 9 47 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 // Box 65
+
+
+AddCollisionMeshRaw 17 -24 0 19 9 49 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 -2 // Box 66
+
+
+AddCollisionMeshRaw 36 -24 0 28 9 49 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 -2 // Box 67
+
+
+AddCollisionMeshRaw 64 -24 0 26 9 49 0 0 0 0 0 0 0 0 0 -3 0 0 0 0 0 0 0 0 0 0 0 -5 0 0 -2 // Box 68
+
+
+AddCollisionMeshRaw 90 -24 0 26 8 46 0 0 0 0 0 0 0 0 0 -8 0 0 0 0 1 0 0 -2 0 0 -2 -10 0 1 -2 // Box 69
+
+
+AddCollisionMeshRaw -49 -15 0 38 12 45 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 0 0 1 0 0 1 -33 0 0 -33 // Box 7
+
+
+AddCollisionMeshRaw 116 -24 0 14 6 38 0 0 0 0 0 0 0 0 0 -6 0 0 0 0 0 0 0 -2 0 0 -2 -8 0 0 -2 // Box 70
+
+
+AddCollisionMeshRaw 130 -24 0 13 2 32 0 0 0 0 0 0 0 0 0 -6 0 0 0 0 2 0 0 0 0 0 0 -7 0 2 -2 // Box 72
+
+
+AddCollisionMeshRaw 143 -40 0 13 16 31 0 0 0 0 0 0 0 0 0 -9 0 0 0 0 0 0 0 -2 0 0 -2 -13 0 0 -5 // Collision
+
+
+AddCollisionMeshRaw 143 -24 4 13 2 23 0 0 0 0 0 2 0 0 2 -9 0 0 -1 0 0 0 0 -3 0 0 -3 -9 0 0 -2 // Box 74
+
+
+AddCollisionMeshRaw 156 -26 0 4 2 20 0 0 0 0 7 2 0 1 2 -8 0 0 -2 0 -1 0 5 -1 0 0 -1 -8 0 -1 -2 // Box 75
+
+
+AddCollisionMeshRaw 156 -40 0 12 14 22 0 0 0 0 8 0 0 2 0 -10 0 0 0 0 0 0 -1 -2 0 -7 -2 -10 0 0 -4 // Collision
+
+
+AddCollisionMeshRaw 90 -15 0 26 14 44 0 0 0 0 0 0 0 0 0 -10 0 0 0 0 0 0 0 -1 0 0 -1 -32 0 0 -32 // Box 77
+
+
+AddCollisionMeshRaw 90 -16 0 26 1 44 0 0 -1 -2 0 2 0 0 2 -8 0 -1 0 0 0 0 0 0 0 0 0 -10 0 0 0 // Box 78
+
+
+AddCollisionMeshRaw 116 -20 0 14 5 37 0 0 0 0 0 0 0 0 0 -7 0 -2 -1 0 0 0 0 0 0 0 0 -9 0 0 -3 // Box 79
+
+
+AddCollisionMeshRaw -49 -34 0 38 10 45 0 0 1 0 0 4 0 0 5 2 0 1 0 0 0 0 0 0 0 0 0 2 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 130 -20 0 13 5 30 0 0 0 0 0 2 0 0 2 -5 0 0 0 0 0 0 0 0 0 0 0 -7 0 0 -2 // Box 80
+
+
+AddCollisionMeshRaw 143 -22 0 13 7 25 0 0 0 0 0 3 0 0 3 -7 0 0 0 0 0 0 -7 0 0 -7 0 -7 0 0 -2 // Box 81
+
+
+AddCollisionMeshRaw 156 -25 0 4 10 18 0 0 0 0 5 0 0 0 0 -6 0 0 0 7 0 0 -9 0 0 -9 0 -6 7 0 0 // Box 83
+
+
+AddCollisionMeshRaw 116 -15 0 14 13 34 0 0 0 0 0 0 0 0 0 -6 0 0 0 0 0 0 0 -2 0 0 -2 -22 0 0 -22 // Box 84
+
+
+AddCollisionMeshRaw 130 -15 0 13 11 28 0 0 0 0 0 0 0 0 0 -5 0 0 0 0 0 0 0 -6 0 0 -6 -16 0 0 -16 // Box 85
+
+
+AddCollisionMeshRaw 143 -15 0 6 5 23 0 0 0 0 0 0 0 0 0 -5 0 0 0 0 0 0 0 -5 0 0 -5 -5 0 0 -11 // Box 86
+
+
+AddCollisionMeshRaw 149 -15 0 2 5 18 0 0 0 0 0 0 0 0 0 -6 0 0 0 6 0 0 0 -5 0 0 -5 -6 6 0 -6 // Box 87
+
+
+AddCollisionMeshRaw -166 -15 -36 62 10 36 0 0 0 -2 0 0 0 0 0 0 0 0 0 -2 0 -24 0 1 -24 0 1 0 -2 0 0 // Box 88
+
+
+AddCollisionMeshRaw -11 -15 0 28 13 47 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 0 0 0 0 0 0 -35 0 0 -35 // Box 9
+
+
+AddCollisionMeshRaw -104 -15 -38 55 11 38 0 0 0 -2 0 0 5 0 0 0 0 0 0 0 0 -26 0 1 -26 0 1 0 0 0 0 // Box 90
+
+
+AddCollisionMeshRaw -49 -15 -45 38 12 45 0 0 0 -2 0 0 0 0 0 0 0 0 0 0 0 -33 0 1 -33 0 1 0 0 0 0 // Box 92
+
+
+AddCollisionMeshRaw -49 -34 -45 38 10 45 0 0 1 0 0 4 2 0 4 0 0 1 0 0 0 0 0 0 2 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw -11 -15 -47 28 13 47 0 0 0 -2 0 0 0 0 0 0 0 0 0 0 0 -35 0 0 -35 0 0 0 0 0 0 // Box 94
+
+
+AddCollisionMeshRaw -11 -37 -47 28 13 47 0 0 1 0 0 2 2 0 2 0 0 1 0 0 0 0 0 0 2 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 17 -39 -49 19 15 49 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 // Collision
+
+
+AddCollisionMeshRaw 17 -15 -49 19 13 49 0 0 0 -2 0 0 -2 0 0 0 0 0 0 0 0 -37 0 0 -37 0 0 0 0 0 0 // Box 97
+
+
+AddCollisionMeshRaw 36 -15 -49 28 13 49 0 0 0 -2 0 0 -2 0 0 0 0 0 0 0 0 -37 0 1 -37 0 1 0 0 0 0 // Box 98
+
+
+AddCollisionMeshRaw 36 -38 -49 28 14 49 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 // Collision

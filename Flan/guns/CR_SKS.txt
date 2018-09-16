@@ -1,0 +1,62 @@
+Name [CR]SKS
+ShortName sks
+Description [SAR]SAR 10Round Magazine [DamageVsLiving 5.5]_ShootDelay 3_EquipPoint 5
+//The ammo this gun uses (shortName)
+Ammo sar_ammo
+Ammo dummyammo
+Icon SKS
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10100
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 60
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 3.0
+RandomRecoilRange 2.0
+RandomRecoilYawRange 0.65
+DecreaseRecoil 1.5
+DecreaseRecoilYaw 1.5
+//Damage in half hearts
+Damage 0.69
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.95
+//The higher this value, the more the bullets spread
+Accuracy 2
+//Time in ticks between rounds
+ShootDelay 3
+ShootSound SKS_Fire
+ReloadSound Type4SAR_Reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode SemiAuto
+//Default scope settings. Usually for aiming down sights. In which case, use FOVZoomLevel, not ZoomLevel
+Scope None
+ZoomLevel 1.00
+FOVZoomLevel 1.50
+Deployable False
+DeployedModel None
+BulletSpeed 19
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Model settings
+Model lwpack.SKS
+//ModelScale 0.19
+ModelScale 1.0
+Texture sks
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+//AllowAttachments
+AllowAttachments flanmosSuppressor flanmosAimPoint_H1 flanmosAimPoint_T2 flanmosKnightsForeGrip flanmosnxs flanMWFlashlight flanMWSingleFire flanMWBurstFire flanMWAutoFire
+AllowBarrelAttachments true
+AllowScopeAttachments true
+AllowStockAttachments false
+AllowGripAttachments true
+NumGenericAttachmentSlots 0
+//Paintjob Settings
+//Format is "Paintjob iconName textureName requiredDyeAmount requiredDyeColour" Multiple colours may be listed in order, seperated by a space
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+MeleeDamage 4

@@ -1,0 +1,114 @@
+//Naming
+Name [SPAAG1]Flakpanzer I
+ShortName flakpanzer1
+Description Placeable on sponge._CoreHP 4500_[AA]2cm AAGun 120Round Ammo
+//Visuals
+Icon flakpanzer1
+Model siberia.Flakpanzer1
+Texture Flakpanzer1
+RotateWheels True
+//Third Person Camera Distance
+CameraDistance 7.5
+//Throttle
+MaxThrottle 1.7
+MaxNegativeThrottle 0.5
+//Steering modifiers
+TurnLeftSpeed 0.45
+TurnRightSpeed 0.45
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.5
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -30 -10 -18
+WheelPosition 1 -30 -10 18
+WheelPosition 2 20 -10 18
+WheelPosition 3 20 -10 -18
+WheelSpringStrength 0.5
+//Bouncy bouncy
+Bounciness 0.3
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank true
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 2000
+//Inventory Slots
+CargoSlots 0
+MissileSlots 1
+//Driver and passenger positions
+Driver 0 18 0 -360 360 -5 80
+RotatedDriverOffset -25 0 0
+//DriverAimSpeed yaw pitch z
+DriverAimSpeed 5.0 3.0 0
+//This would pertain to yaw speeds of 9.6 degrees/second and pitch speeds of 10 degrees/second
+DriverLegacyAiming false
+//Yaw before Pitch: Boolean toggle to force the turret to finish yaw movement before adjusting pitch. Disabled by default.
+DriverYawBeforePitch false
+//Toggle traverse sounds: Boolean toggle to enable traversing sounds. Disabled by default.
+DriverTraverseSounds true
+//Assign traverse sounds: Designates yawing/pitching sounds for the driver. Works the same way as engine sounds.
+YawSound TurretTraverse1
+YawSoundLength 21
+PitchSound Turret4
+PitchSoundLength 8
+Passengers 0
+//Passenger 1 -31 14 13 core -360 360 -89 89
+//Passenger 2 -31 14 -13 core -360 360 -89 89
+Primary Shell
+Secondary Missile
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 160
+ShootDelayPrimary 4
+ReloadTimePrimary 20
+//PlaceTimeSecondary 160
+//ShootDelaySecondary 3
+//ReloadTimeSecondary 140
+BulletSpeed 10.00
+BulletSpread 0.25
+//Whether to alternate or fire all together
+AlternatePrimary False
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 25 26 0 turret
+ShootPointPrimary 25 26 0 turret
+//Secondary gun
+AllowAllAmmo False
+AddAmmo aa_flakvierling_ammo
+//Sounds
+StartSound Pz2_Idle
+StartSoundLength 40
+EngineSound Pz2_Engine
+EngineSoundLength 40
+StartSoundRange 50
+EngineSoundRange 50
+BackSoundRange 50
+BackSoundLength 
+BackSound 
+PlaceSoundPrimary Pz,IIF_PlaceSound
+ShootSoundPrimary 2cmKwK30_Shoot
+ReloadSoundPrimary Pz,IIF_reload
+PlaceSoundSecondary None
+ShootSoundSecondary HMG_BrowningM1919A4_fire2
+ReloadSoundSecondary HMG_BrowningM1919A4Reload2
+//Recipe
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+AddRecipeParts core 6 iron
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//Health and collision
+SetupPart core 4500 -36 -11 -26 71 34 42
+BulletDetection 5
+ModelScale 1.0
+Size 10 5
+BrakeSound Truck_Stop
+BrakeSoundRange 10
+BrakeSoundLength 120
+IsExplosionWhenDestroyed true
+PlaceableOnLand false
+PlaceableOnSponge true
+CollisionDamageEnable true
+CollisionDamageThrottle 0.21
+CollisionDamageTimes 5

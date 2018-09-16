@@ -1,0 +1,60 @@
+Name [RL]FliegerFaust
+ShortName fliegerfaust
+Description [HE]FliegerFaust Rocket_ShootDelay 10_EquipPoint 4
+//The ammo this gun uses _shortName_
+Ammo fliegerfaust_ammo
+Ammo dummyammo
+Icon fliegerfaust
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10102
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 100
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 2
+DecreaseRecoil 1.00
+DecreaseRecoilYaw 1.00
+//Number of bullets to create on firing the weapon. If you set this to 2 knockback and Damage doubles, and multiplies 1 time per added shot.
+NumBullets 4
+//Damage in half hearts
+Damage 1
+//Modifiers
+MoveSpeedModifier 0.7
+//The higher this value, the more the bullets spread
+//AccuracyInADS 10
+Accuracy 10
+//Time in ticks between rounds
+ShootDelay 5
+DistortSound False
+ShootSound rpg7_shoot
+ReloadSound rpg7_reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode Burst
+NumBurstRounds 2
+//Scope.png name or None
+Scope None
+ZoomLevel 1.0
+FOVZoomLevel 1.5
+//Deployable Settings
+Deployable False
+DeployedModel None
+//Model Settings
+Model lwpack.FliegerFaust
+ModelScale 1.0
+Texture FliegerFaust
+BulletSpeed 9.0
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Attachment Settings
+AllowAllAttachments false
+TrailParticles true
+TrailParticleType fireworksSpark
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+AllowAttachments flanMWRedDot flanMWACOG
+AllowBarrelAttachments false
+AllowScopeAttachments false
+AllowStockAttachments false
+AllowGripAttachments false
+NumGenericAttachmentSlots 0

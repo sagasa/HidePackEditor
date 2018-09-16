@@ -1,0 +1,11 @@
+Name [UK]Helmet Mk.II
+ShortName mk2helmet
+ItemID 23641
+Icon AmericanHelmet
+Colour 255 255 255
+Type Helmet
+Defence 0.1
+Model yuque.BritishUniform
+ModelScale 0.95
+ArmourTexture BritishUniform
+KnockbackModifier 0.75

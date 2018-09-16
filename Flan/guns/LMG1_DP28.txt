@@ -1,0 +1,60 @@
+Name [LMG1]DP-28
+ShortName dp28
+Description [LMG1]LMG 50Round Magazine_ShootDelay 3_EquipPoint 6
+//The ammo this gun uses (shortName)
+Ammo lmg1_ammo
+Ammo dummyammo
+Icon dp28
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10023
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 130
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 8.5
+RandomRecoilRange 2.00
+RandomRecoilYawRange 5.0
+DecreaseRecoil 6.5
+DecreaseRecoilYaw 100.0
+//Damage in half hearts
+Damage 1
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.8
+MeleeDamage 0
+//The higher this value, the more the bullets spread
+//AccuracyInADS 2
+Accuracy 1
+//Time in ticks between rounds
+ShootDelay 3
+DistortSound False
+ShootSound DP28_Fire
+ReloadSound SMG_PPSh-41_reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode FullAuto
+//Bullet speed, default 3.0
+BulletSpeed 20
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+Model yuque.DP28
+Texture DP28
+ModelScale 0.25
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+//AllowAttachments
+AllowBarrelAttachments false
+AllowScopeAttachments false
+AllowStockAttachments false
+AllowGripAttachments false
+NumGenericAttachmentSlots 0
+//Default scope settings. Usually for aiming down sights. In which case, use FOVZoomLevel, not ZoomLevel
+Scope None
+ZoomLevel 1.00
+FOVZoomLevel 1.00
+Deployable False
+DeployedModel None
+RecipeOutput 1

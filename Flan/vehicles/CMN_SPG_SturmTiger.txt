@@ -1,0 +1,150 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [SPG]SturmTiger
+ShortName sturmtiger
+Description Placeable on sponge._CoreHP 5500_[HE]38cm SturmTiger Rocket
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon SturmTiger
+Model evp2.Sturmtiger
+Texture Sturmtiger
+RotateWheels True
+//Third Person Camera 
+Distance
+CameraDistance 7.5
+
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 0.8
+MaxNegativeThrottle 0.5
+//Steering modifiers
+TurnLeftSpeed 0.425
+TurnRightSpeed 0.425
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.0
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -77 -8 -32
+WheelPosition 1 -77 -8 22
+WheelPosition 2 20 -8 22
+WheelPosition 3 20 -8 -32
+WheelSpringStrength 0.5
+//Bouncy bouncy
+Bounciness 0.3
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank true
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary 
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 700
+ShootDelayPrimary 700
+ReloadTimePrimary 700
+PlaceTimeSecondary 
+ShootDelaySecondary 
+ReloadTimeSecondary 
+BulletSpeed 4.00
+BulletSpread 1.50
+//Whether to alternate or fire all together
+AlternatePrimary False
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 0 23 0 turret
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary explode 2 0 0
+ShootParticlesPrimary explode 2 0 0
+ShootParticlesPrimary explode 2 0 0
+ShootParticlesPrimary explode 2 0 0
+ShootParticlesPrimary explode 2 0 0
+ShootParticlesPrimary cloud 1 0 0
+ShootParticlesPrimary cloud 1 0 0
+ShootParticlesPrimary cloud 1 0 0
+ShootParticlesPrimary cloud 1 0 0
+ShootParticlesPrimary cloud 1 0 0
+ShootParticlesPrimary cloud 2 0 0
+ShootParticlesPrimary cloud 2 0 0
+ShootParticlesPrimary cloud 2 0 0
+ShootParticlesPrimary cloud 2 0 0
+ShootParticlesPrimary cloud 2 0 0
+ShootParticlesPrimary flame 1 0 0
+ShootParticlesPrimary flame 1 0 0
+ShootParticlesPrimary flame 1 0 0
+ShootParticlesPrimary flame 1 0 0
+ShootParticlesPrimary flame 1 0 0
+ShootParticlesPrimary flame 2 0 0
+ShootParticlesPrimary flame 2 0 0
+ShootParticlesPrimary flame 2 0 0
+ShootParticlesPrimary flame 2 0 0
+ShootParticlesPrimary flame 2 0 0
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 0
+BombSlots 0
+MissileSlots 1
+AllowAllAmmo false
+AddAmmo he_sturmtiger_rocket
+AddAmmo dummyammo
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 1000
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver -38 23 -11 -10 10 0 85
+RotatedDriverOffset 0 0 0
+//DriverAimSpeed yaw pitch z
+DriverAimSpeed 0.8 0.8 0
+//This would pertain to yaw speeds of 9.6 degrees/second and pitch speeds of 10 degrees/second
+DriverLegacyAiming false
+//Yaw before Pitch: Boolean toggle to force the turret to finish yaw movement before adjusting pitch. Disabled by default.
+DriverYawBeforePitch false
+//Toggle traverse sounds: Boolean toggle to enable traversing sounds. Disabled by default.
+DriverTraverseSounds true
+//Assign traverse sounds: Designates yawing/pitching sounds for the driver. Works the same way as engine sounds.
+YawSound Turret4
+YawSoundLength 8
+PitchSound Turret4
+PitchSoundLength 8
+Passengers 0
+//Secondary gun
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound Hetzer_Idle
+StartSoundLength 40
+EngineSound Hetzer_Engine
+EngineSoundLength 40
+StartSoundRange 50
+EngineSoundRange 50
+BackSoundRange 50
+BackSoundLength 
+BackSound 
+PlaceSoundPrimary PlaceSound3
+ShootSoundPrimary SturmTiger_fire
+ReloadSoundPrimary SturmTiger_reload
+PlaceSoundSecondary None
+ShootSoundSecondary None
+ReloadSoundSecondary None
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Recipe
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+AddRecipeParts core 32 iron 1 bedrock
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+Size 10 5
+SetupPart core 5500 -77 -10 -35 99 44 61
+BulletDetection 5
+SquashMobs False
+BrakeSound Truck_Stop
+BrakeSoundRange 10
+BrakeSoundLength 120
+IsExplosionWhenDestroyed true
+PlaceableOnLand false
+PlaceableOnSponge true
+CollisionDamageEnable true
+CollisionDamageThrottle 0.21
+CollisionDamageTimes 5

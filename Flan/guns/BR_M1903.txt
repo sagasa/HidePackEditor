@@ -1,0 +1,66 @@
+Name [BR]M1903A3
+ShortName m1903
+Description [BR]BR 5Round Clip [DamageVsLiving 8.75]_[BR]BR Expanding Bullet 5Round Clip [DamageVsLiving 12]_ShootDelay 25_EquipPoint 5
+//The ammo this gun uses (shortName)
+Ammo br_clip
+Ammo br_ex_clip
+Ammo dummyammo
+Icon M1903
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10018
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 75
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 10
+RandomRecoilRange 4.0
+RandomRecoilYawRange 1.5
+DecreaseRecoil 1.5
+DecreaseRecoilYaw 5.5
+//Damage in half hearts
+LoadIntoGun 1
+NumBullets 1
+Damage 1
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.9
+//The higher this value, the more the bullets spread
+//AccuracyInADS 1
+Accuracy 0
+//Time in ticks between rounds
+ShootDelay 25
+ShootSound M1903_Fire
+ReloadSound MosinNagantReload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode SemiAuto
+//Bullet speed, default 3.0
+BulletSpeed 25
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Default Scope Settings
+Scope None
+ZoomLevel 1.0
+FOVZoomLevel 1.5
+//Deployable Settings
+Deployable False
+DeployedModel None
+//Model Settings
+Model yuque.M1903
+Texture M1903
+ModelScale 0.06
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+AllowAttachments flanMWSilencer flanMWRedDot flanMWACOG flanMW4xScope
+AllowBarrelAttachments true
+AllowScopeAttachments true
+AllowStockAttachments false
+AllowGripAttachments false
+NumGenericAttachmentSlots 0
+//Paintjob Settings
+//Format is "Paintjob iconName textureName requiredDyeAmount requiredDyeColour" Multiple colours may be listed in order, seperated by a space
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+Paintjob Icon_AWP_SnakeCamo SkinAWPSnakeCamo yellow 0

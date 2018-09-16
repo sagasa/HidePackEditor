@@ -1,0 +1,151 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [HT]T-35
+ShortName t-35
+ItemID 11541
+Description Placeable on sponge._CoreHP 9500_[HEAT][IT2]High-Caliber InfantryTank Shell_[HT][IT2]High-Caliber InfantryTank Shell_[VG]MG1Ammo_No.1,No.3Turret_ [VG]MG1Ammo_No.2,No.4Turret_ [APHE][LT2]LightTank Shell_ [HE][LT2]LightTank Shell
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon T-35
+Model evp2.T35
+Texture T35
+RotateWheels True
+//Third Person Camera Distance
+CameraDistance 10.0
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 1.3
+MaxNegativeThrottle 0.6
+//Steering modifiers
+TurnLeftSpeed 0.35
+TurnRightSpeed 0.35
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.5
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -73 -8 -21
+WheelPosition 1 -73 -8 21
+WheelPosition 2 36 -8 21
+WheelPosition 3 36 -8 -21
+WheelSpringStrength 0.5
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank true
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary Missile
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 160
+ShootDelayPrimary 70
+ReloadTimePrimary 70
+PlaceTimeSecondary 160
+ShootDelaySecondary 2
+ReloadTimeSecondary 140
+BulletSpeed 5.50
+BulletSpread 0.75
+//Whether to alternate or fire all together
+AlternatePrimary False
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 30 38 0 turret 
+ShootPointSecondary 23 35 10 turret 
+ShootParticlesPrimary largeexplode 0 0 0
+ShootParticlesPrimary explode 0 0 0
+ShootParticlesPrimary explode 0 0 0
+ShootParticlesPrimary explode 0 0 0
+ShootParticlesPrimary explode 0 0 0
+ShootParticlesPrimary explode 0 0 0
+ShootParticlesPrimary explode 0 0 0
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary cloud 0 0 0
+ShootParticlesPrimary cloud 0 0 0
+ShootParticlesPrimary cloud 0 0 0
+ShootParticlesPrimary cloud 0 0 0
+ShootParticlesPrimary cloud 0 0 0
+ShootParticlesPrimary cloud 0 0 0
+ShootParticlesPrimary cloud 1 0 0
+ShootParticlesPrimary cloud 1 0 0
+ShootParticlesPrimary cloud 1 0 0
+ShootParticlesPrimary cloud 1 0 0
+ShootParticlesPrimary cloud 1 0 0
+ShootParticlesPrimary cloud 1 0 0
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 0
+BombSlots 0
+MissileSlots 8
+AllowAllAmmo false
+AddAmmo heat_it2_shell
+AddAmmo he_it2_shell
+AddAmmo mg1_ammo
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 1000
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver 0 32 0 -360 360 -5 25
+RotatedDriverOffset -4 0 8
+//DriverAimSpeed yaw pitch z
+DriverAimSpeed 1.7 1.2 0
+//This would pertain to yaw speeds of 9.6 degrees/second and pitch speeds of 10 degrees/second
+DriverLegacyAiming false
+//Yaw before Pitch: Boolean toggle to force the turret to finish yaw movement before adjusting pitch. Disabled by default.
+DriverYawBeforePitch false
+//Toggle traverse sounds: Boolean toggle to enable traversing sounds. Disabled by default.
+DriverTraverseSounds true
+//Assign traverse sounds: Designates yawing/pitching sounds for the driver. Works the same way as engine sounds.
+YawSound TurretTraverse1
+YawSoundLength 21
+PitchSound Turret4
+PitchSoundLength 8
+Passengers 4
+Passenger 1 26 17 8 nose -30 135 -5 28 lightatgun Nose
+GunOrigin 1 26 8 8
+Passenger 2 -26 17 -8 nose 145 310 -5 28 lightatgun Nose2
+GunOrigin 2 -26 8 -8
+Passenger 3 22 14 -11 nose -135 20 -10 30 hmg Nose3
+GunOrigin 3 22 5 -11
+Passenger 4 -22 14 11 nose 45 200 -10 30 hmg Nose4
+GunOrigin 4 -22 5 11
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound Pz8_Idle
+StartSoundLength 40
+EngineSound Pz8_Engine
+EngineSoundLength 20
+StartSoundRange 50
+EngineSoundRange 50
+BackSoundRange 50
+BackSoundLength 
+BackSound 
+PlaceSoundPrimary V-2-K_PlaceSound
+ShootSoundPrimary T34_fire
+ReloadSoundPrimary T34-76_reload
+PlaceSoundSecondary None
+ShootSoundSecondary HMG_BrowningM1919A4_fire2
+ReloadSoundSecondary HMG_BrowningM1919A4Reload2
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Recipe
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+//AddRecipeParts core 25 iron 1 bp_t35
+AddRecipeParts core 25 iron 1 bedrock
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+SetupPart core 9500 -100 -10 -27 158 53 54
+BulletDetection 5
+SquashMobs false
+BrakeSound Truck_Stop
+BrakeSoundRange 10
+BrakeSoundLength 120
+IsExplosionWhenDestroyed true
+PlaceableOnLand false
+PlaceableOnSponge true
+CollisionDamageEnable true
+CollisionDamageThrottle 0.21
+CollisionDamageTimes 5

@@ -1,0 +1,116 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [MC]WillysMB
+ShortName willysmb
+ItemID 11001
+Description Placeable on sponge._CoreHP 775_CargoSlots 8_Gunner [VG]MG1Ammo
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon Military_Car_WillysMB
+Model Manus_WW2.Vehicle.WW2_Vehicle_WillyJeep_1
+ModelScale 1.05
+Texture Skin_WW2_Vehicle_WillyJeep_1A
+RotateWheels True
+//Third Person Camera Distance
+CameraDistance 5.0
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 1.2
+MaxNegativeThrottle 0.7
+Acceleration 1.5 1.5
+//Steering modifiers
+TurnLeftSpeed 0.5
+TurnRightSpeed 0.5
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.0
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -28 -8 -20
+WheelPosition 1 -28 -8 20
+WheelPosition 2 32 -8 20
+WheelPosition 3 32 -8 -20
+WheelSpringStrength 0.5
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank false
+CanMountEntity true
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary Shell
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 160
+ShootDelayPrimary 40
+ReloadTimePrimary 40
+PlaceTimeSecondary 160
+ShootDelaySecondary 60
+ReloadTimeSecondary 60
+//Whether to alternate or fire all together
+AlternatePrimary False
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 16 8 0 core
+ShootPointSecondary 16 8 0 core
+ShootParticlesPrimary note 0 1 0
+ShootParticlesPrimary note 0 2 0
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 8
+BombSlots 0
+MissileSlots 1
+AllowAllAmmo False
+AddAmmo sound_horn
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 1000
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver -2 0 -9
+RotatedDriverOffset 0 0 0
+Passengers 2
+Passenger 1 -2 0 9 core -360 360 -89 89
+Passenger 2 -15 11 0 turret -360 360 -15 65 hmg M2
+PassengerAimSpeed 2 5.0 5.0 0
+//PassengerLegacyAiming 2 true
+PassengerYawBeforePitch 2 false
+PassengerTraverseSounds 2 true
+PassengerYawSound 2 Turret3
+PassengerYawSoundLength 2 20
+PassengerPitchSound 2 Turret4
+PassengerPitchSoundLength 2 8
+RotatedPassengerOffset 2 -6 0 0
+GunOrigin 2 -15 3 0
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound Jeep_EngineSound
+StartSoundLength 90
+EngineSound Jeep_EngineSound
+EngineSoundLength 90
+StartSoundRange 50
+EngineSoundRange 50
+BackSoundRange 50
+BackSoundLength 90
+BackSound Jeep_EngineSound
+PlaceSoundPrimary PlaceSound1
+ShootSoundPrimary horn
+ReloadSoundPrimary PG_reload
+PlaceSoundSecondary None
+ShootSoundSecondary GoGoGo
+ReloadSoundSecondary None
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+AddRecipeParts core 4 iron
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+SetupPart core 775 -30 -10 -15 55 21 30
+BulletDetection 5
+SquashMobs false
+BrakeSound Truck_Stop
+BrakeSoundRange 10
+BrakeSoundLength 120
+IsExplosionWhenDestroyed true
+PlaceableOnLand true
+//PlaceableOnSponge true
+CollisionDamageEnable true
+CollisionDamageThrottle 0.50
+CollisionDamageTimes 5

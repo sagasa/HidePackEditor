@@ -1,0 +1,242 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [HZ2]ML-20
+ShortName ml20
+Description CoreHP 800_[SPG2][APHE]Heavy Howitzer Shell_[SPG2][HE]Heavy Howitzer Shell
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon Cannon_152mm_ML-20
+Model evp2.ML20
+Texture ML20
+RotateWheels True
+//Third Person Camera Distance
+CameraDistance 8.0
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 0.30
+MaxNegativeThrottle 0.30
+//Steering modifiers
+TurnLeftSpeed 0.25
+TurnRightSpeed 0.25
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.5
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -32 -8 -18
+WheelPosition 1 -32 -8 18
+WheelPosition 2 32 -8 18
+WheelPosition 3 32 -8 -18
+WheelSpringStrength 0.5
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank true
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary None
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 250
+ShootDelayPrimary 250
+ReloadTimePrimary 250
+PlaceTimeSecondary 
+ShootDelaySecondary 
+ReloadTimeSecondary 
+BulletSpeed 7.00
+BulletSpread 1.00
+//Whether to alternate or fire all together
+AlternatePrimary False
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 20 14 0 turret
+ShootPointSecondary 
+ShootParticlesPrimary largeexplode 5 0 0
+ShootParticlesPrimary hugeexplosion 7 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 4 1 0
+ShootParticlesPrimary explode 4 1 0
+ShootParticlesPrimary explode 4 1 0
+ShootParticlesPrimary explode 4 1 0
+ShootParticlesPrimary explode 4 1 0
+ShootParticlesPrimary explode 4 -1 0
+ShootParticlesPrimary explode 4 -1 0
+ShootParticlesPrimary explode 4 -1 0
+ShootParticlesPrimary explode 4 -1 0
+ShootParticlesPrimary explode 4 -1 0
+ShootParticlesPrimary explode 4 0 1
+ShootParticlesPrimary explode 4 0 1
+ShootParticlesPrimary explode 4 0 1
+ShootParticlesPrimary explode 4 0 1
+ShootParticlesPrimary explode 4 0 1
+ShootParticlesPrimary explode 4 0 -1
+ShootParticlesPrimary explode 4 0 -1
+ShootParticlesPrimary explode 4 0 -1
+ShootParticlesPrimary explode 4 0 -1
+ShootParticlesPrimary explode 4 0 -1
+ShootParticlesPrimary explode 5 0 0
+ShootParticlesPrimary explode 5 0 0
+ShootParticlesPrimary explode 5 0 0
+ShootParticlesPrimary explode 5 0 0
+ShootParticlesPrimary explode 5 0 0
+ShootParticlesPrimary explode 5 1 0
+ShootParticlesPrimary explode 5 1 0
+ShootParticlesPrimary explode 5 1 0
+ShootParticlesPrimary explode 5 1 0
+ShootParticlesPrimary explode 5 1 0
+ShootParticlesPrimary explode 5 1 1
+ShootParticlesPrimary explode 5 1 1
+ShootParticlesPrimary explode 5 1 1
+ShootParticlesPrimary explode 5 1 1
+ShootParticlesPrimary explode 5 1 1
+ShootParticlesPrimary explode 5 1 -1
+ShootParticlesPrimary explode 5 1 -1
+ShootParticlesPrimary explode 5 1 -1
+ShootParticlesPrimary explode 5 1 -1
+ShootParticlesPrimary explode 5 1 -1
+ShootParticlesPrimary explode 5 -1 0
+ShootParticlesPrimary explode 5 -1 0
+ShootParticlesPrimary explode 5 -1 0
+ShootParticlesPrimary explode 5 -1 0
+ShootParticlesPrimary explode 5 -1 0
+ShootParticlesPrimary explode 5 -1 -1
+ShootParticlesPrimary explode 5 -1 -1
+ShootParticlesPrimary explode 5 -1 -1
+ShootParticlesPrimary explode 5 -1 -1
+ShootParticlesPrimary explode 5 -1 -1
+ShootParticlesPrimary explode 5 -1 1
+ShootParticlesPrimary explode 5 -1 1
+ShootParticlesPrimary explode 5 -1 1
+ShootParticlesPrimary explode 5 -1 1
+ShootParticlesPrimary explode 5 -1 1
+ShootParticlesPrimary explode 5 0 1
+ShootParticlesPrimary explode 5 0 1
+ShootParticlesPrimary explode 5 0 1
+ShootParticlesPrimary explode 5 0 1
+ShootParticlesPrimary explode 5 0 1
+ShootParticlesPrimary explode 5 0 -1
+ShootParticlesPrimary explode 5 0 -1
+ShootParticlesPrimary explode 5 0 -1
+ShootParticlesPrimary explode 5 0 -1
+ShootParticlesPrimary explode 5 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 1 0
+ShootParticlesPrimary cloud 4 1 0
+ShootParticlesPrimary cloud 4 1 0
+ShootParticlesPrimary cloud 4 1 0
+ShootParticlesPrimary cloud 4 1 0
+ShootParticlesPrimary cloud 4 -1 0
+ShootParticlesPrimary cloud 4 -1 0
+ShootParticlesPrimary cloud 4 -1 0
+ShootParticlesPrimary cloud 4 -1 0
+ShootParticlesPrimary cloud 4 -1 0
+ShootParticlesPrimary cloud 4 0 1
+ShootParticlesPrimary cloud 4 0 1
+ShootParticlesPrimary cloud 4 0 1
+ShootParticlesPrimary cloud 4 0 1
+ShootParticlesPrimary cloud 4 0 1
+ShootParticlesPrimary cloud 4 0 -1
+ShootParticlesPrimary cloud 4 0 -1
+ShootParticlesPrimary cloud 4 0 -1
+ShootParticlesPrimary cloud 4 0 -1
+ShootParticlesPrimary cloud 4 0 -1
+ShootParticlesPrimary cloud 5 0 0
+ShootParticlesPrimary cloud 5 0 0
+ShootParticlesPrimary cloud 5 0 0
+ShootParticlesPrimary cloud 5 0 0
+ShootParticlesPrimary cloud 5 0 0
+ShootParticlesPrimary cloud 5 1 0
+ShootParticlesPrimary cloud 5 1 0
+ShootParticlesPrimary cloud 5 1 0
+ShootParticlesPrimary cloud 5 1 0
+ShootParticlesPrimary cloud 5 1 0
+ShootParticlesPrimary cloud 5 1 1
+ShootParticlesPrimary cloud 5 1 1
+ShootParticlesPrimary cloud 5 1 1
+ShootParticlesPrimary cloud 5 1 1
+ShootParticlesPrimary cloud 5 1 1
+ShootParticlesPrimary cloud 5 1 -1
+ShootParticlesPrimary cloud 5 1 -1
+ShootParticlesPrimary cloud 5 1 -1
+ShootParticlesPrimary cloud 5 1 -1
+ShootParticlesPrimary cloud 5 1 -1
+ShootParticlesPrimary cloud 5 -1 0
+ShootParticlesPrimary cloud 5 -1 0
+ShootParticlesPrimary cloud 5 -1 0
+ShootParticlesPrimary cloud 5 -1 0
+ShootParticlesPrimary cloud 5 -1 0
+ShootParticlesPrimary cloud 5 -1 -1
+ShootParticlesPrimary cloud 5 -1 -1
+ShootParticlesPrimary cloud 5 -1 -1
+ShootParticlesPrimary cloud 5 -1 -1
+ShootParticlesPrimary cloud 5 -1 -1
+ShootParticlesPrimary cloud 5 -1 1
+ShootParticlesPrimary cloud 5 -1 1
+ShootParticlesPrimary cloud 5 -1 1
+ShootParticlesPrimary cloud 5 -1 1
+ShootParticlesPrimary cloud 5 -1 1
+ShootParticlesPrimary cloud 5 0 1
+ShootParticlesPrimary cloud 5 0 1
+ShootParticlesPrimary cloud 5 0 1
+ShootParticlesPrimary cloud 5 0 1
+ShootParticlesPrimary cloud 5 0 1
+ShootParticlesPrimary cloud 5 0 -1
+ShootParticlesPrimary cloud 5 0 -1
+ShootParticlesPrimary cloud 5 0 -1
+ShootParticlesPrimary cloud 5 0 -1
+ShootParticlesPrimary cloud 5 0 -1
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 0
+BombSlots 0
+MissileSlots 2
+AllowAllAmmo false
+AddAmmo aphe_spg2_shell
+AddAmmo he_spg2_shell
+AddAmmo dummyammo
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 100
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver 0 1 0 -29 29 -2 45
+RotatedDriverOffset -10 0 -8
+Passengers 0
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound ATGun_movement
+StartSoundLength 30
+EngineSound ATGun_movement
+EngineSoundLength 30
+StartSoundRange 10
+EngineSoundRange 10
+BackSoundRange 10
+BackSoundLength 
+BackSound 
+PlaceSoundPrimary PlaceSound2
+ShootSoundPrimary 152mm_ML-20_fire
+ReloadSoundPrimary 152mm_ML-20_reload
+PlaceSoundSecondary None
+ShootSoundSecondary None
+ReloadSoundSecondary None
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Recipe
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+AddRecipeParts core 5 iron
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+SetupPart core 800 -48 -10 -17 71 30 34
+BulletDetection 5
+ModelScale 1.1
+IsExplosionWhenDestroyed true
+PlaceableOnLand true
+PlaceableOnSponge false
+CollisionDamageEnable false
+CollisionDamageThrottle 0.75
+CollisionDamageTimes 0

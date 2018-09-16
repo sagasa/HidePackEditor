@@ -1,0 +1,66 @@
+Name [SR]MosinNagantM1891 Scoped
+ShortName mn1891_scoped
+Description [BR]BR 5Round Clip [DamageVsLiving 11]_ShootDelay 50_EquipPoint 6
+//The ammo this gun uses (shortName)
+Ammo br_clip
+Ammo dummyammo
+Icon mosin_scoped
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10018
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 110
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 12
+RandomRecoilRange 1.1
+RandomRecoilYawRange 1.5
+DecreaseRecoil 2.80
+DecreaseRecoilYaw 2.00
+//Damage in half hearts
+LoadIntoGun 1
+NumBullets 1
+Damage 1.375
+IgnoreArmorProbability 0.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.75
+//The higher this value, the more the bullets spread
+Accuracy 0
+//Time in ticks between rounds
+ShootDelay 50
+ShootSound Mosin-Nagant_fire
+ReloadSound MosinNagantSniperReload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode SemiAuto
+//Bullet speed, default 3.0
+BulletSpeed 26
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Default Scope Settings
+Scope UNERTLScope
+ZoomLevel 4.0
+FOVZoomLevel 1.0
+//Deployable Settings
+Deployable False
+DeployedModel None
+//Model Settings
+Model yuque.MNM1891SR
+Texture MNM1891Scoped
+ModelScale 0.2
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+AllowAttachments flanMWSilencer flanMWRedDot flanMWACOG flanMW4xScope
+AllowBarrelAttachments true
+AllowScopeAttachments true
+AllowStockAttachments false
+AllowGripAttachments false
+NumGenericAttachmentSlots 0
+//Paintjob Settings
+//Format is "Paintjob iconName textureName requiredDyeAmount requiredDyeColour" Multiple colours may be listed in order, seperated by a space
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+Paintjob Icon_AWP_SnakeCamo SkinAWPSnakeCamo yellow 0
+
+HideCrossHair true

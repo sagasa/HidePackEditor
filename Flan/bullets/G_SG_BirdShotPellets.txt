@@ -1,0 +1,45 @@
+Name BirdShot Pellet
+ShortName sg_birdshot_pellet
+Description DamageVsLiving 0.25_DamageVsVehicles 0.25_Explosion 0
+Model Bullet
+//Colour of icon and model
+Colour 255 255 255
+//ItemID 
+Icon ammoicon
+//How affected by gravity the bullet is
+FallSpeed 0.1
+//The number of rounds each item has. Limited to 32000.
+RoundsPerItem 16
+//The maximum stack size of a stack of these
+MaxStackSize 8
+//The damage multiplier caused by the bullet on hitting an entity
+DamageVsPlayer 0.25
+DamageVsLiving 0.25
+DamageVsVehicles 0.25
+DamageVsPlanes 0.25
+//Size of explosion caused
+ExplosionRadius 0
+//True if bullet explodes on hitting anything. Fuse denotes the maximum time it may spend in the air before detonating
+ExplodeOnImpact True
+Fuse 6
+FlakParticles 0
+//Amount of fire to spread on exploding; for each increment, it will increase the dimensions of the burning area by 2. i.e. 1 will burn a 3x3 square, 2 will burn a 5x5 square
+Fire 0
+BreaksGlass Flase
+//Size of box to check for entities to hit / detonate
+HitBoxSize 0.05
+HitSound grassimpact2
+HitSoundRange 10
+HitSoundEnable true
+EntityHitSoundEnable true
+//Whether or not the bullet can travel through an entity having hit it
+Penetrates False
+TrailParticles False
+TrailParticleType fireworksSpark
+HasLight True
+//True if this is a bomb
+Bomb False
+Shell True
+DragInAir 10
+
+Attenuation 0.05

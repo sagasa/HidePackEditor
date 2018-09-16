@@ -1,0 +1,166 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [MT2]Pz.V Ausf.D Panther
+ShortName panther
+Description Placeable on sponge._CoreHP 6750_[APHE][MT2]High-Caliber MediumTank Shell_[APCR][MT2]High-Caliber MediumTank Shell_[HE][MT2]High-Caliber MediumTank Shell_[VG]MG1Ammo
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon Icon_WW2_Vehicle_Panther_1A
+Model Manus_WW2.Vehicle.WW2_Vehicle_Panther_1
+Texture Skin_WW2_Vehicle_Panther_1A
+RotateWheels True
+//Third Person Camera Distance
+CameraDistance 7.0
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 1.75
+MaxNegativeThrottle 0.3
+//Steering modifiers
+TurnLeftSpeed 0.4
+TurnRightSpeed 0.4
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.5
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -25 -8 -24
+WheelPosition 1 -25 -8 24
+WheelPosition 2 40 -8 24
+WheelPosition 3 40 -8 -24
+WheelSpringStrength 0.5
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank true
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary Missile
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 160
+ShootDelayPrimary 105
+ReloadTimePrimary 105
+PlaceTimeSecondary 160
+ShootDelaySecondary 2
+ReloadTimeSecondary 140
+BulletSpeed 12.50
+BulletSpread 0.25
+//Whether to alternate or fire all together
+AlternatePrimary False
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 34 28 0 turret 
+ShootPointSecondary 34 28 4 turret 
+ShootParticlesPrimary largeexplode 5 0 0
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary explode 4 0 0
+ShootParticlesPrimary explode 3 0 1
+ShootParticlesPrimary explode 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 3 0 1
+ShootParticlesPrimary cloud 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 3 0 1
+ShootParticlesPrimary cloud 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 3 0 1
+ShootParticlesPrimary cloud 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 3 0 1
+ShootParticlesPrimary cloud 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 3 0 1
+ShootParticlesPrimary cloud 3 0 -1
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+ShootParticlesPrimary cloud 4 0 0
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 0
+BombSlots 0
+MissileSlots 3
+AllowAllAmmo False
+AddAmmo aphe_mt2_shell
+AddAmmo apcr_mt2_shell
+AddAmmo he_mt2_shell
+AddAmmo mg1_ammo
+AddAmmo dummyammo
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 1000
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver 0 23 0 -360 360 -8 30
+RotatedDriverOffset -3 0 -5
+//DriverAimSpeed yaw pitch z
+DriverAimSpeed 1.3 1.2 0
+//This would pertain to yaw speeds of 9.6 degrees/second and pitch speeds of 10 degrees/second
+DriverLegacyAiming false
+//Yaw before Pitch: Boolean toggle to force the turret to finish yaw movement before adjusting pitch. Disabled by default.
+DriverYawBeforePitch false
+//Toggle traverse sounds: Boolean toggle to enable traversing sounds. Disabled by default.
+DriverTraverseSounds true
+//Assign traverse sounds: Designates yawing/pitching sounds for the driver. Works the same way as engine sounds.
+YawSound TurretTraverse1
+YawSoundLength 21
+PitchSound Turret4
+PitchSoundLength 8
+Passengers 2
+Passenger 1 -30 21 12 core -360 360 -89 89 dummygun DummyGun
+Passenger 2 -30 21 -12 core -360 360 -89 89
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound Pz5_IdleSound
+StartSoundLength 47
+EngineSound Pz5_EngineSound
+EngineSoundLength 63
+StartSoundRange 50
+EngineSoundRange 50
+BackSoundRange 50
+BackSoundLength 
+BackSound 
+PlaceSoundPrimary Pz5_PlaceSound
+ShootSoundPrimary Pz5_fire
+ReloadSoundPrimary Pz5_reload
+PlaceSoundSecondary None
+ShootSoundSecondary HMG_BrowningM1919A4_fire2
+ReloadSoundSecondary HMG_BrowningM1919A4Reload2
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+AddRecipeParts core 40 iron
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+Size 10 5
+SetupPart core 6500 -45 -10 -26 98 48 52
+BulletDetection 5
+ModelScale 0.75
+PlaceableOnWater False
+PlaceableOnLand False
+PlaceableOnSponge True
+BrakeSound Truck_Stop
+BrakeSoundRange 10
+BrakeSoundLength 120
+IsExplosionWhenDestroyed true
+CollisionDamageEnable true
+CollisionDamageThrottle 0.21
+CollisionDamageTimes 5
+
+hasFlare False

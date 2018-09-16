@@ -1,0 +1,142 @@
+// ------------------------------------------------------ Naming ------------------------------------------------------
+Name [SPG]28cm Sd.Kfz.251/1 Wurfrahmen 40
+ShortName 28cm_hanomag
+ItemID 11043
+Description Placeable on sponge._CoreHP 2750_CargoSlots 16_[HE]28cm Wurfgerat 40 Rocket
+// ------------------------------------------------------ Visuals ------------------------------------------------------
+Icon Sd.Kfz.251_1Wurfrahmen40
+Model mos.SdKfz251_1_Wurfrahmen40
+Texture Skinsdkfz2
+RotateWheels True
+//Third Person Camera 
+Distance
+CameraDistance 7.5
+// ------------------------------------------------------ Movement ------------------------------------------------------
+//Throttle
+MaxThrottle 1.2
+MaxNegativeThrottle 0.4
+//Steering modifiers
+TurnLeftSpeed 0.65
+TurnRightSpeed 0.65
+//For calculating whether wheels are on the ground or not for driving
+WheelRadius 1.0
+//Wheel positions for collision handling. Tanks still have 4 wheels, they are just the corner ones.
+WheelPosition 0 -42 -8 -18
+WheelPosition 1 -42 -8 18
+WheelPosition 2 42 -8 18
+WheelPosition 3 42 -8 -18
+WheelSpringStrength 0.5
+//Bouncy 
+bouncy
+Bounciness 0.06
+//If true, then all wheels will apply drive forces
+FourWheelDrive true
+//Tank mode activate
+Tank false
+// ------------------------------------------------------ Weaponry ------------------------------------------------------
+//Weapon types. Options are Missile, Bomb, Gun, Shell, None
+Primary Shell
+Secondary Missile
+//Time between shots in 1/20ths of seconds
+PlaceTimePrimary 360
+ShootDelayPrimary 4
+ReloadTimePrimary 360
+PlaceTimeSecondary 
+ShootDelaySecondary 
+ReloadTimeSecondary 
+BulletSpeed 4.00
+BulletSpread 5.00
+//Whether to alternate or fire all together
+AlternatePrimary True
+AlternateSecondary False
+//Firing modes. One of SemiAuto, FullAuto or Minigun
+ModePrimary FullAuto
+ModeSecondary FullAuto
+//Add shoot origins. These are the points on your vehicle from which bullets / missiles / shells / bombs appear
+ShootPointPrimary 3 9 29 core
+ShootPointPrimary 3 9 -29 core
+ShootPointPrimary -18 14 29 core
+ShootPointPrimary -18 14 -29 core
+ShootPointPrimary -42 19 29 core
+ShootPointPrimary -42 19 -29 core
+ShootPointSecondary 
+ShootParticlesPrimary cloud 1 0 0
+ShootParticlesPrimary cloud 0 0 0
+ShootParticlesPrimary cloud -1 0 0
+ShootParticlesPrimary cloud -2 0 0
+ShootParticlesPrimary explode 1 0 0
+ShootParticlesPrimary explode 0 0 0
+ShootParticlesPrimary explode -1 0 0
+ShootParticlesPrimary explode -2 0 0
+ShootParticlesPrimary flame -2 0 0
+// ------------------------------------------------------ Inventory ------------------------------------------------------
+CargoSlots 16
+BombSlots 0
+MissileSlots 6
+AllowAllAmmo false
+AddAmmo he_wurfgerat40_rocket
+AddAmmo dummyammo
+//Fuel Tank Size (1 point of fuel will keep one propeller going with throttle at 1 for 1 tick)
+FuelTankSize 1500
+// ------------------------------------------------------ Passengers ------------------------------------------------------
+Driver 9 2 -8 -0 0 20 45
+RotatedDriverOffset 0 0 0
+//DriverAimSpeed yaw pitch z
+DriverAimSpeed 1.0 1.0 0
+//This would pertain to yaw speeds of 9.6 degrees/second and pitch speeds of 10 degrees/second
+DriverLegacyAiming false
+//Yaw before Pitch: Boolean toggle to force the turret to finish yaw movement before adjusting pitch. Disabled by default.
+DriverYawBeforePitch false
+//Toggle traverse sounds: Boolean toggle to enable traversing sounds. Disabled by default.
+DriverTraverseSounds true
+//Assign traverse sounds: Designates yawing/pitching sounds for the driver. Works the same way as engine sounds.
+YawSound none
+YawSoundLength 20
+PitchSound Turret4
+PitchSoundLength 8
+Passengers 4
+Passenger 1 -24 8 -8 core -360 360 -89 89 dummygun DummyGun
+Passenger 2 -24 8 8 core -360 360 -89 89
+Passenger 3 -37 8 -8 core -360 360 -89 89
+Passenger 4 -37 8 8 core -360 360 -89 89
+// ------------------------------------------------------- Sounds -------------------------------------------------------
+StartSound HL42_IdleSound
+StartSoundLength 56
+EngineSound HL42_EngineSound
+EngineSoundLength 53
+StartSoundRange 50
+EngineSoundRange 50
+BackSoundRange 50
+BackSoundLength 
+BackSound 
+PlaceSoundPrimary HL42_PlaceSound
+ShootSoundPrimary RocketLaunch
+ReloadSoundPrimary 28cm_Wurfgerat40_reload
+PlaceSoundSecondary none
+ShootSoundSecondary none
+ReloadSoundSecondary none
+// ------------------------------------------------------ Recipe ------------------------------------------------------
+//Recipe
+//Each section of the plane may have many parts
+//The sections are tailWheel, tail, bay, topWing, leftWingWheel, leftWing, rightWingWheel,
+//rightWing, nose, turret, coreWheel, core
+//AddRecipeParts core 10 iron 1 bp_28cm_hanomag
+AddRecipeParts core 10 iron 1 bedrock
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+//AddDye 0 gray
+// ------------------------------------------------------ Health and hitboxes ------------------------------------------------------
+SetupPart core 2750 -54 -10 -21 106 44 42
+BulletDetection 5
+SquashMobs false
+FloatOnLand true
+FloatOnWater false
+Buoyancy 0.06
+BrakeSound Truck_Stop
+BrakeSoundRange 10
+BrakeSoundLength 120
+IsExplosionWhenDestroyed true
+PlaceableOnLand false
+PlaceableOnSponge true
+CollisionDamageEnable true
+CollisionDamageThrottle 0.21
+CollisionDamageTimes 5

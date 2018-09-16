@@ -1,0 +1,59 @@
+Name [RL]M1A1RocketLauncher
+ShortName bazooka
+Description [RL1][HEAT]RocketLauncher Rocket_[RL1][HE]RocketLauncher Rocket_ShootDelay 60_EquipPoint 4
+//The ammo this gun uses _shortName_
+Ammo heat_rl1_rocket
+Ammo he_rl1_rocket
+Ammo dummyammo
+Icon m1bazooka
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10102
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 100
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 3
+DecreaseRecoil 1.00
+DecreaseRecoilYaw 1.00
+//Number of bullets to create on firing the weapon. If you set this to 2 knockback and Damage doubles, and multiplies 1 time per added shot.
+NumBullets 1
+//Damage in half hearts
+Damage 1
+MoveSpeedModifier 0.7
+//The higher this value, the more the bullets spread
+//AccuracyInADS 4
+Accuracy 3
+//Time in ticks between rounds
+ShootDelay 60
+DistortSound False
+ShootSound rpg7_shoot
+ReloadSound rpg7_reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode SemiAuto
+//Scope.png name or None
+Scope None
+ZoomLevel 1.0
+FOVZoomLevel 1.5
+//Deployable Settings
+Deployable False
+DeployedModel None
+//Model Settings
+Model heka.M1Bazooka
+ModelScale 1.0
+Texture m1bazooka
+BulletSpeed 4.5
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Attachment Settings
+AllowAllAttachments false
+TrailParticles true
+TrailParticleType fireworksSpark
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+AllowAttachments flanMWRedDot flanMWACOG
+AllowBarrelAttachments false
+AllowScopeAttachments false
+AllowStockAttachments false
+AllowGripAttachments false
+NumGenericAttachmentSlots 0

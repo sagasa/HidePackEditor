@@ -1,0 +1,60 @@
+Name [SMG2]MAS-38
+ShortName mas38
+Description [SMG2]SMG 35Round Magazine [DamageVsLiving 3]_ShootDelay 1_EquipPoint 5
+//The ammo this gun uses (shortName)
+Ammo smg2_ammo
+Ammo dummyammo
+Icon MAS38
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10023
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 60
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 3.5
+RandomRecoilRange 1.5
+RandomRecoilYawRange 0.75
+DecreaseRecoil 0
+DecreaseRecoilYaw 1
+//Damage in half hearts
+Damage 1
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.90
+MeleeDamage 0
+//The higher this value, the more the bullets spread
+//AccuracyInADS 3
+Accuracy 6
+//Time in ticks between rounds
+ShootDelay 2
+DistortSound False
+ShootSound Type14_Fire
+ReloadSound SMG_PPSh-41_reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode FullAuto SemiAuto 
+//Bullet speed, default 3.0
+BulletSpeed 13
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+Model yuque.MAS38
+Texture MAS38
+ModelScale 0.15
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+//AllowAttachments
+AllowBarrelAttachments false
+AllowScopeAttachments false
+AllowStockAttachments false
+AllowGripAttachments false
+NumGenericAttachmentSlots 0
+//Default scope settings. Usually for aiming down sights. In which case, use FOVZoomLevel, not ZoomLevel
+Scope None
+ZoomLevel 1.00
+FOVZoomLevel 1.00
+Deployable False
+DeployedModel None
+RecipeOutput 1

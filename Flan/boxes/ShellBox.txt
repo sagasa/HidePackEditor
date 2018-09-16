@@ -1,0 +1,52 @@
+Name VehicleShellBox
+ShortName v_shellbox
+TopTexture tankboxtop
+SideTexture tankboxtop
+BottomTexture bottom
+//Recipe I iron G dyePowder.2
+//III
+//GGG
+//III
+//AddGun shortName amountOf item
+//AddAmmo must come immediately after AddGun for them to be in the same slot
+//The names of the items / blocks are those in the code, with some exceptions such as iron _ingotIron_ and gunpowder _sulphur_
+//And with parts from this mod, they are the shortName of the item
+//Guns cannot yet have multiple ammo types in the same slot. For now, just list them under two seperate guns that are the same
+//NumGuns must come before all the addGun lines and must be correct.
+//iron blockIron ingotGold diamond log glass gunpowder redstone
+
+NumGuns 16
+
+AddGun mg1_ammo 1 iron 1 gunpowder
+AddAmmo hmg_ammo 1 iron 1 gunpowder
+AddGun he_mrt2_shell 1 iron 2 gunpowder
+//AddGun aa_flakvierling_ammo 1 gunpowder
+//AddGun aa_bofors_ammo 1 gunpowder
+//AddAmmo he_bofors_ammo 1 gunpowder
+//AddGun aa_flak18_shell 1 iron 2 gunpowder
+//AddGun aa_gunboat_shell 1 iron 1 gunpowder
+//AddAmmo he_bm-8_rocket 2 iron 2 gunpowder
+AddGun he_lt1_shell 1 gunpowder
+AddGun aphe_lt2_shell 2 iron 1 gunpowder
+AddAmmo he_lt2_shell 1 iron 2 gunpowder
+AddGun heat_it1_shell 1 iron 2 gunpowder
+AddAmmo he_it1_shell 1 iron 2 gunpowder
+AddGun heat_it2_shell 1 iron 2 gunpowder
+AddAmmo he_it2_shell 1 iron 2 gunpowder
+AddGun aphe_mt1_shell 2 iron 1 gunpowder
+AddAmmo he_mt1_shell 1 iron 2 gunpowder
+AddGun heat_mt1_shell 1 iron 2 gunpowder
+AddGun aphe_mt2_shell 2 iron 1 gunpowder
+AddAmmo he_mt2_shell 1 iron 2 gunpowder
+AddGun apcr_mt2_shell 1 iron 2 gunpowder
+AddGun aphe_ht1_shell 2 iron 2 gunpowder
+AddAmmo he_ht1_shell 2 iron 2 gunpowder
+AddGun aphe_ht2_shell 2 iron 2 gunpowder
+AddAmmo he_ht2_shell 2 iron 2 gunpowder
+AddGun aphe_sht_shell 2 iron 3 gunpowder
+AddAmmo he_sht_shell 2 iron 3 gunpowder
+AddGun he_spg1_shell 2 iron 3 gunpowder
+AddGun he_spg2_shell 3 iron 3 gunpowder
+//AddAmmo aphe_spg2_shell 3 iron 3 gunpowder
+AddGun he_wurfgerat40_rocket 2 iron 3 gunpowder
+//AddGun he_sturmtiger_rocket 3 iron 3 gunpowder

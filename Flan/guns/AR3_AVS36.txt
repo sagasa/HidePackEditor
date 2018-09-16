@@ -1,0 +1,62 @@
+Name [AR3]AVS36
+ShortName avs36
+Description [AR3]AR 20Round Magazine [DamageVsLiving 5]_ShootDelay 2_EquipPoint 7
+//The ammo this gun uses (shortName)
+Ammo dummyammo
+Ammo ar3_ammo
+Icon avs36
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10100
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 55
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 9.0
+RandomRecoilRange 2.0
+RandomRecoilYawRange 0.75
+DecreaseRecoil 2.0
+DecreaseRecoilYaw 3.0
+//Damage in half hearts
+Damage 1
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.85
+//The higher this value, the more the bullets spread
+//AccuracyInADS 1
+Accuracy 1.75
+//Time in ticks between rounds
+ShootDelay 2
+ShootSound SVT40_Fire
+ReloadSound M14reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode FullAuto SemiAuto
+//Default scope settings. Usually for aiming down sights. In which case, use FOVZoomLevel, not ZoomLevel
+ZoomLevel 1.00
+FOVZoomLevel 1.5
+Deployable False
+DeployedModel None
+BulletSpeed 20
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Model settings
+Model pc12.AVS36
+//ModelScale 0.19
+//ModelScale 0.1
+Texture avs36
+Scope None
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+//AllowAttachments
+AllowAttachments flanmosSuppressor flanmosAimPoint_H1 flanmosAimPoint_T2 flanmosKnightsForeGrip flanmosnxs flanMWFlashlight flanMWSingleFire flanMWBurstFire flanMWAutoFire
+AllowBarrelAttachments true
+AllowScopeAttachments true
+AllowStockAttachments false
+AllowGripAttachments true
+NumGenericAttachmentSlots 0
+//Paintjob Settings
+//Format is "Paintjob iconName textureName requiredDyeAmount requiredDyeColour" Multiple colours may be listed in order, seperated by a space
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"

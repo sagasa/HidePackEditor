@@ -1,0 +1,47 @@
+Name [AA]2cm AAGun 120Round Ammo
+ShortName aa_flakvierling_ammo
+Description DamageVsPlayer 1_DamageVsVehicles 15_DamageVsPlanes 40_Explosion0.5_ExplosionDamageVsPlayer 0.0_ExplosionDamageVsLiving 0.0_ExplosionDamageVsPlane 1_ExplosionDamageVsVehicle 0.5
+Model cvts.MGBullet2
+Texture MGBullet2_Red
+//Colour of icon and model
+Colour 255 255 255
+Icon cmn_aa_20mm
+//How affected by gravity the bullet is
+FallSpeed 0.0
+//The maximum stack size
+MaxStackSize 1
+//The number of rounds each item has. Limited to 32000.
+RoundsPerItem 120
+//The damage multiplier caused by the bullet on hitting an entity
+DamageVsLiving 2
+DamageVsVehicles 15
+DamageVsPlanes 40
+//Size of explosion caused
+ExplosionRadius 0.5
+ExplosionDamageVsPlayer 0.0
+ExplosionDamageVsLiving 0.0
+ExplosionDamageVsPlane 1
+ExplosionDamageVsVehicle 0.5
+//True if bullet explodes on hitting anything. Fuse denotes the maximum time it may spend in the air before detonating
+ExplodeOnImpact True
+Fuse 400
+FlakParticles 20
+//Amount of fire to spread on exploding; for each increment, it will increase the dimensions of the burning area by 2. i.e. 1 will burn a 3x3 square, 2 will burn a 5x5 square
+Fire 0
+BreaksGlass False
+//Size of box to check for entities to hit / detonate
+HitBoxSize 0.0
+HitSound Exp20mm2
+HitSoundRange 200
+HitSoundEnable true
+EntityHitSoundEnable true
+//Whether or not the bullet can travel through an entity having hit it
+Penetrates False
+SmokeTrail False
+//HasLight True
+//True if this is a bomb
+Bomb False
+Shell False
+WeaponType Shell
+DragInWater 1.00
+//DragInAir 0.99

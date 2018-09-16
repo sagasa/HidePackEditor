@@ -1,0 +1,54 @@
+Name [GL]Type89 GrenadeLauncher
+ShortName type89gl
+Description [GL][HE]GrenadeLauncher Shell_[GL][HEAT]GrenadeLauncher Shell_EquipPoint 4
+//The ammo this gun uses _shortName_
+Ammo he_gl_shell
+Ammo heat_gl_shell
+Ammo dummyammo
+Icon type89gl
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 100
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 0.5
+DecreaseRecoil 1.00
+DecreaseRecoilYaw 1.00
+//Number of bullets to create on firing the weapon. If you set this to 2 knockback and Damage doubles, and multiplies 1 time per added shot.
+//Damage in half hearts
+Damage 1
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.65
+//The higher this value, the more the bullets spread
+Accuracy 4
+//Time in ticks between rounds
+ShootDelay 100
+ShootSound garandgrenfire
+ReloadSound PIAT_Reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode SemiAuto
+//Scope.png name or None
+Scope None
+ZoomLevel 1.0
+FOVZoomLevel 1.2
+//Deployable Settings
+//Model Settings
+Model pc12.Type89GL
+ModelScale 1.00
+Texture Type89GL
+BulletSpeed 3.5
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+AllowAttachments flanMWSilencer flanMWRedDot flanMWACOG
+AllowBarrelAttachments false
+AllowScopeAttachments false
+AllowStockAttachments false
+AllowGripAttachments false
+NumGenericAttachmentSlots 0

@@ -1,0 +1,39 @@
+Name [VG]GER 3.7cm Flak M42 AA Gun
+ShortName gunboat_aagun
+//The ammo this gun uses _shortName_
+Ammo aphe_pz38t_shell
+Ammo he_pz38t_shell
+Ammo aa_gunboat_shell
+//Ammo dummyammo
+Icon flakm42
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 32000
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 1
+//Number of bullets to create on firing the weapon. If you set this to 2 knockback and Damage doubles, and multiplies 1 time per added shot.
+NumBullets 1
+//Damage in half hearts
+Damage 0.8
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+MeleeDamage 1
+//The higher this value, the more the bullets spread
+Accuracy 1
+//Time in ticks between rounds
+ShootDelay 10
+ShootSound AAGun_40mm_Bofors_fire
+ReloadSoundRange 5
+GunSoundRange 400
+//The length of the sound. 0 for a single shot sound. Other values are for looping sounds
+//SoundLength 1
+DistortSound False
+ReloadSound AAGun_40mm_Bofors_reload
+Mode FullAuto
+Scope None
+ZoomLevel 1.00
+FOVZoomLevel 1.00
+Deployable True
+BulletSpeed 8.0
+UsableByPlayers false

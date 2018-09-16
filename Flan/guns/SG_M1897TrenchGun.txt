@@ -1,0 +1,68 @@
+Name [SG]M1897TrenchGun
+ShortName m1897
+Description [SG]BuckShot Shell_[SG]BirdShot Shell_[SG]FlameShot Shell_ShootDelay 11_EquipPoint 5
+//The ammo this gun uses (shortName)
+Ammo sg_shotshell
+Ammo sg_flameshot
+Ammo sg_birdshot
+Ammo dummyammo
+Icon M1897
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10303
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 70
+LoadIntoGun 6
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 8
+RandomRecoilRange 4
+RandomRecoilYawRange 1.20
+DecreaseRecoil 1.00
+DecreaseRecoilYaw 1.50
+//Number of bullet entities to create, useful for shotguns, defaults to 1
+NumBullets 1
+//Damage in half hearts
+Damage 1
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.9
+MeleeDamage 0
+//The higher this value, the more the bullets spread
+Accuracy 6
+//Time in ticks between rounds
+ShootDelay 11
+DistortSound False
+ShootSound spas12_shoot
+ReloadSound M1897_Reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode SemiAuto
+OneHanded false
+//Bullet speed, default 3.0
+BulletSpeed 4.0
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Default scope settings. Usually for aiming down sights. In which case, use FOVZoomLevel, not ZoomLevel
+Scope None
+ZoomLevel 1.00
+FOVZoomLevel 1.25
+//Deployable Settings
+Deployable False
+DeployedModel None
+//Model settings
+Model heka.M1897
+Texture m1897
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+//AllowAttachments
+AllowBarrelAttachments false
+AllowScopeAttachments false
+AllowStockAttachments false
+AllowGripAttachments false
+NumGenericAttachmentSlots 0
+//Paintjob Settings
+//Format is "Paintjob iconName textureName requiredDyeAmount requiredDyeColour" Multiple colours may be listed in order, seperated by a space
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"

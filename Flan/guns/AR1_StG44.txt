@@ -1,0 +1,62 @@
+Name [AR1]StG44
+ShortName stg44
+Description [AR1]AR 30Round Magazine [DamageVsLiving 4.0]_ShootDelay 2_EquipPoint 7
+//The ammo this gun uses (shortName)
+Ammo ar1_ammo
+Ammo dummyammo
+Icon StG44
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10100
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 70
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 5.0
+RandomRecoilRange 1.0
+RandomRecoilYawRange 1.0
+DecreaseRecoil 1.5
+DecreaseRecoilYaw 1.0
+//Damage in half hearts
+Damage 1
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.90
+//The higher this value, the more the bullets spread
+//AccuracyInADS 3
+Accuracy 4.25
+//Time in ticks between rounds
+ShootDelay 2
+ShootSound 416shoot
+ReloadSound ak47_reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode FullAuto SemiAuto
+//Default scope settings. Usually for aiming down sights. In which case, use FOVZoomLevel, not ZoomLevel
+Scope None
+ZoomLevel 1.00
+FOVZoomLevel 1.00
+Deployable False
+DeployedModel None
+BulletSpeed 16
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Model settings
+Model lwpack.StG44
+//ModelScale 0.19
+ModelScale 0.2
+Texture SkinStG44
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+//AllowAttachments
+AllowAttachments flanmosSuppressor flanmosAimPoint_H1 flanmosAimPoint_T2 flanmosKnightsForeGrip flanmosnxs flanMWFlashlight flanMWSingleFire flanMWBurstFire flanMWAutoFire
+AllowBarrelAttachments true
+AllowScopeAttachments true
+AllowStockAttachments false
+AllowGripAttachments true
+NumGenericAttachmentSlots 0
+//Paintjob Settings
+//Format is "Paintjob iconName textureName requiredDyeAmount requiredDyeColour" Multiple colours may be listed in order, seperated by a space
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"

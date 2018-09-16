@@ -1,0 +1,65 @@
+Name [SMG]Mauser Schnellfeuer
+ShortName c96f
+Description [HG1]HG 10Round Magazine x2 [DamageVsLiving 2.5]_ShootDelay 1_EquipPoint 3
+//The ammo this gun uses (shortName)
+Ammo smg3_ammo
+Ammo dummyammo
+Icon C96f
+//Colour in Red, Green, Blue, each going up to 255.
+Colour 255 255 255
+ItemID 10100
+//Reload time in ticks, 1/20ths of a second
+ReloadTime 60
+LoadIntoGun 2
+//The amount of gun recoil, all relative : Sten = 1, Mp40 = 3, Kar98kSniper = 20
+Recoil 3.5
+RandomRecoilRange 1.5
+RandomRecoilYawRange 1.5
+DecreaseRecoil 1.0
+DecreaseRecoilYaw 1.0
+//Damage in half hearts
+Damage 0.5
+IgnoreArmorProbability 1.0
+IgnoreArmorDamageFactor 1.0
+//Modifiers
+MoveSpeedModifier 0.9
+//The higher this value, the more the bullets spread
+//AccuracyInADS 4
+Accuracy 6
+//Time in ticks between rounds
+ShootDelay 1
+ShootSound C96_Fire_2
+ReloadSound C96_reload
+ReloadSoundRange 5
+GunSoundRange 400
+Mode FullAuto SemiAuto
+//Default scope settings. Usually for aiming down sights. In which case, use FOVZoomLevel, not ZoomLevel
+Scope None
+ZoomLevel 1.00
+FOVZoomLevel 1.00
+Deployable False
+DeployedModel None
+BulletSpeed 11.75
+ShowRecoil true
+ShowAccuracy true
+ShowReloadTime true
+//Model settings
+Model lwpack.C96F
+//ModelScale 0.19
+ModelScale 1.0
+Texture C96F
+//Attachment Settings
+AllowAllAttachments false
+//List here all the attachments allowed on this gun by shortName and separated by spaces
+//AllowAttachments
+AllowAttachments flanmosSuppressor flanmosAimPoint_H1 flanmosAimPoint_T2 flanmosKnightsForeGrip flanmosnxs flanMWFlashlight flanMWSingleFire flanMWBurstFire flanMWAutoFire
+AllowBarrelAttachments true
+AllowScopeAttachments true
+AllowStockAttachments false
+AllowGripAttachments true
+NumGenericAttachmentSlots 0
+//Paintjob Settings
+//Format is "Paintjob iconName textureName requiredDyeAmount requiredDyeColour" Multiple colours may be listed in order, seperated by a space
+//Dye colours are "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+
+Knockback 0.5

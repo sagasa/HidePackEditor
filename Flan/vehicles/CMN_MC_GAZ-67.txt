@@ -1,0 +1,83 @@
+//---Standard Config for Flans Mod----------------
+
+
+//---Standard-------------------------------------
+// Naming
+Name [MC]GAZ-67
+ShortName gaz-67
+ModelScale 1.0
+
+// Visuals
+Model lwpack.GAZ67
+Icon GAZ-67
+
+//Misc
+
+//------------------------------------------------
+
+//---Driveables-----------------------------------
+//Visuals
+Texture GAZ67
+
+//Movement
+MaxThrottle 1.2
+MaxNegativeThrottle 0.85
+Acceleration 2.5 2.5
+//Wheels
+NumWheels 4
+WheelPosition 0 -21 -11 -15
+WheelPosition 1 -21 -11 15
+WheelPosition 2 21 -11 15
+WheelPosition 3 21 -11 -15
+WheelRadius 1
+SpringStrength 0.5
+
+Bounciness 0.3
+
+//Inventory Slots
+FuelTankSize 1000
+CargoSlots 18
+
+//Recipe
+AddRecipeParts core 4 iron
+
+//Driver and Passengers
+Driver -2 3 -9
+Passengers 3
+Passenger 1 -2 3 7 core -360 360 -89 89 dummygun DummyGun
+Passenger 2 -19 9 9 core
+Passenger 3 -19 9 -9 core
+
+
+//Sounds
+StartSound Jeep_EngineSound
+StartSoundLength 90
+EngineSound Jeep_EngineSound
+EngineSoundLength 90
+
+//Health and collision
+SetupPart core 775 -30 -10 -16 63 25 32
+BulletDetection 5
+
+//Misc
+CameraDistance 5
+//------------------------------------------------
+
+//---Vehicle--------------------------------------
+//Visuals
+RotateWheels True
+
+//Movement
+FourWheelDrive True
+TurnLeftSpeed 0.5
+TurnRightSpeed 0.5
+
+PlaceableOnLand true
+//PlaceableOnSponge true
+IsExplosionWhenDestroyed true
+
+Description Placeable on sponge._CoreHP 775
+
+//Misc
+//SquashMobs True
+//------------------------------------------------

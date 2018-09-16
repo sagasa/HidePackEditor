@@ -1,0 +1,56 @@
+////Name and icon
+Name [ATM]TMi42
+ShortName tmi42
+Description
+Icon TMi42
+//Colour in Red, Green, Blue, each going up to 255
+Colour 255 255 255
+////Item and recipe
+ItemID 10520
+StackSize 4
+////Visuals
+Model serik4.TMi42
+Texture TMi42
+ModelScale 1.2
+TrailParticles false
+//TrailParticleType <particleType>
+ExplodeParticles 0
+//ExplodeParticleType <particleType>
+SmokeTime 0
+//SmokeParticleType <particleType>
+SpinWhenThrown false
+////Throwing
+ThrowDelay 80
+//ThrowSound <sound>
+//DropItemOnThrow <itemID.damage>
+////Physics
+DetonateOnImpact false
+Bounciness 0.1
+HitEntityDamage 0
+ThrowSpeed 1.0
+FallSpeed 1.0
+BreaksGlass false
+PenetratesBlocks false
+HitBoxSize 1.0
+Sticky false
+//BounceSound <sound>
+////Detonation conditions
+VehicleProximityTrigger 2.0
+LivingProximityTrigger -1.0
+Fuse 32000
+DetonateWhenShot true
+Remote false
+DespawnTime 0
+PrimeDelay 60
+////Detonation
+FireRadius 0.0
+ExplosionRadius 6.0
+ExplosionDamageVsLiving 0.1
+ExplosionDamageVsPlayer 0.1
+ExplosionDamageVsPlane 50
+ExplosionDamageVsVehicle 15
+ExplosionBreaksBlocks false
+//DropItemOnDetonate <itemID.damage>
+DetonateSound explcls2
+////Misc
+MeleeDamage 1
