@@ -9,6 +9,14 @@ public class VertexUV {
 		V = v;
 	}
 
+	public VertexUV(float[] pos, float u, float v) {
+		X = pos[0];
+		Y = pos[1];
+		Z = pos[2];
+		U = u;
+		V = v;
+	}
+
 	public float U;
 	public float V;
 

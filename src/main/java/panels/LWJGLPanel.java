@@ -20,7 +20,7 @@ public class LWJGLPanel {
 
 	public LWJGLPanel() {
 		JFrame frame = new JFrame();
-
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Canvas c = new Canvas();
 		frame.add(c);
 		frame.setSize(800, 800);
@@ -33,7 +33,12 @@ public class LWJGLPanel {
 
 	}
 
-	static private final float offset = 8;
+
+	private int width = 50;
+	private int height = 50;
+	private int depth = 50;
+
+	private float rotate = 0;
 
 	class GlThread extends Thread {
 		Canvas Pearent;
@@ -47,62 +52,83 @@ public class LWJGLPanel {
 			try {
 				Display.setParent(Pearent);
 				Display.create();
+				GL11.glMatrixMode(GL11.GL_PROJECTION);
+				GL11.glLoadIdentity();
+				GL11.glOrtho(0, width, 0, height, 0, depth);
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
-	            GL11.glMatrixMode(GL11.GL_MODELVIEW);
+				GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
 			} catch (LWJGLException e) {
 				e.printStackTrace();
 			}
 
-			boolean needUpdateViewport = true;
+			boolean needUpdateViewport = false;
 			while (true) {
 				GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-
+			//  設定を初期化する
+				GL11.glLoadIdentity();
 				// set the color of the quad (R,G,B,A)
 				GL11.glColor3f(0.5f, 0.5f, 1.0f);
 
-				//*
+				GL11.glTranslatef(width / 2f, height / 2f, depth / -2f);
+				GL11.glRotated(180, 1, 0, 0);
+				GL11.glRotatef(rotate, 0, 1, 0);
+				// *
 				// draw quad
-				if(model!=null){
-					for(Polygon poly:model.Body.Polygon){
-						if(poly.Vertex.length==4){
+				if (model != null&&model.Magazine != null) {
+					for (Polygon poly : model.Body.Polygon) {
+						if (poly.Vertex.length == 4) {
 							GL11.glBegin(GL11.GL_LINE_LOOP);
-							for(VertexUV vert:poly.Vertex){
-							//	System.out.println(vert);
-								GL11.glVertex2f((vert.X+offset)*20, (vert.Y+offset)*20);
+							for (VertexUV vert : poly.Vertex) {
+								// System.out.println(vert);
+								GL11.glVertex3f(vert.X, vert.Y, vert.Z);
+							}
+							GL11.glEnd();
+						}
+					}
+					for (Polygon poly : model.Magazine.Polygon) {
+						if (poly.Vertex.length == 4) {
+							GL11.glBegin(GL11.GL_LINE_LOOP);
+							for (VertexUV vert : poly.Vertex) {
+								// System.out.println(vert);
+								GL11.glVertex3f(vert.X, vert.Y, vert.Z);
 							}
 							GL11.glEnd();
 						}
 					}
 				}
-
-				//*/
+				rotate += 0.5;
+				// */
 
 				/*
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glVertex2f(0+offset, 100+offset);
-				GL11.glVertex2f(100+offset, 100+offset);
-				GL11.glVertex2f(100+offset, 0+offset);
-				GL11.glVertex2f(0+offset, 0+offset);
-				GL11.glEnd();
-				//*/
+				 * GL11.glBegin(GL11.GL_QUADS); GL11.glVertex2f(0+offset,
+				 * 100+offset); GL11.glVertex2f(100+offset, 100+offset);
+				 * GL11.glVertex2f(100+offset, 0+offset);
+				 * GL11.glVertex2f(0+offset, 0+offset); GL11.glEnd(); //
+				 */
 
 				int error = GL11.glGetError();
 				if (error != GL11.GL_NO_ERROR) {
 					String msg = "Unknown Error";
 					switch (error) {
 					case GL11.GL_INVALID_OPERATION:
-						msg = "Invalid Operation"; break;
+						msg = "Invalid Operation";
+						break;
 					case GL11.GL_INVALID_VALUE:
-						msg = "Invalid Value"; break;
+						msg = "Invalid Value";
+						break;
 					case GL11.GL_INVALID_ENUM:
-						msg = "Invalid Enum"; break;
+						msg = "Invalid Enum";
+						break;
 					case GL11.GL_STACK_OVERFLOW:
-						msg = "Stack Overflow"; break;
+						msg = "Stack Overflow";
+						break;
 					case GL11.GL_STACK_UNDERFLOW:
-						msg = "Stack Underflow"; break;
+						msg = "Stack Underflow";
+						break;
 					case GL11.GL_OUT_OF_MEMORY:
-						msg = "Out of memory"; break;
+						msg = "Out of memory";
+						break;
 					}
 					throw new RuntimeException(msg);
 				}
@@ -116,16 +142,12 @@ public class LWJGLPanel {
 					Rectangle rect = Pearent.getBounds();
 					int w = (int) rect.getWidth();
 					int h = (int) rect.getHeight();
-
 					GL11.glMatrixMode(GL11.GL_PROJECTION);
-					GL11.glLoadIdentity();
-					GL11.glOrtho(0, w, h, 0, -1, 1);
-					GL11.glViewport(0, 0, w, h);
+					GL11.glViewport(w/-2, h/-2, w/2, h/2);
+					GL11.glMatrixMode(GL11.GL_MODELVIEW);
 				}
 			}
 		}
 	}
-
-
 
 }

@@ -9,6 +9,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +23,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 
-import helper.FlanModelLoader;
 import helper.LocalizeHandler;
 import helper.LocalizeHandler.Lang;
 import io.PackIO;
@@ -157,15 +157,15 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	}
 
 	public static void main(String[] args) {
-		FlanModelLoader.loadFlanModel("pc12.ModelR1918");
-		//LWJGLテスト
-		//LWJGLPanel modelWindow = new LWJGLPanel();
-		//modelWindow.model = FlanModelLoader.loadFlanModel("pc12.ModelR1918");
+		// LWJGLテスト
+		LWJGLPanel modelWindow = new LWJGLPanel();
+		// System.out.println(FlanModelLoader.loadGunModel("AR3_AVS36Scoped.txt"));
+
 
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
 		LocalizeHandler.setLang("en");
-		new Window();
+		// new Window();
 	}
 
 	Editer openedEditer = null;

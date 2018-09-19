@@ -17,6 +17,10 @@ public class DisplayPart {
 	public int displayList;
 	public boolean compiled;
 
+	public DisplayPart() {
+		Polygon = new Polygon[0];
+	}
+
 	public DisplayPart(Polygon... poly) {
 		this.Polygon = poly;
 	}
