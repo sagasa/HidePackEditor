@@ -1,4 +1,4 @@
-package types;
+package types.effect;
 
 import types.base.DataBase;
 

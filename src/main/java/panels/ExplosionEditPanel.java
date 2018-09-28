@@ -7,10 +7,10 @@ import editer.ItemEditer;
 import editer.ValueInfo;
 import editer.ValueInfo.BulletDataList;
 import editer.ValueInfo.ExplosionDataList;
-import types.BulletData;
-import types.Explosion;
 import types.base.DataBase;
 import types.base.EnumDataInfo;
+import types.effect.Explosion;
+import types.guns.BulletData;
 
 public class ExplosionEditPanel extends JTabbedPane {
 	/** 爆発編集 */

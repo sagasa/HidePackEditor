@@ -2,8 +2,8 @@ package types.base;
 
 import types.guns.Recoil;
 import types.ItemInfo;
-import types.Sound;
-import types.Explosion;;
+import types.effect.Sound;
+import types.effect.Explosion;;
 
 /**引数のデータ型の列挙*/
 public enum DataType{
@@ -18,7 +18,7 @@ public enum DataType{
 	StringArray(true,String[].class);
 
 	boolean isObject;
-	Class<?>[] Clazz; 
+	Class<?>[] Clazz;
 
 	private DataType(boolean isObj,Class<?>... clazz) {
 		isObject = isObj;
@@ -41,7 +41,7 @@ public enum DataType{
 		}
 		return null;
 	}
-	
+
 	public boolean isObject(){
 		return isObject;
 	}

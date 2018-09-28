@@ -1,28 +1,36 @@
 package types.guns;
 
-import types.ItemInfo;
-import types.Sound;
-import types.base.DataBase;
+import types.base.ItemData;
+import types.effect.Recoil;
+import types.effect.Sound;
 
-public class GunData extends DataBase {
-	public GunData() {
-		super();
-	}
+public class GunData extends ItemData{
 
-	/** アイテムの名前 : ItemInfo型 */
-	public ItemInfo ITEM_INFO =  new ItemInfo("sample", "Sample", "sample");
+	public float ITEM_MAX_HEALTH = 0f;
+	public float ITEM_MOVE_SPEED = 0f;
+	public float ITEM_KNOCKBACK_RESISTANCE = 0f;
+	public float ITEM_ATTACK_DAMAGE = 0f;
+
 	/** 弾速 1秒の移動距離(m)=弾速 : float型 **/
 	public float BULLET_SPEED = 5f;
 	/** 持ってから撃てるまで ; tickかかる : int型 **/
 	public int PREPARE_TICK = 0;
+	/** ADSへの切り替え時間 ; tickかかる : int型 **/
+	public int ADS_TICK = 0;
+	/**スコープ名 : String型*/
+	public String SCOPE_NAME = "";
+	/**ズーム倍率 float型*/
+	public float SCOPE_DIA = 2f;
 	/** リロード ; リロードにtickかかる : int型 **/
 	public int RELOAD_TICK= 20;
+	/**まとめてリロードできるか : boolean型*/
+	public boolean RELOAD_ALL = false;
 	/** 分間発射数 : int型 **/
 	public int RPM = 600;
 	/** 射撃モード : String配列型 **/
 	public String[] FIREMODE=new String[] { "semiauto" };
 	/** 貫通力 貫通力体のMOBにダメージが与えられる -1で∞ : int型 **/
-	public int BULLET_POWER = 0;
+	public int BULLET_POWER = 1;
 	/** バーストの分間発射数 : int型 **/
 	public int BURST_RPM = 800;
 	/** バーストの発射数 : int型 **/
@@ -57,8 +65,6 @@ public class GunData extends DataBase {
 	public int AIRCRAFT_DAMAGE_ADD=0;
 	/** 対航空機ダメージ倍率 : float型 **/
 	public float AIRCRAFT_DAMAGE_DIAMETER=1f;
-	/**スコープのテクスチャ名 空白でスコープなし : String型*/
-	public String SCOPE_NAME = "";
 	/** 発射音 : Sound型 **/
 	public Sound SOUND_SHOOT=new Sound("sample", 60);
 	/** リロード音 : Sound型 **/

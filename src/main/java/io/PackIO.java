@@ -25,8 +25,8 @@ import com.google.gson.Gson;
 
 import editer.Window;
 import helper.ArrayEditer;
-import types.BulletData;
 import types.ContentsPack;
+import types.guns.BulletData;
 import types.guns.GunData;
 
 public class PackIO {
@@ -101,7 +101,7 @@ public class PackIO {
 	public static void inportGun(File file) {
 		try {
 			GunData data = gson.fromJson(Files.lines(file.toPath()).collect(Collectors.joining()), GunData.class);
-			Window.GunList.put(data.ITEM_INFO.NAME_DISPLAY, data);
+			Window.GunList.put(data.ITEM_DISPLAYNAME, data);
 			Window.ItemList.write();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -124,7 +124,7 @@ public class PackIO {
 	public static void inportMagazine(File file) {
 		try {
 			BulletData data = gson.fromJson(Files.lines(file.toPath()).collect(Collectors.joining()), BulletData.class);
-			Window.BulletList.put(data.ITEM_INFO.NAME_DISPLAY, data);
+			Window.BulletList.put(data.ITEM_DISPLAYNAME, data);
 			Window.ItemList.write();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -233,12 +233,12 @@ public class PackIO {
 			HashMap<String, ByteArrayInputStream> dataList = new HashMap<String, ByteArrayInputStream>();
 			// 銃のデータ
 			for (GunData d : Window.GunList.values()) {
-				dataList.put("guns/" + d.ITEM_INFO.NAME_DISPLAY + ".json",
+				dataList.put("guns/" + d.ITEM_DISPLAYNAME + ".json",
 						new ByteArrayInputStream(d.MakeJsonData().getBytes()));
 			}
 			// 弾のデータ
 			for (BulletData d : Window.BulletList.values()) {
-				dataList.put("bullets/" + d.ITEM_INFO.NAME_DISPLAY + ".json",
+				dataList.put("bullets/" + d.ITEM_DISPLAYNAME + ".json",
 						new ByteArrayInputStream(d.MakeJsonData().getBytes()));
 			}
 
@@ -342,13 +342,13 @@ public class PackIO {
 		// Gun認識
 		if (name.matches("^(.*)guns/(.*).json")) {
 			GunData newGun = gson.fromJson(new String(data, Charset.forName("UTF-8")), GunData.class);
-			Window.GunList.put(newGun.ITEM_INFO.NAME_DISPLAY, newGun);
+			Window.GunList.put(newGun.ITEM_DISPLAYNAME, newGun);
 			System.out.println("gun");
 		}
 		// bullet認識
 		else if (name.matches("^(.*)bullets/(.*).json")) {
 			BulletData newBullet = gson.fromJson(new String(data, Charset.forName("UTF-8")), BulletData.class);
-			Window.BulletList.put(newBullet.ITEM_INFO.NAME_DISPLAY, newBullet);
+			Window.BulletList.put(newBullet.ITEM_DISPLAYNAME, newBullet);
 			System.out.println("bullet");
 		}
 		// packInfo認識

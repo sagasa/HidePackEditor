@@ -1,14 +1,10 @@
-package types;
+package types.guns;
 
-import types.base.DataBase;
+import types.base.ItemData;
+import types.effect.Explosion;
+import types.effect.Sound;
 
-public class BulletData extends DataBase{
-	public BulletData() {
-		super();
-	}
-	/** アイテムの名前 : ItemInfo型 */
-	public ItemInfo ITEM_INFO = new ItemInfo("sample", "Sample", "sample");
-
+public class BulletData extends ItemData{
 	/** 装弾数 : int型 **/
 	public int MAGAZINE_SIZE = 10;
 

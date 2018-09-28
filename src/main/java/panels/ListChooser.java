@@ -27,8 +27,8 @@ import editer.ItemEditer;
 import editer.ValueInfo;
 import editer.ValueInfo.GunDataList;
 import editer.Window;
-import types.BulletData;
 import types.base.EnumDataInfo;
+import types.guns.BulletData;
 import types.guns.GunData;
 
 public class ListChooser extends JPanel implements ComponentListener, MouseListener, ActionListener {

@@ -23,11 +23,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 
+import helper.JavaScriptTest;
 import helper.LocalizeHandler;
 import helper.LocalizeHandler.Lang;
 import io.PackIO;
 import panels.LWJGLPanel;
 import types.*;
+import types.guns.BulletData;
 import types.guns.GunData;
 
 /** メインのフレーム この中にすべて描画 */
@@ -157,8 +159,15 @@ public class Window extends JFrame implements ActionListener, ComponentListener 
 	}
 
 	public static void main(String[] args) {
+		JavaScriptTest.init();
+		try {
+			JavaScriptTest.test();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
 		// LWJGLテスト
-		LWJGLPanel modelWindow = new LWJGLPanel();
+		//LWJGLPanel modelWindow = new LWJGLPanel();
 		// System.out.println(FlanModelLoader.loadGunModel("AR3_AVS36Scoped.txt"));
 
 
