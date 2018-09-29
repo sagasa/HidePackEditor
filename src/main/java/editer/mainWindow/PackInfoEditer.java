@@ -1,5 +1,7 @@
 package editer.mainWindow;
 
+import editPanel.base.StringSetPanel;
+
 import java.awt.Color;
 import java.awt.Font;
 
@@ -7,11 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import panels.StringSetPanel;
-import types.base.ChangeListener;
 
 /**パックインフォ書き換えパネル*/
-public class PackInfoEditer extends JPanel implements ChangeListener{
+public class PackInfoEditer extends JPanel{
 
 	/**パックインフォ書き換えパネル*/
 	private static final long serialVersionUID = -1121568080966240011L;
@@ -30,9 +30,8 @@ public class PackInfoEditer extends JPanel implements ChangeListener{
 		lore.setBounds(10, 2, 100, 20);
 		lore.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(lore);
-		name = new StringSetPanel("PackName","" , true);
+		name = new StringSetPanel();
 		name.setTextBoxWidth(100);
-		name.addChangeListener(this,ChangeListener.PACKINFO_NAME);
 		name.setBounds(5,24,190,20);
 		this.add(name);
 		ver = new StringSetPanel("PackVer","" , true);
@@ -50,8 +49,8 @@ public class PackInfoEditer extends JPanel implements ChangeListener{
 	}
 
 	public void write(){
-		if(Window.Pack!=null){
-			name.setText(Window.Pack.PACK_NAME);
+		if(Main.Pack!=null){
+			name.setText(Main.Pack.PACK_NAME);
 			name.setEnable(true);
 			ver.setText(Window.Pack.PACK_VER);
 			ver.setEnable(true);

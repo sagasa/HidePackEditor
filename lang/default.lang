@@ -1,9 +1,3 @@
-SET=set
-FILE=File
-Edit=Edit
-NEW=New
-OPEN=Open
-SAVE=Save
 file = file
 edit = edit
 new = new

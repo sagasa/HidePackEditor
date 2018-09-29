@@ -1,5 +1,8 @@
 package editer.mainWindow;
 
+import editer.Main;
+import editPanel.GunEditPanel;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -17,10 +20,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import helper.DropFileHandler;
-import helper.LocalizeHandler;
-import helper.LocalizeHandler.Lang;
-import types.BulletData;
-import types.ItemInfo;
+import localize.LocalizeHandler.Lang;
+import localize.LocalizeHandler;
+import types.guns.BulletData;
 import types.guns.GunData;
 
 public class ItemList extends JTabbedPane
@@ -81,23 +83,25 @@ public class ItemList extends JTabbedPane
 			case 0:
 				// gun
 				GunData newGun = new GunData();
-				while (Window.GunList.containsKey("New Gun No." + gunNum)) {
+				while (Main.GunList.containsKey("New Gun No." + gunNum)) {
 					gunNum++;
 				}
 				String displayName = "New Gun No." + gunNum;
-				newGun.ITEM_INFO = new ItemInfo("gun_" + gunNum, displayName, "sample");
-				Window.GunList.put(displayName, newGun);
+				newGun.ITEM_SHORTNAME = "gun_" + gunNum;
+				newGun.ITEM_DISPLAYNAME = displayName;
+				Main.GunList.put(displayName, newGun);
 				write();
 				break;
 			case 1:
 				// magazine
 				BulletData newBullet = new BulletData();
-				while (Window.BulletList.containsKey("New Bullet No." + bulletNum)) {
+				while (Main.BulletList.containsKey("New Bullet No." + bulletNum)) {
 					bulletNum++;
 				}
 				String bulletName = "New Bullet No." + bulletNum;
-				newBullet.ITEM_INFO = new ItemInfo("bullet_" + bulletNum, bulletName, "sample");
-				Window.BulletList.put(bulletName, newBullet);
+				newBullet.ITEM_SHORTNAME = "bullet_" + bulletNum;
+				newBullet.ITEM_DISPLAYNAME =  bulletName;
+				Main.BulletList.put(bulletName, newBullet);
 				write();
 				break;
 			case 2:
@@ -114,17 +118,17 @@ public class ItemList extends JTabbedPane
 
 	public void write() {
 		gunModel.removeAllElements();
-		String[] keySet = Window.GunList.keySet().toArray(new String[Window.GunList.keySet().size()]);
+		String[] keySet = Main.GunList.keySet().toArray(new String[Main.GunList.keySet().size()]);
 		Arrays.sort(keySet);
 		for (String name : keySet) {
-			gunModel.addElement(Window.GunList.get(name).ITEM_INFO.NAME_DISPLAY);
+			gunModel.addElement(Main.GunList.get(name).ITEM_DISPLAYNAME);
 		}
 
 		magazineModel.removeAllElements();
-		keySet = Window.BulletList.keySet().toArray(new String[Window.BulletList.keySet().size()]);
+		keySet = Main.BulletList.keySet().toArray(new String[Main.BulletList.keySet().size()]);
 		Arrays.sort(keySet);
 		for (String name : keySet) {
-			magazineModel.addElement(Window.BulletList.get(name).ITEM_INFO.NAME_DISPLAY);
+			magazineModel.addElement(Main.BulletList.get(name).ITEM_DISPLAYNAME);
 		}
 	}
 
@@ -145,14 +149,14 @@ public class ItemList extends JTabbedPane
 			switch (this.getSelectedIndex()) {
 			case 0:
 				// gun
-				if (Window.GunList.containsKey(value)) {
-					Window.ItemEditer.writeGunEditer(Window.GunList.get(value));
+				if (Main.GunList.containsKey(value)) {
+					MainWindow.setEditer(new GunEditPanel(Main.GunList.get(value)));
 				}
 				break;
 			case 1:
 				// magazine
-				if (Window.BulletList.containsKey(value)) {
-					Window.ItemEditer.writeMagazineEditer(Window.BulletList.get(value));
+				if (Main.BulletList.containsKey(value)) {
+				//	MainWindow.ItemEditer.writeMagazineEditer(Main.BulletList.get(value));
 				}
 				break;
 			case 2:
@@ -198,7 +202,6 @@ public class ItemList extends JTabbedPane
 	/** タブが変わったら */
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		Window.ItemEditer.clearEditer();
 		showEditer();
 	}
 }
