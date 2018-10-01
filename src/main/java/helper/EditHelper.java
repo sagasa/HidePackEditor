@@ -6,6 +6,9 @@ import localize.LocalizeHandler;
 import types.Info;
 import types.PackInfo;
 import types.base.DataBase;
+import types.effect.Recoil;
+import types.effect.Explosion;
+import types.effect.Sound;
 import types.guns.BulletData;
 import types.guns.GunData;
 
@@ -122,6 +125,9 @@ public class EditHelper {
 	public static void makeLocalize() {
 		makeLocalize(GunData.class);
 		makeLocalize(BulletData.class);
+		makeLocalize(Recoil.class);
+		makeLocalize(Sound.class);
+		makeLocalize(Explosion.class);
 		makeLocalize(PackInfo.class);
 	}
 	private static void makeLocalize(Class<? extends DataBase> clazz){

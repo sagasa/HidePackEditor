@@ -1,11 +1,12 @@
 package types.effect;
 
+import types.Info;
 import types.base.DataBase;
 
 public class Explosion extends DataBase {
-
-
+	@Info(Min=0)
 	public float RANGE = 0;
+	
 	public Sound SOUND = new Sound("minecraft:random.explode", 50f);
 	public float DAMAGE_BASE_PLAYER = 0;
 	public float DAMAGE_COE_PLAYER = 0;
