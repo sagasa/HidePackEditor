@@ -27,26 +27,19 @@ public class NumberSetPanel extends ValueSetPanel implements MouseWheelListener 
 	Float Min = null;
 	String scale = null;
 
-	/** DataBase以外からの利用 */
-	public NumberSetPanel(String lore, String defauletValue, boolean canedit, boolean isFloat) {
-		super(canedit);
-		this.isFloat = isFloat;
-		init(lore, defauletValue);
-	}
-
 	/** DataBaseからの利用 */
-	public NumberSetPanel(DataBase data, EnumDataInfo type) {
+	public NumberSetPanel(DataBase data, String type) {
 		super(data, type);
-		Max = type.getMax();
-		Min = type.getMin();
-		scale = type.getScale() != null ? type.getScale() : "1";
+		Max = EditHelper.getMax(data.getClass(), type);
+		Min =  EditHelper.getMin(data.getClass(), type);
+		scale = EditHelper.getScale(data.getClass(), type);
 		try {
 			this.isFloat = float.class.isAssignableFrom(EditHelper.getType(data, type))
 					|| Float.class.isAssignableFrom(EditHelper.getType(data, type));
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
-		init(EditHelper.getLocalizedName(type), EditHelper.getData(data, type).toString());
+		init(EditHelper.getLocalizedName(data,type), EditHelper.getData(data, type).toString());
 	}
 
 	private void init(String lore, String defauletValue) {

@@ -1,5 +1,6 @@
 package types.guns;
 
+import types.Info;
 import types.base.ItemData;
 import types.effect.Recoil;
 import types.effect.Sound;
@@ -12,8 +13,10 @@ public class GunData extends ItemData{
 	public float ITEM_ATTACK_DAMAGE = 0f;
 
 	/** 弾速 1秒の移動距離(m)=弾速 : float型 **/
+	@Info(Cate = 0,Min=0)
 	public float BULLET_SPEED = 5f;
 	/** 持ってから撃てるまで ; tickかかる : int型 **/
+	@Info(Min = 0)
 	public int PREPARE_TICK = 0;
 	/** ADSへの切り替え時間 ; tickかかる : int型 **/
 	public int ADS_TICK = 0;

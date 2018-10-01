@@ -8,11 +8,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -28,9 +23,6 @@ import editer.Main;
 import io.PackIO;
 import localize.LocalizeHandler;
 import localize.LocalizeHandler.Lang;
-import types.PackInfo;
-import types.guns.BulletData;
-import types.guns.GunData;
 
 /** メインのフレーム この中にすべて描画 */
 public class MainWindow extends JFrame implements ActionListener, ComponentListener {
@@ -88,7 +80,6 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 		PackInfoEditer = new PackInfoEditer();
 		ResourceList = new ResourceList();
 
-		this.add(ItemEditer);
 		this.add(ItemList);
 		this.add(ResourceList);
 		this.add(PackInfoEditer);
@@ -126,6 +117,7 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 		ItemEditer = editer;
 		if (editer != null) {
 			INSTANCE.add(ItemEditer);
+			resize();
 		}
 	}
 
@@ -165,14 +157,18 @@ public class MainWindow extends JFrame implements ActionListener, ComponentListe
 
 	@Override
 	public void componentResized(ComponentEvent e) {
+		resize();
+	}
+
+	public static void resize(){
 		if (ItemList != null) {
-			ItemList.setBounds(0, 100, 200, this.getHeight() - 160);
+			ItemList.setBounds(0, 100, 200, INSTANCE.getHeight() - 160);
 		}
 		if (ItemEditer != null) {
-			ItemEditer.setBounds(200, 0, this.getWidth() - 400, this.getHeight() - 60);
+			ItemEditer.setBounds(200, 0, INSTANCE.getWidth() - 400, INSTANCE.getHeight() - 60);
 		}
 		if (ResourceList != null) {
-			ResourceList.setBounds(this.getWidth() - 200, 0, 200, this.getHeight() - 60);
+			ResourceList.setBounds(INSTANCE.getWidth() - 200, 0, 200, INSTANCE.getHeight() - 60);
 		}
 		if (PackInfoEditer != null) {
 			PackInfoEditer.setBounds(0, 0, 200, 100);

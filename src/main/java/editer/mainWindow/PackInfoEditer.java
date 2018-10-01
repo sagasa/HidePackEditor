@@ -1,7 +1,7 @@
 package editer.mainWindow;
 
 import editPanel.base.StringSetPanel;
-
+import editer.Main;
 import java.awt.Color;
 import java.awt.Font;
 
@@ -30,18 +30,16 @@ public class PackInfoEditer extends JPanel{
 		lore.setBounds(10, 2, 100, 20);
 		lore.setFont(new Font("BOLD", Font.BOLD, 13));
 		this.add(lore);
-		name = new StringSetPanel();
+		name = new StringSetPanel(Main.Pack,"PACK_NAME");
 		name.setTextBoxWidth(100);
 		name.setBounds(5,24,190,20);
 		this.add(name);
-		ver = new StringSetPanel("PackVer","" , true);
+		ver = new StringSetPanel(Main.Pack,"PACK_VER");
 		ver.setTextBoxWidth(100);
-		ver.addChangeListener(this,ChangeListener.PACKINFO_VER);
 		ver.setBounds(5,46,190,20);
 		this.add(ver);
-		root = new StringSetPanel("RootName","" , true);
+		root = new StringSetPanel(Main.Pack,"PACK_ROOTNAME");
 		root.setTextBoxWidth(100);
-		root.addChangeListener(this,ChangeListener.PACKINFO_ROOTNAME);
 		root.setBounds(5,68,190,20);
 		this.add(root);
 
@@ -52,9 +50,9 @@ public class PackInfoEditer extends JPanel{
 		if(Main.Pack!=null){
 			name.setText(Main.Pack.PACK_NAME);
 			name.setEnable(true);
-			ver.setText(Window.Pack.PACK_VER);
+			ver.setText(Main.Pack.PACK_VER);
 			ver.setEnable(true);
-			root.setText(Window.Pack.PACK_ROOTNAME);
+			root.setText(Main.Pack.PACK_ROOTNAME);
 			root.setEnable(true);
 		}else{
 			name.setText("no loaded pack");
@@ -65,20 +63,4 @@ public class PackInfoEditer extends JPanel{
 			root.setEnable(false);
 		}
 	}
-
-	@Override
-	public void ValueChange(int cate, Object value) {
-		if(Window.Pack!=null){
-			if(cate==ChangeListener.PACKINFO_NAME){
-				Window.Pack.PACK_NAME = (String) value;
-			}
-			if(cate==ChangeListener.PACKINFO_VER){
-				Window.Pack.PACK_VER = (String) value;
-			}
-			if(cate==ChangeListener.PACKINFO_ROOTNAME){
-				Window.Pack.PACK_ROOTNAME = (String) value;
-			}
-		}
-	}
-
 }

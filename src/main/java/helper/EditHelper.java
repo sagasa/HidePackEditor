@@ -1,119 +1,132 @@
 package helper;
 
-import editPanel.base.EnumDataInfo;
-import localize.LocalizeHandler;
-import types.base.DataBase;
+import java.lang.reflect.Field;
 
-/**リフレクションを利用したTypes編集ヘルパー*/
+import localize.LocalizeHandler;
+import types.Info;
+import types.PackInfo;
+import types.base.DataBase;
+import types.guns.BulletData;
+import types.guns.GunData;
+
+/** リフレクションを利用したTypes編集ヘルパー */
 public class EditHelper {
+
+	/** 型取得 */
+	public static Class<?> getType(DataBase data, String type) {
+		try {
+			return data.getClass().getField(type).getType();
+		} catch (NoSuchFieldException | SecurityException e) {
+			return null;
+		}
+	}
 
 	/**
 	 * データ取得 EnumDataInfo.toString()と同じフィールド名を持つpublicなフィールドを取得可能
 	 */
-	public static Object getData(DataBase data, EnumDataInfo type) {
+	public static Object getData(DataBase data, String string) {
 		try {
-			return data.getClass().getField(type.toString()).get(data);
+			return data.getClass().getField(string).get(data);
 		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
 			return null;
 		}
 	}
 
 	/** データ上書き */
-	public static boolean setData(DataBase data, EnumDataInfo type, Object value) {
+	public static boolean setData(DataBase data, String type, Object value) {
 		try {
-			data.getClass().getField(type.toString()).set(data, value);
+			data.getClass().getField(type).set(data, value);
 			return true;
-		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+		} catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e) {
 			return false;
 		}
 	}
-	/** 型取得 */
-	public static Class<?> getType(DataBase data, EnumDataInfo type) {
+
+
+	/** フィールド名から最大値を取得 */
+	public static Float getMax(Class<? extends DataBase> clazz, String field) {
 		try {
-			return data.getClass().getField(type.toString()).getType();
+			Info info = getInfo(clazz,field);
+			if (info != null) {
+				return info.Max();
+			}
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/** フィールド名から最小値を取得 */
+	public static Float getMin(Class<? extends DataBase> clazz, String field) {
+		try {
+			Info info = getInfo(clazz,field);
+			if (info != null) {
+				return info.Min();
+			}
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/** フィールド名からカテゴリを取得 */
+	public static int getCate(Class<? extends DataBase> clazz, String field) {
+		try {
+			Info info = getInfo(clazz,field);
+			if (info != null) {
+				return info.Cate();
+			}
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	/** フィールド名からスケールを取得 */
+	public static String getScale(Class<? extends DataBase> clazz, String field) {
+		try {
+			Info info = getInfo(clazz,field);
+			if (info != null) {
+				return info.Scale();
+			}
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}
+		return "1";
+	}
+
+	private static Info getInfo(Class<? extends DataBase> clazz, String field){
+		try {
+			return clazz.getField(field).getAnnotation(Info.class);
 		} catch (NoSuchFieldException | SecurityException e) {
 			return null;
 		}
 	}
 
 	/** ローカライズした名前を取得 */
-	public static String getLocalizedName(EnumDataInfo info) {
-		return LocalizeHandler.getLocalizedName(info.getUnlocalizedName());
+	public static String getLocalizedName(DataBase data, String field) {
+		return LocalizeHandler.getLocalizedName(getUnlocalizedName(data.getClass(), field));
 	}
 
-	/** bullet用type */
-	public enum BulletDataList implements EnumDataInfo {
-		,
-		;
-
-		/*
-		 * エンティティの設定項目 エフェクト：着弾時・飛翔中(エンティティに当たった時に付与する効果)
-		 * 飛翔中のエフェクトの効果(音などを追加してもいいかも 弾道落下：true/false・配列とその中の数式
-		 * 威力減衰：true/false・配列とその中の数式 モデル 近接信管・反応するエンティティ
-		 * 誘導：true/false・手動/ロックオン/継続ロックオン・反応するエンティティ
-		 */
-
-		private static final String Domain = "MAGAZINE.";
-
-		public static final int BULLET_INFO = 1;
-		public static final int BULLET_HIT = 2;
-		// public static final int BULLET_HIT_KNOCKBACK = 3;
-		public static final int BULLET_DECAY = 4;
-
-		private BulletDataList() {
-			this(null, null, -1,null);
+	/**UnlocalizedNameのフォーマット*/
+	private static String getUnlocalizedName(Class<?extends DataBase> clazz, String field){
+		try {
+			return (clazz.getSimpleName()+"."+clazz.getField(field).getName().replaceAll("_", ".")).toLowerCase();
+		} catch (NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
 		}
-
-		private BulletDataList(int cate) {
-			this(null, null, cate,null);
-		}
-
-		private BulletDataList(Float min, Float max,String scale) {
-			this(min, max, -1,scale);
-		}
-
-		private BulletDataList(Float min, Float max, int cate,String scale) {
-			Max = max;
-			Min = min;
-			UnlocalizedName = (Domain + this.toString()).replaceAll("_", ".").toLowerCase();
-			LocalizeHandler.addName(UnlocalizedName);
-			Cate = cate;
-		}
-
-		private Float Max;
-		private Float Min;
-		private int Cate;
-		private String UnlocalizedName;
-		private String Scale;
-
-		@Override
-		public Float getMin() {
-			return Min;
-		}
-
-		@Override
-		public Float getMax() {
-			return Max;
-		}
-
-		@Override
-		public String getUnlocalizedName() {
-			return UnlocalizedName;
-		}
-
-		@Override
-		public int getCate() {
-			return Cate;
-		}
-
-		@Override
-		public String getScale() {
-			return Scale;
-		}
+		return null;
 	}
 
 	/** EnumDataInfoをノックする */
 	public static void makeLocalize() {
-		BulletDataList.values();
+		makeLocalize(GunData.class);
+		makeLocalize(BulletData.class);
+		makeLocalize(PackInfo.class);
+	}
+	private static void makeLocalize(Class<? extends DataBase> clazz){
+		for(Field field:clazz.getFields()){
+			LocalizeHandler.addName(getUnlocalizedName(clazz, field.getName()));
+		}
 	}
 }

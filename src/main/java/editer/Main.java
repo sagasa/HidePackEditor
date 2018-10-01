@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import editer.mainWindow.MainWindow;
+import io.PackIO;
 import localize.LocalizeHandler;
 import types.PackInfo;
 import types.guns.BulletData;
@@ -30,6 +31,7 @@ public class Main {
 	public static void main(String[] arg){
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
+		PackIO.makePack();
 		new MainWindow();
 	}
 

@@ -12,15 +12,11 @@ import helper.EditHelper;
 import types.base.DataBase;
 
 public class StringSetPanel extends ValueSetPanel {
-	public StringSetPanel(String lore, String defauletValue, boolean canedit) {
-		super(canedit);
-		init(lore, defauletValue);
-	}
 
 	/** DataBaseからの利用 */
-	public StringSetPanel(DataBase data, EnumDataInfo type) {
-		super(data, type);
-		init(EditHelper.getLocalizedName(type), (String) EditHelper.getData(data, type));
+	public StringSetPanel(DataBase data, String field) {
+		super(data, field);
+		init(EditHelper.getLocalizedName(data,field), EditHelper.getData(data, field).toString());
 	}
 
 	private void init(String lore, String defauletValue) {

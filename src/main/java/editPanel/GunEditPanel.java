@@ -9,7 +9,7 @@ public class GunEditPanel extends JPanel{
 
 	/***/
 	public GunEditPanel(GunData gunData) {
-
+		this.setLayout(null);
 	}
 
 }
