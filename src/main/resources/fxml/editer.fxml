@@ -35,21 +35,42 @@
                 <AnchorPane maxHeight="160.0" minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="100.0" />
                   <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                      <Tab text="Gun" />
-                      <Tab text="Magazines" />
+                      <Tab text="Gun">
+                           <content>
+                              <ListView id="gunlist" prefHeight="200.0" prefWidth="200.0" />
+                           </content></Tab>
+                      <Tab text="Magazines">
+                           <content>
+                              <ListView id="magazinelist" prefHeight="200.0" prefWidth="200.0" />
+                           </content></Tab>
                     </tabs>
                   </TabPane>
               </items>
             </SplitPane>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+            <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+               <items>
+                  <ToolBar prefHeight="40.0" prefWidth="200.0">
+                    <items>
+                      <Button mnemonicParsing="false" text="Button" />
+                    </items>
+                  </ToolBar>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+               </items>
+            </SplitPane>
             <TabPane maxWidth="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="Icon" />
-                <Tab text="Sound" />
+                <Tab text="Icon">
+                     <content>
+                        <ListView prefHeight="200.0" prefWidth="200.0" />
+                     </content></Tab>
+                <Tab text="Sound">
+                     <content>
+                        <ListView prefHeight="200.0" prefWidth="200.0" />
+                     </content></Tab>
                   <Tab text="Model">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
+                     <content>
+                        <ListView prefHeight="200.0" prefWidth="200.0" />
+                     </content>
                   </Tab>
               </tabs>
             </TabPane>
