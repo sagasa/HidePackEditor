@@ -74,7 +74,7 @@ public class ItemList extends JTabbedPane
 		this.addTab(name, sp);
 		return model;
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -151,6 +151,8 @@ public class ItemList extends JTabbedPane
 				// gun
 				if (Main.GunList.containsKey(value)) {
 					MainWindow.setEditer(new GunEditPanel(Main.GunList.get(value)));
+					System.out.println("Show");
+					MainWindow.resize();
 				}
 				break;
 			case 1:

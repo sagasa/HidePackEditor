@@ -4,39 +4,32 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.util.Set;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
-import helper.ArrayEditer;
 import helper.EditHelper;
 import types.base.DataBase;
 
 public class StringComboPanel extends ValueSetPanel implements ActionListener {
 
-	public StringComboPanel(String lore, String[] defauletValue, String selected, boolean canedit) {
-		super(canedit);
-		init(lore, defauletValue, selected);
-	}
+	/**リペイント時に参照されるset*/
+	Set<String> AllList;
 
 	/** DataBaseからの利用 */
-	public StringComboPanel(DataBase data, EnumDataInfo type, String[] defauletValue) {
+	public StringComboPanel(DataBase data, String type, Set<String> defauletValue) {
 		super(data, type);
-		init(EditHelper.getLocalizedName(type), defauletValue, (String) EditHelper.getData(data, type));
+		init(EditHelper.getLocalizedName(data,type), defauletValue, (String) EditHelper.getData(data, type));
 
 	}
 
-	private void init(String lore, String[] defauletValue, String selected) {
-		// もしコンボ一覧に含まれていない値が初期値なら
-		if (!Arrays.asList(defauletValue).contains(selected)) {
-			defauletValue = ArrayEditer.AddToArray(defauletValue, selected);
-		}
-
+	private void init(String lore, Set<String> defauletValue, String selected) {
 		LineBorder border = new LineBorder(Color.black, 1, false);
 		this.setOpaque(false);
 		this.setLayout(null);
+		AllList = defauletValue;
 		// ラベル
 		setting = new JLabel(lore + " :");
 		setting.setHorizontalAlignment(JLabel.RIGHT);
@@ -48,7 +41,7 @@ public class StringComboPanel extends ValueSetPanel implements ActionListener {
 		txtCombo.addActionListener(this);
 		txtCombo.setBorder(border);
 		txtCombo.setEnabled(canEdit);
-		for (String data : defauletValue) {
+		for (String data : AllList) {
 			txtCombo.addItem(data);
 		}
 		this.add(txtCombo);
@@ -78,6 +71,10 @@ public class StringComboPanel extends ValueSetPanel implements ActionListener {
 	public void rePaint() {
 		if (txtCombo != null) {
 			txtCombo.setEnabled(canEdit);
+			txtCombo.removeAllItems();
+			for (String data : AllList) {
+				txtCombo.addItem(data);
+			}
 			// DataBaseならそこから代入
 			if (Data != null) {
 				setItem(EditHelper.getData(Data, Type).toString());
