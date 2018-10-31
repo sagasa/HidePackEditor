@@ -55,7 +55,7 @@ public class Main extends Application{
         FXMLLoader loader = new FXMLLoader();
         Pane rootNode = (Pane) loader.load(getClass().getResourceAsStream(fxmlFile));
         log.debug("Showing JFX scene");
-        Scene scene = new Scene(rootNode, 400, 200);
+        Scene scene = new Scene(rootNode, 1280, 720);
         scene.getStylesheets().add("/styles/styles.css");
 
         stage.setTitle("Hello JavaFX and Maven");
