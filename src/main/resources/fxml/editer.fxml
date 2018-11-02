@@ -5,76 +5,97 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </top>
-   <center>
-      <SplitPane dividerPositions="0.1635, 0.5" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <items>
-            <SplitPane dividerPositions="0.18759018759018758" maxWidth="200.0" minWidth="200.0" orientation="VERTICAL" prefHeight="695.0" prefWidth="200.0">
-              <items>
-                <AnchorPane maxHeight="160.0" minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="100.0" />
-                  <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-                    <tabs>
-                      <Tab text="Gun">
-                           <content>
-                              <ListView id="gunlist" prefHeight="200.0" prefWidth="200.0" />
-                           </content></Tab>
-                      <Tab text="Magazines">
-                           <content>
-                              <ListView id="magazinelist" prefHeight="200.0" prefWidth="200.0" />
-                           </content></Tab>
-                    </tabs>
-                  </TabPane>
-              </items>
-            </SplitPane>
-            <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
-               <items>
-                  <ToolBar prefHeight="40.0" prefWidth="200.0">
-                    <items>
-                      <Button mnemonicParsing="false" text="Button" />
-                    </items>
-                  </ToolBar>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
-               </items>
-            </SplitPane>
-            <TabPane maxWidth="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Icon">
-                     <content>
-                        <ListView prefHeight="200.0" prefWidth="200.0" />
-                     </content></Tab>
-                <Tab text="Sound">
-                     <content>
-                        <ListView prefHeight="200.0" prefWidth="200.0" />
-                     </content></Tab>
-                  <Tab text="Model">
-                     <content>
-                        <ListView prefHeight="200.0" prefWidth="200.0" />
-                     </content>
-                  </Tab>
-              </tabs>
-            </TabPane>
-         </items>
-      </SplitPane>
-   </center>
+<BorderPane id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.editer.RootController">
+	<top>
+		<MenuBar BorderPane.alignment="CENTER">
+			<menus>
+				<Menu mnemonicParsing="false" text="File">
+					<items>
+						<MenuItem mnemonicParsing="false" text="Close" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Edit">
+					<items>
+						<MenuItem mnemonicParsing="false" text="Delete" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Help">
+					<items>
+						<MenuItem mnemonicParsing="false" text="About" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+	</top>
+	<center>
+		<SplitPane dividerPositions="0.1635, 0.5" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<items>
+				<SplitPane dividerPositions="0.18759018759018758" maxWidth="200.0" minWidth="200.0" orientation="VERTICAL" prefHeight="695.0" prefWidth="200.0">
+					<items>
+						<AnchorPane maxHeight="160.0" minHeight="0.0" minWidth="0.0" prefHeight="287.0" prefWidth="100.0" />
+						<TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+							<tabs>
+								<Tab text="Gun">
+									<content>
+										<ListView id="gunlist" fx:id="gunList" onDragDropped="#importGun" onDragOver="#isGun" prefHeight="200.0" prefWidth="200.0">
+                                 <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#addGun" text="AddNewGun" />
+                                      </items>
+                                    </ContextMenu>
+                                 </contextMenu></ListView>
+									</content>
+								</Tab>
+								<Tab text="Magazines">
+									<content>
+										<ListView id="magazinelist" fx:id="magazineList" prefHeight="200.0" prefWidth="200.0">
+                                 <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#addMagazine" text="Unspecified Action" />
+                                      </items>
+                                    </ContextMenu>
+                                 </contextMenu></ListView>
+									</content>
+								</Tab>
+							</tabs>
+						</TabPane>
+					</items>
+				</SplitPane>
+				<SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+					<items>
+						<ToolBar maxHeight="-Infinity" prefHeight="26.0" prefWidth="200.0">
+							<items>
+								<Button mnemonicParsing="false" text="NewGun">
+                           <font>
+                              <Font size="10.0" />
+                           </font></Button>
+							</items>
+						</ToolBar>
+						<AnchorPane fx:id="editer" prefHeight="200.0" prefWidth="200.0" />
+					</items>
+				</SplitPane>
+				<TabPane maxWidth="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+					<tabs>
+						<Tab text="Icon">
+							<content>
+								<ListView fx:id="iconList" prefHeight="200.0" prefWidth="200.0" />
+							</content>
+						</Tab>
+						<Tab text="Sound">
+							<content>
+								<ListView fx:id="soundList" prefHeight="200.0" prefWidth="200.0" />
+							</content>
+						</Tab>
+						<Tab text="Model">
+							<content>
+								<ListView fx:id="modelList" prefHeight="200.0" prefWidth="200.0" />
+							</content>
+						</Tab>
+					</tabs>
+				</TabPane>
+			</items>
+		</SplitPane>
+	</center>
 </BorderPane>

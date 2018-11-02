@@ -23,6 +23,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.google.gson.Gson;
 
+import editer.HidePack;
 import editer.Main;
 import editer.mainWindow.MainWindow;
 import helper.ArrayEditer;
@@ -37,10 +38,8 @@ public class PackIO {
 	/** 新しいパックを作る */
 	public static void makePack() {
 		Main.clear();
-		Main.Pack = new PackInfo();
-		if (MainWindow.INSTANCE != null) {
-			MainWindow.INSTANCE.repaint();
-		}
+		Main.CurrentPack = new HidePack();
+
 	}
 
 	/** 今開いているデータを消して新しいパックを開く */
