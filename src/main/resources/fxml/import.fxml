@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+
+<SplitPane fx:id="base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.editer.ImportController">
+
+	<items>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+         <items>
+      		<ListView fx:id="up" maxHeight="-Infinity" minHeight="-Infinity" onMouseClicked="#crick" prefHeight="200.0" prefWidth="200.0" />
+      		<ListView fx:id="down" onMouseClicked="#crick" prefHeight="200.0" prefWidth="200.0" />
+         </items>
+      </SplitPane>
+	</items>
+</SplitPane>

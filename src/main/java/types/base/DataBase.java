@@ -9,6 +9,10 @@ import com.google.gson.GsonBuilder;
  */
 public abstract class DataBase implements Cloneable {
 
+	/**パックデータ エディタでのみ使用*/
+	transient public long PackUID;
+	/**パックデータ エディタでのみ使用*/
+	transient public boolean isReference = false;
 
 	/** JsonObjectを作成 */
 	public String MakeJsonData() {

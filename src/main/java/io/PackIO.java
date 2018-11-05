@@ -38,8 +38,6 @@ public class PackIO {
 	/** 新しいパックを作る */
 	public static void makePack() {
 		Main.clear();
-		Main.CurrentPack = new HidePack();
-
 	}
 
 	/** 今開いているデータを消して新しいパックを開く */
