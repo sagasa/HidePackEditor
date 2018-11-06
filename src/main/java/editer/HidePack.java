@@ -87,7 +87,7 @@ public class HidePack {
 	/** 表示用カラー */
 	public Color PackColor = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
 	/** Info */
-	public PackInfo Pack = null;
+	public PackInfo Pack = new PackInfo();
 	/** デフォルトか */
 	public boolean isDefault = false;
 }

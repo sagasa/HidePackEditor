@@ -13,8 +13,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -22,24 +24,24 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
+import types.guns.BulletData;
 import types.guns.GunData;
 
 public class RootController implements Initializable {
 	private static final Logger log = LoggerFactory.getLogger(RootController.class);
 	private static RootController INSTANCE;
-	@FXML
+
 	public Pane editer;
-	@FXML
+
+	public TextField packSearch;
 	public ListView<ColordList> packList;
-	@FXML
+
+	public TextField itemSearch;
 	public ListView<ColordList> gunList;
-	@FXML
+	public ContextMenu gunMenu;
 	public ListView<ColordList> magazineList;
-	@FXML
 	public ListView<ColordList> soundList;
-	@FXML
 	public ListView<ColordList> iconList;
-	@FXML
 	public ListView<ColordList> modelList;
 
 	@Override
@@ -47,6 +49,11 @@ public class RootController implements Initializable {
 		INSTANCE = this;
 		packList.setCellFactory(ColordList.getCellFactory());
 		gunList.setCellFactory(ColordList.getCellFactory());
+		magazineList.setCellFactory(ColordList.getCellFactory());
+		soundList.setCellFactory(ColordList.getCellFactory());
+		iconList.setCellFactory(ColordList.getCellFactory());
+		modelList.setCellFactory(ColordList.getCellFactory());
+		write();
 	}
 
 	/** CurrentPackの内容をリストに反映 */
@@ -54,23 +61,28 @@ public class RootController implements Initializable {
 		INSTANCE.write();
 	}
 
-	/** CurrentPackの内容をリストに反映 */
-	private void write() {
+	/** Packの内容をリストに反映 */
+	public void write() {
 		ObservableList<ColordList> list;
 		// Pack
 		list = FXCollections.observableArrayList();
 		for (HidePack pack : HidePack.OpenPacks) {
+
 			list.add(new ColordList(pack.Pack.PACK_NAME, pack.PackColor));
 		}
-		packList.setItems(list);
+		packList.setItems(list.sorted());
 		// Gun
 		list = FXCollections.observableArrayList();
 		for (GunData gun : HidePack.GunList) {
-			list.add(new ColordList(gun.ITEM_DISPLAYNAME, HidePack.getPack(gun.PackUID).PackColor));
+			if (Search(gun.ITEM_DISPLAYNAME, itemSearch.getText()))
+				list.add(new ColordList(gun.ITEM_DISPLAYNAME, HidePack.getPack(gun.PackUID).PackColor));
 		}
 		gunList.setItems(list.sorted());
+		// Magazine
 		list = FXCollections.observableArrayList();
-		// list.addAll(Main.CurrentPack.BulletList.keySet());
+		for (BulletData magazine : HidePack.BulletList) {
+			list.add(new ColordList(magazine.ITEM_DISPLAYNAME, HidePack.getPack(magazine.PackUID).PackColor));
+		}
 		magazineList.setItems(list.sorted());
 	}
 
@@ -91,9 +103,14 @@ public class RootController implements Initializable {
 		System.out.println(gunList.getBoundsInLocal());
 	}
 
+	//========編集========
+	public void editPack() {
+		ColordList item = packList.getSelectionModel().getSelectedItem();
+
+	}
 	@FXML
 	public void importGun(DragEvent event) {
-		System.out.println("import");
+		System.out.println(packList.getFocusModel().getFocusedItem());
 	}
 
 	// ===========追加系============
@@ -102,7 +119,8 @@ public class RootController implements Initializable {
 	private static int bulletNamePointer = 0;
 
 	@FXML
-	public void addMenu() {
+	public void addPack() {
+		log.debug("addPack");
 		HidePack pack = new HidePack();
 		while (HidePack.getPack("New Pack No." + packNamePointer) != null) {
 			packNamePointer++;
@@ -129,11 +147,38 @@ public class RootController implements Initializable {
 
 	@FXML
 	public void addMagazine() {
-		System.out.println("add");
+		log.debug("addBullet");
+		BulletData bullet = new BulletData();
+		while (HidePack.getGunData("New Magazine No." + bulletNamePointer) != null) {
+			gunNamePointer++;
+		}
+		bullet.ITEM_SHORTNAME = "magazine_" + gunNamePointer;
+		bullet.ITEM_DISPLAYNAME = "New Magazine No." + gunNamePointer;
+		bullet.PackUID = HidePack.DefaultPack.Pack.PackUID;
+		HidePack.BulletList.add(bullet);
+		write();
 	}
 
+	// ===========検索============
+	private static final String space = " ";// TODO
+
+	/**
+	 * 検索一致判定処理 スペースで区切ってそれぞれ判定、すべて含んでいたらtrue
+	 */
+	public static boolean Search(String value, String key) {
+		value = value.trim();
+		String[] keys = key.split(space);
+		for (String str : keys) {
+			if (!value.contains(str)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	// ===========リストセル============
 	/** カラーアイコン付きのリストシェル */
-	public static class ColordList {
+	public static class ColordList implements Comparable<ColordList>{
 		public static Callback<ListView<ColordList>, ListCell<ColordList>> getCellFactory() {
 			return new Callback<ListView<ColordList>, ListCell<ColordList>>() {
 				@Override
@@ -147,14 +192,18 @@ public class RootController implements Initializable {
 			String = str;
 			Color = color;
 		}
-
 		public String String;
 		public Color Color;
+		@Override
+		public int compareTo(ColordList value) {
+			return String.compareTo(value.String);
+		}
 	}
 
 	/** カラーアイコン付きのリストシェル */
 	public static class ColordListCell extends ListCell<ColordList> {
 		private Rectangle color = new Rectangle(20, 20);
+		private static final Color DisableColor = Color.rgb(0, 0, 0, 0);
 
 		@Override
 		protected void updateItem(ColordList cl, boolean empty) {
@@ -163,6 +212,9 @@ public class RootController implements Initializable {
 				setText(cl.String);
 				color.setFill(cl.Color);
 				setGraphic(color);
+			}else {
+				setText("");
+				color.setFill(DisableColor);
 			}
 
 		}

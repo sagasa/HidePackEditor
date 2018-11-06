@@ -42,14 +42,14 @@
                                     <Image url="/icon/serch.png" />
                                  </image>
                               </ImageView>
-                              <TextField layoutX="25.0" prefHeight="25.0" prefWidth="175.0" />
+                              <TextField layoutX="25.0" fx:id="packSearch" prefHeight="25.0" prefWidth="175.0" />
                            </children>
                         </AnchorPane>
-                        <ListView fx:id="packList" prefHeight="200.0" prefWidth="200.0">
+                        <ListView fx:id="packList" onMouseClicked="#editPack" prefHeight="200.0" prefWidth="200.0">
                            <contextMenu>
                               <ContextMenu>
                                 <items>
-                                  <MenuItem mnemonicParsing="false" onAction="#addMenu" text="AddNewMenu" />
+                                  <MenuItem mnemonicParsing="false" onAction="#addPack" text="AddNewMenu" />
                                 </items>
                               </ContextMenu>
                            </contextMenu>
@@ -65,7 +65,7 @@
                                     <Image url="/icon/serch.png" />
                                  </image>
                               </ImageView>
-                              <TextField layoutX="25.0" prefHeight="25.0" prefWidth="175.0" />
+                              <TextField layoutX="25.0" fx:id="itemSearch" onKeyPressed="#write" prefHeight="25.0" prefWidth="175.0" />
                            </children>
                         </AnchorPane>
       						<TabPane onMouseClicked="#crick" prefHeight="300.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
