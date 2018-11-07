@@ -42,7 +42,7 @@
                                     <Image url="/icon/serch.png" />
                                  </image>
                               </ImageView>
-                              <TextField layoutX="25.0" fx:id="packSearch" prefHeight="25.0" prefWidth="175.0" />
+                              <TextField fx:id="packSearch" layoutX="25.0" prefHeight="25.0" prefWidth="175.0" />
                            </children>
                         </AnchorPane>
                         <ListView fx:id="packList" onMouseClicked="#editPack" prefHeight="200.0" prefWidth="200.0">
@@ -65,14 +65,14 @@
                                     <Image url="/icon/serch.png" />
                                  </image>
                               </ImageView>
-                              <TextField layoutX="25.0" fx:id="itemSearch" onKeyPressed="#write" prefHeight="25.0" prefWidth="175.0" />
+                              <TextField fx:id="itemSearch" layoutX="25.0" onKeyPressed="#write" prefHeight="25.0" prefWidth="175.0" />
                            </children>
                         </AnchorPane>
       						<TabPane onMouseClicked="#crick" prefHeight="300.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
       							<tabs>
       								<Tab text="Gun">
       									<content>
-      										<ListView id="gunlist" fx:id="gunList" onDragOver="#isGun" prefHeight="200.0" prefWidth="200.0">
+      										<ListView id="gunlist" fx:id="gunList" onDragOver="#isGun" onMouseClicked="#editGun" prefHeight="200.0" prefWidth="200.0">
                                        <contextMenu>
                                           <ContextMenu>
                                             <items>
@@ -85,11 +85,11 @@
       								</Tab>
       								<Tab text="Magazines">
       									<content>
-      										<ListView id="magazinelist" fx:id="magazineList" prefHeight="200.0" prefWidth="200.0">
+      										<ListView id="magazinelist" fx:id="magazineList" onMouseClicked="#editMagazine" prefHeight="200.0" prefWidth="200.0">
                                        <contextMenu>
                                           <ContextMenu>
                                             <items>
-                                              <MenuItem mnemonicParsing="false" onAction="#addMagazine" text="Unspecified Action" />
+                                              <MenuItem mnemonicParsing="false" onAction="#addMagazine" text="AddNewMagazine" />
                                             </items>
                                           </ContextMenu>
                                        </contextMenu>
@@ -112,7 +112,7 @@
                            </font></Button>
 							</items>
 						</ToolBar>
-						<AnchorPane fx:id="editer" prefHeight="200.0" prefWidth="200.0" />
+						<AnchorPane fx:id="editer" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" />
 					</items>
 				</SplitPane>
 				<TabPane maxWidth="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">

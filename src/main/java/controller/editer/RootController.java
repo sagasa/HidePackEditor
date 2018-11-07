@@ -13,7 +13,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -38,7 +37,6 @@ public class RootController implements Initializable {
 
 	public TextField itemSearch;
 	public ListView<ColordList> gunList;
-	public ContextMenu gunMenu;
 	public ListView<ColordList> magazineList;
 	public ListView<ColordList> soundList;
 	public ListView<ColordList> iconList;
@@ -103,11 +101,30 @@ public class RootController implements Initializable {
 		System.out.println(gunList.getBoundsInLocal());
 	}
 
-	//========編集========
+	// ================
+	// ========編集========
 	public void editPack() {
 		ColordList item = packList.getSelectionModel().getSelectedItem();
-
+		if (item != null) {
+			log.debug(HidePack.getPack(item.String).toString());
+		}
 	}
+
+	public void editGun() {
+		ColordList item = gunList.getSelectionModel().getSelectedItem();
+		if (item != null) {
+			log.debug(HidePack.getGunData(item.String).toString());
+			EditerComponent.writeGunEditer(editer, HidePack.getGunData(item.String));
+		}
+	}
+
+	public void editMagazine() {
+		ColordList item = magazineList.getSelectionModel().getSelectedItem();
+		if (item != null) {
+			log.debug(HidePack.getBulletData(item.String).toString());
+		}
+	}
+
 	@FXML
 	public void importGun(DragEvent event) {
 		System.out.println(packList.getFocusModel().getFocusedItem());
@@ -178,7 +195,7 @@ public class RootController implements Initializable {
 
 	// ===========リストセル============
 	/** カラーアイコン付きのリストシェル */
-	public static class ColordList implements Comparable<ColordList>{
+	public static class ColordList implements Comparable<ColordList> {
 		public static Callback<ListView<ColordList>, ListCell<ColordList>> getCellFactory() {
 			return new Callback<ListView<ColordList>, ListCell<ColordList>>() {
 				@Override
@@ -192,8 +209,10 @@ public class RootController implements Initializable {
 			String = str;
 			Color = color;
 		}
+
 		public String String;
 		public Color Color;
+
 		@Override
 		public int compareTo(ColordList value) {
 			return String.compareTo(value.String);
@@ -212,7 +231,7 @@ public class RootController implements Initializable {
 				setText(cl.String);
 				color.setFill(cl.Color);
 				setGraphic(color);
-			}else {
+			} else {
 				setText("");
 				color.setFill(DisableColor);
 			}
