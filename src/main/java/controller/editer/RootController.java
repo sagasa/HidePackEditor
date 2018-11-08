@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import editer.HasDisplayName;
 import editer.HidePack;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -121,7 +122,7 @@ public class RootController implements Initializable {
 	public void editMagazine() {
 		ColordList item = magazineList.getSelectionModel().getSelectedItem();
 		if (item != null) {
-			log.debug(HidePack.getBulletData(item.String).toString());
+			log.debug(HidePack.getBulletData(item.Name.getDisplayName()).toString());
 		}
 	}
 
@@ -205,17 +206,17 @@ public class RootController implements Initializable {
 			};
 		}
 
-		public ColordList(String str, Color color) {
-			String = str;
+		public ColordList(HasDisplayName name, Color color) {
+			Name = name;
 			Color = color;
 		}
 
-		public String String;
+		public HasDisplayName Name;
 		public Color Color;
 
 		@Override
 		public int compareTo(ColordList value) {
-			return String.compareTo(value.String);
+			return Name.getDisplayName().compareTo(value.Name.getDisplayName());
 		}
 	}
 
@@ -228,7 +229,7 @@ public class RootController implements Initializable {
 		protected void updateItem(ColordList cl, boolean empty) {
 			super.updateItem(cl, empty);
 			if (!empty) {
-				setText(cl.String);
+				setText(cl.Name.getDisplayName());
 				color.setFill(cl.Color);
 				setGraphic(color);
 			} else {
