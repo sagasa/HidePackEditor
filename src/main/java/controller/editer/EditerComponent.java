@@ -18,14 +18,25 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import localize.LocalizeHandler;
 import types.base.DataBase;
 import types.guns.GunData;
 
 public class EditerComponent {
 	private static final Logger log = LoggerFactory.getLogger(EditerComponent.class);
 
+	// GunEditer
 	public static void writeGunEditer(Pane editer, GunData data) {
-		editer.getChildren().add(EditNodeBuilder.makeTextSetNode(data, "ITEM_DISPLAYNAME").build());
+		// Cate1
+		AnchorPane cate1 = new AnchorPane();
+		cate1.setStyle("-fx-background-color: gray;");
+		editer.getChildren().add(cate1);
+		cate1.getChildren().add(EditNodeBuilder.makeTextSetNode(data, "ITEM_DISPLAYNAME").setListner(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());;
+			}
+		}).build());
 
 	}
 
@@ -43,8 +54,12 @@ public class EditerComponent {
 			Type = type;
 		}
 
+		/** 変更の保存対象 */
 		private DataBase Data;
+		/** 保存するフィールド名 */
 		private String Field;
+		/** 変更通知リスナー */
+		private ChangeListener<?>[] Listener;
 
 		public static EditNodeBuilder makeTextSetNode(DataBase data, String field) {
 			EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.Text);
@@ -55,6 +70,11 @@ public class EditerComponent {
 				log.warn(field + "is not Text field");
 			}
 			return builder;
+		}
+
+		public EditNodeBuilder setListner(ChangeListener<?>... listener) {
+			Listener = listener;
+			return this;
 		}
 
 		private double sizeX = 200;
@@ -73,10 +93,13 @@ public class EditerComponent {
 				// テキストセット
 				AnchorPane root = new AnchorPane();
 				TextField text = new TextField();
-				Label label = new Label(Field + ":");
+				Label label = new Label(LocalizeHandler.getLocalizedName(Data, Field) + ":");
 				double textFieldX = 100;
 
 				if (Type == EditNodeType.Text) {
+					for (ChangeListener<?> listener : Listener) {
+						text.textProperty().addListener((ChangeListener<? super String>) listener);
+					}
 					text.textProperty().addListener(new ChangeListener<String>() {
 						@Override
 						public void changed(ObservableValue<? extends String> observable, String oldValue,

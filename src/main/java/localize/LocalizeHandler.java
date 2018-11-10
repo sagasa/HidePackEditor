@@ -5,12 +5,20 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import helper.EditHelper;
+import types.PackInfo;
+import types.base.DataBase;
+import types.effect.Explosion;
+import types.effect.Recoil;
+import types.effect.Sound;
+import types.guns.BulletData;
+import types.guns.GunData;
 
 
 /** langの読み込みと表示用  + 説明書きも対応*/
@@ -27,10 +35,22 @@ public class LocalizeHandler {
 		for(Lang lang:Lang.values()){
 			addName(lang.toString().toLowerCase());
 		}
-		// enumをノックしてインスタンスを作らせる
-		EditHelper.makeLocalize();
+		// DataBaseクラスのローカライズファイルを作成
+		makeLocalize(GunData.class);
+		makeLocalize(BulletData.class);
+		makeLocalize(Recoil.class);
+		makeLocalize(Sound.class);
+		makeLocalize(Explosion.class);
+		makeLocalize(PackInfo.class);
 
 		writeDefaultLang();
+	}
+
+
+	private static void makeLocalize(Class<? extends DataBase> clazz){
+		for(Field field:clazz.getFields()){
+			LocalizeHandler.addName(EditHelper.getUnlocalizedName(clazz, field.getName()));
+		}
 	}
 
 	/** UnlocalisedNameがvalueのlangファイルを出力 */
@@ -144,6 +164,11 @@ public class LocalizeHandler {
 		return null;
 	}
 
+	static public String getLocalizedName(DataBase data,String field) {
+		return getLocalizedLore(EditHelper.getUnlocalizedName(data.getClass(), field));
+	}
+
+	/**メニュー用ローカライズデータ取得*/
 	public static String getLocalizedName(Lang lang) {
 		return getLocalizedName(lang.toString().toLowerCase());
 	}

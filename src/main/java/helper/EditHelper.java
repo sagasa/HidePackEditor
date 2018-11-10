@@ -112,27 +112,12 @@ public class EditHelper {
 	}
 
 	/**UnlocalizedNameのフォーマット*/
-	private static String getUnlocalizedName(Class<?extends DataBase> clazz, String field){
+	public static String getUnlocalizedName(Class<?extends DataBase> clazz, String field){
 		try {
 			return (clazz.getSimpleName()+"."+clazz.getField(field).getName().replaceAll("_", ".")).toLowerCase();
 		} catch (NoSuchFieldException | SecurityException e) {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	/** EnumDataInfoをノックする */
-	public static void makeLocalize() {
-		makeLocalize(GunData.class);
-		makeLocalize(BulletData.class);
-		makeLocalize(Recoil.class);
-		makeLocalize(Sound.class);
-		makeLocalize(Explosion.class);
-		makeLocalize(PackInfo.class);
-	}
-	private static void makeLocalize(Class<? extends DataBase> clazz){
-		for(Field field:clazz.getFields()){
-			LocalizeHandler.addName(getUnlocalizedName(clazz, field.getName()));
-		}
 	}
 }

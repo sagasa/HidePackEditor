@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import editer.HasDisplayName;
 import editer.HidePack;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -52,6 +54,13 @@ public class RootController implements Initializable {
 		soundList.setCellFactory(ColordList.getCellFactory());
 		iconList.setCellFactory(ColordList.getCellFactory());
 		modelList.setCellFactory(ColordList.getCellFactory());
+		//Serch用フック
+		itemSearch.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				write();
+			}
+		});
 		write();
 	}
 

@@ -19,6 +19,7 @@ public class Main extends Application {
 	public static void main(String[] arg) {
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
+		LocalizeHandler.setLang("en");
 		PackIO.makePack();
 		// new MainWindow();
 

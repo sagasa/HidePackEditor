@@ -65,7 +65,7 @@
                                     <Image url="/icon/serch.png" />
                                  </image>
                               </ImageView>
-                              <TextField fx:id="itemSearch" layoutX="25.0" onKeyPressed="#write" prefHeight="25.0" prefWidth="175.0" />
+                              <TextField fx:id="itemSearch" layoutX="25.0" prefHeight="25.0" prefWidth="175.0" />
                            </children>
                         </AnchorPane>
       						<TabPane onMouseClicked="#crick" prefHeight="300.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
