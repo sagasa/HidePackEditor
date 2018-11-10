@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import helper.EditHelper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -75,10 +77,13 @@ public class EditerComponent {
 				double textFieldX = 100;
 
 				if (Type == EditNodeType.Text) {
-					text.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+					text.textProperty().addListener(new ChangeListener<String>() {
 						@Override
-						public void handle(KeyEvent event) {
-							System.out.println("key");
+						public void changed(ObservableValue<? extends String> observable, String oldValue,
+								String newValue) {
+							RootController.INSTANCE.gunList.refresh();
+							EditHelper.setData(Data, Field, text.getText());
+							System.out.println("TextField txt Changed (newValue: " + newValue + ")");
 						}
 					});
 

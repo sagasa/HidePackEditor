@@ -29,7 +29,7 @@ import types.guns.GunData;
 
 public class RootController implements Initializable {
 	private static final Logger log = LoggerFactory.getLogger(RootController.class);
-	private static RootController INSTANCE;
+	public static RootController INSTANCE;
 
 	public Pane editer;
 
@@ -67,20 +67,20 @@ public class RootController implements Initializable {
 		list = FXCollections.observableArrayList();
 		for (HidePack pack : HidePack.OpenPacks) {
 
-			list.add(new ColordList(pack.Pack.PACK_NAME, pack.PackColor));
+			list.add(new ColordList(pack.Pack, pack.PackColor));
 		}
 		packList.setItems(list.sorted());
 		// Gun
 		list = FXCollections.observableArrayList();
 		for (GunData gun : HidePack.GunList) {
 			if (Search(gun.ITEM_DISPLAYNAME, itemSearch.getText()))
-				list.add(new ColordList(gun.ITEM_DISPLAYNAME, HidePack.getPack(gun.PackUID).PackColor));
+				list.add(new ColordList(gun, HidePack.getPack(gun.PackUID).PackColor));
 		}
 		gunList.setItems(list.sorted());
 		// Magazine
 		list = FXCollections.observableArrayList();
 		for (BulletData magazine : HidePack.BulletList) {
-			list.add(new ColordList(magazine.ITEM_DISPLAYNAME, HidePack.getPack(magazine.PackUID).PackColor));
+			list.add(new ColordList(magazine, HidePack.getPack(magazine.PackUID).PackColor));
 		}
 		magazineList.setItems(list.sorted());
 	}
@@ -107,15 +107,15 @@ public class RootController implements Initializable {
 	public void editPack() {
 		ColordList item = packList.getSelectionModel().getSelectedItem();
 		if (item != null) {
-			log.debug(HidePack.getPack(item.String).toString());
+			log.debug(HidePack.getPack(item.Name.getDisplayName()).toString());
 		}
 	}
 
 	public void editGun() {
 		ColordList item = gunList.getSelectionModel().getSelectedItem();
 		if (item != null) {
-			log.debug(HidePack.getGunData(item.String).toString());
-			EditerComponent.writeGunEditer(editer, HidePack.getGunData(item.String));
+			log.debug(HidePack.getGunData(item.Name.getDisplayName()).toString());
+			EditerComponent.writeGunEditer(editer, HidePack.getGunData(item.Name.getDisplayName()));
 		}
 	}
 
