@@ -1,6 +1,6 @@
 package controller.editer;
 
-import java.lang.reflect.Field;
+import java.awt.Color;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,15 +8,13 @@ import org.slf4j.LoggerFactory;
 import helper.EditHelper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import localize.LocalizeHandler;
 import types.base.DataBase;
@@ -28,13 +26,16 @@ public class EditerComponent {
 	// GunEditer
 	public static void writeGunEditer(Pane editer, GunData data) {
 		// Cate1
-		AnchorPane cate1 = new AnchorPane();
-		cate1.setStyle("-fx-background-color: gray;");
+		VBox cate1 = new VBox();
+		cate1.setStyle("-fx-background-color: lightGray;");
+		cate1.setLayoutX(5);
+		cate1.setLayoutY(5);
+		cate1.setPrefSize(160, 100);
 		editer.getChildren().add(cate1);
-		cate1.getChildren().add(EditNodeBuilder.makeTextSetNode(data, "ITEM_DISPLAYNAME").setListner(new ChangeListener<String>() {
+		cate1.getChildren().add(EditNodeBuilder.makeTextSetNode(data, "ITEM_DISPLAYNAME").setListner(new Runnable() {
 			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());;
+			public void run() {
+				RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());
 			}
 		}).build());
 
@@ -59,7 +60,7 @@ public class EditerComponent {
 		/** 保存するフィールド名 */
 		private String Field;
 		/** 変更通知リスナー */
-		private ChangeListener<?>[] Listener;
+		private Runnable[] Listener;
 
 		public static EditNodeBuilder makeTextSetNode(DataBase data, String field) {
 			EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.Text);
@@ -72,7 +73,8 @@ public class EditerComponent {
 			return builder;
 		}
 
-		public EditNodeBuilder setListner(ChangeListener<?>... listener) {
+		/** 変更されたタイミングで呼ばれる */
+		public EditNodeBuilder setListner(Runnable... listener) {
 			Listener = listener;
 			return this;
 		}
@@ -97,15 +99,15 @@ public class EditerComponent {
 				double textFieldX = 100;
 
 				if (Type == EditNodeType.Text) {
-					for (ChangeListener<?> listener : Listener) {
-						text.textProperty().addListener((ChangeListener<? super String>) listener);
-					}
 					text.textProperty().addListener(new ChangeListener<String>() {
 						@Override
 						public void changed(ObservableValue<? extends String> observable, String oldValue,
 								String newValue) {
 							RootController.INSTANCE.gunList.refresh();
 							EditHelper.setData(Data, Field, text.getText());
+							for (Runnable listener : Listener) {
+								listener.run();
+							}
 							System.out.println("TextField txt Changed (newValue: " + newValue + ")");
 						}
 					});

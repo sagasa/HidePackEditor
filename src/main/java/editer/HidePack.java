@@ -1,13 +1,12 @@
 package editer;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import javafx.scene.paint.Color;
+import resources.Image;
+import resources.Sound;
 import types.PackInfo;
 import types.guns.BulletData;
 import types.guns.GunData;
@@ -15,18 +14,19 @@ import types.guns.GunData;
 /** パック本体 */
 public class HidePack {
 
-	/** 銃のMAP DisplayName-GunData */
-	public static List<GunData> GunList = new ArrayList<GunData>();
-	/** 弾のMAP DisplayName-BulletData */
-	public static List<BulletData> BulletList = new ArrayList<BulletData>();
-	/** IconのMAP Name - BufferedImage */
-	public static Map<String, BufferedImage> IconMap = new HashMap<String, BufferedImage>();
-	/** ScopeのMAP Name - BufferedImage */
-	public static Map<String, BufferedImage> ScopeMap = new HashMap<String, BufferedImage>();
-	/** SoundのMAP Name - byte[] */
-	public static Map<String, byte[]> SoundMap = new HashMap<String, byte[]>();
+	/** 銃のMAP GunData */
+	public static List<GunData> GunList = new ArrayList<>();
+	/** 弾のMAP BulletData */
+	public static List<BulletData> BulletList = new ArrayList<>();
+	/** IconのMAP Image */
+	public static List<Image> IconList = new ArrayList<>();
+	/** ScopeのMAP Image */
+	public static List<Image> ScopeList = new ArrayList<>();
+	/** SoundのMAP Sound */
+	public static List<Sound> SoundList = new ArrayList<>();
 	/** 編集中のパック */
-	public static List<HidePack> OpenPacks = new ArrayList<HidePack>();
+	public static List<HidePack> OpenPacks = new ArrayList<>();
+	/**デフォルトパック*/
 	public static HidePack DefaultPack;
 
 	/** 銃取得 */
@@ -48,6 +48,7 @@ public class HidePack {
 		}
 		return null;
 	}
+
 	/** パック取得 */
 	public static HidePack getPack(String packName) {
 		for (HidePack data : OpenPacks) {
@@ -61,7 +62,7 @@ public class HidePack {
 	/** パック取得 */
 	public static HidePack getPack(long uid) {
 		for (HidePack data : OpenPacks) {
-			if (data.Pack.PackUID==uid) {
+			if (data.Pack.PackUID == uid) {
 				return data;
 			}
 		}
@@ -82,7 +83,6 @@ public class HidePack {
 		DefaultPack = pack;
 		OpenPacks.add(pack);
 	}
-
 
 	/** 表示用カラー */
 	public Color PackColor = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));

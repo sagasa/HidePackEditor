@@ -27,6 +27,8 @@ import editer.HidePack;
 import editer.Main;
 import editer.mainWindow.MainWindow;
 import helper.ArrayEditer;
+import resources.Image;
+import resources.Sound;
 import types.PackInfo;
 import types.guns.BulletData;
 import types.guns.GunData;
@@ -81,52 +83,7 @@ public class PackIO {
 		return filechooser;
 	}
 
-	/** GunDataをインポート */
-	public static void inportGun() {
-		JFileChooser filechooser = makeFileChooser(new FileNameExtensionFilter("GunData", "json"));
-		int selected = filechooser.showOpenDialog(null);
-
-		if (selected == 0) {
-			for (File file : filechooser.getSelectedFiles()) {
-				inportGun(file);
-			}
-		}
-	}
-
-	/** GunDataをインポート */
-	public static void inportGun(File file) {
-		try {
-			GunData data = gson.fromJson(Files.lines(file.toPath()).collect(Collectors.joining()), GunData.class);
-			Main.GunList.put(data.ITEM_DISPLAYNAME, data);
-			MainWindow.ItemList.write();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/** Magazineをインポート */
-	public static void inportMagazine() {
-		JFileChooser filechooser = makeFileChooser(new FileNameExtensionFilter("BulletData", "json"));
-		int selected = filechooser.showOpenDialog(null);
-
-		if (selected == 0) {
-			for (File file : filechooser.getSelectedFiles()) {
-				inportMagazine(file);
-			}
-		}
-	}
-
-	/** Magazineをインポート */
-	public static void inportMagazine(File file) {
-		try {
-			BulletData data = gson.fromJson(Files.lines(file.toPath()).collect(Collectors.joining()), BulletData.class);
-			Main.BulletList.put(data.ITEM_DISPLAYNAME, data);
-			MainWindow.ItemList.write();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
+	// TODO キャッチにエラーダイアログを
 	/** iconをインポート */
 	public static void inportIcon() {
 		JFileChooser filechooser = makeFileChooser(new FileNameExtensionFilter("Image", "png", "jpg", "bmp"));
@@ -142,7 +99,9 @@ public class PackIO {
 	/** iconをインポート */
 	public static void inportIcon(File file) {
 		try {
-			Main.IconMap.put(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
+			Image image = new Image(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""));
+			image.Image = ImageIO.read(file);
+			HidePack.IconList.add(image);
 			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -164,7 +123,9 @@ public class PackIO {
 	/** Scopeをインポート */
 	public static void inportScope(File file) {
 		try {
-			Main.ScopeMap.put(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
+			Image image = new Image(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""));
+			image.Image = ImageIO.read(file);
+			HidePack.ScopeList.add(image);
 			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -186,7 +147,9 @@ public class PackIO {
 	/** Soundをインポート */
 	public static void inportSound(File file) {
 		try {
-			Main.SoundMap.put(file.getName().replaceAll(".ogg$", ""), Files.readAllBytes(file.toPath()));
+			Sound sound = new Sound(file.getName().replaceAll(".ogg$", ""));
+			sound.Sound = Files.readAllBytes(file.toPath());
+			HidePack.SoundList.add(sound);
 			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -343,7 +306,8 @@ public class PackIO {
 		}
 		// packInfo認識
 		else if (name.matches("^(.*)pack.json")) {
-			Main.Pack = gson.fromJson(new String(data, Charset.forName("UTF-8")), PackInfo.class);;
+			Main.Pack = gson.fromJson(new String(data, Charset.forName("UTF-8")), PackInfo.class);
+			;
 			// System.out.println("pack");
 		}
 
