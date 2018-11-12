@@ -5,7 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * EnumDataInfoを利用してデータを取得できるクラス クローン可能 publicフィールドはすべてクローン可能なクラスにしてください
+ * パックのデータのスーパークラス クローン可能 publicフィールドはすべてクローン可能なクラスにしてください
+ * transient注釈が付いたフィールドはエディターでのみ使用
  */
 public abstract class DataBase implements Cloneable {
 

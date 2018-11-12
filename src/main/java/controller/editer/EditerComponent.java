@@ -1,23 +1,25 @@
 package controller.editer;
 
-import java.awt.Color;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import helper.EditHelper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import localize.LocalizeHandler;
 import types.base.DataBase;
+import types.base.ItemData;
 import types.guns.GunData;
 
 public class EditerComponent {
@@ -26,26 +28,47 @@ public class EditerComponent {
 	// GunEditer
 	public static void writeGunEditer(Pane editer, GunData data) {
 		// Cate1
-		VBox cate1 = new VBox();
-		cate1.setStyle("-fx-background-color: lightGray;");
-		cate1.setLayoutX(5);
-		cate1.setLayoutY(5);
-		cate1.setPrefSize(160, 100);
-		editer.getChildren().add(cate1);
-		cate1.getChildren().add(EditNodeBuilder.makeTextSetNode(data, "ITEM_DISPLAYNAME").setListner(new Runnable() {
+		Region itemInfo = makeItemInfoNode(data);
+		itemInfo.setStyle("-fx-background-color: lightGray;");
+		itemInfo.setLayoutX(5);
+		itemInfo.setLayoutY(5);
+		itemInfo.setPrefSize(160, 100);
+		editer.getChildren().add(itemInfo);
+	}
+
+	// ItemData用名称+アイコン編集ノード
+	private static Region makeItemInfoNode(ItemData data) {
+		VBox root = new VBox();
+		//表示名
+		root.getChildren()
+				.add(EditNodeBuilder.makeTextSetNode(data, "ITEM_DISPLAYNAME").setChangeListner(new Runnable() {
+					@Override
+					public void run() {
+						RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());
+					}
+				}).build());
+		//短縮名の使用可否
+		root.getChildren().add(EditNodeBuilder.makeBooleanSetNode(data, "USE_SHORTNAME").setChangeListner(new Runnable() {
 			@Override
 			public void run() {
 				RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());
 			}
 		}).build());
-
+		//短縮名
+		root.getChildren().add(EditNodeBuilder.makeTextSetNode(data, "ITEM_SHORTNAME").setChangeListner(new Runnable() {
+			@Override
+			public void run() {
+				RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());
+			}
+		}).build());
+		return root;
 	}
 
 	// ベースサイズは200x24
 
 	public static class EditNodeBuilder {
 		private enum EditNodeType {
-			Text, Number,
+			Text, Number,Boolean
 		}
 
 		/** 作成するノードの種類 */
@@ -59,23 +82,37 @@ public class EditerComponent {
 		private DataBase Data;
 		/** 保存するフィールド名 */
 		private String Field;
-		/** 変更通知リスナー */
-		private Runnable[] Listener;
 
+		/**DataBaseのテキストフィールドを編集するノード*/
 		public static EditNodeBuilder makeTextSetNode(DataBase data, String field) {
 			EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.Text);
 			builder.Data = data;
 			builder.Field = field;
 			// Typeチェック
-			if (!EditHelper.getType(data, field).isAssignableFrom(String.class)) {
+			if (!String.class.isAssignableFrom(EditHelper.getType(data, field))) {
 				log.warn(field + "is not Text field");
 			}
 			return builder;
 		}
 
+		/**DataBaseのテキストフィールドを編集するノード*/
+		public static EditNodeBuilder makeBooleanSetNode(DataBase data, String field) {
+			EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.Boolean);
+			builder.Data = data;
+			builder.Field = field;
+			// Typeチェック
+			if (!(boolean.class.isAssignableFrom(EditHelper.getType(data, field))||Boolean.class.isAssignableFrom(EditHelper.getType(data, field)))) {
+				log.warn(field + "is not Boolean field");
+			}
+			return builder;
+		}
+
+		/** 変更通知リスナー */
+		private Runnable[] ChangeListener;
+
 		/** 変更されたタイミングで呼ばれる */
-		public EditNodeBuilder setListner(Runnable... listener) {
-			Listener = listener;
+		public EditNodeBuilder setChangeListner(Runnable... listener) {
+			ChangeListener = listener;
 			return this;
 		}
 
@@ -99,21 +136,21 @@ public class EditerComponent {
 				double textFieldX = 100;
 
 				if (Type == EditNodeType.Text) {
+					// テキスト保存
 					text.textProperty().addListener(new ChangeListener<String>() {
 						@Override
 						public void changed(ObservableValue<? extends String> observable, String oldValue,
 								String newValue) {
 							RootController.INSTANCE.gunList.refresh();
 							EditHelper.setData(Data, Field, text.getText());
-							for (Runnable listener : Listener) {
+							for (Runnable listener : ChangeListener) {
 								listener.run();
 							}
 							System.out.println("TextField txt Changed (newValue: " + newValue + ")");
 						}
 					});
-
 				} else {
-
+					// 数値保存
 				}
 				root.resize(sizeX, sizeY);
 
@@ -127,6 +164,9 @@ public class EditerComponent {
 
 				root.getChildren().add(text);
 				root.getChildren().add(label);
+				return root;
+			}else if(Type==EditNodeType.Boolean) {
+				AnchorPane root = new AnchorPane();
 				return root;
 			}
 			return null;
