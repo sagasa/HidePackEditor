@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -160,10 +163,9 @@ public class PackIO {
 	public static void saveAs() {
 		JFileChooser filechooser = new JFileChooser();
 		filechooser.setCurrentDirectory(new File("."));
-		filechooser.setSelectedFile(new File(Main.Pack.PACK_NAME + ".zip"));
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("zip file", "zip");
 		filechooser.setFileFilter(filter);
-		// filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 		int selected = filechooser.showSaveDialog(null);
 		// System.out.println(selected);
@@ -178,76 +180,100 @@ public class PackIO {
 		}
 	}
 
+	private static class Entry {
+		String Name;
+		ByteArrayInputStream Data;
+
+		public Entry(String name, ByteArrayInputStream data) {
+			Name = name;
+			Data = data;
+		}
+	}
+
 	/** パッキングして出力する */
 	private static void export(File packFile) {
-		// パックがあるなら
-		if (Main.Pack != null) {
-			// データをまとめる
-			HashMap<String, ByteArrayInputStream> dataList = new HashMap<String, ByteArrayInputStream>();
-			// 銃のデータ
-			for (GunData d : Main.GunList.values()) {
-				dataList.put("guns/" + d.ITEM_DISPLAYNAME + ".json",
-						new ByteArrayInputStream(d.MakeJsonData().getBytes()));
-			}
-			// 弾のデータ
-			for (BulletData d : Main.BulletList.values()) {
-				dataList.put("bullets/" + d.ITEM_DISPLAYNAME + ".json",
-						new ByteArrayInputStream(d.MakeJsonData().getBytes()));
-			}
-
-			// パックデータ
-			dataList.put("pack.json", new ByteArrayInputStream(Main.Pack.MakeJsonData().getBytes()));
-
-			// リソース
-			try {
-				// Icon
-				for (String name : Main.IconMap.keySet()) {
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-					ImageIO.write(Main.IconMap.get(name), "png", out);
-
-					dataList.put("icon/" + name + ".png", new ByteArrayInputStream(out.toByteArray()));
-				}
-				// Scope
-				for (String name : Main.ScopeMap.keySet()) {
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-					ImageIO.write(Main.ScopeMap.get(name), "png", out);
-
-					dataList.put("scope/" + name + ".png", new ByteArrayInputStream(out.toByteArray()));
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			for (String name : Main.SoundMap.keySet()) {
-				dataList.put("sounds/" + name + ".ogg", new ByteArrayInputStream(Main.SoundMap.get(name)));
-			}
-
-			ZipOutputStream zos;
-			try {
-				if (packFile.exists()) {
-					packFile.createNewFile();
-				}
-
-				zos = new ZipOutputStream(new FileOutputStream(packFile), Charset.forName("Shift_JIS"));
-				for (String name : dataList.keySet()) {
-					// System.out.println(name);
-					ZipEntry entry = new ZipEntry(name);
-					zos.putNextEntry(entry);
-
-					try (InputStream is = new BufferedInputStream(dataList.get(name))) {
-						byte[] buf = new byte[1024];
-						for (int len = 0; 0 < (len = is.read(buf));) {
-							zos.write(buf, 0, len);
-						}
-					}
-				}
-				zos.close();
-
-			} catch (IOException e) {
-				e.printStackTrace();
+		// データをまとめる
+		Map<Long, List<Entry>> dataMap = new HashMap();
+		for (HidePack pack : HidePack.OpenPacks) {
+			// 参照では無ければ
+			if (!pack.Pack.isReference) {
+				dataMap.put(pack.Pack.PackUID, new ArrayList());
+				// パックデータ
+				dataMap.get(pack.Pack.PackUID).add(new Entry("pack.json", new ByteArrayInputStream(pack.Pack.MakeJsonData().getBytes())));
 			}
 		}
+
+		// 銃のデータ
+		for (GunData d : HidePack.GunList) {
+			// 参照ではなければ
+			if (!d.isReference) {
+				dataMap.get(d.PackUID).add(new Entry("guns/" + d.ITEM_DISPLAYNAME + ".json",
+						new ByteArrayInputStream(d.MakeJsonData().getBytes())));
+			}
+		}
+		// 弾のデータ
+		for (BulletData d : HidePack.BulletList) {
+			// 参照ではなければ
+			if (!d.isReference) {
+				dataMap.get(d.PackUID).add(new Entry("bullets/" + d.ITEM_DISPLAYNAME + ".json",
+						new ByteArrayInputStream(d.MakeJsonData().getBytes())));
+			}
+		}
+
+		// リソース
+		try {
+			// Icon
+			for (Image d : HidePack.IconList) {
+				// 参照ではなければ
+				if (!d.isReference) {
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					ImageIO.write(d.Image, "png", out);
+					dataMap.get(d.PackUID).add(
+							new Entry("icon/" + d.DisplayName + ".png", new ByteArrayInputStream(out.toByteArray())));
+				}
+			}
+			// Scope
+			for (Image d : HidePack.ScopeList) {
+				// 参照ではなければ
+				if (!d.isReference) {
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					ImageIO.write(d.Image, "png", out);
+					dataMap.get(d.PackUID).add(
+							new Entry("scope/" + d.DisplayName + ".png", new ByteArrayInputStream(out.toByteArray())));
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		for (String name : Main.SoundMap.keySet()) {
+			dataList.put("sounds/" + name + ".ogg", new ByteArrayInputStream(Main.SoundMap.get(name)));
+		}
+
+		ZipOutputStream zos;
+		try {
+			if (packFile.exists()) {
+				packFile.createNewFile();
+			}
+
+			zos = new ZipOutputStream(new FileOutputStream(packFile), Charset.forName("Shift_JIS"));
+			for (String name : dataList.keySet()) {
+				// System.out.println(name);
+				ZipEntry entry = new ZipEntry(name);
+				zos.putNextEntry(entry);
+
+				try (InputStream is = new BufferedInputStream(dataList.get(name))) {
+					byte[] buf = new byte[1024];
+					for (int len = 0; 0 < (len = is.read(buf));) {
+						zos.write(buf, 0, len);
+					}
+				}
+			}
+			zos.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/**

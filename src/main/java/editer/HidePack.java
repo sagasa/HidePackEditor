@@ -24,7 +24,7 @@ public class HidePack {
 	public static List<Image> ScopeList = new ArrayList<>();
 	/** SoundのMAP Sound */
 	public static List<Sound> SoundList = new ArrayList<>();
-	/** 編集中のパック */
+	/** 編集中のパック  デフォルトを含む*/
 	public static List<HidePack> OpenPacks = new ArrayList<>();
 	/**デフォルトパック*/
 	public static HidePack DefaultPack;

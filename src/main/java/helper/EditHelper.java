@@ -2,6 +2,7 @@ package helper;
 
 import java.lang.reflect.Field;
 
+import javafx.beans.property.Property;
 import localize.LocalizeHandler;
 import types.Info;
 import types.PackInfo;
@@ -45,6 +46,15 @@ public class EditHelper {
 		}
 	}
 
+	/**プロパティを取得*/
+	public static Property<String> getProperty(DataBase data,String type) {
+		try {
+			data.getClass().getField(type);
+
+		} catch (IllegalArgumentException | SecurityException | NoSuchFieldException e) {
+			return null;
+		}
+	}
 
 	/** フィールド名から最大値を取得 */
 	public static Float getMax(Class<? extends DataBase> clazz, String field) {

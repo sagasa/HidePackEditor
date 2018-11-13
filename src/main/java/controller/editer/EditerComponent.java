@@ -1,17 +1,23 @@
 package controller.editer;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import helper.EditHelper;
+import javafx.beans.Observable;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.ObservableValueBase;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -23,11 +29,14 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Callback;
+import javafx.util.converter.NumberStringConverter;
 import localize.LocalizeHandler;
 import types.base.DataBase;
 import types.base.ItemData;
 import types.guns.GunData;
 
+//TODO プロパティを利用してさらに効率化をする
 public class EditerComponent {
 	private static final Logger log = LoggerFactory.getLogger(EditerComponent.class);
 
@@ -42,32 +51,35 @@ public class EditerComponent {
 		editer.getChildren().add(itemInfo);
 	}
 
-	// ItemData用名称+アイコン編集ノード
+
+	/** ItemData用名称+アイコン編集ノード*/
 	private static Region makeItemInfoNode(ItemData data) {
 		VBox root = new VBox();
-		// 表示名
-		root.getChildren()
-				.add(EditNodeBuilder.makeTextSetNode(data, "ITEM_DISPLAYNAME").setChangeListner(new Runnable() {
-					@Override
-					public void run() {
-						RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());
-					}
-				}).build());
-		// 短縮名の使用可否
-		root.getChildren()
-				.add(EditNodeBuilder.makeBooleanSetNode(data, "USE_SHORTNAME").setChangeListner(new Runnable() {
-					@Override
-					public void run() {
-						RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());
-					}
-				}).build());
 		// 短縮名
-		root.getChildren().add(EditNodeBuilder.makeTextSetNode(data, "ITEM_SHORTNAME").setChangeListner(new Runnable() {
+		Node shortname = EditNodeBuilder.makeTextSetNode(data, "ITEM_SHORTNAME").setChangeListner(new Runnable() {
+			@Override
+			public void run() {
+
+			}
+		}).build();
+		// 表示名
+		Node dizplayname = EditNodeBuilder.makeTextSetNode(data, "ITEM_DISPLAYNAME").setChangeListner(new Runnable() {
 			@Override
 			public void run() {
 				RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());
+				if (!data.USE_SHORTNAME) {
+					data.ITEM_SHORTNAME = data.ITEM_DISPLAYNAME;
+				}
 			}
-		}).build());
+		}).build();
+		// 短縮名の使用可否
+		Node useshortname = EditNodeBuilder.makeBooleanSetNode(data, "USE_SHORTNAME").setChangeListner(new Runnable() {
+			@Override
+			public void run() {
+				shortname.setDisable(!data.USE_SHORTNAME);
+			}
+		}).build();
+		root.getChildren().addAll(dizplayname, useshortname, shortname);
 		return root;
 	}
 
@@ -75,7 +87,7 @@ public class EditerComponent {
 
 	public static class EditNodeBuilder {
 		private enum EditNodeType {
-			Text, Number, Boolean
+			Text, Number, Boolean,StringCombo,StringList
 		}
 
 		/** 作成するノードの種類 */
@@ -107,12 +119,29 @@ public class EditerComponent {
 			EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.Boolean);
 			builder.Data = data;
 			builder.Field = field;
-			builder.layoutX=30;
+			builder.layoutX = 30;
 			// Typeチェック
 			if (!(boolean.class.isAssignableFrom(EditHelper.getType(data, field))
 					|| Boolean.class.isAssignableFrom(EditHelper.getType(data, field)))) {
 				log.warn(field + "is not Boolean field");
 			}
+			return builder;
+		}
+
+		/** DataBaseの数値(float,int,double,long)フィールドを編集するノード */
+		public static EditNodeBuilder makeNumberSetNode(DataBase data, String field) {
+			EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.Number);
+			builder.Data = data;
+			builder.Field = field;
+			return builder;
+		}
+
+		/** DataBaseのストリングコンボ型  */
+		public static EditNodeBuilder makeStringComboNode(DataBase data, String field) {
+			EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.Number);
+			builder.Data = data;
+			builder.Field = field;
+
 			return builder;
 		}
 
@@ -151,6 +180,13 @@ public class EditerComponent {
 				// テキストセット
 				AnchorPane root = new AnchorPane();
 				TextField text = new TextField();
+				text.textProperty().bindBidirectional(new SimpleStringProperty());
+				/**
+				 * bind(new ObservableValueBase<String>() {
+				 *
+				 * @Override public String getValue() { return ((ItemData)Data).ITEM_SHORTNAME;
+				 *           } });
+				 */
 				Label label = new Label(LocalizeHandler.getLocalizedName(Data, Field) + ":");
 				double textFieldX = 100;
 
@@ -169,13 +205,27 @@ public class EditerComponent {
 					});
 				} else {
 					// 数値保存
+					text.textProperty().addListener(new ChangeListener<String>() {
+						@Override
+						public void changed(ObservableValue<? extends String> observable, String oldValue,
+								String newValue) {
+							// 数値でなければ戻す
+							if (!NumberUtils.isNumber(newValue)) {
+								text.setText(oldValue);
+							}
+							new NumberStringConverter().fromString("10");
+							// EditHelper.setData(Data, Field, text.getText());
+							for (Runnable listener : ChangeListener) {
+								listener.run();
+							}
+						}
+					});
 				}
 				root.resize(sizeX, sizeY);
 				root.setLayoutX(layoutX);
 				root.setLayoutY(layoutY);
 
-				text.setBackground(
-						new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), new Insets(2))));
+				text.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), new Insets(2))));
 				text.setText(EditHelper.getData(Data, Field).toString());
 				text.setFont(Font.font(10));
 				text.setLayoutX(sizeX - textFieldX);
@@ -190,19 +240,27 @@ public class EditerComponent {
 			} else if (Type == EditNodeType.Boolean) {
 				AnchorPane root = new AnchorPane();
 				CheckBox check = new CheckBox(LocalizeHandler.getLocalizedName(Data, Field));
-				root.resize(sizeX, sizeY);
-				check.setSelected((boolean) EditHelper.getData(Data, Field));
-				check.addEventFilter(ActionEvent.ACTION, new EventHandler<ActionEvent>(){
+				root.setPrefSize(sizeX, sizeY);
+				check.addEventFilter(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent e) {
 						EditHelper.setData(Data, Field, check.isSelected());
+						for (Runnable listener : ChangeListener) {
+							listener.run();
+						}
 					}
 				});
-				check.setStyle("-fx-background-color: black;");
-				check.setPrefSize(sizeX-layoutX, sizeY-layoutY);
-				check.setLayoutX(layoutX);
+				check.setSelected((boolean) EditHelper.getData(Data, Field));
+				check.setPrefSize(sizeX - layoutX, sizeY - layoutY);
+				check.setLayoutX(layoutX);// TODO なぜか位置調整ができない
 				check.setLayoutX(layoutY);
 				root.getChildren().add(check);
+				return root;
+			}else if(Type==EditNodeType.StringCombo) {
+				AnchorPane root = new AnchorPane();
+
+				ComboBox<String> combo = new ComboBox<>();
+				combo.getSelectionModel().getSelectedItem();
 				return root;
 			}
 			return null;
