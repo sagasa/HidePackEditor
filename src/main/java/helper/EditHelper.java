@@ -2,7 +2,12 @@ package helper;
 
 import java.lang.reflect.Field;
 
+import com.sun.javafx.binding.ExpressionHelper;
+
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import localize.LocalizeHandler;
 import types.Info;
 import types.PackInfo;
@@ -46,10 +51,12 @@ public class EditHelper {
 		}
 	}
 
-	/**プロパティを取得*/
-	public static Property<String> getProperty(DataBase data,String type) {
+	/** プロパティを取得 */
+	public static Property<?> getProperty(DataBase data, String type) {
 		try {
 			data.getClass().getField(type);
+			return new HideProperty<String>();
+
 
 		} catch (IllegalArgumentException | SecurityException | NoSuchFieldException e) {
 			return null;
@@ -59,7 +66,7 @@ public class EditHelper {
 	/** フィールド名から最大値を取得 */
 	public static Float getMax(Class<? extends DataBase> clazz, String field) {
 		try {
-			Info info = getInfo(clazz,field);
+			Info info = getInfo(clazz, field);
 			if (info != null) {
 				return info.Max();
 			}
@@ -72,7 +79,7 @@ public class EditHelper {
 	/** フィールド名から最小値を取得 */
 	public static Float getMin(Class<? extends DataBase> clazz, String field) {
 		try {
-			Info info = getInfo(clazz,field);
+			Info info = getInfo(clazz, field);
 			if (info != null) {
 				return info.Min();
 			}
@@ -85,7 +92,7 @@ public class EditHelper {
 	/** フィールド名からカテゴリを取得 */
 	public static int getCate(Class<? extends DataBase> clazz, String field) {
 		try {
-			Info info = getInfo(clazz,field);
+			Info info = getInfo(clazz, field);
 			if (info != null) {
 				return info.Cate();
 			}
@@ -98,7 +105,7 @@ public class EditHelper {
 	/** フィールド名からスケールを取得 */
 	public static String getScale(Class<? extends DataBase> clazz, String field) {
 		try {
-			Info info = getInfo(clazz,field);
+			Info info = getInfo(clazz, field);
 			if (info != null) {
 				return info.Scale();
 			}
@@ -108,7 +115,7 @@ public class EditHelper {
 		return "1";
 	}
 
-	private static Info getInfo(Class<? extends DataBase> clazz, String field){
+	private static Info getInfo(Class<? extends DataBase> clazz, String field) {
 		try {
 			return clazz.getField(field).getAnnotation(Info.class);
 		} catch (NoSuchFieldException | SecurityException e) {
@@ -121,13 +128,15 @@ public class EditHelper {
 		return LocalizeHandler.getLocalizedName(getUnlocalizedName(data.getClass(), field));
 	}
 
-	/**UnlocalizedNameのフォーマット*/
-	public static String getUnlocalizedName(Class<?extends DataBase> clazz, String field){
+	/** UnlocalizedNameのフォーマット */
+	public static String getUnlocalizedName(Class<? extends DataBase> clazz, String field) {
 		try {
-			return (clazz.getSimpleName()+"."+clazz.getField(field).getName().replaceAll("_", ".")).toLowerCase();
+			return (clazz.getSimpleName() + "." + clazz.getField(field).getName().replaceAll("_", ".")).toLowerCase();
 		} catch (NoSuchFieldException | SecurityException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
+
+
 }

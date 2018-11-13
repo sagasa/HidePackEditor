@@ -5,8 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import helper.EditHelper;
+import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ObservableValueBase;
@@ -51,8 +54,7 @@ public class EditerComponent {
 		editer.getChildren().add(itemInfo);
 	}
 
-
-	/** ItemData用名称+アイコン編集ノード*/
+	/** ItemData用名称+アイコン編集ノード */
 	private static Region makeItemInfoNode(ItemData data) {
 		VBox root = new VBox();
 		// 短縮名
@@ -87,7 +89,7 @@ public class EditerComponent {
 
 	public static class EditNodeBuilder {
 		private enum EditNodeType {
-			Text, Number, Boolean,StringCombo,StringList
+			Text, Number, Boolean, StringCombo, StringList
 		}
 
 		/** 作成するノードの種類 */
@@ -136,7 +138,7 @@ public class EditerComponent {
 			return builder;
 		}
 
-		/** DataBaseのストリングコンボ型  */
+		/** DataBaseのストリングコンボ型 */
 		public static EditNodeBuilder makeStringComboNode(DataBase data, String field) {
 			EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.Number);
 			builder.Data = data;
@@ -180,13 +182,31 @@ public class EditerComponent {
 				// テキストセット
 				AnchorPane root = new AnchorPane();
 				TextField text = new TextField();
-				text.textProperty().bindBidirectional(new SimpleStringProperty());
-				/**
-				 * bind(new ObservableValueBase<String>() {
-				 *
-				 * @Override public String getValue() { return ((ItemData)Data).ITEM_SHORTNAME;
-				 *           } });
-				 */
+
+				text.textProperty().bindBidirectional(new StringPropertyBase() {
+
+					@Override
+					public String get() {
+						return EditHelper.getData(Data, Field).toString();
+					}
+
+					@Override
+					public void set(String arg0) {
+						EditHelper.setData(Data, Field, arg0);
+					}
+
+					@Override
+					public String getName() {
+						return "";
+					}
+
+					@Override
+					public Object getBean() {
+						return null;
+					}
+				});
+
+
 				Label label = new Label(LocalizeHandler.getLocalizedName(Data, Field) + ":");
 				double textFieldX = 100;
 
@@ -256,7 +276,7 @@ public class EditerComponent {
 				check.setLayoutX(layoutY);
 				root.getChildren().add(check);
 				return root;
-			}else if(Type==EditNodeType.StringCombo) {
+			} else if (Type == EditNodeType.StringCombo) {
 				AnchorPane root = new AnchorPane();
 
 				ComboBox<String> combo = new ComboBox<>();
