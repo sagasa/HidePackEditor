@@ -24,8 +24,12 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 
+import controller.editer.EditerComponent;
 import editer.HidePack;
 import editer.Main;
 import editer.mainWindow.MainWindow;
@@ -37,6 +41,7 @@ import types.guns.BulletData;
 import types.guns.GunData;
 
 public class PackIO {
+	private static final Logger log = LoggerFactory.getLogger(PackIO.class);
 	public static boolean isChanged = false;
 	private static Gson gson = new Gson();
 
@@ -172,9 +177,6 @@ public class PackIO {
 		// パックを書く
 		if (selected == 0) {
 			File file = filechooser.getSelectedFile();
-			if (!file.getPath().endsWith(".zip")) {
-				file = new File(file.getAbsolutePath() + ".zip");
-			}
 			export(file);
 			Main.packPath = filechooser.getSelectedFile().getAbsolutePath();
 		}
@@ -192,6 +194,12 @@ public class PackIO {
 
 	/** パッキングして出力する */
 	private static void export(File packFile) {
+		// 出力ディレクトリが使えるか
+		if (!packFile.isDirectory()) {
+			log.error("IO error " + packFile.getAbsolutePath() + " is not dir");
+			return;
+		}
+
 		// データをまとめる
 		Map<Long, List<Entry>> dataMap = new HashMap();
 		for (HidePack pack : HidePack.OpenPacks) {
@@ -199,7 +207,8 @@ public class PackIO {
 			if (!pack.Pack.isReference) {
 				dataMap.put(pack.Pack.PackUID, new ArrayList());
 				// パックデータ
-				dataMap.get(pack.Pack.PackUID).add(new Entry("pack.json", new ByteArrayInputStream(pack.Pack.MakeJsonData().getBytes())));
+				dataMap.get(pack.Pack.PackUID)
+						.add(new Entry("pack.json", new ByteArrayInputStream(pack.Pack.MakeJsonData().getBytes())));
 			}
 		}
 
@@ -245,31 +254,39 @@ public class PackIO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		for (String name : Main.SoundMap.keySet()) {
-			dataList.put("sounds/" + name + ".ogg", new ByteArrayInputStream(Main.SoundMap.get(name)));
+		for (Sound d : HidePack.SoundList) {
+			// 参照ではなければ
+			if (!d.isReference) {
+				dataMap.get(d.PackUID)
+						.add(new Entry("sound/" + d.DisplayName + ".ogg", new ByteArrayInputStream(d.Sound)));
+			}
+		}
+		// 内容がないエントリを削除
+		for (Long id : dataMap.keySet()) {
+			if (dataMap.get(id).size() <= 1) {
+				dataMap.remove(id);
+				log.debug(HidePack.getPack(id).Pack.PACK_NAME + " dont have any contents");
+			}
 		}
 
-		ZipOutputStream zos;
 		try {
-			if (packFile.exists()) {
-				packFile.createNewFile();
-			}
-
-			zos = new ZipOutputStream(new FileOutputStream(packFile), Charset.forName("Shift_JIS"));
-			for (String name : dataList.keySet()) {
-				// System.out.println(name);
-				ZipEntry entry = new ZipEntry(name);
-				zos.putNextEntry(entry);
-
-				try (InputStream is = new BufferedInputStream(dataList.get(name))) {
-					byte[] buf = new byte[1024];
-					for (int len = 0; 0 < (len = is.read(buf));) {
-						zos.write(buf, 0, len);
+			// 全パック出力
+			for (Long id : dataMap.keySet()) {
+				ZipOutputStream zos = new ZipOutputStream(
+						new FileOutputStream(new File(packFile, "/" + HidePack.getPack(id).Pack.PACK_NAME) + ".zip"),
+						Charset.forName("Shift_JIS"));
+				for (Entry data : dataMap.get(id)) {
+					ZipEntry entry = new ZipEntry(data.Name);
+					zos.putNextEntry(entry);
+					try (InputStream is = new BufferedInputStream(data.Data)) {
+						byte[] buf = new byte[1024];
+						for (int len = 0; 0 < (len = is.read(buf));) {
+							zos.write(buf, 0, len);
+						}
 					}
+					zos.close();
 				}
 			}
-			zos.close();
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

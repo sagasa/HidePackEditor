@@ -5,15 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import helper.EditHelper;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.beans.value.ObservableValueBase;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -32,7 +28,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
 import localize.LocalizeHandler;
 import types.base.DataBase;
@@ -70,7 +65,7 @@ public class EditerComponent {
 			public void run() {
 				RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());
 				if (!data.USE_SHORTNAME) {
-					data.ITEM_SHORTNAME = data.ITEM_DISPLAYNAME;
+					((Property<String>)data.Property.get("ITEM_SHORTNAME")).setValue(data.ITEM_DISPLAYNAME);
 				}
 			}
 		}).build();
@@ -78,7 +73,7 @@ public class EditerComponent {
 		Node useshortname = EditNodeBuilder.makeBooleanSetNode(data, "USE_SHORTNAME").setChangeListner(new Runnable() {
 			@Override
 			public void run() {
-				shortname.setDisable(!data.USE_SHORTNAME);
+				shortname.disableProperty().bindBidirectional(((BooleanProperty)data.Property.get("USE_SHORTNAME")));
 			}
 		}).build();
 		root.getChildren().addAll(dizplayname, useshortname, shortname);
@@ -183,29 +178,7 @@ public class EditerComponent {
 				AnchorPane root = new AnchorPane();
 				TextField text = new TextField();
 
-				text.textProperty().bindBidirectional(new StringPropertyBase() {
-
-					@Override
-					public String get() {
-						return EditHelper.getData(Data, Field).toString();
-					}
-
-					@Override
-					public void set(String arg0) {
-						EditHelper.setData(Data, Field, arg0);
-					}
-
-					@Override
-					public String getName() {
-						return "";
-					}
-
-					@Override
-					public Object getBean() {
-						return null;
-					}
-				});
-
+				text.textProperty().bindBidirectional((Property<String>) Data.Property.get(Field));
 
 				Label label = new Label(LocalizeHandler.getLocalizedName(Data, Field) + ":");
 				double textFieldX = 100;
@@ -217,7 +190,7 @@ public class EditerComponent {
 						public void changed(ObservableValue<? extends String> observable, String oldValue,
 								String newValue) {
 							RootController.INSTANCE.gunList.refresh();
-							EditHelper.setData(Data, Field, text.getText());
+						//	EditHelper.setData(Data, Field, text.getText());
 							for (Runnable listener : ChangeListener) {
 								listener.run();
 							}

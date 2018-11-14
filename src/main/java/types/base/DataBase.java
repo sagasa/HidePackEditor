@@ -1,8 +1,17 @@
 package types.base;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import javafx.beans.property.BooleanPropertyBase;
+import javafx.beans.property.FloatPropertyBase;
+import javafx.beans.property.IntegerPropertyBase;
+import javafx.beans.property.Property;
+import javafx.beans.property.StringPropertyBase;
 
 /**
  * パックのデータのスーパークラス クローン可能 publicフィールドはすべてクローン可能なクラスにしてください
@@ -10,10 +19,148 @@ import com.google.gson.GsonBuilder;
  */
 public abstract class DataBase implements Cloneable {
 
-	/**パックデータ エディタでのみ使用*/
+	/** パックデータ エディタでのみ使用 */
 	transient public long PackUID;
-	/**パックデータ エディタでのみ使用*/
+	/** パックデータ エディタでのみ使用 */
 	transient public boolean isReference = false;
+	/** パックデータ エディタでのみ使用 Integer Float Boolean String のフィールドのプロパティ */
+	transient public Map<String, Property<?>> Property = new HashMap<>();
+
+	/** コンストラクタでプロパティMapを作成 */
+	public DataBase() {
+		DataBase This = this;
+		for (Field field : this.getClass().getFields()) {
+			if (field.getType().isAssignableFrom(int.class) || field.getType().isAssignableFrom(Integer.class)) {
+				// Integer
+				Property.put(field.getName(), new IntegerPropertyBase() {
+					@Override
+					public String getName() {
+						return "";
+					}
+
+					@Override
+					public Object getBean() {
+						return null;
+					}
+
+					@Override
+					public void set(int arg0) {
+						try {
+							field.set(This, arg0);
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public int get() {
+						try {
+							return field.getInt(This);
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							e.printStackTrace();
+						}
+						return 0;
+					}
+				});
+			} else if (field.getType().isAssignableFrom(float.class) || field.getType().isAssignableFrom(Float.class)) {
+				//Float
+				Property.put(field.getName(), new FloatPropertyBase() {
+					@Override
+					public String getName() {
+						return "";
+					}
+
+					@Override
+					public Object getBean() {
+						return null;
+					}
+
+					@Override
+					public void set(float arg0) {
+						try {
+							field.set(This, arg0);
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public float get() {
+						try {
+							return field.getFloat(This);
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							e.printStackTrace();
+						}
+						return 0;
+					}
+				});
+			} else if (field.getType().isAssignableFrom(boolean.class) || field.getType().isAssignableFrom(Boolean.class)) {
+				//Boolean
+				Property.put(field.getName(), new BooleanPropertyBase() {
+					@Override
+					public String getName() {
+						return "";
+					}
+
+					@Override
+					public Object getBean() {
+						return null;
+					}
+
+					@Override
+					public void set(boolean arg0) {
+						try {
+							field.set(This, arg0);
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public boolean get() {
+						try {
+							return field.getBoolean(This);
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							e.printStackTrace();
+						}
+						return false;
+					}
+				});
+			} else if (field.getType().isAssignableFrom(String.class)) {
+				//String
+				Property.put(field.getName(), new StringPropertyBase() {
+					@Override
+					public String getName() {
+						return "";
+					}
+
+					@Override
+					public Object getBean() {
+						return null;
+					}
+
+					@Override
+					public void set(String arg0) {
+						try {
+							field.set(This, arg0);
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public String get() {
+						try {
+							return (String) field.get(This);
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							e.printStackTrace();
+						}
+						return null;
+					}
+				});
+			}
+		}
+	}
 
 	/** JsonObjectを作成 */
 	public String MakeJsonData() {
@@ -34,7 +181,7 @@ public abstract class DataBase implements Cloneable {
 		try {
 			for (Field f : clazz.getFields()) {
 				f.set(this, f.get(data));
-				System.out.println("overwrite"+f.getName());
+				System.out.println("overwrite" + f.getName());
 			}
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			return false;
