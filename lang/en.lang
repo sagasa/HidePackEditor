@@ -152,3 +152,7 @@ recoil.property = recoil.property
 sound.property = sound.property
 explosion.property = explosion.property
 packinfo.property = packinfo.property
+gundata.item.shortname.p = gundata.item.shortname.p
+gundata.item.displayname.p = gundata.item.displayname.p
+bulletdata.item.shortname.p = bulletdata.item.shortname.p
+bulletdata.item.displayname.p = bulletdata.item.displayname.p

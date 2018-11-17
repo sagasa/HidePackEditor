@@ -1,22 +1,13 @@
 package helper;
 
-import java.lang.reflect.Field;
-
-import com.sun.javafx.binding.ExpressionHelper;
-
-import javafx.beans.InvalidationListener;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.StringProperty;
 import localize.LocalizeHandler;
 import types.Info;
-import types.PackInfo;
 import types.base.DataBase;
-import types.effect.Recoil;
-import types.effect.Explosion;
-import types.effect.Sound;
-import types.guns.BulletData;
-import types.guns.GunData;
 
 /** リフレクションを利用したTypes編集ヘルパー */
 public class EditHelper {
@@ -48,18 +39,6 @@ public class EditHelper {
 			return true;
 		} catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e) {
 			return false;
-		}
-	}
-
-	/** プロパティを取得 */
-	public static Property<?> getProperty(DataBase data, String type) {
-		try {
-			data.getClass().getField(type);
-			return new HideProperty<String>();
-
-
-		} catch (IllegalArgumentException | SecurityException | NoSuchFieldException e) {
-			return null;
 		}
 	}
 
@@ -121,6 +100,34 @@ public class EditHelper {
 		} catch (NoSuchFieldException | SecurityException e) {
 			return null;
 		}
+	}
+
+	/**プロパティを取得*/
+	public static StringProperty getPropertyString(DataBase data, String type){
+		Property<?> property = data.Property.get(type);
+		if(property!=null&&property instanceof StringProperty&&getType(data, type).isAssignableFrom(String.class)) {
+			return (StringProperty) property;
+		}
+		return null;
+	}
+	/**プロパティを取得*/
+	public static BooleanProperty getPropertyBoolean(DataBase data, String type){
+		Property<?> property = data.Property.get(type);
+		if(property!=null&&property instanceof BooleanProperty&&(getType(data, type).isAssignableFrom(boolean.class)||getType(data, type).isAssignableFrom(Boolean.class))) {
+			return (BooleanProperty) property;
+		}
+		return null;
+	}
+	/**プロパティを取得*/
+	public static Property<Number> getPropertyNumber(DataBase data, String type){
+		Property<?> property = data.Property.get(type);
+		if(property!=null) {
+			if(getType(data, type).isAssignableFrom(int.class)||getType(data, type).isAssignableFrom(Integer.class))
+				return (IntegerProperty) property;
+			if(getType(data, type).isAssignableFrom(float.class)||getType(data, type).isAssignableFrom(Float.class))
+				return (FloatProperty) property;
+		}
+		return null;
 	}
 
 	/** ローカライズした名前を取得 */

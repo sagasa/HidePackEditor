@@ -1,13 +1,14 @@
 package controller.editer;
 
+import java.lang.reflect.Field;
+import java.util.Locale;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import helper.EditHelper;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.StringPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -19,6 +20,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -28,6 +30,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.converter.CurrencyStringConverter;
 import javafx.util.converter.NumberStringConverter;
 import localize.LocalizeHandler;
 import types.base.DataBase;
@@ -42,41 +45,64 @@ public class EditerComponent {
 	public static void writeGunEditer(Pane editer, GunData data) {
 		// Cate1
 		Region itemInfo = makeItemInfoNode(data);
-		itemInfo.setStyle("-fx-background-color: lightGray;");
 		itemInfo.setLayoutX(5);
 		itemInfo.setLayoutY(5);
 		itemInfo.setPrefSize(160, 100);
+		Region cate0 = makeCateEditPanel(data, 0);
+		cate0.setLayoutX(300);
+		cate0.setLayoutY(5);
+		editer.getChildren().add(cate0);
 		editer.getChildren().add(itemInfo);
 	}
 
 	/** ItemData用名称+アイコン編集ノード */
 	private static Region makeItemInfoNode(ItemData data) {
 		VBox root = new VBox();
+		root.setStyle("-fx-background-color: lightGray;");
 		// 短縮名
-		Node shortname = EditNodeBuilder.makeTextSetNode(data, "ITEM_SHORTNAME").setChangeListner(new Runnable() {
-			@Override
-			public void run() {
-
-			}
-		}).build();
+		Node shortname = EditNodeBuilder.makeTextSetNode(data, "ITEM_SHORTNAME").build();
 		// 表示名
 		Node dizplayname = EditNodeBuilder.makeTextSetNode(data, "ITEM_DISPLAYNAME").setChangeListner(new Runnable() {
 			@Override
 			public void run() {
 				RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());
-				if (!data.USE_SHORTNAME) {
-					((Property<String>)data.Property.get("ITEM_SHORTNAME")).setValue(data.ITEM_DISPLAYNAME);
-				}
 			}
 		}).build();
 		// 短縮名の使用可否
 		Node useshortname = EditNodeBuilder.makeBooleanSetNode(data, "USE_SHORTNAME").setChangeListner(new Runnable() {
 			@Override
 			public void run() {
-				shortname.disableProperty().bindBidirectional(((BooleanProperty)data.Property.get("USE_SHORTNAME")));
+				shortname.setDisable(!data.USE_SHORTNAME);
+				if (!data.USE_SHORTNAME) {
+					EditHelper.getPropertyString(data, "ITEM_SHORTNAME")
+							.bindBidirectional(EditHelper.getPropertyString(data, "ITEM_DISPLAYNAME"));
+				} else {
+					EditHelper.getPropertyString(data, "ITEM_SHORTNAME")
+							.unbindBidirectional(EditHelper.getPropertyString(data, "ITEM_DISPLAYNAME"));
+				}
 			}
 		}).build();
 		root.getChildren().addAll(dizplayname, useshortname, shortname);
+		return root;
+	}
+
+	/** ItemData用名称+アイコン編集ノード */
+	private static Region makeCateEditPanel(ItemData data, int cate) {
+		VBox root = new VBox();
+		root.setStyle("-fx-background-color: lightGray;");
+		for (Field field : data.getClass().getFields()) {
+			int c = EditHelper.getCate(data.getClass(), field.getName());
+			if (c == cate) {
+				if (EditHelper.getPropertyString(data, field.getName()) != null) {
+					root.getChildren().add(EditNodeBuilder.makeTextSetNode(data, field.getName()).build());
+				} else if (EditHelper.getPropertyBoolean(data, field.getName()) != null) {
+					root.getChildren().add(EditNodeBuilder.makeBooleanSetNode(data, field.getName()).build());
+				} else if (EditHelper.getPropertyNumber(data, field.getName()) != null) {
+					root.getChildren().add(EditNodeBuilder.makeNumberSetNode(data, field.getName()).build());
+				}
+			}
+
+		}
 		return root;
 	}
 
@@ -135,7 +161,7 @@ public class EditerComponent {
 
 		/** DataBaseのストリングコンボ型 */
 		public static EditNodeBuilder makeStringComboNode(DataBase data, String field) {
-			EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.Number);
+			EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.StringCombo);
 			builder.Data = data;
 			builder.Field = field;
 
@@ -143,7 +169,7 @@ public class EditerComponent {
 		}
 
 		/** 変更通知リスナー */
-		private Runnable[] ChangeListener;
+		private Runnable[] ChangeListener = new Runnable[0];
 
 		/** 変更されたタイミングで呼ばれる */
 		public EditNodeBuilder setChangeListner(Runnable... listener) {
@@ -177,36 +203,44 @@ public class EditerComponent {
 				// テキストセット
 				AnchorPane root = new AnchorPane();
 				TextField text = new TextField();
-
-				text.textProperty().bindBidirectional((Property<String>) Data.Property.get(Field));
-
 				Label label = new Label(LocalizeHandler.getLocalizedName(Data, Field) + ":");
 				double textFieldX = 100;
 
 				if (Type == EditNodeType.Text) {
+					text.textProperty().bindBidirectional(EditHelper.getPropertyString(Data, Field));
 					// テキスト保存
 					text.textProperty().addListener(new ChangeListener<String>() {
 						@Override
 						public void changed(ObservableValue<? extends String> observable, String oldValue,
 								String newValue) {
 							RootController.INSTANCE.gunList.refresh();
-						//	EditHelper.setData(Data, Field, text.getText());
+							// EditHelper.setData(Data, Field, text.getText());
 							for (Runnable listener : ChangeListener) {
 								listener.run();
 							}
 						}
 					});
-				} else {
+				} else if(Type==EditNodeType.Number){
+					text.textProperty().bindBidirectional(EditHelper.getPropertyNumber(Data, Field),
+							new NumberStringConverter());
+
+					TextFormatter<Number> currencyFormatter = new TextFormatter<>(
+
+					        change -> {
+
+					    // 選択範囲は1文字目より前にできない
+					    change.setAnchor(Math.max(1, change.getAnchor()));
+					    change.setCaretPosition(Math.max(1, change.getCaretPosition()));
+					    // テキスト変更範囲は1文字目より前にできない
+					    change.setRange(Math.max(1, change.getRangeStart()), Math.max(1, change.getRangeEnd()));
+					    return change;
+					});
+					text.setTextFormatter(currencyFormatter);
 					// 数値保存
 					text.textProperty().addListener(new ChangeListener<String>() {
 						@Override
 						public void changed(ObservableValue<? extends String> observable, String oldValue,
 								String newValue) {
-							// 数値でなければ戻す
-							if (!NumberUtils.isNumber(newValue)) {
-								text.setText(oldValue);
-							}
-							new NumberStringConverter().fromString("10");
 							// EditHelper.setData(Data, Field, text.getText());
 							for (Runnable listener : ChangeListener) {
 								listener.run();
@@ -219,7 +253,7 @@ public class EditerComponent {
 				root.setLayoutY(layoutY);
 
 				text.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), new Insets(2))));
-				text.setText(EditHelper.getData(Data, Field).toString());
+				// text.setText(EditHelper.getData(Data, Field).toString());
 				text.setFont(Font.font(10));
 				text.setLayoutX(sizeX - textFieldX);
 				text.setPrefSize(textFieldX, sizeY);
@@ -248,6 +282,10 @@ public class EditerComponent {
 				check.setLayoutX(layoutX);// TODO なぜか位置調整ができない
 				check.setLayoutX(layoutY);
 				root.getChildren().add(check);
+				// 1回変更イベントを呼んでおく
+				for (Runnable listener : ChangeListener) {
+					listener.run();
+				}
 				return root;
 			} else if (Type == EditNodeType.StringCombo) {
 				AnchorPane root = new AnchorPane();
