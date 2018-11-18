@@ -102,30 +102,51 @@ public class EditHelper {
 		}
 	}
 
-	/**プロパティを取得*/
-	public static StringProperty getPropertyString(DataBase data, String type){
+	/** プロパティを取得 */
+	public static StringProperty getPropertyString(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
-		if(property!=null&&property instanceof StringProperty&&getType(data, type).isAssignableFrom(String.class)) {
+		if (property != null && property instanceof StringProperty
+				&& getType(data, type).isAssignableFrom(String.class)) {
 			return (StringProperty) property;
 		}
 		return null;
 	}
-	/**プロパティを取得*/
-	public static BooleanProperty getPropertyBoolean(DataBase data, String type){
+
+	/** プロパティを取得 */
+	public static BooleanProperty getPropertyBoolean(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
-		if(property!=null&&property instanceof BooleanProperty&&(getType(data, type).isAssignableFrom(boolean.class)||getType(data, type).isAssignableFrom(Boolean.class))) {
+		if (property != null && property instanceof BooleanProperty
+				&& (getType(data, type).isAssignableFrom(boolean.class)
+						|| getType(data, type).isAssignableFrom(Boolean.class))) {
 			return (BooleanProperty) property;
 		}
 		return null;
 	}
-	/**プロパティを取得*/
-	public static Property<Number> getPropertyNumber(DataBase data, String type){
+
+	/** プロパティを取得 FloatとIntegerのみ */
+	public static Property<Number> getPropertyNumber(DataBase data, String type) {
+		if (getPropertyFloat(data, type) != null)
+			return getPropertyFloat(data, type);
+		else
+			return getPropertyInteger(data, type);
+	}
+
+	/** プロパティを取得 */
+	public static FloatProperty getPropertyFloat(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
-		if(property!=null) {
-			if(getType(data, type).isAssignableFrom(int.class)||getType(data, type).isAssignableFrom(Integer.class))
-				return (IntegerProperty) property;
-			if(getType(data, type).isAssignableFrom(float.class)||getType(data, type).isAssignableFrom(Float.class))
+		if (property != null) {
+			if (getType(data, type).isAssignableFrom(float.class) || getType(data, type).isAssignableFrom(Float.class))
 				return (FloatProperty) property;
+		}
+		return null;
+	}
+
+	/** プロパティを取得 */
+	public static IntegerProperty getPropertyInteger(DataBase data, String type) {
+		Property<?> property = data.Property.get(type);
+		if (property != null) {
+			if (getType(data, type).isAssignableFrom(int.class) || getType(data, type).isAssignableFrom(Integer.class))
+				return (IntegerProperty) property;
 		}
 		return null;
 	}
@@ -144,6 +165,5 @@ public class EditHelper {
 		}
 		return null;
 	}
-
 
 }

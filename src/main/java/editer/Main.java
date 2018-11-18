@@ -22,7 +22,6 @@ public class Main extends Application {
 		LocalizeHandler.setLang("en");
 		PackIO.makePack();
 		// new MainWindow();
-
 		launch(arg);
 	}
 

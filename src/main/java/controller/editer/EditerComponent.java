@@ -2,6 +2,7 @@ package controller.editer;
 
 import java.lang.reflect.Field;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import helper.EditHelper;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -31,6 +34,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.converter.CurrencyStringConverter;
+import javafx.util.converter.FloatStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.NumberStringConverter;
 import localize.LocalizeHandler;
 import types.base.DataBase;
@@ -197,6 +202,9 @@ public class EditerComponent {
 			return this;
 		}
 
+		/** 数値以外のパターン */
+		private static final Pattern notNumber = Pattern.compile("[^0-9]+");
+
 		/** ノード作成処理 */
 		public Node build() {
 			if (Type == EditNodeType.Number || Type == EditNodeType.Text) {
@@ -220,21 +228,47 @@ public class EditerComponent {
 							}
 						}
 					});
-				} else if(Type==EditNodeType.Number){
-					text.textProperty().bindBidirectional(EditHelper.getPropertyNumber(Data, Field),
-							new NumberStringConverter());
+				} else if (Type == EditNodeType.Number) {
+					// FloatかIntegerか判別
+					if (EditHelper.getPropertyFloat(Data, Field) != null) {
+						text.textProperty().bindBidirectional((Property) EditHelper.getPropertyFloat(Data, Field),
+								new FloatStringConverter());
+					} else {
+						text.textProperty().bindBidirectional((Property) EditHelper.getPropertyInteger(Data, Field),
+								new IntegerStringConverter());
+					}
 
 					TextFormatter<Number> currencyFormatter = new TextFormatter<>(
 
-					        change -> {
-
-					    // 選択範囲は1文字目より前にできない
-					    change.setAnchor(Math.max(1, change.getAnchor()));
-					    change.setCaretPosition(Math.max(1, change.getCaretPosition()));
-					    // テキスト変更範囲は1文字目より前にできない
-					    change.setRange(Math.max(1, change.getRangeStart()), Math.max(1, change.getRangeEnd()));
-					    return change;
-					});
+							change -> {
+								String newStr = notNumber.matcher(change.getText()).replaceAll("");
+								int diffcount = change.getText().length() - newStr.length();
+								change.setAnchor(change.getAnchor() - diffcount);
+								change.setCaretPosition(change.getCaretPosition() - diffcount);
+								// Floatなら小数点を消さないように
+								if (change.getControlText().contains(".")) {
+									//小数点の上がなければ
+									if (change.isDeleted() && 0 == change.getControlNewText().indexOf(".")&&change.getAnchor()==change.getCaretPosition() ) {
+										newStr = newStr + "0";
+									}
+									// 小数点を消したならなかったことにする
+									if (change.isDeleted() && !change.getControlNewText().contains(".")) {
+										newStr = newStr + ".";
+										//後ろに数値がなければ
+										if(change.getControlNewText()
+											.length() == change.getCaretPosition()) {
+											newStr = newStr + "0";
+										}
+									}
+									// 小数点以下がすべてなければ0を追加
+									if (change.isDeleted() && change.getControlNewText()
+											.length() == change.getControlNewText().indexOf(".") + 1) {
+										newStr = newStr + "0";
+									}
+								}
+								change.setText(newStr);
+								return change;
+							});
 					text.setTextFormatter(currencyFormatter);
 					// 数値保存
 					text.textProperty().addListener(new ChangeListener<String>() {
