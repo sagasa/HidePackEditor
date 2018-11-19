@@ -203,7 +203,7 @@ public class EditerComponent {
 		}
 
 		/** 数値以外のパターン */
-		private static final Pattern notNumber = Pattern.compile("[^0-9]+");
+		private static final Pattern notNumber = Pattern.compile("[^0-9\\.]+");
 
 		/** ノード作成処理 */
 		public Node build() {
@@ -245,27 +245,6 @@ public class EditerComponent {
 								int diffcount = change.getText().length() - newStr.length();
 								change.setAnchor(change.getAnchor() - diffcount);
 								change.setCaretPosition(change.getCaretPosition() - diffcount);
-								// Floatなら小数点を消さないように
-								if (change.getControlText().contains(".")) {
-									//小数点の上がなければ
-									if (change.isDeleted() && 0 == change.getControlNewText().indexOf(".")&&change.getAnchor()==change.getCaretPosition() ) {
-										newStr = newStr + "0";
-									}
-									// 小数点を消したならなかったことにする
-									if (change.isDeleted() && !change.getControlNewText().contains(".")) {
-										newStr = newStr + ".";
-										//後ろに数値がなければ
-										if(change.getControlNewText()
-											.length() == change.getCaretPosition()) {
-											newStr = newStr + "0";
-										}
-									}
-									// 小数点以下がすべてなければ0を追加
-									if (change.isDeleted() && change.getControlNewText()
-											.length() == change.getControlNewText().indexOf(".") + 1) {
-										newStr = newStr + "0";
-									}
-								}
 								change.setText(newStr);
 								return change;
 							});
