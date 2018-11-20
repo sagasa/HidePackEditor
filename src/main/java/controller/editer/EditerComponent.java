@@ -1,16 +1,13 @@
 package controller.editer;
 
 import java.lang.reflect.Field;
-import java.util.Locale;
+import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import helper.EditHelper;
-import javafx.beans.property.FloatProperty;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,6 +21,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -33,10 +33,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.util.converter.CurrencyStringConverter;
+import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
-import javafx.util.converter.NumberStringConverter;
 import localize.LocalizeHandler;
 import types.base.DataBase;
 import types.base.ItemData;
@@ -70,7 +69,7 @@ public class EditerComponent {
 		Node dizplayname = EditNodeBuilder.makeTextSetNode(data, "ITEM_DISPLAYNAME").setChangeListner(new Runnable() {
 			@Override
 			public void run() {
-				RootController.INSTANCE.gunList.setItems(RootController.INSTANCE.gunList.getItems().sorted());
+				RootController.writeList();
 			}
 		}).build();
 		// 短縮名の使用可否
@@ -203,7 +202,8 @@ public class EditerComponent {
 		}
 
 		/** 数値以外のパターン */
-		private static final Pattern notNumber = Pattern.compile("[^0-9\\.]+");
+		private static final Pattern FloatPattern = Pattern.compile("[^0-9\\.-]+");
+		private static final Pattern IntPattern = Pattern.compile("[^0-9-]+");
 
 		/** ノード作成処理 */
 		public Node build() {
@@ -213,7 +213,15 @@ public class EditerComponent {
 				TextField text = new TextField();
 				Label label = new Label(LocalizeHandler.getLocalizedName(Data, Field) + ":");
 				double textFieldX = 100;
-
+				// エンターを押したらフォーカスを外す
+				text.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+					@Override
+					public void handle(KeyEvent e) {
+						if (e.getCode() == KeyCode.ENTER) {
+							root.requestFocus();
+						}
+					}
+				});
 				if (Type == EditNodeType.Text) {
 					text.textProperty().bindBidirectional(EditHelper.getPropertyString(Data, Field));
 					// テキスト保存
@@ -229,35 +237,138 @@ public class EditerComponent {
 						}
 					});
 				} else if (Type == EditNodeType.Number) {
+					// 入力を数値のみに
+					TextFormatter<Number> formatter;
 					// FloatかIntegerか判別
+					StringConverter<?> converter;
 					if (EditHelper.getPropertyFloat(Data, Field) != null) {
-						text.textProperty().bindBidirectional((Property) EditHelper.getPropertyFloat(Data, Field),
-								new FloatStringConverter());
+						// Floatなら
+						formatter = new TextFormatter<>(change -> {
+							String newStr = FloatPattern.matcher(change.getText()).replaceAll("");
+							int diffcount = change.getText().length() - newStr.length();
+							change.setAnchor(change.getAnchor() - diffcount);
+							change.setCaretPosition(change.getCaretPosition() - diffcount);
+							change.setText(newStr);
+							return change;
+						});
+						converter = new FloatStringConverter() {
+							@Override
+							public Float fromString(String str) {
+								Float res =  (Float) EditHelper.getData(Data, Field);
+								try {
+									res = super.fromString(str);
+								} catch (Exception e) {
+									res = (Float) EditHelper.getData(Data, Field);
+									text.setText(super.toString(res));
+								}
+								//範囲チェック
+								Float resold = res;
+								res = Math.min(res, EditHelper.getMax(Data.getClass(), Field));
+								res = Math.max(res, EditHelper.getMin(Data.getClass(), Field));
+								if(resold != res) {
+									text.setText(super.toString(res));
+								}
+								return res;
+							}
+						};
 					} else {
-						text.textProperty().bindBidirectional((Property) EditHelper.getPropertyInteger(Data, Field),
-								new IntegerStringConverter());
+						converter = new IntegerStringConverter() {
+							@Override
+							public Integer fromString(String str) {
+								Integer res = (Integer) EditHelper.getData(Data, Field);
+								try {
+									res = super.fromString(str);
+								} catch (Exception e) {
+									res = (Integer) EditHelper.getData(Data, Field);
+									text.setText(super.toString(res));
+								}
+								//範囲チェック
+								Integer resold = res;
+								res = Math.min(res,Math.round(EditHelper.getMax(Data.getClass(), Field)));
+								res = Math.max(res, Math.round(EditHelper.getMin(Data.getClass(), Field)));
+								if(resold != res) {
+									text.setText(super.toString(res));
+								}
+								return res;
+							}
+						};
+						formatter = new TextFormatter<>(change -> {
+							String newStr = IntPattern.matcher(change.getText()).replaceAll("");
+							int diffcount = change.getText().length() - newStr.length();
+							change.setAnchor(change.getAnchor() - diffcount);
+							change.setCaretPosition(change.getCaretPosition() - diffcount);
+							change.setText(newStr);
+							return change;
+						});
 					}
-
-					TextFormatter<Number> currencyFormatter = new TextFormatter<>(
-
-							change -> {
-								String newStr = notNumber.matcher(change.getText()).replaceAll("");
-								int diffcount = change.getText().length() - newStr.length();
-								change.setAnchor(change.getAnchor() - diffcount);
-								change.setCaretPosition(change.getCaretPosition() - diffcount);
-								change.setText(newStr);
-								return change;
-							});
-					text.setTextFormatter(currencyFormatter);
+					text.setTextFormatter(formatter);
+					text.textProperty().bindBidirectional((Property) EditHelper.getPropertyNumber(Data, Field),
+							converter);
 					// 数値保存
 					text.textProperty().addListener(new ChangeListener<String>() {
 						@Override
 						public void changed(ObservableValue<? extends String> observable, String oldValue,
 								String newValue) {
-							// EditHelper.setData(Data, Field, text.getText());
 							for (Runnable listener : ChangeListener) {
 								listener.run();
 							}
+						}
+					});
+					text.focusedProperty().addListener(new ChangeListener<Boolean>() {
+						@Override
+						public void changed(ObservableValue<? extends Boolean> value, Boolean oldvalue,
+								Boolean newvalue) {
+							if (!newvalue) {
+								text.setText(EditHelper.getData(Data, Field).toString());
+							}
+						}
+					});
+					// スクロールの追加
+					text.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+						@Override
+						public void handle(KeyEvent e) {
+							if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.DOWN) {
+								BigDecimal oldValue = new BigDecimal(EditHelper.getData(Data, Field).toString());
+								BigDecimal change = new BigDecimal(EditHelper.getScale(Data.getClass(), Field));
+								if (e.isShiftDown()) {
+									change = change.multiply(new BigDecimal("10"));
+								}
+								if (e.getCode() == KeyCode.DOWN) {
+									change = change.multiply(new BigDecimal("-1"));
+								}
+								BigDecimal newValue = change.add(oldValue);
+								// 最大、最小チェック
+								newValue = newValue.max(new BigDecimal(EditHelper.getMin(Data.getClass(), Field)));
+								newValue = newValue.min(new BigDecimal(EditHelper.getMax(Data.getClass(), Field)));
+								Property<Number> property = EditHelper.getPropertyNumber(Data, Field);
+								if (EditHelper.getPropertyFloat(Data, Field) != null)
+									property.setValue(newValue.floatValue());
+								else
+									property.setValue(newValue.intValue());
+							}
+						}
+					});
+					//TODO マウスないからノパソだとわからん
+					text.addEventHandler(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
+						@Override
+						public void handle(ScrollEvent e) {
+							BigDecimal oldValue = new BigDecimal(EditHelper.getData(Data, Field).toString());
+							BigDecimal change = new BigDecimal(EditHelper.getScale(Data.getClass(), Field));
+							if (e.isShiftDown()) {
+								change = change.multiply(new BigDecimal("10"));
+							}
+				/*			if (e.getCode() == KeyCode.DOWN) {
+								change = change.multiply(new BigDecimal("-1"));
+							}//*/
+							BigDecimal newValue = change.add(oldValue);
+							// 最大、最小チェック
+							newValue = newValue.max(new BigDecimal(EditHelper.getMin(Data.getClass(), Field)));
+							newValue = newValue.min(new BigDecimal(EditHelper.getMax(Data.getClass(), Field)));
+							Property<Number> property = EditHelper.getPropertyNumber(Data, Field);
+							if (EditHelper.getPropertyFloat(Data, Field) != null)
+								property.setValue(newValue.floatValue());
+							else
+								property.setValue(newValue.intValue());
 						}
 					});
 				}

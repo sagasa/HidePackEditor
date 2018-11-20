@@ -34,7 +34,7 @@ public class GunData extends ItemData {
 	@Info(Cate = 0)
 	public boolean RELOAD_ALL = false;
 	/** 分間発射数 : int型 **/
-	@Info(Cate = 0,Min=0)
+	@Info(Cate = 0,Min=0,Scale="10")
 	public int RPM = 600;
 	/** 射撃モード : String配列型 **/
 	public String[] FIREMODE = new String[] { "semiauto" };
@@ -42,7 +42,7 @@ public class GunData extends ItemData {
 	@Info(Cate = 0,Min=-1)
 	public int BULLET_POWER = 1;
 	/** バーストの分間発射数 : int型 **/
-	@Info(Cate = 0,Min=0)
+	@Info(Cate = 0,Min=0,Scale="10")
 	public int BURST_RPM = 800;
 	/** バーストの発射数 : int型 **/
 	@Info(Cate = 0,Min=1)
