@@ -254,18 +254,18 @@ public class EditerComponent {
 						converter = new FloatStringConverter() {
 							@Override
 							public Float fromString(String str) {
-								Float res =  (Float) EditHelper.getData(Data, Field);
+								Float res = (Float) EditHelper.getData(Data, Field);
 								try {
 									res = super.fromString(str);
 								} catch (Exception e) {
 									res = (Float) EditHelper.getData(Data, Field);
 									text.setText(super.toString(res));
 								}
-								//範囲チェック
+								// 範囲チェック
 								Float resold = res;
 								res = Math.min(res, EditHelper.getMax(Data.getClass(), Field));
 								res = Math.max(res, EditHelper.getMin(Data.getClass(), Field));
-								if(resold != res) {
+								if (resold != res) {
 									text.setText(super.toString(res));
 								}
 								return res;
@@ -282,12 +282,14 @@ public class EditerComponent {
 									res = (Integer) EditHelper.getData(Data, Field);
 									text.setText(super.toString(res));
 								}
-								//範囲チェック
-								Integer resold = res;
-								res = Math.min(res,Math.round(EditHelper.getMax(Data.getClass(), Field)));
-								res = Math.max(res, Math.round(EditHelper.getMin(Data.getClass(), Field)));
-								if(resold != res) {
-									text.setText(super.toString(res));
+								// 範囲チェック
+								if (res != null) {
+									Integer resold = res;
+									res = Math.min(res, Math.round(EditHelper.getMax(Data.getClass(), Field)));
+									res = Math.max(res, Math.round(EditHelper.getMin(Data.getClass(), Field)));
+									if (resold != res) {
+										text.setText(super.toString(res));
+									}
 								}
 								return res;
 							}
@@ -348,7 +350,7 @@ public class EditerComponent {
 							}
 						}
 					});
-					//TODO マウスないからノパソだとわからん
+					// TODO マウスないからノパソだとわからん
 					text.addEventHandler(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
 						@Override
 						public void handle(ScrollEvent e) {
@@ -357,9 +359,10 @@ public class EditerComponent {
 							if (e.isShiftDown()) {
 								change = change.multiply(new BigDecimal("10"));
 							}
-				/*			if (e.getCode() == KeyCode.DOWN) {
+							if (e.getDeltaY()+e.getDeltaX() < 0) {
 								change = change.multiply(new BigDecimal("-1"));
-							}//*/
+							}
+
 							BigDecimal newValue = change.add(oldValue);
 							// 最大、最小チェック
 							newValue = newValue.max(new BigDecimal(EditHelper.getMin(Data.getClass(), Field)));

@@ -17,14 +17,16 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>
-					<finalName>test</finalName>
+					<source>1.8</source>
+					<target>1.8</target>
+					<finalName>PackEditer</finalName>
 					<descriptorRefs>
 						<!-- 依存するリソースをすべてjarに同梱する -->
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>editer.Window</mainClass>
+							<mainClass>editer.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

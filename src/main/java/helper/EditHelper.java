@@ -52,7 +52,7 @@ public class EditHelper {
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return Float.MAX_VALUE;
 	}
 
 	/** フィールド名から最小値を取得 */
@@ -65,7 +65,7 @@ public class EditHelper {
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return Float.MIN_VALUE;
 	}
 
 	/** フィールド名からカテゴリを取得 */
@@ -159,7 +159,7 @@ public class EditHelper {
 	/** UnlocalizedNameのフォーマット */
 	public static String getUnlocalizedName(Class<? extends DataBase> clazz, String field) {
 		try {
-			return (clazz.getSimpleName() + "." + clazz.getField(field).getName().replaceAll("_", ".")).toLowerCase();
+			return (clazz.getField(field).getName().replaceAll("_", ".")).toLowerCase();
 		} catch (NoSuchFieldException | SecurityException e) {
 			e.printStackTrace();
 		}

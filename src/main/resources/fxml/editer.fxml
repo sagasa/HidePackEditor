@@ -49,7 +49,7 @@
                            <contextMenu>
                               <ContextMenu>
                                 <items>
-                                  <MenuItem mnemonicParsing="false" onAction="#addPack" text="AddNewMenu" />
+                                  <MenuItem mnemonicParsing="false" onAction="#addPack" text="AddNewPack" />
                                 </items>
                               </ContextMenu>
                            </contextMenu>

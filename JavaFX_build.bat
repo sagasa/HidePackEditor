@@ -1,0 +1,1 @@
+cmd /jfx:jar
