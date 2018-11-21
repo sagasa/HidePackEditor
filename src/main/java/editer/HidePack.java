@@ -14,15 +14,15 @@ import types.guns.GunData;
 /** パック本体 */
 public class HidePack {
 
-	/** 銃のMAP GunData */
+	/** 銃のList GunData */
 	public static List<GunData> GunList = new ArrayList<>();
-	/** 弾のMAP BulletData */
+	/** 弾のList BulletData */
 	public static List<BulletData> BulletList = new ArrayList<>();
-	/** IconのMAP Image */
+	/** IconのList Image */
 	public static List<Image> IconList = new ArrayList<>();
-	/** ScopeのMAP Image */
+	/** ScopeのList Image */
 	public static List<Image> ScopeList = new ArrayList<>();
-	/** SoundのMAP Sound */
+	/** SoundのList Sound */
 	public static List<Sound> SoundList = new ArrayList<>();
 	/** 編集中のパック  デフォルトを含む*/
 	public static List<HidePack> OpenPacks = new ArrayList<>();

@@ -350,7 +350,6 @@ public class EditerComponent {
 							}
 						}
 					});
-					// TODO マウスないからノパソだとわからん
 					text.addEventHandler(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
 						@Override
 						public void handle(ScrollEvent e) {

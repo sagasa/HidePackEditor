@@ -1,17 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<SplitPane fx:id="base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.editer.ImportController">
-
-	<items>
-      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.editer.ImportController">
+   <children>
+      <Button layoutX="465.0" layoutY="39.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Add" />
+      <Button layoutX="465.0" layoutY="80.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Remove" />
+      <Button layoutX="465.0" layoutY="125.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="AddAll" />
+      <Button layoutX="465.0" layoutY="169.0" mnemonicParsing="false" text="RemoveAll" />
+      <CheckBox layoutX="465.0" layoutY="246.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="128.0" text="Import to Default" />
+      <SplitPane dividerPositions="0.07046070460704607" layoutX="14.0" layoutY="14.0" orientation="VERTICAL" prefHeight="360.0" prefWidth="440.0">
          <items>
-      		<ListView fx:id="up" maxHeight="-Infinity" minHeight="-Infinity" onMouseClicked="#crick" prefHeight="200.0" prefWidth="200.0" />
-      		<ListView fx:id="down" onMouseClicked="#crick" prefHeight="200.0" prefWidth="200.0" />
+            <AnchorPane prefHeight="25.0" prefWidth="200.0">
+               <children>
+                  <ImageView fitHeight="23.0" fitWidth="23.0" layoutX="1.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="/icon/serch.png" />
+                     </image>
+                  </ImageView>
+                  <TextField layoutX="25.0" prefHeight="25.0" prefWidth="413.0" />
+               </children>
+            </AnchorPane>
+            <TabPane prefHeight="218.0" prefWidth="439.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Guns">
+                     <content>
+                        <ListView fx:id="gunList" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                </Tab>
+                <Tab text="Magazines">
+                     <content>
+                        <ListView fx:id="magazineList" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
          </items>
       </SplitPane>
-	</items>
-</SplitPane>
+      <CheckBox layoutX="465.0" layoutY="217.0" mnemonicParsing="false" text="Import as Reference" />
+      <Button layoutX="519.0" layoutY="360.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Import" />
+      <ProgressBar layoutX="14.0" layoutY="376.0" prefHeight="18.0" prefWidth="440.0" progress="0.0" />
+      <Label layoutX="469.0" layoutY="292.0" prefHeight="20.0" prefWidth="115.0" text="Import">
+         <graphic>
+            <Rectangle fill="DODGERBLUE" height="20.0" smooth="false" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="20.0" />
+         </graphic>
+      </Label>
+      <Label layoutX="469.0" layoutY="322.0" prefHeight="20.0" prefWidth="115.0" text="Import ">
+         <graphic>
+            <Rectangle fill="#ffc91f" height="20.0" smooth="false" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="20.0" />
+         </graphic>
+      </Label>
+   </children>
+</AnchorPane>
