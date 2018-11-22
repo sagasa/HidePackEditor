@@ -15,8 +15,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -30,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import controller.editer.EditerComponent;
 import editer.HidePack;
 import editer.Main;
 import editer.mainWindow.MainWindow;
@@ -65,7 +62,7 @@ public class PackIO {
 		if (selected == 0) {
 			Main.clear();
 			try {
-				readPack(filechooser.getSelectedFile(),false);
+				readPack(filechooser.getSelectedFile());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -202,7 +199,7 @@ public class PackIO {
 		Map<Long, List<Entry>> dataMap = new HashMap<>();
 		for (HidePack pack : HidePack.OpenPacks) {
 			// 参照では無ければ
-			if (!pack.Pack.isReference) {
+			if (!pack.Pack.isReference()) {
 				dataMap.put(pack.Pack.PackUID, new ArrayList<>());
 				// パックデータ
 				dataMap.get(pack.Pack.PackUID)
@@ -213,7 +210,7 @@ public class PackIO {
 		// 銃のデータ
 		for (GunData d : HidePack.GunList) {
 			// 参照ではなければ
-			if (!d.isReference) {
+			if (!d.isReference()) {
 				dataMap.get(d.PackUID).add(new Entry("guns/" + d.ITEM_DISPLAYNAME + ".json",
 						new ByteArrayInputStream(d.MakeJsonData().getBytes())));
 			}
@@ -221,7 +218,7 @@ public class PackIO {
 		// 弾のデータ
 		for (BulletData d : HidePack.BulletList) {
 			// 参照ではなければ
-			if (!d.isReference) {
+			if (!d.isReference()) {
 				dataMap.get(d.PackUID).add(new Entry("bullets/" + d.ITEM_DISPLAYNAME + ".json",
 						new ByteArrayInputStream(d.MakeJsonData().getBytes())));
 			}
@@ -232,7 +229,7 @@ public class PackIO {
 			// Icon
 			for (Image d : HidePack.IconList) {
 				// 参照ではなければ
-				if (!d.isReference) {
+				if (!d.isReference()) {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					ImageIO.write(d.Image, "png", out);
 					dataMap.get(d.PackUID).add(
@@ -242,7 +239,7 @@ public class PackIO {
 			// Scope
 			for (Image d : HidePack.ScopeList) {
 				// 参照ではなければ
-				if (!d.isReference) {
+				if (!d.isReference()) {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					ImageIO.write(d.Image, "png", out);
 					dataMap.get(d.PackUID).add(
@@ -254,7 +251,7 @@ public class PackIO {
 		}
 		for (Sound d : HidePack.SoundList) {
 			// 参照ではなければ
-			if (!d.isReference) {
+			if (!d.isReference()) {
 				dataMap.get(d.PackUID)
 						.add(new Entry("sound/" + d.DisplayName + ".ogg", new ByteArrayInputStream(d.Sound)));
 			}
@@ -291,21 +288,9 @@ public class PackIO {
 
 	}
 
-	/** 銃のList GunData */
-	private List<GunData> GunList = new ArrayList<>();
-	/** 弾のList BulletData */
-	private List<BulletData> BulletList = new ArrayList<>();
-	/** IconのList Image */
-	private List<Image> IconList = new ArrayList<>();
-	/** ScopeのList Image */
-	private List<Image> ScopeList = new ArrayList<>();
-	/** SoundのList Sound */
-	private List<Sound> SoundList = new ArrayList<>();
-	/**読み込み中のパック*/
-	private HidePack Pack;
-
-	private void readPack(File file,boolean isReference) throws IOException {
+	private static PackCash readPack(File file) throws IOException {
 		// 読み込むファイル
+		PackCash pack = new PackCash();
 		FileInputStream in = new FileInputStream(file);
 		// 以下、zipを展開して、中身を確認する
 		ZipInputStream zipIn = new ZipInputStream(in, Charset.forName("Shift_JIS"));
@@ -324,38 +309,38 @@ public class PackIO {
 
 				}
 				// パックラッパーに送る
-				PackWrapper(data, entry.getName());
+				PackWrapper(data, entry.getName(),pack);
 			}
 			zipIn.closeEntry();
 		}
 		zipIn.close();
 		in.close();
+		return pack;
 	}
 
 	/**
 	 * byte配列とNameからパックの要素の当てはめる
-	 *
 	 * @throws IOException
 	 */
-	private void PackWrapper(byte[] data, String name) throws IOException {
+	private static void PackWrapper(byte[] data, String name, PackCash pack) throws IOException {
 		// JsonObject newData = gson.fromJson(new String(Arrays.copyOf(data,
 		// data.length)), JsonObject.class);
 		// Gun認識
 		if (name.matches("^(.*)guns/(.*).json")) {
 			GunData newGun = gson.fromJson(new String(data, Charset.forName("UTF-8")), GunData.class);
-			GunList.add(newGun);
+			pack.GunList.add(newGun);
 			// System.out.println("gun");
 		}
 		// bullet認識
 		else if (name.matches("^(.*)bullets/(.*).json")) {
 			BulletData newBullet = gson.fromJson(new String(data, Charset.forName("UTF-8")), BulletData.class);
-			BulletList.add(newBullet);
+			pack.BulletList.add(newBullet);
 			// System.out.println("bullet");
 		}
 		// packInfo認識
 		else if (name.matches("^(.*)pack.json")) {
-			Pack = new HidePack();
-			Pack.Pack = gson.fromJson(new String(data, Charset.forName("UTF-8")), PackInfo.class);
+			pack.Pack = new HidePack();
+			pack.Pack.Pack = gson.fromJson(new String(data, Charset.forName("UTF-8")), PackInfo.class);
 			// System.out.println("pack");
 		}
 
@@ -363,13 +348,13 @@ public class PackIO {
 		// Icon
 		if (name.matches("^(.*)icon/(.*).png")) {
 			String n = name.replaceAll(".png", "").replaceAll("^(.*)icon/", "");
-			IconList.add(new Image(n,ImageIO.read(new ByteArrayInputStream(data))));
+			pack.IconList.add(new Image(n,ImageIO.read(new ByteArrayInputStream(data))));
 			// System.out.println("icon");
 		}
 		// Scope
 		if (name.matches("^(.*)scope/(.*).png")) {
 			String n = name.replaceAll(".png", "").replaceAll("^(.*)scope/", "");
-			ScopeList.add(new Image(n,ImageIO.read(new ByteArrayInputStream(data))));
+			pack.ScopeList.add(new Image(n,ImageIO.read(new ByteArrayInputStream(data))));
 			// System.out.println("scope");
 		}
 		// model
@@ -383,7 +368,7 @@ public class PackIO {
 		// sounds
 		if (name.matches("^(.*)sounds/(.*).ogg")) {
 			String n = name.replaceAll(".ogg", "").replaceAll("^(.*)sounds/", "");
-			SoundList.add(new Sound(n, data));
+			pack.SoundList.add(new Sound(n, data));
 			// System.out.println("sounds");
 		}
 

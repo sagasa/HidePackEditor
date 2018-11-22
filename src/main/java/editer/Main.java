@@ -53,10 +53,4 @@ public class Main extends Application {
 		confirmDialog.setScene(scene);
 		confirmDialog.show();
 	}
-
-	/** パック初期化 */
-	public static void clear() {
-		packPath = null;
-
-	}
 }

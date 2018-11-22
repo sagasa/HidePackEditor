@@ -1,14 +1,7 @@
 package controller.editer;
 
-import java.lang.reflect.Executable;
-import java.util.Arrays;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-
 import editer.HasDisplayName;
-import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SplitPane;
 
 public class ImportController {
 
@@ -17,6 +10,8 @@ public class ImportController {
 
 
 	public void Import() {
+		gunList.getItems().forEach(entry->entry.doImport());
+		magazineList.getItems().forEach(entry->entry.doImport());
 
 	}
 

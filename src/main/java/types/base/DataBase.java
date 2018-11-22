@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import editer.HidePack;
 import javafx.beans.property.Property;
 import types.wrapper.TypesBooleanPropertyWrapper;
 import types.wrapper.TypesFloatPropertyWrapper;
@@ -20,10 +22,12 @@ public abstract class DataBase implements Cloneable {
 
 	/** パックデータ エディタでのみ使用 */
 	transient public long PackUID;
-	/** パックデータ エディタでのみ使用 */
-	transient public boolean isReference = false;
 	/** パックデータ エディタでのみ使用 Integer Float Boolean String のフィールドのプロパティ */
 	transient public Map<String, Property<?>> Property = new HashMap<>();
+	/**参照データか確認*/
+	public boolean isReference() {
+		return HidePack.getPack(PackUID).isReference;
+	}
 
 	/** コンストラクタでプロパティMapを作成 */
 	public DataBase() {

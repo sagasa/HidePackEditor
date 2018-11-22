@@ -24,10 +24,21 @@ public class HidePack {
 	public static List<Image> ScopeList = new ArrayList<>();
 	/** SoundのList Sound */
 	public static List<Sound> SoundList = new ArrayList<>();
-	/** 編集中のパック  デフォルトを含む*/
+	/** 編集中のパック デフォルトを含む */
 	public static List<HidePack> OpenPacks = new ArrayList<>();
-	/**デフォルトパック*/
+	/** デフォルトパック */
 	public static HidePack DefaultPack;
+
+	/** パック初期化 */
+	public static void clear() {
+		GunList = new ArrayList<>();
+		BulletList = new ArrayList<>();
+		IconList = new ArrayList<>();
+		ScopeList = new ArrayList<>();
+		SoundList = new ArrayList<>();
+		OpenPacks = new ArrayList<>();
+		OpenPacks.add(DefaultPack);
+	}
 
 	/** 銃取得 */
 	public static GunData getGunData(String displayName) {
@@ -84,6 +95,8 @@ public class HidePack {
 		OpenPacks.add(pack);
 	}
 
+	/** 参照か */
+	public boolean isReference = false;
 	/** 表示用カラー */
 	public Color PackColor = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
 	/** Info */
