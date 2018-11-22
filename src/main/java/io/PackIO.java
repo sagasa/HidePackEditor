@@ -28,10 +28,16 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
+import controller.editer.ImportController;
 import editer.HidePack;
 import editer.Main;
 import editer.mainWindow.MainWindow;
 import helper.ArrayEditer;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import resources.Image;
 import resources.Sound;
 import types.PackInfo;
@@ -45,24 +51,32 @@ public class PackIO {
 
 	/** 新しいパックを作る */
 	public static void makePack() {
-		Main.clear();
+		HidePack.clear();
 	}
 
 	/** 今開いているデータを消して新しいパックを開く */
 	public static void openPack() {
 		JFileChooser filechooser = new JFileChooser();
 		filechooser.setCurrentDirectory(new File("."));
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("zip file", "zip");
-		filechooser.setFileFilter(filter);
-		filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
+		filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		System.out.println(ClassLoader.getSystemResource("/fxml/import.fxml"));
 		int selected = filechooser.showOpenDialog(MainWindow.INSTANCE);
 		// System.out.println(selected);
 		// パックを読む
 		if (selected == 0) {
-			Main.clear();
+			HidePack.clear();
 			try {
-				readPack(filechooser.getSelectedFile());
+				Stage confirmDialog = new Stage(StageStyle.DECORATED);
+				FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("/fxml/import.fxml"));
+				Parent importroot = (Parent) loader.load();
+				ImportController controller = loader.getController();
+				controller.setPack(readPack(filechooser.getSelectedFile()));;
+				Scene scene = new Scene(importroot);
+				confirmDialog.setTitle("Import");
+				confirmDialog.setScene(scene);
+				confirmDialog.setResizable(false);
+				confirmDialog.show();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -105,7 +119,7 @@ public class PackIO {
 	/** iconをインポート */
 	public static void inportIcon(File file) {
 		try {
-			Image image = new Image(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""),ImageIO.read(file));
+			Image image = new Image(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
 			HidePack.IconList.add(image);
 			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
@@ -128,7 +142,7 @@ public class PackIO {
 	/** Scopeをインポート */
 	public static void inportScope(File file) {
 		try {
-			Image image = new Image(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""),ImageIO.read(file));
+			Image image = new Image(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
 			HidePack.ScopeList.add(image);
 			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
@@ -151,7 +165,7 @@ public class PackIO {
 	/** Soundをインポート */
 	public static void inportSound(File file) {
 		try {
-			Sound sound = new Sound(file.getName().replaceAll(".ogg$", ""),Files.readAllBytes(file.toPath()));
+			Sound sound = new Sound(file.getName().replaceAll(".ogg$", ""), Files.readAllBytes(file.toPath()));
 			HidePack.SoundList.add(sound);
 			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
@@ -309,7 +323,7 @@ public class PackIO {
 
 				}
 				// パックラッパーに送る
-				PackWrapper(data, entry.getName(),pack);
+				PackWrapper(data, entry.getName(), pack);
 			}
 			zipIn.closeEntry();
 		}
@@ -320,6 +334,7 @@ public class PackIO {
 
 	/**
 	 * byte配列とNameからパックの要素の当てはめる
+	 *
 	 * @throws IOException
 	 */
 	private static void PackWrapper(byte[] data, String name, PackCash pack) throws IOException {
@@ -348,13 +363,13 @@ public class PackIO {
 		// Icon
 		if (name.matches("^(.*)icon/(.*).png")) {
 			String n = name.replaceAll(".png", "").replaceAll("^(.*)icon/", "");
-			pack.IconList.add(new Image(n,ImageIO.read(new ByteArrayInputStream(data))));
+			pack.IconList.add(new Image(n, ImageIO.read(new ByteArrayInputStream(data))));
 			// System.out.println("icon");
 		}
 		// Scope
 		if (name.matches("^(.*)scope/(.*).png")) {
 			String n = name.replaceAll(".png", "").replaceAll("^(.*)scope/", "");
-			pack.ScopeList.add(new Image(n,ImageIO.read(new ByteArrayInputStream(data))));
+			pack.ScopeList.add(new Image(n, ImageIO.read(new ByteArrayInputStream(data))));
 			// System.out.println("scope");
 		}
 		// model

@@ -1,14 +1,20 @@
 package editer;
 
+import java.io.File;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import controller.editer.ImportController;
 import io.PackIO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import localize.LocalizeHandler;
@@ -41,16 +47,12 @@ public class Main extends Application {
 		stage.setScene(scene);
 		stage.setMinHeight(STAGE_SIZE.getY());
 		stage.setMinWidth(STAGE_SIZE.getX());
-		//stage.show();
+		stage.show();
+		//PackIO.openPack();
 
-		Stage confirmDialog = new Stage(StageStyle.DECORATED);
-		loader = new FXMLLoader(getClass().getResource("/fxml/import.fxml"));
-		Parent importroot = (Parent) loader.load();
-		log.debug("Showing JFX scene");
-		scene = new Scene(importroot);
+		DirectoryChooser fxtest = new DirectoryChooser();
+		fxtest.setInitialDirectory(new File("./"));
 
-		confirmDialog.setTitle("Import");
-		confirmDialog.setScene(scene);
-		confirmDialog.show();
+		System.out.println(fxtest.showDialog(stage));
 	}
 }
