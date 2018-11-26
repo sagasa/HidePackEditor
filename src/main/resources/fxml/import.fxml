@@ -46,11 +46,6 @@
       <CheckBox fx:id="isReference" layoutX="465.0" layoutY="217.0" mnemonicParsing="false" text="Import as Reference" />
       <Button layoutX="519.0" layoutY="360.0" mnemonicParsing="false" onAction="#Import" prefHeight="25.0" prefWidth="65.0" text="Import" />
       <ProgressBar layoutX="14.0" layoutY="376.0" prefHeight="18.0" prefWidth="440.0" progress="0.0" />
-      <Label layoutX="469.0" layoutY="292.0" prefHeight="20.0" prefWidth="115.0" text="Import">
-         <graphic>
-            <Rectangle fill="DODGERBLUE" height="20.0" smooth="false" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="20.0" />
-         </graphic>
-      </Label>
       <Label layoutX="469.0" layoutY="322.0" prefHeight="20.0" prefWidth="115.0" text="Import ">
          <graphic>
             <Rectangle fill="#ffc91f" height="20.0" smooth="false" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="20.0" />

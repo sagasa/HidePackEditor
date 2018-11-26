@@ -2,8 +2,10 @@ package controller.editer;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import controller.editer.RootController.ColordList;
@@ -68,21 +70,38 @@ public class ImportController implements Initializable {
 		return gunList.getSelectionModel().getSelectedItems();
 	}
 
+	private List<ImportEntry> getAll() {
+		List<ImportEntry> allEntris = new ArrayList<>();
+		allEntris.addAll(gunList.getSelectionModel().getSelectedItems());
+		return allEntris;
+	}
+
+	private void refresh() {
+		gunList.refresh();
+		magazineList.refresh();
+		iconList.refresh();
+		scopeList.refresh();
+		soundList.refresh();
+	}
+
 	public void add() {
 		getSelected().forEach(entry -> entry.isImport = true);
-		gunList.refresh();
+		refresh();
 	}
 
 	public void remove() {
 		getSelected().forEach(entry -> entry.isImport = false);
+		refresh();
 	}
 
 	public void addAll() {
-
+		getAll().forEach(entry -> entry.isImport = true);
+		refresh();
 	}
 
 	public void removeAll() {
-
+		getAll().forEach(entry -> entry.isImport = false);
+		refresh();
 	}
 
 	public void Import() {
@@ -91,11 +110,9 @@ public class ImportController implements Initializable {
 			Pack = HidePack.addPack(Pack);
 		}
 		long uid = toDefault.isSelected() ? HidePack.DefaultPack.Pack.PackUID : Pack.Pack.PackUID;
+		getAll().forEach(entry -> entry.doImport(uid));
+
 		gunList.getScene().getWindow().hide();
-		gunList.getItems().forEach(entry -> entry.doImport(uid));
-		magazineList.getItems().forEach(entry -> entry.doImport(uid));
-
-
 		RootController.writeList();
 	}
 
@@ -121,7 +138,7 @@ public class ImportController implements Initializable {
 	/** インポートエントリ用リスト表示 */
 	public static class ImportListCell extends ListCell<ImportEntry> {
 		private static final Color DisableColor = Color.rgb(0, 0, 0, 0);
-		private static final Color ImportColor = Color.DODGERBLUE;
+		private static final Color ImportColor = Color.web("#ffc91f");
 		private Rectangle importrect = new Rectangle(20, 20);
 		private Text text;
 		private HBox root;
