@@ -23,4 +23,17 @@ public class PackCash {
 	/** 読み込み中のパック */
 	public HidePack Pack;
 
+	/** パック情報を付与 trueでデフォルトパック 同じ名前があったら統合 */
+	public void setPack(boolean useDefault) {
+		Pack = useDefault ? HidePack.DefaultPack : Pack;
+		long uid = HidePack.getPack(Pack.Pack.PACK_NAME) != null ? HidePack.getPack(Pack.Pack.PACK_NAME).Pack.PackUID
+				: Pack.Pack.PackUID;
+		if (HidePack.getPack(Pack.Pack.PACK_NAME) != null)
+			Pack = null;
+		GunList.forEach(data -> data.PackUID = uid);
+		BulletList.forEach(data -> data.PackUID = uid);
+		IconList.forEach(data -> data.PackUID = uid);
+		ScopeList.forEach(data -> data.PackUID = uid);
+		SoundList.forEach(data -> data.PackUID = uid);
+	}
 }

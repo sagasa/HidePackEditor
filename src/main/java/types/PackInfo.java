@@ -1,9 +1,14 @@
 package types;
 
-import editer.HasDisplayName;
+import java.io.File;
+
+import editer.DataEntityInterface;
 import types.base.DataBase;
 
-public class PackInfo extends DataBase implements HasDisplayName{
+public class PackInfo extends DataBase implements DataEntityInterface{
+
+	/**パックのパス*/
+	transient public File PackPath = new File("./export/");
 	/** パックの登録名 ファイル名ではない */
 	public String PACK_NAME = "sample";
 	/** パックのバージョン */
@@ -13,5 +18,9 @@ public class PackInfo extends DataBase implements HasDisplayName{
 	@Override
 	public String getDisplayName() {
 		return PACK_NAME;
+	}
+	@Override
+	public long getPackUID() {
+		return PackUID;
 	}
 }

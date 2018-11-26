@@ -1,10 +1,10 @@
 package resources;
 
-import editer.HasDisplayName;
+import editer.DataEntityInterface;
 import editer.HidePack;
 
 /**名前付きリソースのスーパークラス*/
-public abstract class Resource implements HasDisplayName{
+public abstract class Resource implements DataEntityInterface{
 	public Resource(String name) {
 		DisplayName = name;
 	}
@@ -17,5 +17,9 @@ public abstract class Resource implements HasDisplayName{
 	@Override
 	public String getDisplayName() {
 		return DisplayName;
+	}
+	@Override
+	public long getPackUID() {
+		return PackUID;
 	}
 }

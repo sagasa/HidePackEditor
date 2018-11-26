@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import io.PackCash;
 import javafx.scene.paint.Color;
 import resources.Image;
 import resources.Sound;
@@ -28,6 +29,8 @@ public class HidePack {
 	public static List<HidePack> OpenPacks = new ArrayList<>();
 	/** デフォルトパック */
 	public static HidePack DefaultPack;
+	/** 初回かどうか */
+	public static boolean isNewPack = true;
 
 	/** パック初期化 */
 	public static void clear() {
@@ -38,6 +41,27 @@ public class HidePack {
 		SoundList = new ArrayList<>();
 		OpenPacks = new ArrayList<>();
 		OpenPacks.add(DefaultPack);
+	}
+
+	/** PackCashインポート */
+	public static void addPack(PackCash pack) {
+		// 放り込む
+		GunList.addAll(pack.GunList);
+		BulletList.addAll(pack.BulletList);
+		IconList.addAll(pack.IconList);
+		ScopeList.addAll(pack.ScopeList);
+		SoundList.addAll(pack.SoundList);
+		if (pack.Pack != null)
+			OpenPacks.add(pack.Pack);
+	}
+
+	public static HidePack addPack(HidePack pack) {
+		if (getPack(pack.Pack.PACK_NAME) == null || getPack(pack.Pack.PACK_NAME).isReference != pack.isReference) {
+			OpenPacks.add(pack);
+			return pack;
+		} else {
+			return getPack(pack.Pack.PACK_NAME);
+		}
 	}
 
 	/** 銃取得 */

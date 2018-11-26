@@ -141,6 +141,7 @@ knockback.base.air = knockback.base.air
 knockback.coe.air = knockback.coe.air
 packuid = packuid
 property = property
+packpath = packpath
 pack.name = pack.name
 pack.ver = pack.ver
 pack.rootname = pack.rootname

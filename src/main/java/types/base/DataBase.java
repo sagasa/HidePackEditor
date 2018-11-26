@@ -18,7 +18,7 @@ import types.wrapper.TypesStringPropertyWrapper;
  * パックのデータのスーパークラス クローン可能 publicフィールドはすべてクローン可能なクラスにしてください
  * transient注釈が付いたフィールドはエディターでのみ使用
  */
-public abstract class DataBase implements Cloneable {
+public abstract class DataBase implements Cloneable{
 
 	/** パックデータ エディタでのみ使用 */
 	transient public long PackUID;

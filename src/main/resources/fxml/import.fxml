@@ -10,11 +10,11 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.editer.ImportController">
    <children>
-      <Button layoutX="465.0" layoutY="39.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Add" />
-      <Button layoutX="465.0" layoutY="80.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Remove" />
-      <Button layoutX="465.0" layoutY="125.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="AddAll" />
-      <Button layoutX="465.0" layoutY="169.0" mnemonicParsing="false" text="RemoveAll" />
-      <CheckBox layoutX="465.0" layoutY="246.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="128.0" text="Import to Default" />
+      <Button layoutX="465.0" layoutY="39.0" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="65.0" text="Add" />
+      <Button layoutX="465.0" layoutY="80.0" mnemonicParsing="false" onAction="#remove" prefHeight="25.0" prefWidth="65.0" text="Remove" />
+      <Button layoutX="465.0" layoutY="125.0" mnemonicParsing="false" onAction="#addAll" prefHeight="25.0" prefWidth="73.0" text="AddAll" />
+      <Button layoutX="465.0" layoutY="169.0" mnemonicParsing="false" onAction="#removeAll" text="RemoveAll" />
+      <CheckBox fx:id="toDefault" layoutX="465.0" layoutY="246.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="128.0" text="Import to Default" />
       <SplitPane dividerPositions="0.07046070460704607" layoutX="14.0" layoutY="14.0" orientation="VERTICAL" prefHeight="360.0" prefWidth="440.0">
          <items>
             <AnchorPane prefHeight="25.0" prefWidth="200.0">
@@ -24,7 +24,7 @@
                         <Image url="/icon/serch.png" />
                      </image>
                   </ImageView>
-                  <TextField layoutX="25.0" prefHeight="25.0" prefWidth="413.0" />
+                  <TextField fx:id="searchBox" layoutX="25.0" prefHeight="25.0" prefWidth="413.0" />
                </children>
             </AnchorPane>
             <TabPane prefHeight="218.0" prefWidth="439.0" tabClosingPolicy="UNAVAILABLE">
@@ -43,8 +43,8 @@
             </TabPane>
          </items>
       </SplitPane>
-      <CheckBox layoutX="465.0" layoutY="217.0" mnemonicParsing="false" text="Import as Reference" />
-      <Button layoutX="519.0" layoutY="360.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Import" />
+      <CheckBox fx:id="isReference" layoutX="465.0" layoutY="217.0" mnemonicParsing="false" text="Import as Reference" />
+      <Button layoutX="519.0" layoutY="360.0" mnemonicParsing="false" onAction="#Import" prefHeight="25.0" prefWidth="65.0" text="Import" />
       <ProgressBar layoutX="14.0" layoutY="376.0" prefHeight="18.0" prefWidth="440.0" progress="0.0" />
       <Label layoutX="469.0" layoutY="292.0" prefHeight="20.0" prefWidth="115.0" text="Import">
          <graphic>

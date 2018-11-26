@@ -20,8 +20,6 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +34,7 @@ import helper.ArrayEditer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import resources.Image;
@@ -55,13 +54,9 @@ public class PackIO {
 	}
 
 	/** 今開いているデータを消して新しいパックを開く */
-	public static void openPack() {
-		JFileChooser filechooser = new JFileChooser();
-		filechooser.setCurrentDirectory(new File("."));
+	public static void openPack(File pack) {
+		FileChooser filechooser = new FileChooser();
 
-		filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		System.out.println(ClassLoader.getSystemResource("/fxml/import.fxml"));
-		int selected = filechooser.showOpenDialog(MainWindow.INSTANCE);
 		// System.out.println(selected);
 		// パックを読む
 		if (selected == 0) {
@@ -71,7 +66,8 @@ public class PackIO {
 				FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("/fxml/import.fxml"));
 				Parent importroot = (Parent) loader.load();
 				ImportController controller = loader.getController();
-				controller.setPack(readPack(filechooser.getSelectedFile()));;
+				controller.setPack(readPack(filechooser.getSelectedFile()));
+				;
 				Scene scene = new Scene(importroot);
 				confirmDialog.setTitle("Import");
 				confirmDialog.setScene(scene);
@@ -202,13 +198,7 @@ public class PackIO {
 	}
 
 	/** パッキングして出力する */
-	private static void export(File packFile) {
-		// 出力ディレクトリが使えるか
-		if (!packFile.isDirectory()) {
-			log.error("IO error " + packFile.getAbsolutePath() + " is not dir");
-			return;
-		}
-
+	public static void export() {
 		// データをまとめる
 		Map<Long, List<Entry>> dataMap = new HashMap<>();
 		for (HidePack pack : HidePack.OpenPacks) {
@@ -282,7 +272,7 @@ public class PackIO {
 			// 全パック出力
 			for (Long id : dataMap.keySet()) {
 				ZipOutputStream zos = new ZipOutputStream(
-						new FileOutputStream(new File(packFile, "/" + HidePack.getPack(id).Pack.PACK_NAME) + ".zip"),
+						new FileOutputStream(new File(HidePack.getPack(id).Pack.PackPath,  HidePack.getPack(id).Pack.PACK_NAME) + ".zip"),
 						Charset.forName("Shift_JIS"));
 				for (Entry data : dataMap.get(id)) {
 					ZipEntry entry = new ZipEntry(data.Name);
@@ -293,8 +283,8 @@ public class PackIO {
 							zos.write(buf, 0, len);
 						}
 					}
-					zos.close();
 				}
+				zos.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -302,33 +292,37 @@ public class PackIO {
 
 	}
 
-	private static PackCash readPack(File file) throws IOException {
+	public static PackCash readPack(File file) {
 		// 読み込むファイル
 		PackCash pack = new PackCash();
-		FileInputStream in = new FileInputStream(file);
-		// 以下、zipを展開して、中身を確認する
-		ZipInputStream zipIn = new ZipInputStream(in, Charset.forName("Shift_JIS"));
-		ZipEntry entry = null;
-		while ((entry = zipIn.getNextEntry()) != null) {
-			// dirかどうか確認
-			if (!entry.isDirectory()) {
-				// 内容を読み取り
-				// byte[] buffer = new byte[0x6400000];
-				byte[] buffer = new byte[1024];
-				byte[] data = new byte[0];
-				int size;
-				while (0 < (size = zipIn.read(buffer))) {
-					data = ArrayEditer.ByteArrayCombining(data, Arrays.copyOf(buffer, size));
-					buffer = new byte[1024];
+		try {
+			FileInputStream in = new FileInputStream(file);
+			// 以下、zipを展開して、中身を確認する
+			ZipInputStream zipIn = new ZipInputStream(in, Charset.forName("Shift_JIS"));
+			ZipEntry entry = null;
+			while ((entry = zipIn.getNextEntry()) != null) {
+				// dirかどうか確認
+				if (!entry.isDirectory()) {
+					// 内容を読み取り
+					// byte[] buffer = new byte[0x6400000];
+					byte[] buffer = new byte[1024];
+					byte[] data = new byte[0];
+					int size;
+					while (0 < (size = zipIn.read(buffer))) {
+						data = ArrayEditer.ByteArrayCombining(data, Arrays.copyOf(buffer, size));
+						buffer = new byte[1024];
 
+					}
+					// パックラッパーに送る
+					PackWrapper(data, entry.getName(), pack);
 				}
-				// パックラッパーに送る
-				PackWrapper(data, entry.getName(), pack);
+				zipIn.closeEntry();
 			}
-			zipIn.closeEntry();
+			zipIn.close();
+			in.close();
+		} catch (Exception e) {
+
 		}
-		zipIn.close();
-		in.close();
 		return pack;
 	}
 

@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.javafx.scene.control.skin.TextFieldSkin;
+
 import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
@@ -57,6 +59,7 @@ public class EditerComponent {
 		cate0.setLayoutY(5);
 		editer.getChildren().add(cate0);
 		editer.getChildren().add(itemInfo);
+		TextField field = new TextField();
 	}
 
 	/** ItemData用名称+アイコン編集ノード */

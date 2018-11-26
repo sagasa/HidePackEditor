@@ -152,3 +152,4 @@ pack.rootname = pack.rootname
 packuid = packuid
 isreference = isreference
 property = property
+packpath = packpath
