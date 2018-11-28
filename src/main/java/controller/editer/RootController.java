@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import javax.swing.event.ChangeEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +18,13 @@ import io.PackIO;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -32,7 +34,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
@@ -73,6 +74,12 @@ public class RootController implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				write();
+			}
+		});
+		HidePack.GunList.addListener(new ListChangeListener<GunData>() {
+			@Override
+			public void onChanged(Change<? extends GunData> change) {
+				System.out.println(change.wasAdded());
 			}
 		});
 		write();
@@ -133,31 +140,31 @@ public class RootController implements Initializable {
 		File file = fxtest.showOpenDialog(STAGE);
 		if (file != null) {
 			PackCash pack = PackIO.readPack(file);
-			//パックが1つなら
-			if(HidePack.isNewPack) {
+			// パックが1つなら
+			if (HidePack.isNewPack) {
 				HidePack.isNewPack = false;
 				pack.setPack(false);
 				HidePack.addPack(pack);
 				write();
-			}else {
-				//インポートダイアログを開く
+			} else {
+				// インポートダイアログを開く
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/import.fxml"));
-	            try {
+				try {
 					loader.load();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-	            Parent root = loader.getRoot();
-	            ImportController controller = loader.getController();
-	            controller.setPack(pack);
-	            Scene scene = new Scene(root);
-	            Stage confirmDialog = new Stage(StageStyle.UTILITY);
-	            confirmDialog.setScene(scene);
-	            confirmDialog.initOwner(STAGE);
-	            confirmDialog.initModality(Modality.WINDOW_MODAL);
-	            confirmDialog.setResizable(false);
-	            confirmDialog.setTitle("Select an Option");
-	            confirmDialog.show();
+				Parent root = loader.getRoot();
+				ImportController controller = loader.getController();
+				controller.setPack(pack);
+				Scene scene = new Scene(root);
+				Stage confirmDialog = new Stage(StageStyle.UTILITY);
+				confirmDialog.setScene(scene);
+				confirmDialog.initOwner(STAGE);
+				confirmDialog.initModality(Modality.WINDOW_MODAL);
+				confirmDialog.setResizable(false);
+				confirmDialog.setTitle("Select an Option");
+				confirmDialog.show();
 
 			}
 		}

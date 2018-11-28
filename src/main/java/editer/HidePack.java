@@ -1,10 +1,11 @@
 package editer;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import io.PackCash;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import resources.Image;
 import resources.Sound;
@@ -16,30 +17,43 @@ import types.guns.GunData;
 public class HidePack {
 
 	/** 銃のList GunData */
-	public static List<GunData> GunList = new ArrayList<>();
+	public static ObservableList<GunData> GunList;
 	/** 弾のList BulletData */
-	public static List<BulletData> BulletList = new ArrayList<>();
+	public static ObservableList<BulletData> BulletList;
 	/** IconのList Image */
-	public static List<Image> IconList = new ArrayList<>();
+	public static ObservableList<Image> IconList;
 	/** ScopeのList Image */
-	public static List<Image> ScopeList = new ArrayList<>();
+	public static ObservableList<Image> ScopeList;
 	/** SoundのList Sound */
-	public static List<Sound> SoundList = new ArrayList<>();
+	public static ObservableList<Sound> SoundList;
 	/** 編集中のパック デフォルトを含む */
-	public static List<HidePack> OpenPacks = new ArrayList<>();
+	public static ObservableList<HidePack> OpenPacks;
 	/** デフォルトパック */
 	public static HidePack DefaultPack;
 	/** 初回かどうか */
 	public static boolean isNewPack = true;
 
+	private static Random random = new Random();
+
+	static {
+		clear();
+	}
 	/** パック初期化 */
 	public static void clear() {
-		GunList = new ArrayList<>();
-		BulletList = new ArrayList<>();
-		IconList = new ArrayList<>();
-		ScopeList = new ArrayList<>();
-		SoundList = new ArrayList<>();
-		OpenPacks = new ArrayList<>();
+		GunList = FXCollections.observableList(new ArrayList<>());
+		BulletList = FXCollections.observableList(new ArrayList<>());
+		IconList = FXCollections.observableList(new ArrayList<>());
+		ScopeList = FXCollections.observableList(new ArrayList<>());
+		SoundList = FXCollections.observableList(new ArrayList<>());
+		OpenPacks = FXCollections.observableList(new ArrayList<>());
+		DefaultPack = new HidePack();
+		DefaultPack.Pack = new PackInfo();
+		DefaultPack.Pack.PackUID = random.nextLong();
+		DefaultPack.Pack.PACK_NAME = "default";
+		DefaultPack.Pack.PACK_ROOTNAME = "default";
+		DefaultPack.Pack.PACK_VER = "";
+		DefaultPack.isDefault = true;
+		DefaultPack.PackColor = Color.GRAY;
 		OpenPacks.add(DefaultPack);
 	}
 
@@ -102,21 +116,6 @@ public class HidePack {
 			}
 		}
 		return null;
-	}
-
-	private static Random random = new Random();
-
-	static {
-		HidePack pack = new HidePack();
-		pack.Pack = new PackInfo();
-		pack.Pack.PackUID = random.nextLong();
-		pack.Pack.PACK_NAME = "default";
-		pack.Pack.PACK_ROOTNAME = "default";
-		pack.Pack.PACK_VER = "";
-		pack.isDefault = true;
-		pack.PackColor = Color.GRAY;
-		DefaultPack = pack;
-		OpenPacks.add(pack);
 	}
 
 	/** 参照か */
