@@ -5,8 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
-
-import javax.swing.event.ChangeEvent;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +14,9 @@ import editer.DataEntityInterface;
 import editer.HidePack;
 import io.PackCash;
 import io.PackIO;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.collections.WeakListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -51,37 +48,45 @@ public class RootController implements Initializable {
 	public Pane editer;
 
 	public TextField packSearch;
-	public ListView<ColordList> packList;
+	public ListView<DataEntityInterface> packList;
 
 	public TextField itemSearch;
-	public ListView<ColordList> gunList;
-	public ListView<ColordList> magazineList;
-	public ListView<ColordList> soundList;
-	public ListView<ColordList> iconList;
-	public ListView<ColordList> modelList;
+	public ListView<DataEntityInterface> gunList;
+	public ListView<DataEntityInterface> magazineList;
+	public ListView<DataEntityInterface> soundList;
+	public ListView<DataEntityInterface> iconList;
+	public ListView<DataEntityInterface> modelList;
+
+	/** writeのリスナー */
+	private ListChangeListener<DataEntityInterface> writeListener = new WeakListChangeListener<>(
+			new ListChangeListener<DataEntityInterface>() {
+				@Override
+				public void onChanged(Change<? extends DataEntityInterface> change) {
+					while (change.next()) {
+						write();
+					}
+				}
+			});
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		INSTANCE = this;
-		packList.setCellFactory(ColordList.getCellFactory());
-		gunList.setCellFactory(ColordList.getCellFactory());
-		magazineList.setCellFactory(ColordList.getCellFactory());
-		soundList.setCellFactory(ColordList.getCellFactory());
-		iconList.setCellFactory(ColordList.getCellFactory());
-		modelList.setCellFactory(ColordList.getCellFactory());
+		packList.setCellFactory(ColordListCell.getCellFactory());
+		gunList.setCellFactory(ColordListCell.getCellFactory());
+		magazineList.setCellFactory(ColordListCell.getCellFactory());
+		soundList.setCellFactory(ColordListCell.getCellFactory());
+		iconList.setCellFactory(ColordListCell.getCellFactory());
+		modelList.setCellFactory(ColordListCell.getCellFactory());
 		// Serch用フック
-		itemSearch.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				write();
-			}
-		});
-		HidePack.GunList.addListener(new ListChangeListener<GunData>() {
-			@Override
-			public void onChanged(Change<? extends GunData> change) {
-				System.out.println(change.wasAdded());
-			}
-		});
+		itemSearch.textProperty().addListener(change -> write());
+		packSearch.textProperty().addListener(change -> write());
+		// リスト通知用フック
+		HidePack.GunList.addListener(new WeakListChangeListener<>(writeListener));
+		HidePack.BulletList.addListener(new WeakListChangeListener<>(writeListener));
+		HidePack.IconList.addListener(new WeakListChangeListener<>(writeListener));
+		HidePack.ScopeList.addListener(new WeakListChangeListener<>(writeListener));
+		HidePack.SoundList.addListener(new WeakListChangeListener<>(writeListener));
+		HidePack.OpenPacks.addListener(new WeakListChangeListener<>(writeListener));
 		write();
 	}
 
@@ -92,27 +97,22 @@ public class RootController implements Initializable {
 
 	/** Packの内容をリストに反映 */
 	public void write() {
-		ObservableList<ColordList> list;
 		// Pack
-		list = FXCollections.observableArrayList();
-		for (HidePack pack : HidePack.OpenPacks) {
-
-			list.add(new ColordList(pack.Pack, pack.PackColor));
-		}
-		packList.setItems(list.sorted());
+		packList.setItems(FXCollections.observableArrayList(
+				HidePack.OpenPacks.stream().filter(data -> Search(data.getDisplayName(), packSearch.getText())).sorted()
+						.collect(Collectors.toList())));
 		// Gun
-		list = FXCollections.observableArrayList();
-		for (GunData gun : HidePack.GunList) {
-			if (Search(gun.ITEM_DISPLAYNAME, itemSearch.getText()))
-				list.add(new ColordList(gun, HidePack.getPack(gun.PackUID).PackColor));
-		}
-		gunList.setItems(list.sorted());
+		gunList.setItems(FXCollections.observableArrayList(
+				HidePack.GunList.stream().filter(data -> Search(data.getDisplayName(), itemSearch.getText())).sorted()
+						.collect(Collectors.toList())));
 		// Magazine
-		list = FXCollections.observableArrayList();
-		for (BulletData magazine : HidePack.BulletList) {
-			list.add(new ColordList(magazine, HidePack.getPack(magazine.PackUID).PackColor));
-		}
-		magazineList.setItems(list.sorted());
+		magazineList.setItems(FXCollections.observableArrayList(
+				HidePack.BulletList.stream().filter(data -> Search(data.getDisplayName(), itemSearch.getText()))
+						.sorted().collect(Collectors.toList())));
+
+		packList.refresh();
+		gunList.refresh();
+		magazineList.refresh();
 	}
 
 	@FXML
@@ -129,7 +129,7 @@ public class RootController implements Initializable {
 
 	@FXML
 	public void crick() {
-		System.out.println(gunList.getBoundsInLocal());
+
 	}
 
 	// ========メニュー操作========
@@ -165,7 +165,6 @@ public class RootController implements Initializable {
 				confirmDialog.setResizable(false);
 				confirmDialog.setTitle("Select an Option");
 				confirmDialog.show();
-
 			}
 		}
 	}
@@ -174,26 +173,29 @@ public class RootController implements Initializable {
 		PackIO.export();
 	}
 
+	// FXCollections.observableArrayList(HidePack.OpenPacks.stream().filter(data ->
+	// Search(data.getDisplayName(),
+	// packSearch.getText())).sorted().collect(Collectors.toList()))
 	// ========編集========
 	public void editPack() {
-		ColordList item = packList.getSelectionModel().getSelectedItem();
+		DataEntityInterface item = packList.getSelectionModel().getSelectedItem();
 		if (item != null) {
-			log.debug(HidePack.getPack(item.Name.getDisplayName()).toString());
+			log.debug(HidePack.getPack(item.getDisplayName()).toString());
 		}
 	}
 
 	public void editGun() {
-		ColordList item = gunList.getSelectionModel().getSelectedItem();
+		DataEntityInterface item = gunList.getSelectionModel().getSelectedItem();
 		if (item != null) {
-			log.debug(HidePack.getGunData(item.Name.getDisplayName()).toString());
-			EditerComponent.writeGunEditer(editer, HidePack.getGunData(item.Name.getDisplayName()));
+			log.debug(HidePack.getGunData(item.getDisplayName()).toString());
+			EditerComponent.writeGunEditer(editer, HidePack.getGunData(item.getDisplayName()));
 		}
 	}
 
 	public void editMagazine() {
-		ColordList item = magazineList.getSelectionModel().getSelectedItem();
+		DataEntityInterface item = magazineList.getSelectionModel().getSelectedItem();
 		if (item != null) {
-			log.debug(HidePack.getBulletData(item.Name.getDisplayName()).toString());
+			log.debug(HidePack.getBulletData(item.getDisplayName()).toString());
 		}
 	}
 
@@ -207,26 +209,26 @@ public class RootController implements Initializable {
 	private static int gunNamePointer = 0;
 	private static int bulletNamePointer = 0;
 
-	@FXML
 	public void addPack() {
 		log.debug("addPack");
 		HidePack pack = new HidePack();
 		while (HidePack.getPack("New Pack No." + packNamePointer) != null) {
 			packNamePointer++;
 		}
+		packNamePointer++;
 		pack.Pack.PACK_NAME = "New Pack No." + packNamePointer;
 		pack.Pack.PackUID = new Random().nextLong();
 		HidePack.OpenPacks.add(pack);
 		write();
 	}
 
-	@FXML
 	public void addGun() {
 		log.debug("addGun");
 		GunData newGun = new GunData();
 		while (HidePack.getGunData("New Gun No." + gunNamePointer) != null) {
 			gunNamePointer++;
 		}
+		gunNamePointer++;
 		newGun.ITEM_SHORTNAME = "gun_" + gunNamePointer;
 		newGun.ITEM_DISPLAYNAME = "New Gun No." + gunNamePointer;
 		newGun.PackUID = HidePack.DefaultPack.Pack.PackUID;
@@ -234,18 +236,27 @@ public class RootController implements Initializable {
 		write();
 	}
 
-	@FXML
 	public void addMagazine() {
 		log.debug("addBullet");
 		BulletData bullet = new BulletData();
 		while (HidePack.getGunData("New Magazine No." + bulletNamePointer) != null) {
-			gunNamePointer++;
+			bulletNamePointer++;
 		}
-		bullet.ITEM_SHORTNAME = "magazine_" + gunNamePointer;
-		bullet.ITEM_DISPLAYNAME = "New Magazine No." + gunNamePointer;
+		bulletNamePointer++;
+		bullet.ITEM_SHORTNAME = "magazine_" + bulletNamePointer;
+		bullet.ITEM_DISPLAYNAME = "New Magazine No." + bulletNamePointer;
 		bullet.PackUID = HidePack.DefaultPack.Pack.PackUID;
 		HidePack.BulletList.add(bullet);
 		write();
+	}
+
+	public void importIcon() {
+		PackIO.importIcon();
+	}
+
+	public void importSound() {
+		PackIO.importSound();
+		;
 	}
 
 	// ===========検索============
@@ -267,47 +278,31 @@ public class RootController implements Initializable {
 
 	// ===========リストセル============
 	/** カラーアイコン付きのリストシェル */
-	public static class ColordList implements Comparable<ColordList> {
-		public static Callback<ListView<ColordList>, ListCell<ColordList>> getCellFactory() {
-			return new Callback<ListView<ColordList>, ListCell<ColordList>>() {
+	public static class ColordListCell extends ListCell<DataEntityInterface> {
+		/** ファクトリー */
+		public static Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>> getCellFactory() {
+			return new Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>>() {
 				@Override
-				public ListCell<ColordList> call(ListView<ColordList> arg0) {
+				public ListCell<DataEntityInterface> call(ListView<DataEntityInterface> arg0) {
 					return new ColordListCell();
 				}
 			};
 		}
 
-		public ColordList(DataEntityInterface name, Color color) {
-			Name = name;
-			Color = color;
-		}
-
-		public DataEntityInterface Name;
-		public Color Color;
-
-		@Override
-		public int compareTo(ColordList value) {
-			return Name.getDisplayName().compareTo(value.Name.getDisplayName());
-		}
-	}
-
-	/** カラーアイコン付きのリストシェル */
-	public static class ColordListCell extends ListCell<ColordList> {
 		private Rectangle color = new Rectangle(20, 20);
 		private static final Color DisableColor = Color.rgb(0, 0, 0, 0);
 
 		@Override
-		protected void updateItem(ColordList cl, boolean empty) {
-			super.updateItem(cl, empty);
+		protected void updateItem(DataEntityInterface data, boolean empty) {
+			super.updateItem(data, empty);
 			if (!empty) {
-				setText(cl.Name.getDisplayName());
-				color.setFill(cl.Color);
+				setText(data.getDisplayName());
+				color.setFill(HidePack.getPack(data.getPackUID()).PackColor);
 				setGraphic(color);
 			} else {
 				setText("");
 				color.setFill(DisableColor);
 			}
-
 		}
 	}
 }

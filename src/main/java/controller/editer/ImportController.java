@@ -2,14 +2,10 @@ package controller.editer;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.function.Consumer;
 
-import controller.editer.RootController.ColordList;
-import controller.editer.RootController.ColordListCell;
 import editer.DataEntityInterface;
 import editer.HidePack;
 import io.PackCash;
@@ -23,9 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
-import resources.Image;
-import resources.Sound;
-import types.PackInfo;
 
 public class ImportController implements Initializable {
 

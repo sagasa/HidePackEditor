@@ -8,12 +8,13 @@ import org.controlsfx.control.textfield.TextFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.javafx.scene.control.skin.TextFieldSkin;
-
+import editer.HidePack;
 import helper.EditHelper;
 import javafx.beans.property.Property;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -24,6 +25,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -40,6 +43,7 @@ import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import localize.LocalizeHandler;
+import resources.HideImage;
 import types.base.DataBase;
 import types.base.ItemData;
 import types.guns.GunData;
@@ -48,18 +52,25 @@ import types.guns.GunData;
 public class EditerComponent {
 	private static final Logger log = LoggerFactory.getLogger(EditerComponent.class);
 
+	/** 未設定時のイメージ */
+	private static final Image NullImage = new Image("./icon/notSet.png");
+
 	// GunEditer
 	public static void writeGunEditer(Pane editer, GunData data) {
 		// Cate1
 		Region itemInfo = makeItemInfoNode(data);
 		itemInfo.setLayoutX(5);
 		itemInfo.setLayoutY(5);
-		itemInfo.setPrefSize(160, 100);
 		Region cate0 = makeCateEditPanel(data, 0);
 		cate0.setLayoutX(300);
 		cate0.setLayoutY(5);
 		editer.getChildren().add(cate0);
 		editer.getChildren().add(itemInfo);
+
+		Region icon = makeIconNode(EditHelper.getPropertyString(data, "ITEM_ICONNAME"));
+		icon.setLayoutX(5);
+		icon.setLayoutY(160);
+		editer.getChildren().add(icon);
 	}
 
 	/** ItemData用名称+アイコン編集ノード */
@@ -90,6 +101,22 @@ public class EditerComponent {
 			}
 		}).build();
 		root.getChildren().addAll(dizplayname, useshortname, shortname);
+		root.setPrefSize(160, 72);
+		return root;
+	}
+
+	/** Stringにアイコン設定パネル */
+	private static Region makeIconNode(StringProperty icon) {
+		AnchorPane root = new AnchorPane();
+		root.setStyle("-fx-background-color: lightGray;");
+		HideImage image = HidePack.getIcon(icon.get());
+		ImageView iconview = new ImageView();
+		iconview.setFitWidth(64);
+		iconview.setFitHeight(64);
+		iconview.setPreserveRatio(true);
+		iconview.setImage(image == null ? NullImage : SwingFXUtils.toFXImage(image.Image, null));
+		root.getChildren().add(iconview);
+		root.setPrefSize(160, 100);
 		return root;
 	}
 
@@ -225,20 +252,12 @@ public class EditerComponent {
 						}
 					}
 				});
+				text.textProperty().addListener((change, old, newv) -> {
+					for (Runnable run : ChangeListener)
+						run.run();
+				});
 				if (Type == EditNodeType.Text) {
 					text.textProperty().bindBidirectional(EditHelper.getPropertyString(Data, Field));
-					// テキスト保存
-					text.textProperty().addListener(new ChangeListener<String>() {
-						@Override
-						public void changed(ObservableValue<? extends String> observable, String oldValue,
-								String newValue) {
-							RootController.INSTANCE.gunList.refresh();
-							// EditHelper.setData(Data, Field, text.getText());
-							for (Runnable listener : ChangeListener) {
-								listener.run();
-							}
-						}
-					});
 				} else if (Type == EditNodeType.Number) {
 					// 入力を数値のみに
 					TextFormatter<Number> formatter;
@@ -309,16 +328,6 @@ public class EditerComponent {
 					text.setTextFormatter(formatter);
 					text.textProperty().bindBidirectional((Property) EditHelper.getPropertyNumber(Data, Field),
 							converter);
-					// 数値保存
-					text.textProperty().addListener(new ChangeListener<String>() {
-						@Override
-						public void changed(ObservableValue<? extends String> observable, String oldValue,
-								String newValue) {
-							for (Runnable listener : ChangeListener) {
-								listener.run();
-							}
-						}
-					});
 					text.focusedProperty().addListener(new ChangeListener<Boolean>() {
 						@Override
 						public void changed(ObservableValue<? extends Boolean> value, Boolean oldvalue,
@@ -361,7 +370,7 @@ public class EditerComponent {
 							if (e.isShiftDown()) {
 								change = change.multiply(new BigDecimal("10"));
 							}
-							if (e.getDeltaY()+e.getDeltaX() < 0) {
+							if (e.getDeltaY() + e.getDeltaX() < 0) {
 								change = change.multiply(new BigDecimal("-1"));
 							}
 

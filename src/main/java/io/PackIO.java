@@ -26,18 +26,13 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import controller.editer.ImportController;
+import controller.editer.RootController;
 import editer.HidePack;
-import editer.Main;
 import editer.mainWindow.MainWindow;
 import helper.ArrayEditer;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import resources.Image;
+import javafx.stage.FileChooser.ExtensionFilter;
+import resources.HideImage;
 import resources.Sound;
 import types.PackInfo;
 import types.guns.BulletData;
@@ -53,69 +48,30 @@ public class PackIO {
 		HidePack.clear();
 	}
 
-	/** 今開いているデータを消して新しいパックを開く */
-	public static void openPack(File pack) {
-		FileChooser filechooser = new FileChooser();
-
-		// System.out.println(selected);
-		// パックを読む
-		if (selected == 0) {
-			HidePack.clear();
-			try {
-				Stage confirmDialog = new Stage(StageStyle.DECORATED);
-				FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("/fxml/import.fxml"));
-				Parent importroot = (Parent) loader.load();
-				ImportController controller = loader.getController();
-				controller.setPack(readPack(filechooser.getSelectedFile()));
-				;
-				Scene scene = new Scene(importroot);
-				confirmDialog.setTitle("Import");
-				confirmDialog.setScene(scene);
-				confirmDialog.setResizable(false);
-				confirmDialog.show();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			Main.packPath = filechooser.getSelectedFile().getPath();
-		}
-	}
-
-	/** 前に保存した場所に出力 */
-	public static void save() {
-		if (Main.packPath == null) {
-			saveAs();
-			return;
-		}
-		export(new File(Main.packPath));
-	}
-
 	/** ファイル選択を開く */
-	private static JFileChooser makeFileChooser(FileNameExtensionFilter filter) {
-		JFileChooser filechooser = new JFileChooser();
-		filechooser.setCurrentDirectory(new File("."));
-		filechooser.setFileFilter(filter);
-		filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		filechooser.setMultiSelectionEnabled(true);
+	private static FileChooser makeFileChooser(ExtensionFilter filter) {
+		FileChooser filechooser = new FileChooser();
+		filechooser.setInitialDirectory(new File("."));
+		filechooser.getExtensionFilters().add(filter);
 		return filechooser;
 	}
 
 	// TODO キャッチにエラーダイアログを
 	/** iconをインポート */
-	public static void inportIcon() {
-		JFileChooser filechooser = makeFileChooser(new FileNameExtensionFilter("Image", "png", "jpg", "bmp"));
-		int selected = filechooser.showOpenDialog(null);
-
-		if (selected == 0) {
-			for (File file : filechooser.getSelectedFiles()) {
-				inportIcon(file);
+	public static void importIcon() {
+		FileChooser filechooser = makeFileChooser(new ExtensionFilter("image", "*.png", "*.jpg", "*.bmp"));
+		List<File> files = filechooser.showOpenMultipleDialog(RootController.STAGE);
+		if (files != null) {
+			for (File file : files) {
+				importIcon(file);
 			}
 		}
 	}
 
 	/** iconをインポート */
-	public static void inportIcon(File file) {
+	public static void importIcon(File file) {
 		try {
-			Image image = new Image(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
+			HideImage image = new HideImage(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
 			HidePack.IconList.add(image);
 			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
@@ -124,21 +80,20 @@ public class PackIO {
 	}
 
 	/** Scopeをインポート */
-	public static void inportScope() {
-		JFileChooser filechooser = makeFileChooser(new FileNameExtensionFilter("Image", "png", "jpg", "bmp"));
-		int selected = filechooser.showOpenDialog(null);
-
-		if (selected == 0) {
-			for (File file : filechooser.getSelectedFiles()) {
-				inportScope(file);
+	public static void importScope() {
+		FileChooser filechooser = makeFileChooser(new ExtensionFilter("image", "*.png", "*.jpg", "*.bmp"));
+		List<File> files =  filechooser.showOpenMultipleDialog(RootController.STAGE);
+		if (files != null) {
+			for (File file :files) {
+				importScope(file);
 			}
 		}
 	}
 
 	/** Scopeをインポート */
-	public static void inportScope(File file) {
+	public static void importScope(File file) {
 		try {
-			Image image = new Image(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
+			HideImage image = new HideImage(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
 			HidePack.ScopeList.add(image);
 			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
@@ -147,43 +102,24 @@ public class PackIO {
 	}
 
 	/** Soundをインポート */
-	public static void inportSound() {
-		JFileChooser filechooser = makeFileChooser(new FileNameExtensionFilter("Sound", "ogg"));
-		int selected = filechooser.showOpenDialog(null);
-
-		if (selected == 0) {
-			for (File file : filechooser.getSelectedFiles()) {
-				inportSound(file);
+	public static void importSound() {
+		FileChooser filechooser = makeFileChooser(new ExtensionFilter("ogg", "*.ogg"));
+		List<File> files =  filechooser.showOpenMultipleDialog(RootController.STAGE);
+		if (files != null) {
+			for (File file :files) {
+				importSound(file);
 			}
 		}
 	}
 
 	/** Soundをインポート */
-	public static void inportSound(File file) {
+	public static void importSound(File file) {
 		try {
 			Sound sound = new Sound(file.getName().replaceAll(".ogg$", ""), Files.readAllBytes(file.toPath()));
 			HidePack.SoundList.add(sound);
 			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-
-	/** ファイル指定して出力 */
-	public static void saveAs() {
-		JFileChooser filechooser = new JFileChooser();
-		filechooser.setCurrentDirectory(new File("."));
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("zip file", "zip");
-		filechooser.setFileFilter(filter);
-		filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-		int selected = filechooser.showSaveDialog(null);
-		// System.out.println(selected);
-		// パックを書く
-		if (selected == 0) {
-			File file = filechooser.getSelectedFile();
-			export(file);
-			Main.packPath = filechooser.getSelectedFile().getAbsolutePath();
 		}
 	}
 
@@ -231,7 +167,7 @@ public class PackIO {
 		// リソース
 		try {
 			// Icon
-			for (Image d : HidePack.IconList) {
+			for (HideImage d : HidePack.IconList) {
 				// 参照ではなければ
 				if (!d.isReference()) {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -241,7 +177,7 @@ public class PackIO {
 				}
 			}
 			// Scope
-			for (Image d : HidePack.ScopeList) {
+			for (HideImage d : HidePack.ScopeList) {
 				// 参照ではなければ
 				if (!d.isReference()) {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -271,8 +207,8 @@ public class PackIO {
 		try {
 			// 全パック出力
 			for (Long id : dataMap.keySet()) {
-				ZipOutputStream zos = new ZipOutputStream(
-						new FileOutputStream(new File(HidePack.getPack(id).Pack.PackPath,  HidePack.getPack(id).Pack.PACK_NAME) + ".zip"),
+				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(
+						new File(HidePack.getPack(id).Pack.PackPath, HidePack.getPack(id).Pack.PACK_NAME) + ".zip"),
 						Charset.forName("Shift_JIS"));
 				for (Entry data : dataMap.get(id)) {
 					ZipEntry entry = new ZipEntry(data.Name);
@@ -357,13 +293,13 @@ public class PackIO {
 		// Icon
 		if (name.matches("^(.*)icon/(.*).png")) {
 			String n = name.replaceAll(".png", "").replaceAll("^(.*)icon/", "");
-			pack.IconList.add(new Image(n, ImageIO.read(new ByteArrayInputStream(data))));
+			pack.IconList.add(new HideImage(n, ImageIO.read(new ByteArrayInputStream(data))));
 			// System.out.println("icon");
 		}
 		// Scope
 		if (name.matches("^(.*)scope/(.*).png")) {
 			String n = name.replaceAll(".png", "").replaceAll("^(.*)scope/", "");
-			pack.ScopeList.add(new Image(n, ImageIO.read(new ByteArrayInputStream(data))));
+			pack.ScopeList.add(new HideImage(n, ImageIO.read(new ByteArrayInputStream(data))));
 			// System.out.println("scope");
 		}
 		// model

@@ -37,7 +37,6 @@ public class Main extends Application {
 		RootController.STAGE = stage;
 		log.debug("Showing JFX scene");
 		Scene scene = new Scene(rootNode, STAGE_SIZE.getX(), STAGE_SIZE.getY()-40);
-		scene.getStylesheets().add("/styles/styles.css");
 		stage.setTitle("HidePackEditer");
 		stage.setScene(scene);
 		stage.setMinHeight(STAGE_SIZE.getY());

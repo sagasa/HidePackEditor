@@ -69,7 +69,7 @@
                               <TextField fx:id="itemSearch" layoutX="25.0" prefHeight="25.0" prefWidth="175.0" />
                            </children>
                         </AnchorPane>
-      						<TabPane onMouseClicked="#crick" prefHeight="300.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+      						<TabPane prefHeight="300.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
       							<tabs>
       								<Tab text="Gun">
       									<content>
@@ -107,10 +107,31 @@
 					<items>
 						<ToolBar maxHeight="-Infinity" prefHeight="26.0" prefWidth="200.0">
 							<items>
-								<Button mnemonicParsing="false" text="NewGun">
+								<Button mnemonicParsing="false" onAction="#addGun" text="NewGun">
                            <font>
                               <Font size="10.0" />
                            </font></Button>
+                        <Button mnemonicParsing="false" onAction="#addMagazine" text="NewMagazine">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Region prefHeight="10.0" prefWidth="20.0" visible="false" />
+                        <Button mnemonicParsing="false" onAction="#importIcon" text="ImportIcon">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#importSound" text="ImportSound">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Button mnemonicParsing="false" text="ImportModel">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
 							</items>
 						</ToolBar>
 						<AnchorPane fx:id="editer" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" />

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import editer.HidePack;
-import resources.Image;
+import resources.HideImage;
 import resources.Sound;
 import types.guns.BulletData;
 import types.guns.GunData;
@@ -15,9 +15,9 @@ public class PackCash {
 	/** 弾のList BulletData */
 	public List<BulletData> BulletList = new ArrayList<>();
 	/** IconのList Image */
-	public List<Image> IconList = new ArrayList<>();
+	public List<HideImage> IconList = new ArrayList<>();
 	/** ScopeのList Image */
-	public List<Image> ScopeList = new ArrayList<>();
+	public List<HideImage> ScopeList = new ArrayList<>();
 	/** SoundのList Sound */
 	public List<Sound> SoundList = new ArrayList<>();
 	/** 読み込み中のパック */

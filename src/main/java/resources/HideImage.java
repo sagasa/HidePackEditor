@@ -2,9 +2,9 @@ package resources;
 
 import java.awt.image.BufferedImage;
 
-public class Image extends Resource {
+public class HideImage extends Resource {
 
-	public Image(String name, BufferedImage bufferedImage) {
+	public HideImage(String name, BufferedImage bufferedImage) {
 		super(name);
 		Image = bufferedImage;
 	}

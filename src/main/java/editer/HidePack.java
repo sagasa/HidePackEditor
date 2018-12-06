@@ -7,23 +7,23 @@ import io.PackCash;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
-import resources.Image;
+import resources.HideImage;
 import resources.Sound;
 import types.PackInfo;
 import types.guns.BulletData;
 import types.guns.GunData;
 
 /** パック本体 */
-public class HidePack {
+public class HidePack implements DataEntityInterface{
 
 	/** 銃のList GunData */
 	public static ObservableList<GunData> GunList;
 	/** 弾のList BulletData */
 	public static ObservableList<BulletData> BulletList;
 	/** IconのList Image */
-	public static ObservableList<Image> IconList;
+	public static ObservableList<HideImage> IconList;
 	/** ScopeのList Image */
-	public static ObservableList<Image> ScopeList;
+	public static ObservableList<HideImage> ScopeList;
 	/** SoundのList Sound */
 	public static ObservableList<Sound> SoundList;
 	/** 編集中のパック デフォルトを含む */
@@ -118,6 +118,16 @@ public class HidePack {
 		return null;
 	}
 
+	/**アイコン取得*/
+	public static HideImage getIcon(String string) {
+		for (HideImage data : IconList) {
+			if (data.getDisplayName().equals(string)) {
+				return data;
+			}
+		}
+		return null;
+	}
+
 	/** 参照か */
 	public boolean isReference = false;
 	/** 表示用カラー */
@@ -126,4 +136,14 @@ public class HidePack {
 	public PackInfo Pack = new PackInfo();
 	/** デフォルトか */
 	public boolean isDefault = false;
+
+	@Override
+	public String getDisplayName() {
+		return Pack.PACK_NAME;
+	}
+
+	@Override
+	public long getPackUID() {
+		return Pack.PackUID;
+	}
 }
