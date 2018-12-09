@@ -1,5 +1,8 @@
 package types.guns;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import types.Info;
 import types.base.ItemData;
 import types.effect.Recoil;
@@ -22,7 +25,6 @@ public class GunData extends ItemData {
 	@Info(Cate = 0, Min = 0)
 	public int ADS_TICK = 0;
 	/** スコープ名 : String型 */
-	@Info(Cate = 0)
 	public String SCOPE_NAME = "";
 	/** ズーム倍率 float型 */
 	@Info(Cate = 2, Min = 0.2f, Max = 16f)
@@ -93,7 +95,7 @@ public class GunData extends ItemData {
 	/** リロード音 : Sound型 **/
 	public Sound SOUND_RELOAD = new Sound("sample", 10);
 	/** 使用する弾 : StringArray型 */
-	public String[] BULLET_USE = new String[0];
+	public List<String> BULLET_USE = new ArrayList<>();
 	/** セカンダリにできるか */
 	@Info(Cate = 0)
 	public boolean USE_SECONDARY = false;

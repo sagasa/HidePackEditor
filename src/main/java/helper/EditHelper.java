@@ -1,5 +1,8 @@
 package helper;
 
+import java.lang.reflect.TypeVariable;
+import java.util.Arrays;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
@@ -22,7 +25,7 @@ public class EditHelper {
 	}
 
 	/**
-	 * データ取得 EnumDataInfo.toString()と同じフィールド名を持つpublicなフィールドを取得可能
+	 * データ取得
 	 */
 	public static Object getData(DataBase data, String string) {
 		try {
@@ -103,52 +106,54 @@ public class EditHelper {
 	}
 
 	/** プロパティを取得 */
-	public static StringProperty getPropertyString(DataBase data, String type) {
+	public static Property<?> getProperty(DataBase data, String field) {
+		return data.Property.get(field);
+	}
+
+	/**プロパティとフィールドの型チェック*/
+	public static boolean isString(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
 		if (property != null && property instanceof StringProperty
 				&& getType(data, type).isAssignableFrom(String.class)) {
-			return (StringProperty) property;
+			return true;
 		}
-		return null;
+		return false;
 	}
 
-	/** プロパティを取得 */
-	public static BooleanProperty getPropertyBoolean(DataBase data, String type) {
+	/**プロパティとフィールドの型チェック*/
+	public static boolean isBoolean(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
 		if (property != null && property instanceof BooleanProperty
 				&& (getType(data, type).isAssignableFrom(boolean.class)
 						|| getType(data, type).isAssignableFrom(Boolean.class))) {
-			return (BooleanProperty) property;
+			return true;
 		}
-		return null;
+		return false;
 	}
 
-	/** プロパティを取得 FloatとIntegerのみ */
-	public static Property<Number> getPropertyNumber(DataBase data, String type) {
-		if (getPropertyFloat(data, type) != null)
-			return getPropertyFloat(data, type);
-		else
-			return getPropertyInteger(data, type);
+	/**プロパティとフィールドの型チェック*/
+	public static boolean isNumber(DataBase data, String type) {
+		return isFloat(data, type)||isInteger(data, type);
 	}
 
-	/** プロパティを取得 */
-	public static FloatProperty getPropertyFloat(DataBase data, String type) {
+	/**プロパティとフィールドの型チェック*/
+	public static boolean isFloat(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
 		if (property != null) {
 			if (getType(data, type).isAssignableFrom(float.class) || getType(data, type).isAssignableFrom(Float.class))
-				return (FloatProperty) property;
+				return true;
 		}
-		return null;
+		return false;
 	}
 
-	/** プロパティを取得 */
-	public static IntegerProperty getPropertyInteger(DataBase data, String type) {
+	/**プロパティとフィールドの型チェック*/
+	public static boolean isInteger(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
 		if (property != null) {
 			if (getType(data, type).isAssignableFrom(int.class) || getType(data, type).isAssignableFrom(Integer.class))
-				return (IntegerProperty) property;
+				return true;
 		}
-		return null;
+		return false;
 	}
 
 	/** ローカライズした名前を取得 */

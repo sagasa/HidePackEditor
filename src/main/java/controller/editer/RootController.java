@@ -177,6 +177,10 @@ public class RootController implements Initializable {
 	// Search(data.getDisplayName(),
 	// packSearch.getText())).sorted().collect(Collectors.toList()))
 	// ========編集========
+	public void editClear() {
+		editer.getChildren().clear();
+	}
+
 	public void editPack() {
 		DataEntityInterface item = packList.getSelectionModel().getSelectedItem();
 		if (item != null) {
@@ -185,10 +189,11 @@ public class RootController implements Initializable {
 	}
 
 	public void editGun() {
+		editClear();
 		DataEntityInterface item = gunList.getSelectionModel().getSelectedItem();
 		if (item != null) {
 			log.debug(HidePack.getGunData(item.getDisplayName()).toString());
-			EditerComponent.writeGunEditer(editer, HidePack.getGunData(item.getDisplayName()));
+			EditerComponent.writeGunEditer(editer,HidePack.getGunData(item.getDisplayName()));
 		}
 	}
 
@@ -225,10 +230,12 @@ public class RootController implements Initializable {
 	public void addGun() {
 		log.debug("addGun");
 		GunData newGun = new GunData();
+		if(HidePack.getGunData("New Gun No." + gunNamePointer)==null) {
+			gunNamePointer++;
+		}
 		while (HidePack.getGunData("New Gun No." + gunNamePointer) != null) {
 			gunNamePointer++;
 		}
-		gunNamePointer++;
 		newGun.ITEM_SHORTNAME = "gun_" + gunNamePointer;
 		newGun.ITEM_DISPLAYNAME = "New Gun No." + gunNamePointer;
 		newGun.PackUID = HidePack.DefaultPack.Pack.PackUID;
