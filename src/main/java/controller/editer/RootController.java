@@ -58,15 +58,7 @@ public class RootController implements Initializable {
 	public ListView<DataEntityInterface> modelList;
 
 	/** writeのリスナー */
-	private ListChangeListener<DataEntityInterface> writeListener = new WeakListChangeListener<>(
-			new ListChangeListener<DataEntityInterface>() {
-				@Override
-				public void onChanged(Change<? extends DataEntityInterface> change) {
-					while (change.next()) {
-						write();
-					}
-				}
-			});
+	private ListChangeListener<DataEntityInterface> writeListener = change -> write();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -193,7 +185,7 @@ public class RootController implements Initializable {
 		DataEntityInterface item = gunList.getSelectionModel().getSelectedItem();
 		if (item != null) {
 			log.debug(HidePack.getGunData(item.getDisplayName()).toString());
-			EditerComponent.writeGunEditer(editer,HidePack.getGunData(item.getDisplayName()));
+			EditerComponent.writeGunEditer(editer, HidePack.getGunData(item.getDisplayName()));
 		}
 	}
 
@@ -230,7 +222,7 @@ public class RootController implements Initializable {
 	public void addGun() {
 		log.debug("addGun");
 		GunData newGun = new GunData();
-		if(HidePack.getGunData("New Gun No." + gunNamePointer)==null) {
+		if (HidePack.getGunData("New Gun No." + gunNamePointer) == null) {
 			gunNamePointer++;
 		}
 		while (HidePack.getGunData("New Gun No." + gunNamePointer) != null) {

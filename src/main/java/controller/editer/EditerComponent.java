@@ -1,12 +1,12 @@
 package controller.editer;
 
 import java.lang.reflect.Field;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import editer.DataEntityInterface;
 import editer.HidePack;
 import helper.EditHelper;
 import javafx.beans.property.Property;
@@ -25,7 +25,6 @@ import resources.HideImage;
 import types.base.ItemData;
 import types.guns.GunData;
 
-//TODO プロパティを利用してさらに効率化をする
 public class EditerComponent {
 	private static final Logger log = LoggerFactory.getLogger(EditerComponent.class);
 
@@ -53,8 +52,8 @@ public class EditerComponent {
 		VBox scope = new VBox();
 		scope.setStyle("-fx-background-color: lightGray;");
 		//TODO 監視を付けなきゃ
-		ObservableList<String> list = FXCollections.observableArrayList(HidePack.GunList.stream().map(name->name.getDisplayName()).collect(Collectors.toList()));
-		scope.getChildren().add(EditNodeBuilder.makeStringAutoFillNode(data, "SCOPE_NAME", list).build());
+		ObservableList<DataEntityInterface> list = FXCollections.observableArrayList(HidePack.GunList.stream().map(name->(DataEntityInterface)name).collect(Collectors.toList()));
+		scope.getChildren().add(EditNodeBuilder.makeStringAutoFillNode(data, "SCOPE_NAME",list).build());
 		scope.setLayoutX(5);
 		scope.setLayoutY(300);
 		editer.getChildren().add(scope);

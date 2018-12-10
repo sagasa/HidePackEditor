@@ -1,6 +1,8 @@
 package controller.editer;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 
@@ -8,10 +10,13 @@ import org.controlsfx.control.textfield.TextFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import controller.editer.RootController.ColordListCell;
+import editer.DataEntityInterface;
 import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -20,10 +25,12 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -101,7 +108,7 @@ public class EditNodeBuilder {
 	}
 
 	/** DataBaseのストリングコンボ型 */
-	public static EditNodeBuilder makeStringAutoFillNode(DataBase data, String field,ObservableList<String> list) {
+	public static EditNodeBuilder makeStringAutoFillNode(DataBase data, String field,List<DataEntityInterface> list) {
 		if (!EditHelper.isString(data, field)) {
 			log.error(data.getClass() + "." + field + " is not String");
 			return null;
@@ -174,10 +181,10 @@ public class EditNodeBuilder {
 		return this;
 	}
 
-	private ObservableList<String> fromList;
+	private List<DataEntityInterface> fromList;
 
 	/** テキストフィールドの幅 テキストフィールドを使用しない場合は無効 */
-	public EditNodeBuilder setAutoFillList(ObservableList<String> list) {
+	public EditNodeBuilder setAutoFillList(ObservableList<DataEntityInterface> list) {
 		fromList = list;
 		return this;
 	}
@@ -373,9 +380,16 @@ public class EditNodeBuilder {
 				listener.run();
 			}
 			return root;
-		} else if (Type == EditNodeType.StringCombo) {
+		} else if (Type == EditNodeType.StringList) {
 			AnchorPane root = new AnchorPane();
 
+			ListView<DataEntityInterface> listview = new ListView<>();
+			listview.setCellFactory(ColordListCell.getCellFactory());
+			// 順番変更＋削除用クリックイベント
+			listview.addEventFilter(MouseEvent.MOUSE_CLICKED, event->{
+				listview.get
+			});
+			fromList.stream().filter(str->true);
 			ComboBox<String> combo = new ComboBox<>();
 			combo.getSelectionModel().getSelectedItem();
 			return root;

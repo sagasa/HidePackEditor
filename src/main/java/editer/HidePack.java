@@ -1,6 +1,5 @@
 package editer;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import io.PackCash;
@@ -40,12 +39,12 @@ public class HidePack implements DataEntityInterface{
 	}
 	/** パック初期化 */
 	public static void clear() {
-		GunList = FXCollections.observableList(new ArrayList<>());
-		BulletList = FXCollections.observableList(new ArrayList<>());
-		IconList = FXCollections.observableList(new ArrayList<>());
-		ScopeList = FXCollections.observableList(new ArrayList<>());
-		SoundList = FXCollections.observableList(new ArrayList<>());
-		OpenPacks = FXCollections.observableList(new ArrayList<>());
+		GunList = FXCollections.observableArrayList();
+		BulletList = FXCollections.observableArrayList();
+		IconList = FXCollections.observableArrayList();
+		ScopeList = FXCollections.observableArrayList();
+		SoundList = FXCollections.observableArrayList();
+		OpenPacks = FXCollections.observableArrayList();
 		DefaultPack = new HidePack();
 		DefaultPack.Pack = new PackInfo();
 		DefaultPack.Pack.PackUID = random.nextLong();
