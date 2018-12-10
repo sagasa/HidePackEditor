@@ -8,23 +8,27 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import editer.HidePack;
+import javafx.beans.property.ListPropertyBase;
 import javafx.beans.property.Property;
-import types.wrapper.TypesBooleanPropertyWrapper;
-import types.wrapper.TypesFloatPropertyWrapper;
-import types.wrapper.TypesIntegerPropertyWrapper;
-import types.wrapper.TypesStringPropertyWrapper;
+import javafx.collections.FXCollections;
+import types.wrapper.BooleanWrapper;
+import types.wrapper.FloatWrapper;
+import types.wrapper.IntegerWrapper;
+import types.wrapper.StringListWrapper;
+import types.wrapper.StringWrapper;
 
 /**
  * パックのデータのスーパークラス クローン可能 publicフィールドはすべてクローン可能なクラスにしてください
  * transient注釈が付いたフィールドはエディターでのみ使用
  */
-public abstract class DataBase implements Cloneable{
+public abstract class DataBase implements Cloneable {
 
 	/** パックデータ エディタでのみ使用 */
 	transient public long PackUID;
 	/** パックデータ エディタでのみ使用 Integer Float Boolean String のフィールドのプロパティ */
 	transient public Map<String, Property<?>> Property = new HashMap<>();
-	/**参照データか確認*/
+
+	/** 参照データか確認 */
 	public boolean isReference() {
 		return HidePack.getPack(PackUID).isReference;
 	}
@@ -34,17 +38,34 @@ public abstract class DataBase implements Cloneable{
 		for (Field field : this.getClass().getFields()) {
 			if (field.getType().isAssignableFrom(int.class) || field.getType().isAssignableFrom(Integer.class)) {
 				// Integer
-				Property.put(field.getName(), new TypesIntegerPropertyWrapper(this, field.getName()));
+				Property.put(field.getName(), new IntegerWrapper(this, field.getName()));
 			} else if (field.getType().isAssignableFrom(float.class) || field.getType().isAssignableFrom(Float.class)) {
 				// Float
-				Property.put(field.getName(), new TypesFloatPropertyWrapper(this, field.getName()));
+				Property.put(field.getName(), new FloatWrapper(this, field.getName()));
 			} else if (field.getType().isAssignableFrom(boolean.class)
 					|| field.getType().isAssignableFrom(Boolean.class)) {
 				// Boolean
-				Property.put(field.getName(), new TypesBooleanPropertyWrapper(this, field.getName()));
+				Property.put(field.getName(), new BooleanWrapper(this, field.getName()));
 			} else if (field.getType().isAssignableFrom(String.class)) {
 				// String
-				Property.put(field.getName(), new TypesStringPropertyWrapper(this,field.getName()));
+				Property.put(field.getName(), new StringWrapper(this, field.getName()));
+			} else if (field.getType().isAssignableFrom(String.class)) {
+				// String
+				Property.put(field.getName(), new StringListWrapper(this, field.getName()));
+				new ListPropertyBase<String>(FXCollections.observableArrayList()) {
+
+					@Override
+					public Object getBean() {
+						// TODO 自動生成されたメソッド・スタブ
+						return null;
+					}
+
+					@Override
+					public String getName() {
+						// TODO 自動生成されたメソッド・スタブ
+						return null;
+					}
+				};
 			}
 		}
 	}

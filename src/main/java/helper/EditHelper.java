@@ -2,6 +2,7 @@ package helper;
 
 import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
+import java.util.List;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -110,7 +111,7 @@ public class EditHelper {
 		return data.Property.get(field);
 	}
 
-	/**プロパティとフィールドの型チェック*/
+	/** プロパティとフィールドの型チェック */
 	public static boolean isString(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
 		if (property != null && property instanceof StringProperty
@@ -120,7 +121,7 @@ public class EditHelper {
 		return false;
 	}
 
-	/**プロパティとフィールドの型チェック*/
+	/** プロパティとフィールドの型チェック */
 	public static boolean isBoolean(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
 		if (property != null && property instanceof BooleanProperty
@@ -131,12 +132,22 @@ public class EditHelper {
 		return false;
 	}
 
-	/**プロパティとフィールドの型チェック*/
-	public static boolean isNumber(DataBase data, String type) {
-		return isFloat(data, type)||isInteger(data, type);
+	/** プロパティとフィールドの型チェック */
+	public static boolean isStringList(DataBase data, String type) {
+		Property<?> property = data.Property.get(type);
+		if (property != null && property instanceof BooleanProperty
+				&& getType(data, type).isAssignableFrom(List.class)) {
+			return true;
+		}
+		return false;
 	}
 
-	/**プロパティとフィールドの型チェック*/
+	/** プロパティとフィールドの型チェック */
+	public static boolean isNumber(DataBase data, String type) {
+		return isFloat(data, type) || isInteger(data, type);
+	}
+
+	/** プロパティとフィールドの型チェック */
 	public static boolean isFloat(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
 		if (property != null) {
@@ -146,7 +157,7 @@ public class EditHelper {
 		return false;
 	}
 
-	/**プロパティとフィールドの型チェック*/
+	/** プロパティとフィールドの型チェック */
 	public static boolean isInteger(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
 		if (property != null) {
@@ -170,5 +181,4 @@ public class EditHelper {
 		}
 		return null;
 	}
-
 }

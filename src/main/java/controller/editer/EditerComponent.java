@@ -3,8 +3,8 @@ package controller.editer;
 import java.lang.reflect.Field;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import editer.DataEntityInterface;
 import editer.HidePack;
@@ -26,7 +26,7 @@ import types.base.ItemData;
 import types.guns.GunData;
 
 public class EditerComponent {
-	private static final Logger log = LoggerFactory.getLogger(EditerComponent.class);
+	private static final Logger log = LogManager.getLogger();
 
 	/** 未設定時のイメージ */
 	private static final Image NullImage = new Image("./icon/notSet.png");
@@ -56,6 +56,8 @@ public class EditerComponent {
 		scope.getChildren().add(EditNodeBuilder.makeStringAutoFillNode(data, "SCOPE_NAME",list).build());
 		scope.setLayoutX(5);
 		scope.setLayoutY(300);
+
+		scope.getChildren().add(EditNodeBuilder.makeStringListNode(data, "BULLET_USE", list).build());
 		editer.getChildren().add(scope);
 	}
 

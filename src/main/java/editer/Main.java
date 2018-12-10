@@ -1,7 +1,10 @@
 package editer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import controller.editer.RootController;
 import io.PackIO;
@@ -26,7 +29,7 @@ public class Main extends Application {
 		launch(arg);
 	}
 
-	private static final Logger log = LoggerFactory.getLogger(Main.class);
+	private static final Logger log = LogManager.getLogger();
 	private static final Point2D STAGE_SIZE = new Point2D(1280, 720);
 
 	public void start(Stage stage) throws Exception {
@@ -36,7 +39,7 @@ public class Main extends Application {
 		Parent rootNode = (Parent) loader.load();
 		RootController.STAGE = stage;
 		log.debug("Showing JFX scene");
-		Scene scene = new Scene(rootNode, STAGE_SIZE.getX(), STAGE_SIZE.getY()-40);
+		Scene scene = new Scene(rootNode, STAGE_SIZE.getX(), STAGE_SIZE.getY() - 40);
 		stage.setTitle("HidePackEditer");
 		stage.setScene(scene);
 		stage.setMinHeight(STAGE_SIZE.getY());

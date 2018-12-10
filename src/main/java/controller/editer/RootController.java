@@ -7,8 +7,8 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import editer.DataEntityInterface;
 import editer.HidePack;
@@ -41,7 +41,7 @@ import types.guns.BulletData;
 import types.guns.GunData;
 
 public class RootController implements Initializable {
-	private static final Logger log = LoggerFactory.getLogger(RootController.class);
+	private static final Logger log = LogManager.getLogger();
 	public static RootController INSTANCE;
 	public static Stage STAGE;
 

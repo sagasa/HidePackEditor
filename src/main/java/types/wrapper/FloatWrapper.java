@@ -1,29 +1,29 @@
 package types.wrapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import helper.EditHelper;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import types.base.DataBase;
 
-public class TypesIntegerPropertyWrapper extends SimpleIntegerProperty implements TypesUpdate {
-	private static final Logger log = LoggerFactory.getLogger(TypesIntegerPropertyWrapper.class);
+public class FloatWrapper extends SimpleFloatProperty implements TypesUpdate {
+	private static final Logger log = LogManager.getLogger();
 	private DataBase Data;
 	private String Field;
 	private boolean isinit = false;
 
-	public TypesIntegerPropertyWrapper(DataBase data, String field) {
+	public FloatWrapper(DataBase data, String field) {
 		Data = data;
 		Field = field;
-		if (!(EditHelper.getType(Data, Field).equals(Integer.class)
-				|| EditHelper.getType(Data, Field).equals(int.class))) {
+		if (!(EditHelper.getType(Data, Field).equals(Float.class)
+				|| EditHelper.getType(Data, Field).equals(float.class))) {
 			log.warn(Data + "." + Field + " is not Integer Field");
 		}
 	}
 
 	@Override
-	public void set(int arg0) {
+	public void set(float arg0) {
 		super.set(arg0);
 		EditHelper.setData(Data, Field, arg0);
 	}
@@ -34,7 +34,7 @@ public class TypesIntegerPropertyWrapper extends SimpleIntegerProperty implement
 	}
 
 	@Override
-	public int get() {
+	public float get() {
 		if (!isinit) {
 			updateValue();
 			isinit = true;
@@ -43,7 +43,7 @@ public class TypesIntegerPropertyWrapper extends SimpleIntegerProperty implement
 	}
 
 	@Override
-	public Integer getValue() {
+	public Float getValue() {
 		return this.get();
 	}
 

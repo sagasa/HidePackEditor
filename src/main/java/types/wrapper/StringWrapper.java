@@ -1,18 +1,18 @@
 package types.wrapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import helper.EditHelper;
 import javafx.beans.property.SimpleStringProperty;
 import types.base.DataBase;
 
-public class TypesStringPropertyWrapper extends SimpleStringProperty implements TypesUpdate{
-	private static final Logger log = LoggerFactory.getLogger(TypesStringPropertyWrapper.class);
+public class StringWrapper extends SimpleStringProperty implements TypesUpdate{
+	private static final Logger log = LogManager.getLogger();
 	private DataBase Data;
 	private String Field;
 	private boolean isinit = false;
-	public TypesStringPropertyWrapper(DataBase data,String field) {
+	public StringWrapper(DataBase data,String field) {
 		Data = data;
 		Field = field;
 		if(!EditHelper.getType(Data, Field).equals(String.class)) {

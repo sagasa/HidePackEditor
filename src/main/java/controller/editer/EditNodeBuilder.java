@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.textfield.TextFields;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import controller.editer.RootController.ColordListCell;
 import editer.DataEntityInterface;
+import editer.HidePack;
 import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
@@ -22,9 +23,11 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -37,7 +40,9 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
@@ -49,7 +54,7 @@ import types.base.DataBase;
  */
 public class EditNodeBuilder {
 
-	private static final Logger log = LoggerFactory.getLogger(EditerComponent.class);
+	private static final Logger log = LogManager.getLogger();
 
 	private enum EditNodeType {
 		Text, TextFromList, Integer, Float, Boolean, StringList
@@ -108,12 +113,23 @@ public class EditNodeBuilder {
 	}
 
 	/** DataBaseのストリングコンボ型 */
-	public static EditNodeBuilder makeStringAutoFillNode(DataBase data, String field,List<DataEntityInterface> list) {
+	public static EditNodeBuilder makeStringAutoFillNode(DataBase data, String field, List<DataEntityInterface> list) {
 		if (!EditHelper.isString(data, field)) {
 			log.error(data.getClass() + "." + field + " is not String");
 			return null;
 		}
 		EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.TextFromList, data, field);
+		builder.fromList = list;
+		return builder;
+	}
+
+	/** DataBaseのストリングコンボ型 */
+	public static EditNodeBuilder makeStringListNode(DataBase data, String field, List<DataEntityInterface> list) {
+		if (!EditHelper.isStringList(data, field)) {
+			log.error(data.getClass() + "." + field + " is not StringList");
+			return null;
+		}
+		EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.StringList, data, field);
 		builder.fromList = list;
 		return builder;
 	}
@@ -384,12 +400,12 @@ public class EditNodeBuilder {
 			AnchorPane root = new AnchorPane();
 
 			ListView<DataEntityInterface> listview = new ListView<>();
-			listview.setCellFactory(ColordListCell.getCellFactory());
+			listview.setCellFactory(TESTListCell.getCellFactory());
 			// 順番変更＋削除用クリックイベント
-			listview.addEventFilter(MouseEvent.MOUSE_CLICKED, event->{
-				listview.get
+			listview.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+
 			});
-			fromList.stream().filter(str->true);
+			fromList.stream().filter(str -> true);
 			ComboBox<String> combo = new ComboBox<>();
 			combo.getSelectionModel().getSelectedItem();
 			return root;
@@ -397,4 +413,34 @@ public class EditNodeBuilder {
 		return null;
 	}
 
+	/** カラーアイコン付きのリストシェル */
+	public static class TESTListCell extends ListCell<DataEntityInterface> {
+		/** ファクトリー */
+		public static Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>> getCellFactory() {
+			return new Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>>() {
+				@Override
+				public ListCell<DataEntityInterface> call(ListView<DataEntityInterface> arg0) {
+					return new TESTListCell();
+				}
+			};
+		}
+
+		private Rectangle color = new Rectangle(20, 20);
+		private static final Color DisableColor = Color.rgb(0, 0, 0, 0);
+		private Button button = new Button();
+
+		@Override
+		protected void updateItem(DataEntityInterface data, boolean empty) {
+			super.updateItem(data, empty);
+			setGraphic(button);
+			if (!empty) {
+				setText(data.getDisplayName());
+				color.setFill(HidePack.getPack(data.getPackUID()).PackColor);
+			//	setGraphic(color);
+			} else {
+				setText("");
+				color.setFill(DisableColor);
+			}
+		}
+	}
 }
