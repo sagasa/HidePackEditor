@@ -113,7 +113,7 @@ public class EditNodeBuilder {
 	}
 
 	/** DataBaseのストリングコンボ型 */
-	public static EditNodeBuilder makeStringAutoFillNode(DataBase data, String field, List<DataEntityInterface> list) {
+	public static EditNodeBuilder makeStringAutoFillNode(DataBase data, String field, ObservableList<DataEntityInterface> list) {
 		if (!EditHelper.isString(data, field)) {
 			log.error(data.getClass() + "." + field + " is not String");
 			return null;
@@ -123,8 +123,8 @@ public class EditNodeBuilder {
 		return builder;
 	}
 
-	/** DataBaseのストリングコンボ型 */
-	public static EditNodeBuilder makeStringListNode(DataBase data, String field, List<DataEntityInterface> list) {
+	/** DataBaseのストリングリスト型 */
+	public static EditNodeBuilder makeStringListNode(DataBase data, String field, ObservableList<DataEntityInterface> list) {
 		if (!EditHelper.isStringList(data, field)) {
 			log.error(data.getClass() + "." + field + " is not StringList");
 			return null;
@@ -197,7 +197,7 @@ public class EditNodeBuilder {
 		return this;
 	}
 
-	private List<DataEntityInterface> fromList;
+	private ObservableList<DataEntityInterface> fromList;
 
 	/** テキストフィールドの幅 テキストフィールドを使用しない場合は無効 */
 	public EditNodeBuilder setAutoFillList(ObservableList<DataEntityInterface> list) {
@@ -398,9 +398,11 @@ public class EditNodeBuilder {
 			return root;
 		} else if (Type == EditNodeType.StringList) {
 			AnchorPane root = new AnchorPane();
-
+			root.setPrefSize(200, 200);
 			ListView<DataEntityInterface> listview = new ListView<>();
 			listview.setCellFactory(TESTListCell.getCellFactory());
+			listview.setPrefSize(190, 160);
+			listview.setItems(fromList);
 			// 順番変更＋削除用クリックイベント
 			listview.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
 
@@ -408,6 +410,7 @@ public class EditNodeBuilder {
 			fromList.stream().filter(str -> true);
 			ComboBox<String> combo = new ComboBox<>();
 			combo.getSelectionModel().getSelectedItem();
+			root.getChildren().addAll(listview,combo);
 			return root;
 		}
 		return null;

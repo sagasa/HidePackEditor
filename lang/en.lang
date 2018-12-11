@@ -153,3 +153,5 @@ packuid = packuid
 isreference = isreference
 property = property
 packpath = packpath
+packcolor = packcolor
+isdefault = isdefault

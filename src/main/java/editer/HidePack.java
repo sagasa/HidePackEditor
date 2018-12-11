@@ -4,16 +4,18 @@ import java.util.Random;
 
 import io.PackCash;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import resources.HideImage;
 import resources.Sound;
 import types.PackInfo;
+import types.base.DataBase;
 import types.guns.BulletData;
 import types.guns.GunData;
 
 /** パック本体 */
-public class HidePack implements DataEntityInterface{
+public class HidePack {
 
 	/** 銃のList GunData */
 	public static ObservableList<GunData> GunList;
@@ -26,17 +28,20 @@ public class HidePack implements DataEntityInterface{
 	/** SoundのList Sound */
 	public static ObservableList<Sound> SoundList;
 	/** 編集中のパック デフォルトを含む */
-	public static ObservableList<HidePack> OpenPacks;
+	public static ObservableList<PackInfo> OpenPacks;
 	/** デフォルトパック */
-	public static HidePack DefaultPack;
+	public static PackInfo DefaultPack;
 	/** 初回かどうか */
 	public static boolean isNewPack = true;
 
-	private static Random random = new Random();
+	public static Random random = new Random();
+
+	/** 追加時にinit()を呼ばせる */
 
 	static {
 		clear();
 	}
+
 	/** パック初期化 */
 	public static void clear() {
 		GunList = FXCollections.observableArrayList();
@@ -45,15 +50,24 @@ public class HidePack implements DataEntityInterface{
 		ScopeList = FXCollections.observableArrayList();
 		SoundList = FXCollections.observableArrayList();
 		OpenPacks = FXCollections.observableArrayList();
-		DefaultPack = new HidePack();
-		DefaultPack.Pack = new PackInfo();
-		DefaultPack.Pack.PackUID = random.nextLong();
-		DefaultPack.Pack.PACK_NAME = "default";
-		DefaultPack.Pack.PACK_ROOTNAME = "default";
-		DefaultPack.Pack.PACK_VER = "";
+		DefaultPack = new PackInfo();
+		DefaultPack.PackUID = random.nextLong();
+		DefaultPack.PACK_NAME = "default";
+		DefaultPack.PACK_ROOTNAME = "default";
+		DefaultPack.PACK_VER = "";
 		DefaultPack.isDefault = true;
 		DefaultPack.PackColor = Color.GRAY;
 		OpenPacks.add(DefaultPack);
+		// DataBaseを追加時にinitを呼ぶリスナー
+		ListChangeListener<DataBase> initListener = change -> {
+			while (change.next()) {
+				change.getAddedSubList().forEach(data -> data.init());
+			}
+		};
+
+		GunList.addListener(initListener);
+		BulletList.addListener(initListener);
+		OpenPacks.addListener(initListener);
 	}
 
 	/** PackCashインポート */
@@ -68,12 +82,12 @@ public class HidePack implements DataEntityInterface{
 			OpenPacks.add(pack.Pack);
 	}
 
-	public static HidePack addPack(HidePack pack) {
-		if (getPack(pack.Pack.PACK_NAME) == null || getPack(pack.Pack.PACK_NAME).isReference != pack.isReference) {
+	public static PackInfo addPack(PackInfo pack) {
+		if (getPack(pack.PACK_NAME) == null || getPack(pack.PACK_NAME).isReference != pack.isReference) {
 			OpenPacks.add(pack);
 			return pack;
 		} else {
-			return getPack(pack.Pack.PACK_NAME);
+			return getPack(pack.PACK_NAME);
 		}
 	}
 
@@ -98,9 +112,9 @@ public class HidePack implements DataEntityInterface{
 	}
 
 	/** パック取得 */
-	public static HidePack getPack(String packName) {
-		for (HidePack data : OpenPacks) {
-			if (data.Pack.PACK_NAME.equals(packName)) {
+	public static PackInfo getPack(String packName) {
+		for (PackInfo data : OpenPacks) {
+			if (data.PACK_NAME.equals(packName)) {
 				return data;
 			}
 		}
@@ -108,16 +122,16 @@ public class HidePack implements DataEntityInterface{
 	}
 
 	/** パック取得 */
-	public static HidePack getPack(long uid) {
-		for (HidePack data : OpenPacks) {
-			if (data.Pack.PackUID == uid) {
+	public static PackInfo getPack(long uid) {
+		for (PackInfo data : OpenPacks) {
+			if (data.PackUID == uid) {
 				return data;
 			}
 		}
 		return null;
 	}
 
-	/**アイコン取得*/
+	/** アイコン取得 */
 	public static HideImage getIcon(String string) {
 		for (HideImage data : IconList) {
 			if (data.getDisplayName().equals(string)) {
@@ -125,24 +139,5 @@ public class HidePack implements DataEntityInterface{
 			}
 		}
 		return null;
-	}
-
-	/** 参照か */
-	public boolean isReference = false;
-	/** 表示用カラー */
-	public Color PackColor = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
-	/** Info */
-	public PackInfo Pack = new PackInfo();
-	/** デフォルトか */
-	public boolean isDefault = false;
-
-	@Override
-	public String getDisplayName() {
-		return Pack.PACK_NAME;
-	}
-
-	@Override
-	public long getPackUID() {
-		return Pack.PackUID;
 	}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 import localize.LocalizeHandler;
@@ -135,8 +136,7 @@ public class EditHelper {
 	/** プロパティとフィールドの型チェック */
 	public static boolean isStringList(DataBase data, String type) {
 		Property<?> property = data.Property.get(type);
-		if (property != null && property instanceof BooleanProperty
-				&& getType(data, type).isAssignableFrom(List.class)) {
+		if (property != null && property instanceof ListProperty && getType(data, type).isAssignableFrom(List.class)) {
 			return true;
 		}
 		return false;

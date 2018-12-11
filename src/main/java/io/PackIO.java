@@ -28,7 +28,6 @@ import com.google.gson.Gson;
 
 import controller.editer.RootController;
 import editer.HidePack;
-import editer.mainWindow.MainWindow;
 import helper.ArrayEditer;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -73,7 +72,6 @@ public class PackIO {
 		try {
 			HideImage image = new HideImage(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
 			HidePack.IconList.add(image);
-			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -95,7 +93,6 @@ public class PackIO {
 		try {
 			HideImage image = new HideImage(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
 			HidePack.ScopeList.add(image);
-			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -117,7 +114,6 @@ public class PackIO {
 		try {
 			Sound sound = new Sound(file.getName().replaceAll(".ogg$", ""), Files.readAllBytes(file.toPath()));
 			HidePack.SoundList.add(sound);
-			MainWindow.INSTANCE.repaint();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -137,13 +133,13 @@ public class PackIO {
 	public static void export() {
 		// データをまとめる
 		Map<Long, List<Entry>> dataMap = new HashMap<>();
-		for (HidePack pack : HidePack.OpenPacks) {
+		for (PackInfo pack : HidePack.OpenPacks) {
 			// 参照では無ければ
-			if (!pack.Pack.isReference()) {
-				dataMap.put(pack.Pack.PackUID, new ArrayList<>());
+			if (!pack.isReference()) {
+				dataMap.put(pack.PackUID, new ArrayList<>());
 				// パックデータ
-				dataMap.get(pack.Pack.PackUID)
-						.add(new Entry("pack.json", new ByteArrayInputStream(pack.Pack.MakeJsonData().getBytes())));
+				dataMap.get(pack.PackUID)
+						.add(new Entry("pack.json", new ByteArrayInputStream(pack.MakeJsonData().getBytes())));
 			}
 		}
 
@@ -200,15 +196,15 @@ public class PackIO {
 		for (Long id : dataMap.keySet()) {
 			if (dataMap.get(id).size() <= 1) {
 				dataMap.remove(id);
-				log.debug(HidePack.getPack(id).Pack.PACK_NAME + " dont have any contents");
+				log.debug(HidePack.getPack(id).PACK_NAME + " dont have any contents");
 			}
 		}
 
 		try {
 			// 全パック出力
 			for (Long id : dataMap.keySet()) {
-				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(
-						new File(HidePack.getPack(id).Pack.PackPath, HidePack.getPack(id).Pack.PACK_NAME) + ".zip"),
+				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(//TODO 出力先指定
+						new File("./export/", HidePack.getPack(id).PACK_NAME) + ".zip"),
 						Charset.forName("Shift_JIS"));
 				for (Entry data : dataMap.get(id)) {
 					ZipEntry entry = new ZipEntry(data.Name);
@@ -284,8 +280,8 @@ public class PackIO {
 		}
 		// packInfo認識
 		else if (name.matches("^(.*)pack.json")) {
-			pack.Pack = new HidePack();
-			pack.Pack.Pack = gson.fromJson(new String(data, Charset.forName("UTF-8")), PackInfo.class);
+			pack.Pack = new PackInfo();
+			pack.Pack = gson.fromJson(new String(data, Charset.forName("UTF-8")), PackInfo.class);
 			// System.out.println("pack");
 		}
 

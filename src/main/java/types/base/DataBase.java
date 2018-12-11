@@ -2,24 +2,25 @@ package types.base;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import editer.HidePack;
-import javafx.beans.property.ListPropertyBase;
+import helper.EditHelper;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import types.wrapper.BooleanWrapper;
 import types.wrapper.FloatWrapper;
 import types.wrapper.IntegerWrapper;
-import types.wrapper.StringListWrapper;
 import types.wrapper.StringWrapper;
 
 /**
  * パックのデータのスーパークラス クローン可能 publicフィールドはすべてクローン可能なクラスにしてください
- * transient注釈が付いたフィールドはエディターでのみ使用
+ * transient注釈が付いたフィールドはエディターでのみ使用 インスタンス生成後にinit(）を呼ぶこと
  */
 public abstract class DataBase implements Cloneable {
 
@@ -33,40 +34,32 @@ public abstract class DataBase implements Cloneable {
 		return HidePack.getPack(PackUID).isReference;
 	}
 
-	/** コンストラクタでプロパティMapを作成 */
-	public DataBase() {
-		for (Field field : this.getClass().getFields()) {
-			if (field.getType().isAssignableFrom(int.class) || field.getType().isAssignableFrom(Integer.class)) {
-				// Integer
-				Property.put(field.getName(), new IntegerWrapper(this, field.getName()));
-			} else if (field.getType().isAssignableFrom(float.class) || field.getType().isAssignableFrom(Float.class)) {
-				// Float
-				Property.put(field.getName(), new FloatWrapper(this, field.getName()));
-			} else if (field.getType().isAssignableFrom(boolean.class)
-					|| field.getType().isAssignableFrom(Boolean.class)) {
-				// Boolean
-				Property.put(field.getName(), new BooleanWrapper(this, field.getName()));
-			} else if (field.getType().isAssignableFrom(String.class)) {
-				// String
-				Property.put(field.getName(), new StringWrapper(this, field.getName()));
-			} else if (field.getType().isAssignableFrom(String.class)) {
-				// String
-				Property.put(field.getName(), new StringListWrapper(this, field.getName()));
-				new ListPropertyBase<String>(FXCollections.observableArrayList()) {
+	private boolean doinit = false;
 
-					@Override
-					public Object getBean() {
-						// TODO 自動生成されたメソッド・スタブ
-						return null;
-					}
-
-					@Override
-					public String getName() {
-						// TODO 自動生成されたメソッド・スタブ
-						return null;
-					}
-				};
+	/** プロパティMapを作成 */
+	public void init() {
+		if (!doinit) {
+			for (Field field : this.getClass().getFields()) {
+				if (field.getType().isAssignableFrom(int.class) || field.getType().isAssignableFrom(Integer.class)) {
+					// Integer
+					Property.put(field.getName(), new IntegerWrapper(this, field.getName()));
+				} else if (field.getType().isAssignableFrom(float.class)
+						|| field.getType().isAssignableFrom(Float.class)) {
+					// Float
+					Property.put(field.getName(), new FloatWrapper(this, field.getName()));
+				} else if (field.getType().isAssignableFrom(boolean.class)
+						|| field.getType().isAssignableFrom(Boolean.class)) {
+					// Boolean
+					Property.put(field.getName(), new BooleanWrapper(this, field.getName()));
+				} else if (field.getType().isAssignableFrom(String.class)) {
+					// String
+					Property.put(field.getName(), new StringWrapper(this, field.getName()));
+				} else if (field.getType().isAssignableFrom(List.class)) {
+					Property.put(field.getName(), new SimpleListProperty<>(
+							FXCollections.observableList((List<String>) EditHelper.getData(this, field.getName()))));
+				}
 			}
+			doinit = true;
 		}
 	}
 

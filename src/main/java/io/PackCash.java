@@ -6,6 +6,7 @@ import java.util.List;
 import editer.HidePack;
 import resources.HideImage;
 import resources.Sound;
+import types.PackInfo;
 import types.guns.BulletData;
 import types.guns.GunData;
 
@@ -21,14 +22,14 @@ public class PackCash {
 	/** SoundのList Sound */
 	public List<Sound> SoundList = new ArrayList<>();
 	/** 読み込み中のパック */
-	public HidePack Pack;
+	public PackInfo Pack;
 
 	/** パック情報を付与 trueでデフォルトパック 同じ名前があったら統合 */
 	public void setPack(boolean useDefault) {
 		Pack = useDefault ? HidePack.DefaultPack : Pack;
-		long uid = HidePack.getPack(Pack.Pack.PACK_NAME) != null ? HidePack.getPack(Pack.Pack.PACK_NAME).Pack.PackUID
-				: Pack.Pack.PackUID;
-		if (HidePack.getPack(Pack.Pack.PACK_NAME) != null)
+		long uid = HidePack.getPack(Pack.PACK_NAME) != null ? HidePack.getPack(Pack.PACK_NAME).PackUID
+				: Pack.PackUID;
+		if (HidePack.getPack(Pack.PACK_NAME) != null)
 			Pack = null;
 		GunList.forEach(data -> data.PackUID = uid);
 		BulletList.forEach(data -> data.PackUID = uid);

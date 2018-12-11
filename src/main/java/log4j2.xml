@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="off">
+
+	<!-- AppenterやLoggerで使用するプロパティを定義する -->
+	<Properties>
+		<Property name="debuglayout">[%t/%p] %l: %m%n</Property>
+		<Property name="mainlayout">[%d{HH:mm:ss.SS}],[%t/%p]:%m%n</Property>
+	</Properties>
+
+	<!-- ログの出力先と出力フォーマットを設定する -->
+	<Appenders>
+		<Console name="TEST" target="SYSTEM_OUT">
+			<PatternLayout pattern="${debuglayout}" />
+		</Console>
+	</Appenders>
+
+	<!-- パッケージごとにAppenderとログレベルを組み合わせる -->
+	<Loggers>
+		<Root level="debug">
+			<AppenderRef ref="TEST" />
+		</Root>
+	</Loggers>
+</Configuration>

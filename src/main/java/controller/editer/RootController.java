@@ -37,6 +37,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import types.PackInfo;
 import types.guns.BulletData;
 import types.guns.GunData;
 
@@ -208,13 +209,13 @@ public class RootController implements Initializable {
 
 	public void addPack() {
 		log.debug("addPack");
-		HidePack pack = new HidePack();
+		PackInfo pack = new PackInfo();
 		while (HidePack.getPack("New Pack No." + packNamePointer) != null) {
 			packNamePointer++;
 		}
 		packNamePointer++;
-		pack.Pack.PACK_NAME = "New Pack No." + packNamePointer;
-		pack.Pack.PackUID = new Random().nextLong();
+		pack.PACK_NAME = "New Pack No." + packNamePointer;
+		pack.PackUID = new Random().nextLong();
 		HidePack.OpenPacks.add(pack);
 		write();
 	}
@@ -230,7 +231,7 @@ public class RootController implements Initializable {
 		}
 		newGun.ITEM_SHORTNAME = "gun_" + gunNamePointer;
 		newGun.ITEM_DISPLAYNAME = "New Gun No." + gunNamePointer;
-		newGun.PackUID = HidePack.DefaultPack.Pack.PackUID;
+		newGun.PackUID = HidePack.DefaultPack.PackUID;
 		HidePack.GunList.add(newGun);
 		write();
 	}
@@ -244,7 +245,7 @@ public class RootController implements Initializable {
 		bulletNamePointer++;
 		bullet.ITEM_SHORTNAME = "magazine_" + bulletNamePointer;
 		bullet.ITEM_DISPLAYNAME = "New Magazine No." + bulletNamePointer;
-		bullet.PackUID = HidePack.DefaultPack.Pack.PackUID;
+		bullet.PackUID = HidePack.DefaultPack.PackUID;
 		HidePack.BulletList.add(bullet);
 		write();
 	}

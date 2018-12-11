@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import types.PackInfo;
 
 public class ImportController implements Initializable {
 
@@ -32,7 +33,7 @@ public class ImportController implements Initializable {
 	public CheckBox toDefault;
 	public CheckBox isReference;
 
-	private HidePack Pack;
+	private PackInfo Pack;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -102,7 +103,7 @@ public class ImportController implements Initializable {
 			Pack.isReference = isReference.isCache();
 			Pack = HidePack.addPack(Pack);
 		}
-		long uid = toDefault.isSelected() ? HidePack.DefaultPack.Pack.PackUID : Pack.Pack.PackUID;
+		long uid = toDefault.isSelected() ? HidePack.DefaultPack.PackUID : Pack.PackUID;
 		getAll().forEach(entry -> entry.doImport(uid));
 
 		gunList.getScene().getWindow().hide();
