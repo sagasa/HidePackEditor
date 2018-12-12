@@ -113,7 +113,8 @@ public class EditNodeBuilder {
 	}
 
 	/** DataBaseのストリングコンボ型 */
-	public static EditNodeBuilder makeStringAutoFillNode(DataBase data, String field, ObservableList<DataEntityInterface> list) {
+	public static EditNodeBuilder makeStringAutoFillNode(DataBase data, String field,
+			ObservableList<DataEntityInterface> list) {
 		if (!EditHelper.isString(data, field)) {
 			log.error(data.getClass() + "." + field + " is not String");
 			return null;
@@ -124,7 +125,8 @@ public class EditNodeBuilder {
 	}
 
 	/** DataBaseのストリングリスト型 */
-	public static EditNodeBuilder makeStringListNode(DataBase data, String field, ObservableList<DataEntityInterface> list) {
+	public static EditNodeBuilder makeStringListNode(DataBase data, String field,
+			ObservableList<DataEntityInterface> list) {
 		if (!EditHelper.isStringList(data, field)) {
 			log.error(data.getClass() + "." + field + " is not StringList");
 			return null;
@@ -410,7 +412,7 @@ public class EditNodeBuilder {
 			fromList.stream().filter(str -> true);
 			ComboBox<String> combo = new ComboBox<>();
 			combo.getSelectionModel().getSelectedItem();
-			root.getChildren().addAll(listview,combo);
+			root.getChildren().addAll(listview);
 			return root;
 		}
 		return null;
@@ -430,18 +432,47 @@ public class EditNodeBuilder {
 
 		private Rectangle color = new Rectangle(20, 20);
 		private static final Color DisableColor = Color.rgb(0, 0, 0, 0);
-		private Button button = new Button();
+		private Button up = new Button();
+		private Button down = new Button();
+		private Button delete = new Button();
+		private AnchorPane root = new AnchorPane();
+		private boolean isBind = false;
+
+		public TESTListCell() {
+			up.setStyle("-fx-background-radius:0.0;-fx-border-radius:0.0;");
+			down.setStyle("-fx-background-radius:0.0;-fx-border-radius:0.0;");
+			delete.setStyle("-fx-background-radius:0.0;-fx-border-radius:0.0;");
+			root.setStyle("-fx-background-color: lightGray;");
+			//	root.getChildren().addAll(up,down);
+		}
 
 		@Override
 		protected void updateItem(DataEntityInterface data, boolean empty) {
 			super.updateItem(data, empty);
-			setGraphic(button);
+			// 初期化
+			if (!isBind) {
+				root.prefWidthProperty().bind(widthProperty().subtract(12));
+				root.prefHeightProperty().bind(heightProperty().subtract(10));
+				up.prefWidthProperty().bind(root.heightProperty());
+				up.prefHeightProperty().bind(root.heightProperty().divide(2.2));
+				down.prefWidthProperty().bind(root.heightProperty());
+				down.prefHeightProperty().bind(root.heightProperty().divide(2.2));
+			}
 			if (!empty) {
-				setText(data.getDisplayName());
-				color.setFill(HidePack.getPack(data.getPackUID()).PackColor);
-			//	setGraphic(color);
+				// 1番上以外なら
+				up.setDisable(0 == getIndex());
+				// 1番下以外なら
+				down.setDisable(getListView().getItems().size() - 1 == getIndex());
+				setGraphic(root);
+				getIndex();
+				getListView().getItems().size();
+
+				setText(null);
+				//setText(data.getDisplayName());
+				//color.setFill(HidePack.getPack(data.getPackUID()).PackColor);
+				// setGraphic(color);
 			} else {
-				setText("");
+				setText(null);
 				color.setFill(DisableColor);
 			}
 		}

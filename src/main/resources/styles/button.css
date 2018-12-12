@@ -1,0 +1,10 @@
+/* Application wide styles */
+
+.button {
+    -fx-background-radius:0.0;
+    -fx-border-radius:0.0;
+}
+
+.button:hover{
+    -fx-base: #395bae;
+}
