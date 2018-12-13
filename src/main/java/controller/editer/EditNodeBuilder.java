@@ -31,6 +31,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -432,9 +433,9 @@ public class EditNodeBuilder {
 
 		private Rectangle color = new Rectangle(20, 20);
 		private static final Color DisableColor = Color.rgb(0, 0, 0, 0);
-		private Button up = new Button();
-		private Button down = new Button();
-		private Button delete = new Button();
+		private Label up= new Label();
+		private Label down = new Label();
+		private Label delete = new Label();
 		private AnchorPane root = new AnchorPane();
 		private boolean isBind = false;
 
@@ -442,8 +443,8 @@ public class EditNodeBuilder {
 			up.setStyle("-fx-background-radius:0.0;-fx-border-radius:0.0;");
 			down.setStyle("-fx-background-radius:0.0;-fx-border-radius:0.0;");
 			delete.setStyle("-fx-background-radius:0.0;-fx-border-radius:0.0;");
-			root.setStyle("-fx-background-color: lightGray;");
-			//	root.getChildren().addAll(up,down);
+		//	root.setStyle("-fx-background-color: lightGray;");
+			root.getChildren().addAll(up,down);
 		}
 
 		@Override
@@ -452,11 +453,15 @@ public class EditNodeBuilder {
 			// 初期化
 			if (!isBind) {
 				root.prefWidthProperty().bind(widthProperty().subtract(12));
-				root.prefHeightProperty().bind(heightProperty().subtract(10));
+				root.prefHeightProperty().bind(heightProperty().subtract(6));
 				up.prefWidthProperty().bind(root.heightProperty());
-				up.prefHeightProperty().bind(root.heightProperty().divide(2.2));
+				up.prefHeightProperty().bind(root.heightProperty().divide(2.1));
+				up.translateXProperty().bind(root.widthProperty().subtract(root.heightProperty().multiply(2.2)));
 				down.prefWidthProperty().bind(root.heightProperty());
-				down.prefHeightProperty().bind(root.heightProperty().divide(2.2));
+				down.prefHeightProperty().bind(root.heightProperty().divide(2.1));
+				down.translateXProperty().bind(root.widthProperty().subtract(root.heightProperty().multiply(2.2)));;
+				down.translateYProperty().bind(root.heightProperty().subtract(down.heightProperty()));
+				isBind = true;
 			}
 			if (!empty) {
 				// 1番上以外なら
