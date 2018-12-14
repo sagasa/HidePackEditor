@@ -27,6 +27,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -266,7 +267,9 @@ public class EditNodeBuilder {
 		if (Type == EditNodeType.Text || Type == EditNodeType.TextFromList) {
 			text.textProperty().bindBidirectional((Property<String>) Property);
 			if (Type == EditNodeType.TextFromList) {
-				TextFields.bindAutoCompletion(text, fromList);
+				ChoiceBox<String> test = new ChoiceBox<>();
+			//	test.
+				TextFields.bindAutoCompletion(text, fromList.stream().map(data->data.getDisplayName()).collect(Collectors.toList()));
 			}
 		} else if (Type == EditNodeType.Float || Type == EditNodeType.Integer) {
 			// 入力を数値のみに
@@ -407,16 +410,18 @@ public class EditNodeBuilder {
 		} else if (Type == EditNodeType.StringList) {
 			AnchorPane root = new AnchorPane();
 			root.setPrefSize(200, 200);
-			ListView<DataEntityInterface> listview = new ListView<>();
+			ListView<String> listview = new ListView<>();
 			listview.setCellFactory(EditListCell.getCellFactory());
 			listview.setPrefSize(190, 160);
-			listview.setItems(fromList);
+			listview.setItems((ListProperty<String>) Property);
 
 			;
-
-			fromList.stream().filter(data -> ((ListProperty<String>) Property).stream()
-					.anyMatch(str -> data.getDisplayName().equals(str))).collect(Collectors.toList());
 			ComboBox<String> combo = new ComboBox<>();
+			combo.getItems()
+					.setAll(fromList.stream().map(data -> data.getDisplayName()).filter(
+							data -> !((ListProperty<String>) Property).stream().anyMatch(str -> data.equals(str)))
+							.collect(Collectors.toList()));
+
 			combo.getSelectionModel().getSelectedItem();
 			root.getChildren().addAll(listview, combo);
 			return root;
@@ -425,12 +430,12 @@ public class EditNodeBuilder {
 	}
 
 	/** 上下ボタンと削除ボタン付きのリストシェル */
-	public static class EditListCell extends ListCell<DataEntityInterface> {
+	public static class EditListCell extends ListCell<String> {
 		/** ファクトリー */
-		public static Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>> getCellFactory() {
-			return new Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>>() {
+		public static Callback<ListView<String>, ListCell<String>> getCellFactory() {
+			return new Callback<ListView<String>, ListCell<String>>() {
 				@Override
-				public ListCell<DataEntityInterface> call(ListView<DataEntityInterface> arg0) {
+				public ListCell<String> call(ListView<String> arg0) {
 					return new EditListCell();
 				}
 			};
@@ -459,14 +464,14 @@ public class EditNodeBuilder {
 		}
 
 		private void rep(int index0, int index1) {
-			ObservableList<DataEntityInterface> list = getListView().getItems();
-			DataEntityInterface cash = list.get(index0);
+			ObservableList<String> list = getListView().getItems();
+			String cash = list.get(index0);
 			list.set(index0, list.get(index1));
 			list.set(index1, cash);
 		}
 
 		@Override
-		protected void updateItem(DataEntityInterface data, boolean empty) {
+		protected void updateItem(String data, boolean empty) {
 			super.updateItem(data, empty);
 			// 初期化
 			if (!isBind) {
@@ -487,7 +492,7 @@ public class EditNodeBuilder {
 				isBind = true;
 			}
 			if (!empty) {
-				text.setText(data.getDisplayName());
+				text.setText(data);
 				// 1番上以外なら
 				up.setVisible(0 < getIndex());
 				// 1番下以外なら
