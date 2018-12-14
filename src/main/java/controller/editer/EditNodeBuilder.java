@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +15,7 @@ import controller.editer.RootController.ColordListCell;
 import editer.DataEntityInterface;
 import editer.HidePack;
 import helper.EditHelper;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -43,11 +45,14 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import localize.LocalizeHandler;
+import resources.HideImage;
 import types.base.DataBase;
 
 /**
@@ -403,48 +408,61 @@ public class EditNodeBuilder {
 			AnchorPane root = new AnchorPane();
 			root.setPrefSize(200, 200);
 			ListView<DataEntityInterface> listview = new ListView<>();
-			listview.setCellFactory(TESTListCell.getCellFactory());
+			listview.setCellFactory(EditListCell.getCellFactory());
 			listview.setPrefSize(190, 160);
 			listview.setItems(fromList);
-			// 順番変更＋削除用クリックイベント
-			listview.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
 
-			});
-			fromList.stream().filter(str -> true);
+			;
+
+			fromList.stream().filter(data -> ((ListProperty<String>) Property).stream()
+					.anyMatch(str -> data.getDisplayName().equals(str))).collect(Collectors.toList());
 			ComboBox<String> combo = new ComboBox<>();
 			combo.getSelectionModel().getSelectedItem();
-			root.getChildren().addAll(listview);
+			root.getChildren().addAll(listview, combo);
 			return root;
 		}
 		return null;
 	}
 
-	/** カラーアイコン付きのリストシェル */
-	public static class TESTListCell extends ListCell<DataEntityInterface> {
+	/** 上下ボタンと削除ボタン付きのリストシェル */
+	public static class EditListCell extends ListCell<DataEntityInterface> {
 		/** ファクトリー */
 		public static Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>> getCellFactory() {
 			return new Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>>() {
 				@Override
 				public ListCell<DataEntityInterface> call(ListView<DataEntityInterface> arg0) {
-					return new TESTListCell();
+					return new EditListCell();
 				}
 			};
 		}
 
-		private Rectangle color = new Rectangle(20, 20);
-		private static final Color DisableColor = Color.rgb(0, 0, 0, 0);
-		private Label up= new Label();
-		private Label down = new Label();
-		private Label delete = new Label();
+		private ImageView up = new ImageView("./icon/up.png");
+		private ImageView down = new ImageView("./icon/down.png");
+		private ImageView delete = new ImageView("./icon/delete.png");
+		private Label text = new Label();
 		private AnchorPane root = new AnchorPane();
 		private boolean isBind = false;
 
-		public TESTListCell() {
-			up.setStyle("-fx-background-radius:0.0;-fx-border-radius:0.0;");
-			down.setStyle("-fx-background-radius:0.0;-fx-border-radius:0.0;");
-			delete.setStyle("-fx-background-radius:0.0;-fx-border-radius:0.0;");
-		//	root.setStyle("-fx-background-color: lightGray;");
-			root.getChildren().addAll(up,down);
+		public EditListCell() {
+			root.getChildren().addAll(up, down, delete, text);
+
+			up.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+				rep(getIndex(), getIndex() - 1);
+			});
+			down.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+				rep(getIndex(), getIndex() + 1);
+			});
+			delete.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+				getListView().getItems().remove(getIndex());
+				getListView().refresh();
+			});
+		}
+
+		private void rep(int index0, int index1) {
+			ObservableList<DataEntityInterface> list = getListView().getItems();
+			DataEntityInterface cash = list.get(index0);
+			list.set(index0, list.get(index1));
+			list.set(index1, cash);
 		}
 
 		@Override
@@ -452,33 +470,33 @@ public class EditNodeBuilder {
 			super.updateItem(data, empty);
 			// 初期化
 			if (!isBind) {
-				root.prefWidthProperty().bind(widthProperty().subtract(12));
+				root.prefWidthProperty().bind(widthProperty().subtract(14));
 				root.prefHeightProperty().bind(heightProperty().subtract(6));
-				up.prefWidthProperty().bind(root.heightProperty());
-				up.prefHeightProperty().bind(root.heightProperty().divide(2.1));
+				up.fitWidthProperty().bind(root.heightProperty());
+				up.fitHeightProperty().bind(root.heightProperty().divide(2.3));
 				up.translateXProperty().bind(root.widthProperty().subtract(root.heightProperty().multiply(2.2)));
-				down.prefWidthProperty().bind(root.heightProperty());
-				down.prefHeightProperty().bind(root.heightProperty().divide(2.1));
-				down.translateXProperty().bind(root.widthProperty().subtract(root.heightProperty().multiply(2.2)));;
-				down.translateYProperty().bind(root.heightProperty().subtract(down.heightProperty()));
+				down.fitWidthProperty().bind(root.heightProperty());
+				down.fitHeightProperty().bind(root.heightProperty().divide(2.3));
+				down.translateXProperty().bind(root.widthProperty().subtract(root.heightProperty().multiply(2.2)));
+				;
+				down.translateYProperty().bind(root.heightProperty().subtract(down.fitHeightProperty()));
+				delete.fitWidthProperty().bind(root.heightProperty());
+				delete.fitHeightProperty().bind(root.heightProperty());
+				delete.translateXProperty().bind(root.widthProperty().subtract(root.heightProperty().multiply(1.1)));
+				;
 				isBind = true;
 			}
 			if (!empty) {
+				text.setText(data.getDisplayName());
 				// 1番上以外なら
-				up.setDisable(0 == getIndex());
+				up.setVisible(0 < getIndex());
 				// 1番下以外なら
-				down.setDisable(getListView().getItems().size() - 1 == getIndex());
+				down.setVisible(getListView().getItems().size() - 1 > getIndex());
 				setGraphic(root);
 				getIndex();
 				getListView().getItems().size();
-
-				setText(null);
-				//setText(data.getDisplayName());
-				//color.setFill(HidePack.getPack(data.getPackUID()).PackColor);
-				// setGraphic(color);
 			} else {
-				setText(null);
-				color.setFill(DisableColor);
+				setGraphic(null);
 			}
 		}
 	}
