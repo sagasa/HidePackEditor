@@ -1,31 +1,28 @@
 package controller.editer;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
 
-import controller.editer.RootController.ColordListCell;
 import editer.DataEntityInterface;
-import editer.HidePack;
 import helper.EditHelper;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
@@ -44,16 +41,12 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import localize.LocalizeHandler;
-import resources.HideImage;
 import types.base.DataBase;
 
 /**
@@ -139,6 +132,7 @@ public class EditNodeBuilder {
 			return null;
 		}
 		EditNodeBuilder builder = new EditNodeBuilder(EditNodeType.StringList, data, field);
+		builder.sizeY = 200;
 		builder.fromList = list;
 		return builder;
 	}
@@ -252,13 +246,9 @@ public class EditNodeBuilder {
 
 		Label label = new Label(Name + ":");
 		// エンターを押したらフォーカスを外す
-		text.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent e) {
-				if (e.getCode() == KeyCode.ENTER) {
-					root.requestFocus();
-				}
-			}
+		text.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+			if (e.getCode() == KeyCode.ENTER)
+				root.requestFocus();
 		});
 		text.textProperty().addListener((change, old, newv) -> {
 			for (Runnable run : ChangeListener)
@@ -268,8 +258,9 @@ public class EditNodeBuilder {
 			text.textProperty().bindBidirectional((Property<String>) Property);
 			if (Type == EditNodeType.TextFromList) {
 				ChoiceBox<String> test = new ChoiceBox<>();
-			//	test.
-				TextFields.bindAutoCompletion(text, fromList.stream().map(data->data.getDisplayName()).collect(Collectors.toList()));
+				// test.
+				TextFields.bindAutoCompletion(text,
+						fromList.stream().map(data -> data.getDisplayName()).collect(Collectors.toList()));
 			}
 		} else if (Type == EditNodeType.Float || Type == EditNodeType.Integer) {
 			// 入力を数値のみに
@@ -340,29 +331,19 @@ public class EditNodeBuilder {
 			}
 			text.setTextFormatter(formatter);
 			text.textProperty().bindBidirectional((Property) Property, converter);
-			text.focusedProperty().addListener(new ChangeListener<Boolean>() {
-				@Override
-				public void changed(ObservableValue<? extends Boolean> value, Boolean oldvalue, Boolean newvalue) {
-					if (!newvalue) {
-						text.setText(Property.getValue().toString());
-					}
+			text.focusedProperty().addListener((observable, newvalue, oldvalue) -> {
+				if (!newvalue) {
+					text.setText(Property.getValue().toString());
 				}
 			});
 			// スクロールの追加
-			text.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-				@Override
-				public void handle(KeyEvent e) {
-					if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.DOWN) {
-						Scroll.accept(e.getCode() == KeyCode.UP, e.isShiftDown());
-					}
+			text.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+				if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.DOWN) {
+					Scroll.accept(e.getCode() == KeyCode.UP, e.isShiftDown());
 				}
 			});
-			text.addEventHandler(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
-				@Override
-				public void handle(ScrollEvent e) {
-					Scroll.accept(e.getDeltaY() + e.getDeltaX() > 0, e.isShiftDown());
-				}
-			});
+			text.addEventHandler(ScrollEvent.SCROLL,
+					e -> Scroll.accept(e.getDeltaY() + e.getDeltaX() > 0, e.isShiftDown()));
 		}
 		// サイズプロパティの関連
 		root.setPrefSize(sizeX, sizeY);
@@ -415,7 +396,8 @@ public class EditNodeBuilder {
 			listview.setPrefSize(190, 160);
 			listview.setItems((ListProperty<String>) Property);
 
-			;
+			Label label = new Label(Name);
+
 			ComboBox<String> combo = new ComboBox<>();
 			combo.getItems()
 					.setAll(fromList.stream().map(data -> data.getDisplayName()).filter(
@@ -423,7 +405,31 @@ public class EditNodeBuilder {
 							.collect(Collectors.toList()));
 
 			combo.getSelectionModel().getSelectedItem();
-			root.getChildren().addAll(listview, combo);
+			root.getChildren().addAll(label, listview, combo);
+
+			root.setPrefSize(sizeX, sizeY);
+			label.setLayoutX(5);
+			label.setLayoutY(5);
+			label.setPrefSize(sizeX - 10, 24);
+			listview.setLayoutX(5);
+			listview.setLayoutY(34);
+			listview.setPrefSize(sizeX - 10, sizeY - 50);
+			combo.setPrefSize(sizeX-10, 24);
+			combo.setLayoutX(5);
+			combo.setLayoutY(sizeY-29);
+			TextFields.bindAutoCompletion(new TextField(), new Callback<ISuggestionRequest, Collection<String>>(){
+
+				@Override
+				public Collection<String> call(
+						ISuggestionRequest arg0) {
+					// TODO 自動生成されたメソッド・スタブ
+
+					return null;
+				}
+
+
+
+			});
 			return root;
 		}
 		return null;
