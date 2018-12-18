@@ -57,7 +57,7 @@ public class EditerComponent {
 		scope.setLayoutX(5);
 		scope.setLayoutY(300);
 
-		scope.getChildren().add(EditNodeBuilder.makeStringListNode(data, "BULLET_USE", list).build());
+		scope.getChildren().add(EditNodeBuilder.makeStringListNode(data, "BULLET_USE", HidePack.GunList).build());
 		editer.getChildren().add(scope);
 	}
 

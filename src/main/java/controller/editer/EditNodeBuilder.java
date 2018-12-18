@@ -2,6 +2,7 @@ package controller.editer;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -13,16 +14,20 @@ import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest
 import org.controlsfx.control.textfield.TextFields;
 
 import editer.DataEntityInterface;
+import editer.HidePack;
+import helper.ArrayEditer;
 import helper.EditHelper;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
@@ -126,7 +131,7 @@ public class EditNodeBuilder {
 
 	/** DataBaseのストリングリスト型 */
 	public static EditNodeBuilder makeStringListNode(DataBase data, String field,
-			ObservableList<DataEntityInterface> list) {
+			ObservableList<? extends DataEntityInterface> list) {
 		if (!EditHelper.isStringList(data, field)) {
 			log.error(data.getClass() + "." + field + " is not StringList");
 			return null;
@@ -200,7 +205,7 @@ public class EditNodeBuilder {
 		return this;
 	}
 
-	private ObservableList<DataEntityInterface> fromList;
+	private ObservableList<? extends DataEntityInterface> fromList;
 
 	/** テキストフィールドの幅 テキストフィールドを使用しない場合は無効 */
 	public EditNodeBuilder setAutoFillList(ObservableList<DataEntityInterface> list) {
@@ -258,9 +263,14 @@ public class EditNodeBuilder {
 			text.textProperty().bindBidirectional((Property<String>) Property);
 			if (Type == EditNodeType.TextFromList) {
 				ChoiceBox<String> test = new ChoiceBox<>();
-				// test.
-				TextFields.bindAutoCompletion(text,
-						fromList.stream().map(data -> data.getDisplayName()).collect(Collectors.toList()));
+				// test
+				TextFields.bindAutoCompletion(text, new Callback<ISuggestionRequest, Collection<String>>() {
+					@Override
+					public Collection<String> call(ISuggestionRequest key) {
+						return ArrayEditer.Search(fromList, key.getUserText()).stream()
+								.map(data -> data.getDisplayName()).collect(Collectors.toList());
+					}
+				});
 			}
 		} else if (Type == EditNodeType.Float || Type == EditNodeType.Integer) {
 			// 入力を数値のみに
@@ -390,125 +400,50 @@ public class EditNodeBuilder {
 			return root;
 		} else if (Type == EditNodeType.StringList) {
 			AnchorPane root = new AnchorPane();
-			root.setPrefSize(200, 200);
-			ListView<String> listview = new ListView<>();
-			listview.setCellFactory(EditListCell.getCellFactory());
-			listview.setPrefSize(190, 160);
-			listview.setItems((ListProperty<String>) Property);
+			ListView<String> listview = new SelectList(fromList, (ListProperty<String>) Property);
+
 
 			Label label = new Label(Name);
+			label.setAlignment(Pos.CENTER);
 
-			ComboBox<String> combo = new ComboBox<>();
-			combo.getItems()
-					.setAll(fromList.stream().map(data -> data.getDisplayName()).filter(
-							data -> !((ListProperty<String>) Property).stream().anyMatch(str -> data.equals(str)))
-							.collect(Collectors.toList()));
+			TextField text = new TextField();
+			// リストの内容以外の候補を返す
+			TextFields.bindAutoCompletion(text, new Callback<ISuggestionRequest, Collection<String>>() {
+				@Override
+				public Collection<String> call(ISuggestionRequest key) {
+					return ArrayEditer.Search(fromList, key.getUserText()).stream().map(data -> data.getDisplayName())
+							.sorted().filter(data -> !((ListProperty<String>) Property).stream()
+									.anyMatch(str -> data.equals(str)))
+							.collect(Collectors.toList());
+				}
+			});
 
-			combo.getSelectionModel().getSelectedItem();
-			root.getChildren().addAll(label, listview, combo);
+			Button add = new Button("add");
+
+			add.addEventHandler(ActionEvent.ACTION, e -> {
+				// 入れていいかチェック
+				if (fromList.stream().anyMatch(data -> data.getDisplayName().equals(text.getText()))) {
+					listview.getItems().add(text.getText());
+					text.setText("");
+				}
+			});
 
 			root.setPrefSize(sizeX, sizeY);
 			label.setLayoutX(5);
-			label.setLayoutY(5);
-			label.setPrefSize(sizeX - 10, 24);
+			label.setLayoutY(2);
+			label.setPrefSize(sizeX - 10, 20);
 			listview.setLayoutX(5);
-			listview.setLayoutY(34);
-			listview.setPrefSize(sizeX - 10, sizeY - 50);
-			combo.setPrefSize(sizeX-10, 24);
-			combo.setLayoutX(5);
-			combo.setLayoutY(sizeY-29);
-			TextFields.bindAutoCompletion(new TextField(), new Callback<ISuggestionRequest, Collection<String>>(){
+			listview.setLayoutY(24);
+			listview.setPrefSize(sizeX - 10, sizeY - 56);
+			text.setPrefSize(sizeX - 50, 24);
+			text.setLayoutX(5);
+			text.setLayoutY(sizeY - 29);
+			add.setLayoutX(sizeX - 44);
+			add.setLayoutY(sizeY - 29);
 
-				@Override
-				public Collection<String> call(
-						ISuggestionRequest arg0) {
-					// TODO 自動生成されたメソッド・スタブ
-
-					return null;
-				}
-
-
-
-			});
+			root.getChildren().addAll(label, listview, text, add);
 			return root;
 		}
 		return null;
-	}
-
-	/** 上下ボタンと削除ボタン付きのリストシェル */
-	public static class EditListCell extends ListCell<String> {
-		/** ファクトリー */
-		public static Callback<ListView<String>, ListCell<String>> getCellFactory() {
-			return new Callback<ListView<String>, ListCell<String>>() {
-				@Override
-				public ListCell<String> call(ListView<String> arg0) {
-					return new EditListCell();
-				}
-			};
-		}
-
-		private ImageView up = new ImageView("./icon/up.png");
-		private ImageView down = new ImageView("./icon/down.png");
-		private ImageView delete = new ImageView("./icon/delete.png");
-		private Label text = new Label();
-		private AnchorPane root = new AnchorPane();
-		private boolean isBind = false;
-
-		public EditListCell() {
-			root.getChildren().addAll(up, down, delete, text);
-
-			up.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-				rep(getIndex(), getIndex() - 1);
-			});
-			down.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-				rep(getIndex(), getIndex() + 1);
-			});
-			delete.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-				getListView().getItems().remove(getIndex());
-				getListView().refresh();
-			});
-		}
-
-		private void rep(int index0, int index1) {
-			ObservableList<String> list = getListView().getItems();
-			String cash = list.get(index0);
-			list.set(index0, list.get(index1));
-			list.set(index1, cash);
-		}
-
-		@Override
-		protected void updateItem(String data, boolean empty) {
-			super.updateItem(data, empty);
-			// 初期化
-			if (!isBind) {
-				root.prefWidthProperty().bind(widthProperty().subtract(14));
-				root.prefHeightProperty().bind(heightProperty().subtract(6));
-				up.fitWidthProperty().bind(root.heightProperty());
-				up.fitHeightProperty().bind(root.heightProperty().divide(2.3));
-				up.translateXProperty().bind(root.widthProperty().subtract(root.heightProperty().multiply(2.2)));
-				down.fitWidthProperty().bind(root.heightProperty());
-				down.fitHeightProperty().bind(root.heightProperty().divide(2.3));
-				down.translateXProperty().bind(root.widthProperty().subtract(root.heightProperty().multiply(2.2)));
-				;
-				down.translateYProperty().bind(root.heightProperty().subtract(down.fitHeightProperty()));
-				delete.fitWidthProperty().bind(root.heightProperty());
-				delete.fitHeightProperty().bind(root.heightProperty());
-				delete.translateXProperty().bind(root.widthProperty().subtract(root.heightProperty().multiply(1.1)));
-				;
-				isBind = true;
-			}
-			if (!empty) {
-				text.setText(data);
-				// 1番上以外なら
-				up.setVisible(0 < getIndex());
-				// 1番下以外なら
-				down.setVisible(getListView().getItems().size() - 1 > getIndex());
-				setGraphic(root);
-				getIndex();
-				getListView().getItems().size();
-			} else {
-				setGraphic(null);
-			}
-		}
 	}
 }

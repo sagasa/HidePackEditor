@@ -3,6 +3,7 @@ package controller.editer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import editer.DataEntityInterface;
 import editer.HidePack;
+import helper.ArrayEditer;
 import io.PackCash;
 import io.PackIO;
 import javafx.collections.FXCollections;
@@ -91,17 +93,11 @@ public class RootController implements Initializable {
 	/** Packの内容をリストに反映 */
 	public void write() {
 		// Pack
-		packList.setItems(FXCollections.observableArrayList(
-				HidePack.OpenPacks.stream().filter(data -> Search(data.getDisplayName(), packSearch.getText())).sorted()
-						.collect(Collectors.toList())));
+		packList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.OpenPacks, itemSearch.getText())));
 		// Gun
-		gunList.setItems(FXCollections.observableArrayList(
-				HidePack.GunList.stream().filter(data -> Search(data.getDisplayName(), itemSearch.getText())).sorted()
-						.collect(Collectors.toList())));
+		gunList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.GunList, itemSearch.getText())));
 		// Magazine
-		magazineList.setItems(FXCollections.observableArrayList(
-				HidePack.BulletList.stream().filter(data -> Search(data.getDisplayName(), itemSearch.getText()))
-						.sorted().collect(Collectors.toList())));
+		magazineList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.BulletList, itemSearch.getText())));
 
 		packList.refresh();
 		gunList.refresh();
@@ -257,23 +253,6 @@ public class RootController implements Initializable {
 	public void importSound() {
 		PackIO.importSound();
 		;
-	}
-
-	// ===========検索============
-	private static final String space = " ";// TODO
-
-	/**
-	 * 検索一致判定処理 スペースで区切ってそれぞれ判定、すべて含んでいたらtrue
-	 */
-	public static boolean Search(String value, String key) {
-		value = value.trim();
-		String[] keys = key.split(space);
-		for (String str : keys) {
-			if (!value.contains(str)) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	// ===========リストセル============
