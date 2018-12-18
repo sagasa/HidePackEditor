@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
 
@@ -41,6 +42,7 @@ public class Main extends Application {
 		log.debug("Showing JFX scene");
 		Scene scene = new Scene(rootNode, STAGE_SIZE.getX(), STAGE_SIZE.getY() - 40);
 		stage.setTitle("HidePackEditer");
+		stage.getIcons().add(new Image("./icon/M14_scope.png"));
 		stage.setScene(scene);
 		stage.setMinHeight(STAGE_SIZE.getY());
 		stage.setMinWidth(STAGE_SIZE.getX());

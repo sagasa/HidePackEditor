@@ -2,44 +2,31 @@ package controller.editer;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
 
 import editer.DataEntityInterface;
-import editer.HidePack;
 import helper.ArrayEditer;
 import helper.EditHelper;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.Property;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -382,17 +369,19 @@ public class EditNodeBuilder {
 			return buildTextField();
 		} else if (Type == EditNodeType.Boolean) {
 			AnchorPane root = new AnchorPane();
-			CheckBox check = new CheckBox(Name);
+			Label label = new Label(Name + ":");
+			label.setAlignment(Pos.CENTER_RIGHT);
+			CheckBox check = new CheckBox();
 			root.setPrefSize(sizeX, sizeY);
 			check.selectedProperty().bindBidirectional((Property<Boolean>) Property);
 			check.selectedProperty().addListener((value, newvalue, oldvalue) -> {
 				for (Runnable run : ChangeListener)
 					run.run();
 			});
-			check.setPrefSize(sizeX - layoutX, sizeY - layoutY);
-			check.setTranslateX(layoutX);
-			check.setTranslateY(layoutY);
-			root.getChildren().add(check);
+			check.setPrefSize(sizeY, sizeY);
+			check.setTranslateX(sizeX-sizeY);
+			label.setPrefSize(sizeX-sizeY, sizeY);
+			root.getChildren().addAll(check,label);
 			// 1回変更イベントを呼んでおく
 			for (Runnable listener : ChangeListener) {
 				listener.run();
@@ -400,33 +389,13 @@ public class EditNodeBuilder {
 			return root;
 		} else if (Type == EditNodeType.StringList) {
 			AnchorPane root = new AnchorPane();
-			ListView<String> listview = new SelectList(fromList, (ListProperty<String>) Property);
-
+			SelectList listview = new SelectList(fromList, (ListProperty<String>) Property);
 
 			Label label = new Label(Name);
 			label.setAlignment(Pos.CENTER);
 
 			TextField text = new TextField();
-			// リストの内容以外の候補を返す
-			TextFields.bindAutoCompletion(text, new Callback<ISuggestionRequest, Collection<String>>() {
-				@Override
-				public Collection<String> call(ISuggestionRequest key) {
-					return ArrayEditer.Search(fromList, key.getUserText()).stream().map(data -> data.getDisplayName())
-							.sorted().filter(data -> !((ListProperty<String>) Property).stream()
-									.anyMatch(str -> data.equals(str)))
-							.collect(Collectors.toList());
-				}
-			});
-
-			Button add = new Button("add");
-
-			add.addEventHandler(ActionEvent.ACTION, e -> {
-				// 入れていいかチェック
-				if (fromList.stream().anyMatch(data -> data.getDisplayName().equals(text.getText()))) {
-					listview.getItems().add(text.getText());
-					text.setText("");
-				}
-			});
+			text.textProperty().addListener((value, oldvalue, newvalue) -> listview.setSearch(newvalue));
 
 			root.setPrefSize(sizeX, sizeY);
 			label.setLayoutX(5);
@@ -435,13 +404,11 @@ public class EditNodeBuilder {
 			listview.setLayoutX(5);
 			listview.setLayoutY(24);
 			listview.setPrefSize(sizeX - 10, sizeY - 56);
-			text.setPrefSize(sizeX - 50, 24);
+			text.setPrefSize(sizeX - 10, 24);
 			text.setLayoutX(5);
 			text.setLayoutY(sizeY - 29);
-			add.setLayoutX(sizeX - 44);
-			add.setLayoutY(sizeY - 29);
 
-			root.getChildren().addAll(label, listview, text, add);
+			root.getChildren().addAll(label, listview, text);
 			return root;
 		}
 		return null;

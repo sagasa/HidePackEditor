@@ -1,13 +1,9 @@
 package controller.editer;
 
-import java.util.stream.Collectors;
-
 import editer.DataEntityInterface;
+import helper.ArrayEditer;
 import javafx.beans.property.ListProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.WeakListChangeListener;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -19,9 +15,10 @@ import javafx.util.Callback;
 /** 母集団のリストから任意に選択するListView */
 public class SelectList extends ListView<String> {
 
-	ObservableList<? extends DataEntityInterface> motherList;
-	ListProperty<String> setList;
-
+	private ObservableList<? extends DataEntityInterface> motherList;
+	private ListProperty<String> setList;
+	private String SearchKey = null;
+//TODO 要素の最大、最小数の指定を
 	/**
 	 * @param fromList
 	 *            母集団
@@ -40,11 +37,17 @@ public class SelectList extends ListView<String> {
 		writeList();
 	}
 
+	/**フィルターをセット*/
+	public void setSearch(String key) {
+		SearchKey = key;
+		writeList();
+	}
+
 	/** リストを読み取って値をセット */
 	private void writeList() {
 		getItems().clear();
 		getItems().addAll(setList);
-		motherList.stream().map(data -> data.getDisplayName()).filter(str->!setList.contains(str)).forEach(str->getItems().add(str));
+		motherList.stream().map(data -> data.getDisplayName()).filter(str->(!setList.contains(str)&&ArrayEditer.Search(str, SearchKey))).forEach(str->getItems().add(str));
 	}
 
 	/** 上下ボタンと削除ボタン付きのリストシェル */
@@ -111,7 +114,7 @@ public class SelectList extends ListView<String> {
 
 				// 選択済みなら
 				if (setList.contains(data)) {
-					setlabel.setText("delete");
+					setlabel.setStyle("-fx-background-image : url('./icon/remove.png');");;
 					// 1番上以外なら
 					up.setVisible(0 < getIndex());
 					// 1番下以外なら
@@ -119,7 +122,7 @@ public class SelectList extends ListView<String> {
 				} else {
 					up.setVisible(false);
 					down.setVisible(false);
-					setlabel.setText("add");
+					setlabel.setStyle("-fx-background-image : url('./icon/add.png');");
 				}
 				setGraphic(root);
 				getIndex();
