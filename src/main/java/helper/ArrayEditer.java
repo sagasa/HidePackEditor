@@ -13,22 +13,53 @@ public class ArrayEditer {
 	// ===========検索============
 	private static final String space = " ";// TODO
 
-	/** 検索一致判定処理 スペースで区切ってそれぞれ判定、すべて含んでいたらtrue */
+	/** 検索一致判定処理 スペースで区切ってそれぞれ判定、1つでも含んでいたらtrue */
 	public static List<DataEntityInterface> Search(List<? extends DataEntityInterface> value, String key) {
 		return value.stream().filter(data -> Search(data.getDisplayName(), key)).sorted().collect(Collectors.toList());
 	}
 
 	/**
-	 * 検索一致判定処理 スペースで区切ってそれぞれ判定、すべて含んでいたらtrue
+	 * 検索一致判定処理 スペースで区切ってそれぞれ判定、1つでも含んでいたらtrue
 	 */
-	public static boolean Search(String value, String key) {
+	public static boolean Search(String value, String keys) {
+		if (keys == null)
+			return true;
+		if (value == null)
+			return false;
 		value = value.trim();
-		String[] keys = key.split(space);
-		for (String str : keys) {
-			if (!value.contains(str)) {
+
+		int p = 0;
+		for(String key:keys.split(space)) {
+			p = value.indexOf(key, p);
+			if(p==-1) {
 				return false;
 			}
 		}
+
+		/*// 旧検索処理 キーの順序を問わない
+		Map<String, Integer> keyMap = new HashMap<>();
+		for (String key : keys.split(space)) {
+			if (keyMap.containsKey(key)) {
+				keyMap.put(key, keyMap.get(key) + 1);
+			} else {
+				keyMap.put(key, 1);
+			}
+		}
+
+		for (String key : keyMap.keySet()) {
+			int keyNum = keyMap.get(key);
+			int matchNum = 0;
+			int pointer = 0;
+			while (keyNum > matchNum) {
+				// 検索
+				pointer = value.indexOf(key, pointer);
+				if (pointer == -1) {
+					return false;
+				}
+				pointer += key.length();
+				matchNum++;
+			}
+		}//*/
 		return true;
 	}
 
