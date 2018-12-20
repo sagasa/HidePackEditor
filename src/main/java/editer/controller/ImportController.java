@@ -1,4 +1,4 @@
-package controller.editer;
+package editer.controller;
 
 import java.net.URL;
 import java.util.ArrayList;

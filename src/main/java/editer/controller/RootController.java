@@ -1,4 +1,4 @@
-package controller.editer;
+package editer.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import editer.DataEntityInterface;
 import editer.HidePack;
+import editer.node.EditerComponent;
 import helper.ArrayEditer;
 import io.PackCash;
 import io.PackIO;

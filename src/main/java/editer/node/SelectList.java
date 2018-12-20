@@ -1,9 +1,8 @@
-package controller.editer;
+package editer.node;
 
 import editer.DataEntityInterface;
 import helper.ArrayEditer;
 import javafx.beans.property.ListProperty;
-import javafx.beans.value.WeakChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;

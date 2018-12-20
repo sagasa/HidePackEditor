@@ -1,4 +1,4 @@
-package controller.editer;
+package editer.node;
 
 import java.lang.reflect.Field;
 import java.util.stream.Collectors;
@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import editer.DataEntityInterface;
 import editer.HidePack;
+import editer.controller.RootController;
 import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
@@ -27,9 +28,6 @@ import types.guns.GunData;
 
 public class EditerComponent {
 	private static final Logger log = LogManager.getLogger();
-
-	/** 未設定時のイメージ */
-	private static final Image NullImage = new Image("./icon/notSet.png");
 
 	/** GunEditer */
 	public static void writeGunEditer(Pane editer, GunData data) {
@@ -101,8 +99,6 @@ public class EditerComponent {
 		iconview.setFitWidth(64);
 		iconview.setFitHeight(64);
 		iconview.setPreserveRatio(true);
-		iconview.setImage(image == null ? NullImage : SwingFXUtils.toFXImage(image.Image, null));
-
 		root.getChildren().add(iconview);
 		root.setPrefSize(200, 100);
 		return root;
