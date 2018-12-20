@@ -106,7 +106,7 @@ public class EditNodeBuilder {
 
 	/** DataBaseのストリングコンボ型 */
 	public static EditNodeBuilder makeStringAutoFillNode(DataBase data, String field,
-			ObservableList<DataEntityInterface> list) {
+			ObservableList<? extends DataEntityInterface> list) {
 		if (!EditHelper.isString(data, field)) {
 			log.error(data.getClass() + "." + field + " is not String");
 			return null;
@@ -249,13 +249,12 @@ public class EditNodeBuilder {
 		if (Type == EditNodeType.Text || Type == EditNodeType.TextFromList) {
 			text.textProperty().bindBidirectional((Property<String>) Property);
 			if (Type == EditNodeType.TextFromList) {
-				ChoiceBox<String> test = new ChoiceBox<>();
 				// test
 				TextFields.bindAutoCompletion(text, new Callback<ISuggestionRequest, Collection<String>>() {
 					@Override
 					public Collection<String> call(ISuggestionRequest key) {
 						return ArrayEditer.Search(fromList, key.getUserText()).stream()
-								.map(data -> data.getDisplayName()).collect(Collectors.toList());
+								.map(data -> data.getDisplayName()).sorted().collect(Collectors.toList());
 					}
 				});
 			}

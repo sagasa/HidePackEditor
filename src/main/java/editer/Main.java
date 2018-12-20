@@ -1,8 +1,5 @@
 package editer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,7 +39,7 @@ public class Main extends Application {
 		log.debug("Showing JFX scene");
 		Scene scene = new Scene(rootNode, STAGE_SIZE.getX(), STAGE_SIZE.getY() - 40);
 		stage.setTitle("HidePackEditer");
-		stage.getIcons().add(new Image("./icon/M14_scope.png"));
+		stage.getIcons().add(new Image("icon/M14_scope.png"));
 		stage.setScene(scene);
 		stage.setMinHeight(STAGE_SIZE.getY());
 		stage.setMinWidth(STAGE_SIZE.getX());

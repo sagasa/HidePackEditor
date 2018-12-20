@@ -51,9 +51,8 @@ public class EditerComponent {
 		//scope
 		VBox scope = new VBox();
 		scope.setStyle("-fx-background-color: lightGray;");
-		//TODO 監視を付けなきゃ
-		ObservableList<DataEntityInterface> list = FXCollections.observableArrayList(HidePack.GunList.stream().map(name->(DataEntityInterface)name).collect(Collectors.toList()));
-		scope.getChildren().add(EditNodeBuilder.makeStringAutoFillNode(data, "SCOPE_NAME",list).build());
+
+		scope.getChildren().add(EditNodeBuilder.makeStringAutoFillNode(data, "SCOPE_NAME",HidePack.ScopeList).build());
 		scope.setLayoutX(5);
 		scope.setLayoutY(300);
 

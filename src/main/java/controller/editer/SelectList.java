@@ -3,7 +3,10 @@ package controller.editer;
 import editer.DataEntityInterface;
 import helper.ArrayEditer;
 import javafx.beans.property.ListProperty;
+import javafx.beans.value.WeakChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.WeakListChangeListener;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -18,6 +21,7 @@ public class SelectList extends ListView<String> {
 	private ObservableList<? extends DataEntityInterface> motherList;
 	private ListProperty<String> setList;
 	private String SearchKey = null;
+	private ListChangeListener<DataEntityInterface> listener;
 //TODO 要素の最大、最小数の指定を
 	/**
 	 * @param fromList
@@ -28,6 +32,13 @@ public class SelectList extends ListView<String> {
 	public SelectList(ObservableList<? extends DataEntityInterface> fromList, ListProperty<String> list) {
 		motherList = fromList;
 		setList = list;
+		listener = new ListChangeListener<DataEntityInterface>() {
+			@Override
+			public void onChanged(Change<? extends DataEntityInterface> arg0) {
+				writeList();
+			}
+		};
+		fromList.addListener(new WeakListChangeListener<>(listener));
 		setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
 			@Override
 			public ListCell<String> call(ListView<String> arg0) {
@@ -114,7 +125,7 @@ public class SelectList extends ListView<String> {
 
 				// 選択済みなら
 				if (setList.contains(data)) {
-					setlabel.setStyle("-fx-background-image : url('./icon/remove.png');");;
+					setlabel.setStyle("-fx-background-image : url('./icon/remove.png');");
 					// 1番上以外なら
 					up.setVisible(0 < getIndex());
 					// 1番下以外なら
