@@ -6,7 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.editer.RootController">
+<BorderPane id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="editer.controller.RootController">
 	<top>
 		<MenuBar BorderPane.alignment="CENTER">
 			<menus>
@@ -134,7 +134,7 @@
                         </Button>
 							</items>
 						</ToolBar>
-						<AnchorPane fx:id="editer" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" />
+						<FlowPane fx:id="editer" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" />
 					</items>
 				</SplitPane>
 				<TabPane maxWidth="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">

@@ -200,7 +200,7 @@ public class EditNodeBuilder {
 	}
 
 	// ========================= スクロール処理 =========================
-	BiConsumer<Boolean, Boolean> Scroll = new BiConsumer<Boolean, Boolean>() {
+	private BiConsumer<Boolean, Boolean> Scroll = new BiConsumer<Boolean, Boolean>() {
 		@Override
 		public void accept(Boolean plus, Boolean shift) {
 			BigDecimal oldValue = new BigDecimal(Property.getValue().toString());

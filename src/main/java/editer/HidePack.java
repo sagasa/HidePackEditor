@@ -1,11 +1,13 @@
 package editer;
 
+import java.util.List;
 import java.util.Random;
 
 import io.PackCash;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import resources.HideImage;
 import resources.Sound;
@@ -16,6 +18,9 @@ import types.guns.GunData;
 
 /** パック本体 */
 public class HidePack {
+
+	/** 未設定時のイメージ */
+	public static final Image NullImage = new Image("./icon/notSet.png");
 
 	/** 銃のList GunData */
 	public static ObservableList<GunData> GunList;
@@ -59,15 +64,15 @@ public class HidePack {
 		DefaultPack.PackColor = Color.GRAY;
 		OpenPacks.add(DefaultPack);
 		// DataBaseを追加時にinitを呼ぶリスナー
-		ListChangeListener<DataBase> initListener = change -> {
+		ListChangeListener<DataBase> propertyInit = change -> {
 			while (change.next()) {
 				change.getAddedSubList().forEach(data -> data.init());
 			}
 		};
 
-		GunList.addListener(initListener);
-		BulletList.addListener(initListener);
-		OpenPacks.addListener(initListener);
+		GunList.addListener(propertyInit);
+		BulletList.addListener(propertyInit);
+		OpenPacks.addListener(propertyInit);
 	}
 
 	/** PackCashインポート */
@@ -89,6 +94,16 @@ public class HidePack {
 		} else {
 			return getPack(pack.PACK_NAME);
 		}
+	}
+
+	/** リストから一致する名前を取得 複数ある場合も1つしか戻らない */
+	public static <T extends DataEntityInterface> T getDataByName(List<T> list,String displayName) {
+		for (T data : list) {
+			if (data.getDisplayName().equals(displayName)) {
+				return data;
+			}
+		}
+		return null;
 	}
 
 	/** 銃取得 */

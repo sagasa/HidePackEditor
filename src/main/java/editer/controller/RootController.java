@@ -99,6 +99,11 @@ public class RootController implements Initializable {
 		gunList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.GunList, itemSearch.getText())));
 		// Magazine
 		magazineList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.BulletList, itemSearch.getText())));
+		// Icon
+		iconList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.IconList, itemSearch.getText())));
+		// Sound
+		soundList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.SoundList, itemSearch.getText())));
+
 
 		packList.refresh();
 		gunList.refresh();
@@ -179,9 +184,9 @@ public class RootController implements Initializable {
 	}
 
 	public void editGun() {
-		editClear();
 		DataEntityInterface item = gunList.getSelectionModel().getSelectedItem();
 		if (item != null) {
+			editClear();
 			log.debug(HidePack.getGunData(item.getDisplayName()).toString());
 			EditerComponent.writeGunEditer(editer, HidePack.getGunData(item.getDisplayName()));
 		}

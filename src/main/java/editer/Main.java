@@ -3,7 +3,7 @@ package editer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import controller.editer.RootController;
+import editer.controller.RootController;
 import io.PackIO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

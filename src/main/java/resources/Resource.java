@@ -5,8 +5,9 @@ import editer.HidePack;
 
 /**名前付きリソースのスーパークラス*/
 public abstract class Resource implements DataEntityInterface{
-	public Resource(String name) {
+	public Resource(String name,long uid) {
 		DisplayName = name;
+		PackUID = uid;
 	}
 	public long PackUID;
 	public String DisplayName;

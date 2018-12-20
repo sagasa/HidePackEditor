@@ -26,8 +26,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import controller.editer.RootController;
 import editer.HidePack;
+import editer.controller.RootController;
 import helper.ArrayEditer;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -71,6 +71,7 @@ public class PackIO {
 	public static void importIcon(File file) {
 		try {
 			HideImage image = new HideImage(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
+
 			HidePack.IconList.add(image);
 		} catch (IOException e) {
 			e.printStackTrace();
