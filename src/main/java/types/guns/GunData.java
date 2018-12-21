@@ -3,6 +3,8 @@ package types.guns;
 import java.util.ArrayList;
 import java.util.List;
 
+import helper.EditHelper;
+import javafx.beans.property.Property;
 import types.Info;
 import types.base.ItemData;
 import types.effect.Recoil;
@@ -10,9 +12,41 @@ import types.effect.Sound;
 
 public class GunData extends ItemData {
 
+	@Override
+	public void init() {
+		super.init();
+		bindRecoil(RECOIL_DEFAULT, RECOIL_ADS);
+		bindRecoil(RECOIL_DEFAULT, RECOIL_SNEAK);
+		bindRecoil(RECOIL_SNEAK, RECOIL_SNEAK_ADS);
+	}
+
+	/** リコイル非使用時のバインド用 */
+	private void bindRecoil(Recoil from, Recoil to) {
+		(EditHelper.getProperty(to, "USE")).addListener((value, oldV, newV) -> {
+			from.Property.keySet().forEach(str -> {
+				if (!str.equals("USE")) {
+					if ((boolean) newV) {
+						to.Property.get(str).unbind();
+					} else {
+
+						EditHelper.getProperty(to, str).bind((Property)EditHelper.getProperty(from, str));
+					}
+				}
+			});
+		});
+	}
+
+	/** 所持しているときのHP増加量 */
+	@Info(Cate = 3)
 	public float ITEM_MAX_HEALTH = 0f;
+	/** 所持しているときの移動速度増加量 */
+	@Info(Cate = 3, Scale = "0.1")
 	public float ITEM_MOVE_SPEED = 0f;
+	/** 所持しているときのノックバック耐性増加量 */
+	@Info(Cate = 3, Scale = "0.1")
 	public float ITEM_KNOCKBACK_RESISTANCE = 0f;
+	/** 所持しているときの近接ダメージ増加量 */
+	@Info(Cate = 3)
 	public float ITEM_ATTACK_DAMAGE = 0f;
 
 	/** 弾速 1秒の移動距離(m)=弾速 : float型 **/
@@ -36,36 +70,36 @@ public class GunData extends ItemData {
 	@Info(Cate = 0)
 	public boolean RELOAD_ALL = false;
 	/** 分間発射数 : int型 **/
-	@Info(Cate = 0,Min=0,Scale="10")
+	@Info(Cate = 0, Min = 0, Scale = "10")
 	public int RPM = 600;
 	/** 射撃モード : String配列型 **/
 	public String[] FIREMODE = new String[] { "semiauto" };
 	/** 貫通力 貫通力体のMOBにダメージが与えられる -1で∞ : int型 **/
-	@Info(Cate = 0,Min=-1)
+	@Info(Cate = 0, Min = -1)
 	public int BULLET_POWER = 1;
 	/** バーストの分間発射数 : int型 **/
-	@Info(Cate = 0,Min=0,Scale="10")
+	@Info(Cate = 0, Min = 0, Scale = "10")
 	public int BURST_RPM = 800;
 	/** バーストの発射数 : int型 **/
-	@Info(Cate = 0,Min=1)
+	@Info(Cate = 0, Min = 1)
 	public int BURST_BULLET_NUM = 3;
 	/** 装填数 : int型 **/
-	@Info(Cate = 0,Min=1)
+	@Info(Cate = 0, Min = 1)
 	public int LOAD_NUM = 1;
 	/** 精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
-	@Info(Cate = 0,Min=0)
+	@Info(Cate = 0, Min = 0)
 	public float ACCURACY = 0f;
 	/** ADS精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
-	@Info(Cate = 0,Min=0)
+	@Info(Cate = 0, Min = 0)
 	public float ACCURACY_ADS = 0f;
 	/** デフォルトリコイル : GunRecoil型 */
-	public Recoil RECOIL_DEFAULT = new Recoil().setUse(true);
+	public Recoil RECOIL_DEFAULT = new Recoil();
 	/** ADSリコイル : GunRecoil型 */
-	public Recoil RECOIL_ADS = new Recoil();
+	public Recoil RECOIL_ADS = new Recoil().setUse(false);
 	/** スニークリコイル : GunRecoil型 */
-	public Recoil RECOIL_SNEAK = new Recoil();
+	public Recoil RECOIL_SNEAK = new Recoil().setUse(false);
 	/** スニークADSリコイル : GunRecoil型 */
-	public Recoil RECOIL_SNEAK_ADS = new Recoil();
+	public Recoil RECOIL_SNEAK_ADS = new Recoil().setUse(false);
 	/** 対人ダメージ加算値 : float型 **/
 	@Info(Cate = 1)
 	public float PLAYER_DAMAGE_ADD = 0f;

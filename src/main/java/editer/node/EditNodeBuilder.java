@@ -99,6 +99,9 @@ public class EditNodeBuilder {
 			return null;
 		}
 		EditNodeBuilder builder = new EditNodeBuilder(type, data, field);
+		builder.MaxValue = EditHelper.getMax(data.getClass(), field);
+		builder.MinValue = EditHelper.getMin(data.getClass(), field);
+		builder.Scale = EditHelper.getScale(data.getClass(), field);
 		builder.textFieldWidth = 40;
 		return builder;
 	}
@@ -175,7 +178,7 @@ public class EditNodeBuilder {
 		return this;
 	}
 
-	private float MinValue = Float.MIN_VALUE;
+	private float MinValue = -Float.MAX_VALUE;
 
 	/** 数値編集フィールドの最大値 */
 	public EditNodeBuilder setMin(float min) {
@@ -280,15 +283,12 @@ public class EditNodeBuilder {
 							res = super.fromString(str);
 						} catch (Exception e) {
 							res = (Float) Property.getValue();
-							text.setText(super.toString(res));
+							text.setText(String.valueOf(res));
 						}
 						// 範囲チェック
-						Float resold = res;
 						res = Math.min(res, MaxValue);
 						res = Math.max(res, MinValue);
-						if (resold != res) {
-							text.setText(super.toString(res));
-						}
+
 						return res;
 					}
 				};
@@ -301,17 +301,11 @@ public class EditNodeBuilder {
 							res = super.fromString(str);
 						} catch (Exception e) {
 							res = (Integer) Property.getValue();
-							text.setText(super.toString(res));
 						}
 						// 範囲チェック
-						if (res != null) {
-							Integer resold = res;
-							res = Math.min(res, Math.round(MaxValue));
-							res = Math.max(res, Math.round(MinValue));
-							if (resold != res) {
-								text.setText(super.toString(res));
-							}
-						}
+						res = Math.min(res, Math.round(MaxValue));
+						res = Math.max(res, Math.round(MinValue));
+						String.valueOf(res);
 						return res;
 					}
 				};
@@ -377,9 +371,9 @@ public class EditNodeBuilder {
 					run.run();
 			});
 			check.setPrefSize(sizeY, sizeY);
-			check.setTranslateX(sizeX-sizeY);
-			label.setPrefSize(sizeX-sizeY, sizeY);
-			root.getChildren().addAll(check,label);
+			check.setTranslateX(sizeX - sizeY);
+			label.setPrefSize(sizeX - sizeY, sizeY);
+			root.getChildren().addAll(check, label);
 			// 1回変更イベントを呼んでおく
 			for (Runnable listener : ChangeListener) {
 				listener.run();

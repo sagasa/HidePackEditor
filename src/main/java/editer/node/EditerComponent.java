@@ -8,17 +8,20 @@ import editer.HidePack;
 import editer.controller.RootController;
 import helper.EditHelper;
 import javafx.beans.property.Property;
-import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import resources.HideImage;
 import types.base.DataBase;
 import types.base.ItemData;
+import types.effect.Recoil;
 import types.guns.GunData;
 
 public class EditerComponent {
@@ -26,7 +29,6 @@ public class EditerComponent {
 
 	/** 色とマージンを設定 */
 	private static <T extends Node> T setDefault(T region) {
-		FlowPane.setMargin(region, new Insets(5, 0, 0, 5));
 		region.setStyle("-fx-background-color: lightGray;");
 		return region;
 	}
@@ -54,8 +56,31 @@ public class EditerComponent {
 	}
 
 	/** GunData */
-	private static Pane makeRecoilEditer(GunData data) {
-		return makeCateEditPanel(data.RECOIL_DEFAULT, -1);
+	private static Region makeRecoilEditer(GunData data) {
+		TabPane root = new TabPane();
+		root.setMaxWidth(200);
+		Tab Default = new Tab("Default", makeRecoilEditer(data.RECOIL_DEFAULT));
+		Default.setClosable(false);
+		Tab ADS = new Tab("ADS", makeRecoilEditer(data.RECOIL_ADS));
+		ADS.setClosable(false);
+		Tab Sneak = new Tab("Sneak", makeRecoilEditer(data.RECOIL_SNEAK));
+		Sneak.setClosable(false);
+		Tab SneakADS = new Tab("Sneak+ADS", makeRecoilEditer(data.RECOIL_SNEAK_ADS));
+		SneakADS.setClosable(false);
+		root.getTabs().addAll(Default, Sneak, ADS, SneakADS);
+		return root;
+	}
+
+	private static Region makeRecoilEditer(Recoil recoil) {
+		VBox root = new VBox();
+		// 数値系
+		Pane pane = makeCateEditPanel(recoil, -1);
+		// 使用可否
+		Node use = EditNodeBuilder.makeBooleanSetNode(recoil, "USE").setChangeListner(() -> {
+			pane.setDisable(!recoil.USE);
+		}).build();
+		root.getChildren().addAll(use, pane);
+		return root;
 	}
 
 	/** ItemData用名称+アイコン編集ノード */
@@ -66,24 +91,17 @@ public class EditerComponent {
 		// 短縮名
 		Node shortname = EditNodeBuilder.makeStringSetNode(data, "ITEM_SHORTNAME").build();
 		// 表示名
-		Node dizplayname = EditNodeBuilder.makeStringSetNode(data, "ITEM_DISPLAYNAME").setChangeListner(new Runnable() {
-			@Override
-			public void run() {
-				RootController.writeList();
-			}
-		}).build();
+		Node dizplayname = EditNodeBuilder.makeStringSetNode(data, "ITEM_DISPLAYNAME")
+				.setChangeListner(() -> RootController.writeList()).build();
 		// 短縮名の使用可否
-		Node useshortname = EditNodeBuilder.makeBooleanSetNode(data, "USE_SHORTNAME").setChangeListner(new Runnable() {
-			@Override
-			public void run() {
-				shortname.setDisable(!data.USE_SHORTNAME);
-				if (!data.USE_SHORTNAME) {
-					EditHelper.getProperty(data, "ITEM_SHORTNAME")
-							.bindBidirectional((Property) EditHelper.getProperty(data, "ITEM_DISPLAYNAME"));
-				} else {
-					EditHelper.getProperty(data, "ITEM_SHORTNAME")
-							.unbindBidirectional((Property) EditHelper.getProperty(data, "ITEM_DISPLAYNAME"));
-				}
+		Node useshortname = EditNodeBuilder.makeBooleanSetNode(data, "USE_SHORTNAME").setChangeListner(() -> {
+			shortname.setDisable(!data.USE_SHORTNAME);
+			if (!data.USE_SHORTNAME) {
+				EditHelper.getProperty(data, "ITEM_SHORTNAME")
+						.bindBidirectional((Property)EditHelper.getProperty(data, "ITEM_DISPLAYNAME"));
+			} else {
+				EditHelper.getProperty(data, "ITEM_SHORTNAME")
+						.unbindBidirectional((Property) EditHelper.getProperty(data, "ITEM_DISPLAYNAME"));
 			}
 		}).build();
 		root.getChildren().addAll(dizplayname, useshortname, shortname);
@@ -95,7 +113,7 @@ public class EditerComponent {
 	private static Pane makeImageNode(ItemData data, String fieldName, ObservableList<HideImage> list) {
 		VBox root = new VBox();
 		setDefault(root);
-		ImageView iconview = new HideImageView(list, (StringProperty) EditHelper.getProperty(data, fieldName));
+		ImageView iconview = new HideImageView(list, (ObservableValue<String>) EditHelper.getProperty(data, fieldName));
 		iconview.setFitWidth(64);
 		iconview.setFitHeight(64);
 		VBox.setMargin(iconview, new Insets(5, 0, 0, 5));

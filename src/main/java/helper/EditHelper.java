@@ -1,12 +1,8 @@
 package helper;
 
-import java.lang.reflect.TypeVariable;
-import java.util.Arrays;
 import java.util.List;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
@@ -107,9 +103,14 @@ public class EditHelper {
 		}
 	}
 
-	/** プロパティを取得 */
+
+	/** プロパティを取得*/
 	public static Property<?> getProperty(DataBase data, String field) {
 		return data.Property.get(field);
+	}
+	/** プロパティを取得*/
+	public static <T> Property<T> getProperty(DataBase data, String field,Class<T> clazz) {
+		return (Property<T>) data.Property.get(field);
 	}
 
 	/** プロパティとフィールドの型チェック */

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface Info {
-	float Min() default Float.MIN_VALUE;
+	float Min() default -Float.MAX_VALUE;
 	float Max() default Float.MAX_VALUE;
 	String Scale() default "1";
 	int Cate() default -1;

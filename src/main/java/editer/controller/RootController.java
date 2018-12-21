@@ -31,6 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -49,7 +50,7 @@ public class RootController implements Initializable {
 	public static RootController INSTANCE;
 	public static Stage STAGE;
 
-	public Pane editer;
+	public FlowPane editer;
 
 	public TextField packSearch;
 	public ListView<DataEntityInterface> packList;
@@ -83,6 +84,10 @@ public class RootController implements Initializable {
 		HidePack.ScopeList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.SoundList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.OpenPacks.addListener(new WeakListChangeListener<>(writeListener));
+
+		editer.setVgap(5);
+		editer.setHgap(5);
+		editer.prefWrapLengthProperty().bind(editer.widthProperty());
 		write();
 	}
 

@@ -36,7 +36,7 @@ public abstract class DataBase implements Cloneable {
 
 	private boolean doinit = false;
 
-	/** プロパティMapを作成 */
+	/**エディター側のみのプロパティ関連の初期化*/
 	public void init() {
 		if (!doinit) {
 			for (Field field : this.getClass().getFields()) {
