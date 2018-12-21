@@ -15,9 +15,9 @@ import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import resources.HideImage;
+import types.base.DataBase;
 import types.base.ItemData;
 import types.guns.GunData;
 
@@ -48,6 +48,14 @@ public class EditerComponent {
 		Pane scope = makeImageNode(data, "SCOPE_NAME", HidePack.ScopeList);
 		scope.getChildren().add(EditNodeBuilder.makeNumberSetNode(data, "SCOPE_DIA").build());
 		editer.getChildren().add(scope);
+
+		editer.getChildren().add(setDefault(makeRecoilEditer(data)));
+		data.RECOIL_ADS.init();
+	}
+
+	/** GunData */
+	private static Pane makeRecoilEditer(GunData data) {
+		return makeCateEditPanel(data.RECOIL_DEFAULT, -1);
 	}
 
 	/** ItemData用名称+アイコン編集ノード */
@@ -98,7 +106,7 @@ public class EditerComponent {
 	}
 
 	/** カテゴリが付いた値を編集するノード */
-	private static Pane makeCateEditPanel(ItemData data, int cate) {
+	private static Pane makeCateEditPanel(DataBase data, int cate) {
 		VBox root = new VBox();
 		setDefault(root);
 		for (Field field : data.getClass().getFields()) {
@@ -112,7 +120,6 @@ public class EditerComponent {
 					root.getChildren().add(EditNodeBuilder.makeNumberSetNode(data, field.getName()).build());
 				}
 			}
-
 		}
 		return root;
 	}

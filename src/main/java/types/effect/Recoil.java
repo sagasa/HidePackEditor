@@ -5,6 +5,8 @@ import types.base.DataBase;
 
 public class Recoil extends DataBase {
 
+	public boolean USE = true;
+
 	public float MAX_YAW_BASE = 0f;
 	@Info(Min=0)
 	public float MAX_YAW_SPREAD = 0f;
@@ -41,8 +43,6 @@ public class Recoil extends DataBase {
 	public int POWER_TICK = 0;
 	@Info(Min=0)
 	public int POWER_SHOOT = 0;
-
-	public boolean USE = true;
 
 	public Recoil setUse(boolean b) {
 		USE =  b;

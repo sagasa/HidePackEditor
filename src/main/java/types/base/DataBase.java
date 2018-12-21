@@ -57,6 +57,8 @@ public abstract class DataBase implements Cloneable {
 				} else if (field.getType().isAssignableFrom(List.class)) {
 					Property.put(field.getName(), new SimpleListProperty<>(
 							FXCollections.observableList((List<String>) EditHelper.getData(this, field.getName()))));
+				} else if(DataBase.class.isAssignableFrom(field.getType())) {
+					((DataBase)EditHelper.getData(this, field.getName())).init();
 				}
 			}
 			doinit = true;
