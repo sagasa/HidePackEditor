@@ -22,13 +22,12 @@ public class GunData extends ItemData {
 
 	/** リコイル非使用時のバインド用 */
 	private void bindRecoil(Recoil from, Recoil to) {
-		(EditHelper.getProperty(to, "USE")).addListener((value, oldV, newV) -> {
+		EditHelper.getProperty(to, "USE").addListener((value, oldV, newV) -> {
 			from.Property.keySet().forEach(str -> {
 				if (!str.equals("USE")) {
 					if ((boolean) newV) {
 						to.Property.get(str).unbind();
 					} else {
-
 						EditHelper.getProperty(to, str).bind((Property)EditHelper.getProperty(from, str));
 					}
 				}

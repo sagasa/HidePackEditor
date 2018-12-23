@@ -11,17 +11,22 @@ import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import localize.LocalizeHandler;
 import resources.HideImage;
 import types.base.DataBase;
 import types.base.ItemData;
 import types.effect.Recoil;
+import types.effect.Sound;
+import types.guns.BulletData;
 import types.guns.GunData;
 
 public class EditerComponent {
@@ -45,17 +50,33 @@ public class EditerComponent {
 		editer.getChildren().add(makeCateEditPanel(data, 1));
 		// useBullet
 		editer.getChildren()
-				.add(setDefault(EditNodeBuilder.makeStringListNode(data, "BULLET_USE", HidePack.GunList).build()));
+				.add(setDefault(EditNodeBuilder.makeStringListNode(data, "BULLET_USE", HidePack.BulletList).build()));
 		// scope
 		Pane scope = makeImageNode(data, "SCOPE_NAME", HidePack.ScopeList);
 		scope.getChildren().add(EditNodeBuilder.makeNumberSetNode(data, "SCOPE_DIA").build());
 		editer.getChildren().add(scope);
-
+		// shootSound
+		editer.getChildren().add(setDefault(makeSoundEditer(data.SOUND_SHOOT,LocalizeHandler.getLocalizedName(data, "SOUND_SHOOT"))));
+		// reloadSound
+		editer.getChildren().add(setDefault(makeSoundEditer(data.SOUND_RELOAD,LocalizeHandler.getLocalizedName(data, "SOUND_SHOOT"))));
+		// recoil
 		editer.getChildren().add(setDefault(makeRecoilEditer(data)));
-		data.RECOIL_ADS.init();
 	}
 
-	/** GunData */
+	/** BulletData */
+	public static void writeBulletEditer(Pane editer, BulletData data) {
+		// ItemName
+		editer.getChildren().add(makeItemInfoNode(data));
+		// icon
+		editer.getChildren().add(makeImageNode(data, "ITEM_ICONNAME", HidePack.IconList));
+		// Cate0
+		editer.getChildren().add(makeCateEditPanel(data, 0));
+		// Cate1
+		editer.getChildren().add(makeCateEditPanel(data, 1));
+	}
+
+
+	/** Recoil */
 	private static Region makeRecoilEditer(GunData data) {
 		TabPane root = new TabPane();
 		root.setMaxWidth(200);
@@ -68,6 +89,19 @@ public class EditerComponent {
 		Tab SneakADS = new Tab("Sneak+ADS", makeRecoilEditer(data.RECOIL_SNEAK_ADS));
 		SneakADS.setClosable(false);
 		root.getTabs().addAll(Default, Sneak, ADS, SneakADS);
+		return root;
+	}
+
+	/** Soundの詳細 */
+	private static Region makeSoundEditer(Sound sound, String name) {
+		VBox root = new VBox();
+		Label label = new Label(name);
+		label.setPrefWidth(200);
+		label.setAlignment(Pos.CENTER);
+		root.getChildren().add(label);
+		// 数値系
+		root.getChildren().add(EditNodeBuilder.makeStringAutoFillNode(sound, "NAME", HidePack.SoundList).build());
+		root.getChildren().add(makeCateEditPanel(sound, -1));
 		return root;
 	}
 
@@ -98,7 +132,7 @@ public class EditerComponent {
 			shortname.setDisable(!data.USE_SHORTNAME);
 			if (!data.USE_SHORTNAME) {
 				EditHelper.getProperty(data, "ITEM_SHORTNAME")
-						.bindBidirectional((Property)EditHelper.getProperty(data, "ITEM_DISPLAYNAME"));
+						.bindBidirectional((Property) EditHelper.getProperty(data, "ITEM_DISPLAYNAME"));
 			} else {
 				EditHelper.getProperty(data, "ITEM_SHORTNAME")
 						.unbindBidirectional((Property) EditHelper.getProperty(data, "ITEM_DISPLAYNAME"));

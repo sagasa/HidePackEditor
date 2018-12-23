@@ -1,6 +1,5 @@
 package types.effect;
 
-import helper.EditHelper;
 import types.Info;
 import types.base.DataBase;
 
@@ -50,7 +49,6 @@ public class Recoil extends DataBase {
 
 	public Recoil setUse(boolean b) {
 		USE = b;
-
 		return this;
 	}
 }

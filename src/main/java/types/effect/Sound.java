@@ -5,6 +5,7 @@ import types.base.DataBase;
 
 public class Sound extends DataBase {
 
+	@Info(Cate = 0)
 	public String NAME = "sample";
 	@Info(Min=0)
 	public float RANGE = 50f;
@@ -19,5 +20,4 @@ public class Sound extends DataBase {
 		NAME = name;
 		RANGE = range;
 	}
-
 }

@@ -97,7 +97,7 @@ public class HidePack {
 	}
 
 	/** リストから一致する名前を取得 複数ある場合も1つしか戻らない */
-	public static <T extends DataEntityInterface> T getDataByName(List<T> list,String displayName) {
+	public static <T extends DataEntityInterface> T getDataByName(List<T> list, String displayName) {
 		for (T data : list) {
 			if (data.getDisplayName().equals(displayName)) {
 				return data;

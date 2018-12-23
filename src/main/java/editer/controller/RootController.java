@@ -200,7 +200,9 @@ public class RootController implements Initializable {
 	public void editMagazine() {
 		DataEntityInterface item = magazineList.getSelectionModel().getSelectedItem();
 		if (item != null) {
+			editClear();
 			log.debug(HidePack.getBulletData(item.getDisplayName()).toString());
+			EditerComponent.writeBulletEditer(editer, HidePack.getBulletData(item.getDisplayName()));
 		}
 	}
 

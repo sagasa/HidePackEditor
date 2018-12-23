@@ -27,18 +27,19 @@ public abstract class DataBase implements Cloneable {
 	/** パックデータ エディタでのみ使用 */
 	transient public long PackUID;
 	/** パックデータ エディタでのみ使用 Integer Float Boolean String のフィールドのプロパティ */
-	transient public Map<String, Property<?>> Property = new HashMap<>();
+	transient public Map<String, Property<?>> Property;
 
 	/** 参照データか確認 */
 	public boolean isReference() {
 		return HidePack.getPack(PackUID).isReference;
 	}
 
-	private boolean doinit = false;
+	transient private boolean doinit = false;
 
 	/**エディター側のみのプロパティ関連の初期化*/
 	public void init() {
 		if (!doinit) {
+			Property = new HashMap<>();
 			for (Field field : this.getClass().getFields()) {
 				if (field.getType().isAssignableFrom(int.class) || field.getType().isAssignableFrom(Integer.class)) {
 					// Integer
