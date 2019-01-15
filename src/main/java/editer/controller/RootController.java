@@ -43,6 +43,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import types.PackInfo;
 import types.items.GunData;
+import types.items.MagazineData;
 import types.projectile.BulletData;
 
 public class RootController implements Initializable {
@@ -79,7 +80,7 @@ public class RootController implements Initializable {
 		packSearch.textProperty().addListener(change -> write());
 		// リスト通知用フック
 		HidePack.GunList.addListener(new WeakListChangeListener<>(writeListener));
-		HidePack.BulletList.addListener(new WeakListChangeListener<>(writeListener));
+		HidePack.MagazineList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.IconList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.ScopeList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.SoundList.addListener(new WeakListChangeListener<>(writeListener));
@@ -103,7 +104,7 @@ public class RootController implements Initializable {
 		// Gun
 		gunList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.GunList, itemSearch.getText())));
 		// Magazine
-		magazineList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.BulletList, itemSearch.getText())));
+		magazineList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.MagazineList, itemSearch.getText())));
 		// Icon
 		iconList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.IconList, itemSearch.getText())));
 		// Sound
@@ -201,8 +202,8 @@ public class RootController implements Initializable {
 		DataEntityInterface item = magazineList.getSelectionModel().getSelectedItem();
 		if (item != null) {
 			editClear();
-			log.debug(HidePack.getBulletData(item.getDisplayName()).toString());
-			EditerComponent.writeBulletEditer(editer, HidePack.getBulletData(item.getDisplayName()));
+			log.debug(HidePack.getMagazineData(item.getDisplayName()).toString());
+			EditerComponent.writeMagazineEditer(editer, HidePack.getMagazineData(item.getDisplayName()));
 		}
 	}
 
@@ -247,15 +248,15 @@ public class RootController implements Initializable {
 
 	public void addMagazine() {
 		log.debug("addBullet");
-		BulletData bullet = new BulletData();
+		MagazineData magazine = new MagazineData();
 		while (HidePack.getGunData("New Magazine No." + bulletNamePointer) != null) {
 			bulletNamePointer++;
 		}
 		bulletNamePointer++;
-		bullet.ITEM_SHORTNAME = "magazine_" + bulletNamePointer;
-		bullet.ITEM_DISPLAYNAME = "New Magazine No." + bulletNamePointer;
-		bullet.PackUID = HidePack.DefaultPack.PackUID;
-		HidePack.BulletList.add(bullet);
+		magazine.ITEM_SHORTNAME = "magazine_" + bulletNamePointer;
+		magazine.ITEM_DISPLAYNAME = "New Magazine No." + bulletNamePointer;
+		magazine.PackUID = HidePack.DefaultPack.PackUID;
+		HidePack.MagazineList.add(magazine);
 		write();
 	}
 

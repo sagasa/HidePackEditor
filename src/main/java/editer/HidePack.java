@@ -14,6 +14,7 @@ import resources.Sound;
 import types.PackInfo;
 import types.base.DataBase;
 import types.items.GunData;
+import types.items.MagazineData;
 import types.projectile.BulletData;
 
 /** パック本体 */
@@ -24,6 +25,8 @@ public class HidePack {
 
 	/** 銃のList GunData */
 	public static ObservableList<GunData> GunList;
+	/** 弾のList MagazineData */
+	public static ObservableList<MagazineData> MagazineList;
 	/** 弾のList BulletData */
 	public static ObservableList<BulletData> BulletList;
 	/** IconのList Image */
@@ -50,6 +53,7 @@ public class HidePack {
 	/** パック初期化 */
 	public static void clear() {
 		GunList = FXCollections.observableArrayList();
+		MagazineList = FXCollections.observableArrayList();
 		BulletList = FXCollections.observableArrayList();
 		IconList = FXCollections.observableArrayList();
 		ScopeList = FXCollections.observableArrayList();
@@ -71,7 +75,7 @@ public class HidePack {
 		};
 
 		GunList.addListener(propertyInit);
-		BulletList.addListener(propertyInit);
+		MagazineList.addListener(propertyInit);
 		OpenPacks.addListener(propertyInit);
 	}
 
@@ -79,7 +83,7 @@ public class HidePack {
 	public static void addPack(PackCash pack) {
 		// 放り込む
 		GunList.addAll(pack.GunList);
-		BulletList.addAll(pack.BulletList);
+		MagazineList.addAll(pack.MagazineList);
 		IconList.addAll(pack.IconList);
 		ScopeList.addAll(pack.ScopeList);
 		SoundList.addAll(pack.SoundList);
@@ -117,8 +121,8 @@ public class HidePack {
 	}
 
 	/** 弾取得 */
-	public static BulletData getBulletData(String displayName) {
-		for (BulletData data : BulletList) {
+	public static MagazineData getMagazineData(String displayName) {
+		for (MagazineData data : MagazineList) {
 			if (data.ITEM_DISPLAYNAME.equals(displayName)) {
 				return data;
 			}

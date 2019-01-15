@@ -169,3 +169,7 @@ item.knockback.resistance = item.knockback.resistance
 item.attack.damage = item.attack.damage
 item.stack.size = item.stack.size
 item.stack.size = item.stack.size
+packuid = packuid
+property = property
+use.bulletdata = use.bulletdata
+bulletdata = bulletdata

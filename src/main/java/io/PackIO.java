@@ -36,6 +36,7 @@ import resources.HideImage;
 import resources.Sound;
 import types.PackInfo;
 import types.items.GunData;
+import types.items.MagazineData;
 import types.projectile.BulletData;
 
 public class PackIO {
@@ -154,7 +155,7 @@ public class PackIO {
 			}
 		}
 		// 弾のデータ
-		for (BulletData d : HidePack.BulletList) {
+		for (MagazineData d : HidePack.MagazineList) {
 			// 参照ではなければ
 			if (!d.isReference()) {
 				dataMap.get(d.PackUID).add(new Entry(PackPattern.MAGAZINE.toPath(d.getDisplayName()),
@@ -170,8 +171,8 @@ public class PackIO {
 				if (!d.isReference()) {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					ImageIO.write(d.Image, "png", out);
-					dataMap.get(d.PackUID).add(
-							new Entry(PackPattern.ICON.toPath(d.getDisplayName()), new ByteArrayInputStream(out.toByteArray())));
+					dataMap.get(d.PackUID).add(new Entry(PackPattern.ICON.toPath(d.getDisplayName()),
+							new ByteArrayInputStream(out.toByteArray())));
 				}
 			}
 			// Scope
@@ -180,8 +181,8 @@ public class PackIO {
 				if (!d.isReference()) {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					ImageIO.write(d.Image, "png", out);
-					dataMap.get(d.PackUID).add(
-							new Entry(PackPattern.SCOPE.toPath(d.getDisplayName()), new ByteArrayInputStream(out.toByteArray())));
+					dataMap.get(d.PackUID).add(new Entry(PackPattern.SCOPE.toPath(d.getDisplayName()),
+							new ByteArrayInputStream(out.toByteArray())));
 				}
 			}
 		} catch (IOException e) {
@@ -190,8 +191,8 @@ public class PackIO {
 		for (Sound d : HidePack.SoundList) {
 			// 参照ではなければ
 			if (!d.isReference()) {
-				dataMap.get(d.PackUID)
-						.add(new Entry(PackPattern.SOUND.toPath(d.getDisplayName()), new ByteArrayInputStream(d.Sound)));
+				dataMap.get(d.PackUID).add(
+						new Entry(PackPattern.SOUND.toPath(d.getDisplayName()), new ByteArrayInputStream(d.Sound)));
 			}
 		}
 		// 内容がないエントリを削除
@@ -275,8 +276,8 @@ public class PackIO {
 		}
 		// bullet認識
 		else if (PackPattern.MAGAZINE.mache(name)) {
-			BulletData newBullet = gson.fromJson(new String(data, Charset.forName("UTF-8")), BulletData.class);
-			pack.BulletList.add(newBullet);
+			MagazineData newBullet = gson.fromJson(new String(data, Charset.forName("UTF-8")), MagazineData.class);
+			pack.MagazineList.add(newBullet);
 			// System.out.println("bullet");
 		}
 		// packInfo認識

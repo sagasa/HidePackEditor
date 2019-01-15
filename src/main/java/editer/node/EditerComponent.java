@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -28,6 +29,7 @@ import types.effect.Recoil;
 import types.effect.Sound;
 import types.items.GunData;
 import types.items.ItemData;
+import types.items.MagazineData;
 import types.projectile.BulletData;
 
 public class EditerComponent {
@@ -50,8 +52,8 @@ public class EditerComponent {
 		// Cate1
 		editer.getChildren().add(makeCateEditPanel(data, 1));
 		// useBullet
-		editer.getChildren()
-				.add(setDefault(EditNodeBuilder.makeStringListNode(data, "MAGAZINE_USE", HidePack.BulletList).build()));
+		editer.getChildren().add(
+				setDefault(EditNodeBuilder.makeStringListNode(data, "MAGAZINE_USE", HidePack.MagazineList).build()));
 		// fireMode
 		editer.getChildren()
 				.add(setDefault(EditNodeBuilder.makeStringListNode(data, "FIREMODE", GunFireMode.getList()).build()));
@@ -70,16 +72,38 @@ public class EditerComponent {
 		editer.getChildren().add(setDefault(makeRecoilEditer(data)));
 	}
 
-	/** BulletData */
-	public static void writeBulletEditer(Pane editer, BulletData data) {
+	/** MagazineData */
+	public static void writeMagazineEditer(Pane editer, MagazineData data) {
 		// ItemName
 		editer.getChildren().add(makeItemInfoNode(data));
 		// icon
 		editer.getChildren().add(makeImageNode(data, "ITEM_ICONNAME", HidePack.IconList));
 		// Cate0
 		editer.getChildren().add(makeCateEditPanel(data, 0));
+
+		writeBulletEditer(editer, data.BULLETDATA);// TODO
+	}
+
+	/** BulletData */
+	public static void writeBulletEditer(Pane editer, BulletData data) {
+		// Cate0
+		editer.getChildren().add(makeCateEditPanel(data, 0));
 		// Cate1
 		editer.getChildren().add(makeCateEditPanel(data, 1));
+		// Cate2
+		editer.getChildren().add(makeCateEditPanel(data, 2));
+		// Cate3
+		editer.getChildren().add(makeCateEditPanel(data, 3));
+		// sound
+		editer.getChildren().add(setDefault(
+				makeSoundEditer(data.SOUND_HIT_ENTITY, LocalizeHandler.getLocalizedName(data, "SOUND_HIT_ENTITY"))));
+		// sound
+		editer.getChildren().add(setDefault(
+				makeSoundEditer(data.SOUND_HIT_GROUND, LocalizeHandler.getLocalizedName(data, "SOUND_HIT_GROUND"))));
+		// sound
+		editer.getChildren().add(setDefault(
+				makeSoundEditer(data.SOUND_PASSING, LocalizeHandler.getLocalizedName(data, "SOUND_PASSING"))));
+
 	}
 
 	/** Recoil */

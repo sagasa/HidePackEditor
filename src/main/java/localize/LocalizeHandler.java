@@ -18,6 +18,7 @@ import types.effect.Explosion;
 import types.effect.Recoil;
 import types.effect.Sound;
 import types.items.GunData;
+import types.items.MagazineData;
 import types.projectile.BulletData;
 
 
@@ -42,6 +43,7 @@ public class LocalizeHandler {
 		makeLocalize(Sound.class);
 		makeLocalize(Explosion.class);
 		makeLocalize(PackInfo.class);
+		makeLocalize(MagazineData.class);
 
 		writeDefaultLang();
 	}

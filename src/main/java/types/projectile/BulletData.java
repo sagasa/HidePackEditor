@@ -1,11 +1,12 @@
 package types.projectile;
 
 import types.Info;
+import types.base.DataBase;
 import types.effect.Explosion;
 import types.effect.Sound;
 import types.items.ItemData;
 
-public class BulletData extends ItemData{
+public class BulletData extends DataBase{
 	/**弾の名前**/
 	@Info(Cate = 0)
 	public String BULLET_NAME = "sample";
