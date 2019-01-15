@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 import localize.LocalizeHandler;
 import resources.HideImage;
 import types.base.DataBase;
+import types.base.GunFireMode;
 import types.effect.Recoil;
 import types.effect.Sound;
 import types.items.GunData;
@@ -50,15 +51,21 @@ public class EditerComponent {
 		editer.getChildren().add(makeCateEditPanel(data, 1));
 		// useBullet
 		editer.getChildren()
-				.add(setDefault(EditNodeBuilder.makeStringListNode(data, "MAGAZINEE", HidePack.BulletList).build()));
+				.add(setDefault(EditNodeBuilder.makeStringListNode(data, "MAGAZINE_USE", HidePack.BulletList).build()));
+		// fireMode
+		editer.getChildren()
+				.add(setDefault(EditNodeBuilder.makeStringListNode(data, "FIREMODE", GunFireMode.getList()).build()));
+
 		// scope
 		Pane scope = makeImageNode(data, "SCOPE_NAME", HidePack.ScopeList);
-		scope.getChildren().add(EditNodeBuilder.makeNumberSetNode(data, "SCOPE_DIA").build());
+		scope.getChildren().add(makeCateEditPanel(data, 2));
 		editer.getChildren().add(scope);
 		// shootSound
-		editer.getChildren().add(setDefault(makeSoundEditer(data.SOUND_SHOOT,LocalizeHandler.getLocalizedName(data, "SOUND_SHOOT"))));
+		editer.getChildren().add(
+				setDefault(makeSoundEditer(data.SOUND_SHOOT, LocalizeHandler.getLocalizedName(data, "SOUND_SHOOT"))));
 		// reloadSound
-		editer.getChildren().add(setDefault(makeSoundEditer(data.SOUND_RELOAD,LocalizeHandler.getLocalizedName(data, "SOUND_SHOOT"))));
+		editer.getChildren().add(
+				setDefault(makeSoundEditer(data.SOUND_RELOAD, LocalizeHandler.getLocalizedName(data, "SOUND_SHOOT"))));
 		// recoil
 		editer.getChildren().add(setDefault(makeRecoilEditer(data)));
 	}
@@ -74,7 +81,6 @@ public class EditerComponent {
 		// Cate1
 		editer.getChildren().add(makeCateEditPanel(data, 1));
 	}
-
 
 	/** Recoil */
 	private static Region makeRecoilEditer(GunData data) {
@@ -109,6 +115,11 @@ public class EditerComponent {
 		VBox root = new VBox();
 		// 数値系
 		Pane pane = makeCateEditPanel(recoil, -1);
+
+		// バインドチェック
+		boolean value = recoil.USE;
+		EditHelper.getProperty(recoil, "USE", boolean.class).setValue(!value);
+		EditHelper.getProperty(recoil, "USE", boolean.class).setValue(value);
 		// 使用可否
 		Node use = EditNodeBuilder.makeBooleanSetNode(recoil, "USE").setChangeListner(() -> {
 			pane.setDisable(!recoil.USE);

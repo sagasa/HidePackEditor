@@ -317,8 +317,16 @@ public class PackIO {
 
 	/** パック認識用パターン エディター側と完全互換 */
 	private enum PackPattern {
-		GUN("guns", "json"), MAGAZINE("magazines", "json"), PACKINFO("pack", "json"), ICON("icons", "png"), SCOPE(
-				"scopes", "png"), TEXTURE("textures", "png"), SOUND("soubds", "ogg"), MODEL("models", "obj");
+		GUN("guns", "json"), MAGAZINE("magazines", "json"), PACKINFO(Pattern.compile("^(.*)pack\\.json$"),
+				"json"), ICON("icons", "png"), SCOPE("scopes",
+						"png"), TEXTURE("textures", "png"), SOUND("soubds", "ogg"), MODEL("models", "obj");
+
+		private PackPattern(Pattern mache, String end) {
+			this.mache = mache;
+			this.end = end;
+			this.start = "\\.";
+		}
+
 		private PackPattern(String start, String end) {
 			mache = Pattern.compile("^(.*)" + start + "/(.*)\\." + end + "$");
 			rep_start = Pattern.compile("^(.*)" + start + "/");

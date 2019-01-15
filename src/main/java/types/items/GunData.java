@@ -1,6 +1,8 @@
 package types.items;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import helper.EditHelper;
@@ -27,7 +29,7 @@ public class GunData extends ItemData {
 					if ((boolean) newV) {
 						to.Property.get(str).unbind();
 					} else {
-						EditHelper.getProperty(to, str).bind((Property)EditHelper.getProperty(from, str));
+						EditHelper.getProperty(to, str).bind((Property) EditHelper.getProperty(from, str));
 					}
 				}
 			});
@@ -77,7 +79,7 @@ public class GunData extends ItemData {
 	@Info(Cate = 0, Min = 0, Scale = "10")
 	public int RPM = 600;
 	/** 射撃モード : String配列型 **/
-	public String[] FIREMODE = new String[] { "semiauto" };
+	public List<String> FIREMODE = new ArrayList<>(Arrays.asList("semiauto"));
 	/** 貫通力 貫通力体のMOBにダメージが与えられる -1で∞ : int型 **/
 	@Info(Cate = 0, Min = -1)
 	public int BULLET_POWER = 1;

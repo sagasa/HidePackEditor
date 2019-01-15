@@ -22,7 +22,7 @@ public class PackCash {
 	/** SoundのList Sound */
 	public List<Sound> SoundList = new ArrayList<>();
 	/** 読み込み中のパック */
-	public PackInfo Pack;
+	public PackInfo Pack = new PackInfo();
 
 	/** パック情報を付与 trueでデフォルトパック 同じ名前があったら統合 */
 	public void setPack(boolean useDefault) {
