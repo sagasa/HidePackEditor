@@ -7,8 +7,8 @@ import editer.HidePack;
 import resources.HideImage;
 import resources.Sound;
 import types.PackInfo;
-import types.guns.BulletData;
-import types.guns.GunData;
+import types.items.GunData;
+import types.projectile.BulletData;
 
 public class PackCash {
 	/** 銃のList GunData */

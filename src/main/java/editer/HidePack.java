@@ -13,8 +13,8 @@ import resources.HideImage;
 import resources.Sound;
 import types.PackInfo;
 import types.base.DataBase;
-import types.guns.BulletData;
-import types.guns.GunData;
+import types.items.GunData;
+import types.projectile.BulletData;
 
 /** パック本体 */
 public class HidePack {

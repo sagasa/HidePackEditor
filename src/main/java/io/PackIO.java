@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -34,8 +35,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import resources.HideImage;
 import resources.Sound;
 import types.PackInfo;
-import types.guns.BulletData;
-import types.guns.GunData;
+import types.items.GunData;
+import types.projectile.BulletData;
 
 public class PackIO {
 	private static final Logger log = LogManager.getLogger();
@@ -81,9 +82,9 @@ public class PackIO {
 	/** Scopeをインポート */
 	public static void importScope() {
 		FileChooser filechooser = makeFileChooser(new ExtensionFilter("image", "*.png", "*.jpg", "*.bmp"));
-		List<File> files =  filechooser.showOpenMultipleDialog(RootController.STAGE);
+		List<File> files = filechooser.showOpenMultipleDialog(RootController.STAGE);
 		if (files != null) {
-			for (File file :files) {
+			for (File file : files) {
 				importScope(file);
 			}
 		}
@@ -102,9 +103,9 @@ public class PackIO {
 	/** Soundをインポート */
 	public static void importSound() {
 		FileChooser filechooser = makeFileChooser(new ExtensionFilter("ogg", "*.ogg"));
-		List<File> files =  filechooser.showOpenMultipleDialog(RootController.STAGE);
+		List<File> files = filechooser.showOpenMultipleDialog(RootController.STAGE);
 		if (files != null) {
-			for (File file :files) {
+			for (File file : files) {
 				importSound(file);
 			}
 		}
@@ -148,7 +149,7 @@ public class PackIO {
 		for (GunData d : HidePack.GunList) {
 			// 参照ではなければ
 			if (!d.isReference()) {
-				dataMap.get(d.PackUID).add(new Entry("guns/" + d.ITEM_DISPLAYNAME + ".json",
+				dataMap.get(d.PackUID).add(new Entry(PackPattern.GUN.toPath(d.getDisplayName()),
 						new ByteArrayInputStream(d.MakeJsonData().getBytes())));
 			}
 		}
@@ -156,7 +157,7 @@ public class PackIO {
 		for (BulletData d : HidePack.BulletList) {
 			// 参照ではなければ
 			if (!d.isReference()) {
-				dataMap.get(d.PackUID).add(new Entry("bullets/" + d.ITEM_DISPLAYNAME + ".json",
+				dataMap.get(d.PackUID).add(new Entry(PackPattern.MAGAZINE.toPath(d.getDisplayName()),
 						new ByteArrayInputStream(d.MakeJsonData().getBytes())));
 			}
 		}
@@ -170,7 +171,7 @@ public class PackIO {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					ImageIO.write(d.Image, "png", out);
 					dataMap.get(d.PackUID).add(
-							new Entry("icon/" + d.DisplayName + ".png", new ByteArrayInputStream(out.toByteArray())));
+							new Entry(PackPattern.ICON.toPath(d.getDisplayName()), new ByteArrayInputStream(out.toByteArray())));
 				}
 			}
 			// Scope
@@ -180,7 +181,7 @@ public class PackIO {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					ImageIO.write(d.Image, "png", out);
 					dataMap.get(d.PackUID).add(
-							new Entry("scope/" + d.DisplayName + ".png", new ByteArrayInputStream(out.toByteArray())));
+							new Entry(PackPattern.SCOPE.toPath(d.getDisplayName()), new ByteArrayInputStream(out.toByteArray())));
 				}
 			}
 		} catch (IOException e) {
@@ -190,7 +191,7 @@ public class PackIO {
 			// 参照ではなければ
 			if (!d.isReference()) {
 				dataMap.get(d.PackUID)
-						.add(new Entry("sound/" + d.DisplayName + ".ogg", new ByteArrayInputStream(d.Sound)));
+						.add(new Entry(PackPattern.SOUND.toPath(d.getDisplayName()), new ByteArrayInputStream(d.Sound)));
 			}
 		}
 		// 内容がないエントリを削除
@@ -204,9 +205,8 @@ public class PackIO {
 		try {
 			// 全パック出力
 			for (Long id : dataMap.keySet()) {
-				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(//TODO 出力先指定
-						new File("./export/", HidePack.getPack(id).PACK_NAME) + ".zip"),
-						Charset.forName("Shift_JIS"));
+				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(// TODO 出力先指定
+						new File("./export/", HidePack.getPack(id).PACK_NAME) + ".zip"), Charset.forName("Shift_JIS"));
 				for (Entry data : dataMap.get(id)) {
 					ZipEntry entry = new ZipEntry(data.Name);
 					zos.putNextEntry(entry);
@@ -268,19 +268,19 @@ public class PackIO {
 		// JsonObject newData = gson.fromJson(new String(Arrays.copyOf(data,
 		// data.length)), JsonObject.class);
 		// Gun認識
-		if (name.matches("^(.*)guns/(.*).json")) {
+		if (PackPattern.GUN.mache(name)) {
 			GunData newGun = gson.fromJson(new String(data, Charset.forName("UTF-8")), GunData.class);
 			pack.GunList.add(newGun);
 			// System.out.println("gun");
 		}
 		// bullet認識
-		else if (name.matches("^(.*)bullets/(.*).json")) {
+		else if (PackPattern.MAGAZINE.mache(name)) {
 			BulletData newBullet = gson.fromJson(new String(data, Charset.forName("UTF-8")), BulletData.class);
 			pack.BulletList.add(newBullet);
 			// System.out.println("bullet");
 		}
 		// packInfo認識
-		else if (name.matches("^(.*)pack.json")) {
+		else if (PackPattern.PACKINFO.mache(name)) {
 			pack.Pack = new PackInfo();
 			pack.Pack = gson.fromJson(new String(data, Charset.forName("UTF-8")), PackInfo.class);
 			// System.out.println("pack");
@@ -288,31 +288,61 @@ public class PackIO {
 
 		// Resources認識
 		// Icon
-		if (name.matches("^(.*)icon/(.*).png")) {
-			String n = name.replaceAll(".png", "").replaceAll("^(.*)icon/", "");
+		if (PackPattern.ICON.mache(name)) {
+			String n = PackPattern.ICON.trim(name);
 			pack.IconList.add(new HideImage(n, ImageIO.read(new ByteArrayInputStream(data))));
 			// System.out.println("icon");
 		}
 		// Scope
-		if (name.matches("^(.*)scope/(.*).png")) {
-			String n = name.replaceAll(".png", "").replaceAll("^(.*)scope/", "");
+		if (PackPattern.SCOPE.mache(name)) {
+			String n = PackPattern.SCOPE.trim(name);
 			pack.ScopeList.add(new HideImage(n, ImageIO.read(new ByteArrayInputStream(data))));
 			// System.out.println("scope");
 		}
 		// model
-		if (name.matches("^(.*)model/(.*).json")) {
+		if (PackPattern.MODEL.mache(name)) {
 			// System.out.println("model");
 		}
 		// texture
-		if (name.matches("^(.*)texture/(.*).png")) {
+		if (PackPattern.TEXTURE.mache(name)) {
 			// System.out.println("texture");
 		}
 		// sounds
-		if (name.matches("^(.*)sounds/(.*).ogg")) {
-			String n = name.replaceAll(".ogg", "").replaceAll("^(.*)sounds/", "");
+		if (PackPattern.SOUND.mache(name)) {
+			String n = PackPattern.SOUND.trim(name);
 			pack.SoundList.add(new Sound(n, data));
 			// System.out.println("sounds");
 		}
+	}
 
+	/** パック認識用パターン エディター側と完全互換 */
+	private enum PackPattern {
+		GUN("guns", "json"), MAGAZINE("magazines", "json"), PACKINFO("pack", "json"), ICON("icons", "png"), SCOPE(
+				"scopes", "png"), TEXTURE("textures", "png"), SOUND("soubds", "ogg"), MODEL("models", "obj");
+		private PackPattern(String start, String end) {
+			mache = Pattern.compile("^(.*)" + start + "/(.*)\\." + end + "$");
+			rep_start = Pattern.compile("^(.*)" + start + "/");
+			rep_end = Pattern.compile("\\." + end + "$");
+			this.start = start;
+			this.end = end;
+		}
+
+		boolean mache(String path) {
+			return mache.matcher(path).matches();
+		}
+
+		String trim(String path) {
+			return rep_start.matcher(rep_end.matcher(path).replaceFirst("")).replaceFirst("");
+		}
+
+		String toPath(String name) {
+			return start + "/" + name + "." + end;
+		}
+
+		private Pattern mache;
+		private Pattern rep_start;
+		private Pattern rep_end;
+		private String start;
+		private String end;
 	}
 }

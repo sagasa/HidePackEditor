@@ -23,11 +23,11 @@ import javafx.scene.layout.VBox;
 import localize.LocalizeHandler;
 import resources.HideImage;
 import types.base.DataBase;
-import types.base.ItemData;
 import types.effect.Recoil;
 import types.effect.Sound;
-import types.guns.BulletData;
-import types.guns.GunData;
+import types.items.GunData;
+import types.items.ItemData;
+import types.projectile.BulletData;
 
 public class EditerComponent {
 	private static final Logger log = LogManager.getLogger();
@@ -50,7 +50,7 @@ public class EditerComponent {
 		editer.getChildren().add(makeCateEditPanel(data, 1));
 		// useBullet
 		editer.getChildren()
-				.add(setDefault(EditNodeBuilder.makeStringListNode(data, "BULLET_USE", HidePack.BulletList).build()));
+				.add(setDefault(EditNodeBuilder.makeStringListNode(data, "MAGAZINEE", HidePack.BulletList).build()));
 		// scope
 		Pane scope = makeImageNode(data, "SCOPE_NAME", HidePack.ScopeList);
 		scope.getChildren().add(EditNodeBuilder.makeNumberSetNode(data, "SCOPE_DIA").build());

@@ -17,8 +17,8 @@ import types.base.DataBase;
 import types.effect.Explosion;
 import types.effect.Recoil;
 import types.effect.Sound;
-import types.guns.BulletData;
-import types.guns.GunData;
+import types.items.GunData;
+import types.projectile.BulletData;
 
 
 /** langの読み込みと表示用  + 説明書きも対応*/

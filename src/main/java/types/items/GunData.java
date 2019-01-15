@@ -1,4 +1,4 @@
-package types.guns;
+package types.items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.List;
 import helper.EditHelper;
 import javafx.beans.property.Property;
 import types.Info;
-import types.base.ItemData;
 import types.effect.Recoil;
 import types.effect.Sound;
 
@@ -35,19 +34,6 @@ public class GunData extends ItemData {
 		});
 	}
 
-	/** 所持しているときのHP増加量 */
-	@Info(Cate = 3)
-	public float ITEM_MAX_HEALTH = 0f;
-	/** 所持しているときの移動速度増加量 */
-	@Info(Cate = 3, Scale = "0.1")
-	public float ITEM_MOVE_SPEED = 0f;
-	/** 所持しているときのノックバック耐性増加量 */
-	@Info(Cate = 3, Scale = "0.1")
-	public float ITEM_KNOCKBACK_RESISTANCE = 0f;
-	/** 所持しているときの近接ダメージ増加量 */
-	@Info(Cate = 3)
-	public float ITEM_ATTACK_DAMAGE = 0f;
-
 	/** 弾速 1秒の移動距離(m)=弾速 : float型 **/
 	@Info(Cate = 0, Min = 0, Max = 128)
 	public float BULLET_SPEED = 5f;
@@ -57,10 +43,29 @@ public class GunData extends ItemData {
 	/** ADSへの切り替え時間 ; tickかかる : int型 **/
 	@Info(Cate = 0, Min = 0)
 	public int ADS_TICK = 0;
+	/** fovズーム倍率 float型 */
+	@Info(Cate = 2, Min = 0.5f, Max = 2f)
+	public float FOV_ZOOM_DIA = 1.2f;
+	/** スコープの使用可否 */
+	@Info(Cate = 2)
+	public boolean USE_SCOPE = true;
+	/** モデルスコープを使用するか */
+	@Info(Cate = 2)
+	public boolean MODEL_SCOPE = false;
 	/** スコープ名 : String型 */
+	@Info(isResourceName = true)
 	public String SCOPE_NAME = "";
-	/** ズーム倍率 float型 */
-	@Info(Cate = 2, Min = 0.2f, Max = 16f)
+	/** スコープの表示サイズ */
+	@Info(Cate = 2, Min = 0.1f, Max = 1f)
+	public float SCOPE_SIZE = 0.7f;
+	/** スコープの中心位置 */
+	@Info(Cate = 2, Min = 0f, Max = 1f)
+	public float SCOPE_CENTER_X = 0.5f;
+	/** スコープの中心位置 */
+	@Info(Cate = 2, Min = 0f, Max = 1f)
+	public float SCOPE_CENTER_Y = 0.5f;
+	/** スコープのズーム倍率 float型 */
+	@Info(Cate = 2, Min = 0.6f, Max = 8f)
 	public float SCOPE_DIA = 2f;
 	/** リロード ; リロードにtickかかる : int型 **/
 	@Info(Cate = 0, Min = 0, Scale = "5")
@@ -128,7 +133,7 @@ public class GunData extends ItemData {
 	/** リロード音 : Sound型 **/
 	public Sound SOUND_RELOAD = new Sound("sample", 10);
 	/** 使用する弾 : StringArray型 */
-	public List<String> BULLET_USE = new ArrayList<>();
+	public List<String> MAGAZINE_USE = new ArrayList<>();
 	/** セカンダリにできるか */
 	@Info(Cate = 0)
 	public boolean USE_SECONDARY = false;

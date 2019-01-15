@@ -1,17 +1,14 @@
-package types.guns;
+package types.projectile;
 
 import types.Info;
-import types.base.ItemData;
 import types.effect.Explosion;
 import types.effect.Sound;
+import types.items.ItemData;
 
 public class BulletData extends ItemData{
-	/** 装弾数 : int型 **/
-	@Info(Cate = 0,Min = 1)
-	public int MAGAZINE_SIZE = 10;
-	/** スタックサイズ : int型 **/
-	@Info(Cate = 0,Min = 1,Max=64)
-	public int STACK_SIZE = 4;
+	/**弾の名前**/
+	@Info(Cate = 0)
+	public String BULLET_NAME = "sample";
 	/**弾の寿命 (tick) : int型**/
 	@Info(Cate = 0,Min = 1)
 	public int BULLET_LIFE = 600;
@@ -21,9 +18,6 @@ public class BulletData extends ItemData{
 	/** 発射数 : int型 **/
 	@Info(Cate = 0,Min = 1)
 	public int SHOOT_NUM = 1;
-	/**リロード時にマガジンが破棄されるか : boolean型**/
-	@Info(Cate = 0)
-	public boolean MAGAZINE_BREAK = true;
 	/**防具貫通 : boolean型**/
 	@Info(Cate = 1)
 	public boolean HIT_IGNORING_ARMOR = false;
@@ -62,7 +56,7 @@ public class BulletData extends ItemData{
 	public Explosion EXP_ON_HIT_GROUND = new Explosion();
 	/** 時間経過の爆発 : Explosion型 **/
 	public Explosion EXP_ON_TIMEOUT = new Explosion();
-	
+
 	@Info(Cate = 3)
 	/**対人ダメージの減衰開始距離 : 減衰量=減衰開始から距離(m)*係数 : float**/
 	public float DECAY_DAMAGE_START_PLAYER = 0F;

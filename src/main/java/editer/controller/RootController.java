@@ -42,8 +42,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import types.PackInfo;
-import types.guns.BulletData;
-import types.guns.GunData;
+import types.items.GunData;
+import types.projectile.BulletData;
 
 public class RootController implements Initializable {
 	private static final Logger log = LogManager.getLogger();
