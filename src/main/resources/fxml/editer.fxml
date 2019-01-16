@@ -46,7 +46,7 @@
                               <TextField fx:id="packSearch" layoutX="25.0" prefHeight="25.0" prefWidth="175.0" />
                            </children>
                         </AnchorPane>
-                        <ListView fx:id="packList" onMouseClicked="#editPack" prefHeight="200.0" prefWidth="200.0">
+                        <ListView fx:id="packList" prefHeight="200.0" prefWidth="200.0">
                            <contextMenu>
                               <ContextMenu>
                                 <items>
@@ -73,7 +73,7 @@
       							<tabs>
       								<Tab text="Gun">
       									<content>
-      										<ListView id="gunlist" fx:id="gunList" onDragOver="#isGun" onMouseClicked="#editGun" prefHeight="200.0" prefWidth="200.0">
+      										<ListView id="gunlist" fx:id="gunList" onDragOver="#isGun" prefHeight="200.0" prefWidth="200.0">
                                        <contextMenu>
                                           <ContextMenu>
                                             <items>
@@ -86,7 +86,7 @@
       								</Tab>
       								<Tab text="Magazines">
       									<content>
-      										<ListView id="magazinelist" fx:id="magazineList" onMouseClicked="#editMagazine" prefHeight="200.0" prefWidth="200.0">
+      										<ListView id="magazinelist" fx:id="magazineList" prefHeight="200.0" prefWidth="200.0">
                                        <contextMenu>
                                           <ContextMenu>
                                             <items>

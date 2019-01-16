@@ -161,7 +161,7 @@ public class EditerComponent {
 		Node shortname = EditNodeBuilder.makeStringSetNode(data, "ITEM_SHORTNAME").build();
 		// 表示名
 		Node dizplayname = EditNodeBuilder.makeStringSetNode(data, "ITEM_DISPLAYNAME")
-				.setChangeListner(() -> RootController.writeList()).build();
+				.setChangeListner(() -> RootController.refreshList()).build();
 		// 短縮名の使用可否
 		Node useshortname = EditNodeBuilder.makeBooleanSetNode(data, "USE_SHORTNAME").setChangeListner(() -> {
 			shortname.setDisable(!data.USE_SHORTNAME);

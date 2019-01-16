@@ -3,11 +3,9 @@ package editer.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
+import java.util.function.Consumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,15 +23,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -44,7 +43,6 @@ import javafx.util.Callback;
 import types.PackInfo;
 import types.items.GunData;
 import types.items.MagazineData;
-import types.projectile.BulletData;
 
 public class RootController implements Initializable {
 	private static final Logger log = LogManager.getLogger();
@@ -86,10 +84,37 @@ public class RootController implements Initializable {
 		HidePack.SoundList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.OpenPacks.addListener(new WeakListChangeListener<>(writeListener));
 
+		packList.getSelectionModel().getSelectedItems().addListener(makeListListener((item) -> editPack(item)));
+		gunList.getSelectionModel().getSelectedItems().addListener(makeListListener((item) -> editGun(item)));
+		magazineList.getSelectionModel().getSelectedItems().addListener(makeListListener((item) -> editMagazine(item)));
+
 		editer.setVgap(5);
 		editer.setHgap(5);
 		editer.prefWrapLengthProperty().bind(editer.widthProperty());
 		write();
+	}
+
+	private static ListChangeListener<DataEntityInterface> makeListListener(Consumer<DataEntityInterface> run) {
+		return c -> {
+			while (c.next())
+				if (c.getList().size() > 0)
+					run.accept(c.getList().get(0));
+		};
+	}
+
+	/** リストをリフレッシュ */
+	public static void refreshList() {
+		INSTANCE.refresh();
+	}
+
+	/** リストをリフレッシュ */
+	public void refresh() {
+		packList.refresh();
+		gunList.refresh();
+		magazineList.refresh();
+		soundList.refresh();
+		iconList.refresh();
+		modelList.refresh();
 	}
 
 	/** CurrentPackの内容をリストに反映 */
@@ -100,20 +125,19 @@ public class RootController implements Initializable {
 	/** Packの内容をリストに反映 */
 	public void write() {
 		// Pack
-		packList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.OpenPacks, itemSearch.getText())));
+		packList.setItems(
+				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.OpenPacks, itemSearch.getText())));
 		// Gun
 		gunList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.GunList, itemSearch.getText())));
 		// Magazine
-		magazineList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.MagazineList, itemSearch.getText())));
+		magazineList.setItems(
+				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.MagazineList, itemSearch.getText())));
 		// Icon
-		iconList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.IconList, itemSearch.getText())));
+		iconList.setItems(
+				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.IconList, itemSearch.getText())));
 		// Sound
-		soundList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.SoundList, itemSearch.getText())));
-
-
-		packList.refresh();
-		gunList.refresh();
-		magazineList.refresh();
+		soundList.setItems(
+				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.SoundList, itemSearch.getText())));
 	}
 
 	@FXML
@@ -180,28 +204,32 @@ public class RootController implements Initializable {
 	// ========編集========
 	public void editClear() {
 		editer.getChildren().clear();
+		nowEditItem = null;
 	}
 
-	public void editPack() {
-		DataEntityInterface item = packList.getSelectionModel().getSelectedItem();
-		if (item != null) {
+	private DataEntityInterface nowEditItem = null;
+
+	public void editPack(DataEntityInterface item) {
+		if (item != null && !item.equals(nowEditItem)) {
+			editClear();
+			nowEditItem = item;
 			log.debug(HidePack.getPack(item.getDisplayName()).toString());
 		}
 	}
 
-	public void editGun() {
-		DataEntityInterface item = gunList.getSelectionModel().getSelectedItem();
-		if (item != null) {
+	public void editGun(DataEntityInterface item) {
+		if (item != null && !item.equals(nowEditItem)) {
 			editClear();
+			nowEditItem = item;
 			log.debug(HidePack.getGunData(item.getDisplayName()).toString());
 			EditerComponent.writeGunEditer(editer, HidePack.getGunData(item.getDisplayName()));
 		}
 	}
 
-	public void editMagazine() {
-		DataEntityInterface item = magazineList.getSelectionModel().getSelectedItem();
-		if (item != null) {
+	public void editMagazine(DataEntityInterface item) {
+		if (item != null && !item.equals(nowEditItem)) {
 			editClear();
+			nowEditItem = item;
 			log.debug(HidePack.getMagazineData(item.getDisplayName()).toString());
 			EditerComponent.writeMagazineEditer(editer, HidePack.getMagazineData(item.getDisplayName()));
 		}
@@ -282,22 +310,43 @@ public class RootController implements Initializable {
 			};
 		}
 
+		private Label delete = new Label();
 		private Rectangle color = new Rectangle(20, 20);
-		private Rectangle a = new Rectangle(20, 20);
-		private Rectangle b = new Rectangle(20, 20);
-		private static final Color DisableColor = Color.rgb(0, 0, 0, 0);
+		private Label text = new Label();
+		private AnchorPane root = new AnchorPane();
+		private boolean isBind = false;
+
+		public ColordListCell() {
+			root.getChildren().addAll(color, delete, text);
+			delete.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+
+			});
+		}
 
 		@Override
 		protected void updateItem(DataEntityInterface data, boolean empty) {
 			super.updateItem(data, empty);
+			// 初期化
+			if (!isBind) {
+				root.prefWidthProperty().bind(widthProperty().subtract(14));
+				root.prefHeightProperty().bind(heightProperty().subtract(6));
+				delete.prefWidthProperty().bind(root.heightProperty());
+				delete.prefHeightProperty().bind(root.heightProperty());
+				delete.translateXProperty().bind(root.widthProperty().subtract(root.heightProperty().multiply(1.1)));
+				color.widthProperty().bind(root.heightProperty());
+				color.heightProperty().bind(root.heightProperty());
+				text.translateXProperty().bind(root.heightProperty().add(5));
+				isBind = true;
+			}
 			if (!empty) {
-				setText(data.getDisplayName());
+				text.setText(data.getDisplayName());
+				delete.setStyle("-fx-background-image : url('./icon/delete.png');");
 				color.setFill(HidePack.getPack(data.getPackUID()).PackColor);
-				setGraphic(color);
-				getChildren().add(a);
+				setGraphic(root);
+				getIndex();
+				getListView().getItems().size();
 			} else {
-				setText("");
-				color.setFill(DisableColor);
+				setGraphic(null);
 			}
 		}
 	}
