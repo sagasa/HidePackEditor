@@ -3,9 +3,12 @@ package editer.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.function.Function;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,6 +20,7 @@ import io.PackCash;
 import io.PackIO;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,12 +71,13 @@ public class RootController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		INSTANCE = this;
-		packList.setCellFactory(ColordListCell.getCellFactory());
-		gunList.setCellFactory(ColordListCell.getCellFactory());
-		magazineList.setCellFactory(ColordListCell.getCellFactory());
-		soundList.setCellFactory(ColordListCell.getCellFactory());
-		iconList.setCellFactory(ColordListCell.getCellFactory());
-		modelList.setCellFactory(ColordListCell.getCellFactory());
+		packList.setCellFactory(
+				ColordListCell.getCellFactory(HidePack.OpenPacks, data -> !HidePack.DefaultPack.equals(data)));
+		gunList.setCellFactory(ColordListCell.getCellFactory(HidePack.GunList));
+		magazineList.setCellFactory(ColordListCell.getCellFactory(HidePack.MagazineList));
+		soundList.setCellFactory(ColordListCell.getCellFactory(HidePack.SoundList));
+		iconList.setCellFactory(ColordListCell.getCellFactory(HidePack.IconList));
+		// modelList.setCellFactory(ColordListCell.getCellFactory(HidePack.));TODO
 		// Serch用フック
 		itemSearch.textProperty().addListener(change -> write());
 		packSearch.textProperty().addListener(change -> write());
@@ -126,7 +131,7 @@ public class RootController implements Initializable {
 	public void write() {
 		// Pack
 		packList.setItems(
-				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.OpenPacks, itemSearch.getText())));
+				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.OpenPacks, packSearch.getText())));
 		// Gun
 		gunList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.GunList, itemSearch.getText())));
 		// Magazine
@@ -300,27 +305,52 @@ public class RootController implements Initializable {
 	// ===========リストセル============
 	/** カラーアイコン付きのリストシェル */
 	public static class ColordListCell extends ListCell<DataEntityInterface> {
-		/** ファクトリー */
-		public static Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>> getCellFactory() {
+
+		public static Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>> getCellFactory(
+				ObservableList<? extends DataEntityInterface> fromList) {
+			return getCellFactory(fromList, null);
+		}
+
+		/**
+		 * ファクトリー
+		 *
+		 * @param fromList
+		 *            削除元になるリスト Null許容
+		 * @param candelete
+		 *            削除ボタンの表示判定 Null許容
+		 */
+		public static Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>> getCellFactory(
+				ObservableList<? extends DataEntityInterface> fromList,
+				Function<DataEntityInterface, Boolean> candelete) {
 			return new Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>>() {
 				@Override
 				public ListCell<DataEntityInterface> call(ListView<DataEntityInterface> arg0) {
-					return new ColordListCell();
+					return new ColordListCell(fromList, candelete);
 				}
 			};
 		}
 
+		/** 削除ボタンを*出すかどうかの判定 */
+		private Function<DataEntityInterface, Boolean> canDelete = null;
 		private Label delete = new Label();
 		private Rectangle color = new Rectangle(20, 20);
 		private Label text = new Label();
 		private AnchorPane root = new AnchorPane();
 		private boolean isBind = false;
 
-		public ColordListCell() {
-			root.getChildren().addAll(color, delete, text);
-			delete.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+		public ColordListCell(ObservableList<? extends DataEntityInterface> fromList,
+				Function<DataEntityInterface, Boolean> candelete) {
 
-			});
+			root.getChildren().addAll(color, delete, text);
+			// 削除元がない場合は無視
+			delete.setDisable(fromList == null);
+			if (fromList != null) {
+				canDelete = candelete;
+				delete.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+					fromList.remove(getItem());
+				});
+			}
+			delete.setStyle("-fx-background-image : url('./icon/delete.png');");
 		}
 
 		@Override
@@ -339,8 +369,8 @@ public class RootController implements Initializable {
 				isBind = true;
 			}
 			if (!empty) {
+				delete.setVisible(canDelete == null || canDelete.apply(data));
 				text.setText(data.getDisplayName());
-				delete.setStyle("-fx-background-image : url('./icon/delete.png');");
 				color.setFill(HidePack.getPack(data.getPackUID()).PackColor);
 				setGraphic(root);
 				getIndex();
