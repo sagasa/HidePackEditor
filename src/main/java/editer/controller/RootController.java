@@ -3,7 +3,6 @@ package editer.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;

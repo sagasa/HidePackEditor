@@ -122,6 +122,11 @@ public abstract class DataBase implements Cloneable {
 	}
 
 	/** .区切りのフィールド名のパスにの型取得する */
+	public Class<?> getType(String path) {
+		return getType(this, path);
+	}
+
+	/** .区切りのフィールド名のパスにの型取得する */
 	public static Class<?> getType(DataBase data, String path) {
 		String[] split = path.split("\\.", 2);
 		try {
@@ -141,6 +146,11 @@ public abstract class DataBase implements Cloneable {
 	}
 
 	/** .区切りのフィールド名のパスにデータを書き込む */
+	public void setValue(String path, Object value) {
+		setValue(this, path, value);
+	}
+
+	/** .区切りのフィールド名のパスにデータを書き込む */
 	public static void setValue(DataBase data, String path, Object value) {
 		String[] split = path.split("\\.", 2);
 		try {
@@ -156,6 +166,11 @@ public abstract class DataBase implements Cloneable {
 		} catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/** .区切りのフィールド名のパスからデータを取得する */
+	public Object getValue(String path) {
+		return getValue(this, path);
 	}
 
 	/** .区切りのフィールド名のパスからデータを取得する */
