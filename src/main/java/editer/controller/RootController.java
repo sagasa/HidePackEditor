@@ -283,6 +283,8 @@ public class RootController implements Initializable {
 		}
 
 		private Rectangle color = new Rectangle(20, 20);
+		private Rectangle a = new Rectangle(20, 20);
+		private Rectangle b = new Rectangle(20, 20);
 		private static final Color DisableColor = Color.rgb(0, 0, 0, 0);
 
 		@Override
@@ -292,6 +294,7 @@ public class RootController implements Initializable {
 				setText(data.getDisplayName());
 				color.setFill(HidePack.getPack(data.getPackUID()).PackColor);
 				setGraphic(color);
+				getChildren().add(a);
 			} else {
 				setText("");
 				color.setFill(DisableColor);
