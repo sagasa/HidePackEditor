@@ -11,6 +11,9 @@ public abstract class ModelBase {
 
 	String Texture;
 
+	public float[] vertCoord;
+	public float[] texCoord;
+
 	float ScaleX = 1;
 	float ScaleY = 1;
 	float ScaleZ = 1;

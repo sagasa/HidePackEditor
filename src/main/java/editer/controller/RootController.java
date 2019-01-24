@@ -14,9 +14,11 @@ import org.apache.logging.log4j.Logger;
 import editer.DataEntityInterface;
 import editer.HidePack;
 import editer.node.EditerComponent;
+import editer.node.ModelView;
 import helper.ArrayEditer;
 import io.PackCash;
 import io.PackIO;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -29,6 +31,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -58,6 +61,7 @@ public class RootController implements Initializable {
 	public ListView<DataEntityInterface> packList;
 
 	public TextField itemSearch;
+	public TabPane itemTab;
 	public ListView<DataEntityInterface> gunList;
 	public ListView<DataEntityInterface> magazineList;
 	public ListView<DataEntityInterface> soundList;
@@ -92,9 +96,12 @@ public class RootController implements Initializable {
 		gunList.getSelectionModel().getSelectedItems().addListener(makeListListener((item) -> editGun(item)));
 		magazineList.getSelectionModel().getSelectedItems().addListener(makeListListener((item) -> editMagazine(item)));
 
+		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
+
 		editer.setVgap(5);
 		editer.setHgap(5);
 		editer.prefWrapLengthProperty().bind(editer.widthProperty());
+		editer.getChildren().add(new ModelView());
 		write();
 	}
 
@@ -142,6 +149,17 @@ public class RootController implements Initializable {
 		// Sound
 		soundList.setItems(
 				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.SoundList, itemSearch.getText())));
+	}
+
+	/** タブ切り替え時にアイテムエディタを描画 */
+	public void itemTabChange() {
+		int id = itemTab.getSelectionModel().getSelectedIndex();
+		if (id != 0) {
+			gunList.getSelectionModel().clearSelection();
+		}
+		if (id != 1) {
+			magazineList.getSelectionModel().clearSelection();
+		}
 	}
 
 	@FXML

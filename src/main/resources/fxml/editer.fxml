@@ -69,7 +69,7 @@
                               <TextField fx:id="itemSearch" layoutX="25.0" prefHeight="25.0" prefWidth="175.0" />
                            </children>
                         </AnchorPane>
-      						<TabPane prefHeight="300.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+      						<TabPane fx:id="itemTab" prefHeight="300.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
       							<tabs>
       								<Tab text="Gun">
       									<content>

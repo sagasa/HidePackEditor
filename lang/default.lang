@@ -151,7 +151,6 @@ pack.rootname = pack.rootname
 packuid = packuid
 property = property
 magazine.size = magazine.size
-stack.size = stack.size
 magazine.break = magazine.break
 use.bulletdata = use.bulletdata
 bulletdata = bulletdata

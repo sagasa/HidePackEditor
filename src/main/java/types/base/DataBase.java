@@ -192,6 +192,7 @@ public abstract class DataBase implements Cloneable {
 		return null;
 	}
 
+	/** データ型にファンクションを適応 */
 	public static <V> void changeFieldsByType(DataBase target, Class<V> key, BiFunction<V, Field, V> change,
 			boolean deep) {
 		try {

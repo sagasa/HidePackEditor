@@ -1,9 +1,9 @@
 package model;
 
-public class ModelPart {
-	public Polygon[] Polygon;
+import com.sun.javafx.geom.Vec3d;
 
-	public ModelPart(Polygon[] array) {
-		Polygon = array;
-	}
+public class ModelPart {
+	public int[] faces;
+
+
 }

@@ -2,7 +2,7 @@ package model;
 
 public class HideCollision extends ModelPart {
 
-	public HideCollision(Polygon[] array) {
+	public HideCollision(HidePolygon[] array) {
 		super(array);
 
 	}

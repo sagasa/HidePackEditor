@@ -10,11 +10,11 @@ import org.lwjgl.opengl.GL11;
 
 public class ModelGun extends ModelBase {
 
-	public DisplayPart ModelBody;
-	public DisplayPart ModelLeaver;
-	public DisplayPart ModelDefaultBarrel;
-	public DisplayPart ModelDefaultScope;
-	public DisplayPart ModelDefaultMagazine;
+	public ModelPart ModelBody;
+	public ModelPart ModelLeaver;
+	public ModelPart ModelDefaultBarrel;
+	public ModelPart ModelDefaultScope;
+	public ModelPart ModelDefaultMagazine;
 
 	public ModelGroup Body;
 	public ModelGroup Leaver;
