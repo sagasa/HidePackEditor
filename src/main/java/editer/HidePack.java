@@ -35,6 +35,8 @@ public class HidePack {
 	public static ObservableList<HideImage> ScopeList;
 	/** SoundのList Sound */
 	public static ObservableList<Sound> SoundList;
+	/** TextureのList Image */
+	public static ObservableList<HideImage> TextureList;
 	/** 編集中のパック デフォルトを含む */
 	public static ObservableList<PackInfo> OpenPacks;
 	/** デフォルトパック */
@@ -58,6 +60,7 @@ public class HidePack {
 		IconList = FXCollections.observableArrayList();
 		ScopeList = FXCollections.observableArrayList();
 		SoundList = FXCollections.observableArrayList();
+		TextureList = FXCollections.observableArrayList();
 		OpenPacks = FXCollections.observableArrayList();
 		DefaultPack = new PackInfo();
 		DefaultPack.PackUID = random.nextLong();
@@ -153,6 +156,15 @@ public class HidePack {
 	/** アイコン取得 */
 	public static HideImage getIcon(String string) {
 		for (HideImage data : IconList) {
+			if (data.getDisplayName().equals(string)) {
+				return data;
+			}
+		}
+		return null;
+	}
+	/** テクスチャ取得 */
+	public static HideImage getTexture(String string) {
+		for (HideImage data : TextureList) {
 			if (data.getDisplayName().equals(string)) {
 				return data;
 			}

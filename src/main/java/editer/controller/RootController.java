@@ -16,6 +16,7 @@ import editer.HidePack;
 import editer.node.EditerComponent;
 import editer.node.ModelView;
 import helper.ArrayEditer;
+import io.ModelIO;
 import io.PackCash;
 import io.PackIO;
 import javafx.beans.value.ChangeListener;
@@ -101,7 +102,7 @@ public class RootController implements Initializable {
 		editer.setVgap(5);
 		editer.setHgap(5);
 		editer.prefWrapLengthProperty().bind(editer.widthProperty());
-		editer.getChildren().add(new ModelView());
+		editer.getChildren().add(new ModelView(ModelIO.read()));
 		write();
 	}
 
