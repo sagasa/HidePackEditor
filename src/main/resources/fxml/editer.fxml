@@ -134,7 +134,7 @@
                         </Button>
 							</items>
 						</ToolBar>
-						<FlowPane fx:id="editer" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" />
+						<Pane fx:id="editer" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" />
 					</items>
 				</SplitPane>
 				<TabPane maxWidth="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">

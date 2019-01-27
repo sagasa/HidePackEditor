@@ -27,6 +27,7 @@ import javafx.collections.WeakListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -40,6 +41,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -56,7 +58,7 @@ public class RootController implements Initializable {
 	public static RootController INSTANCE;
 	public static Stage STAGE;
 
-	public FlowPane editer;
+	public Pane editer;
 
 	public TextField packSearch;
 	public ListView<DataEntityInterface> packList;
@@ -99,10 +101,8 @@ public class RootController implements Initializable {
 
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
-		editer.setVgap(5);
-		editer.setHgap(5);
-		editer.prefWrapLengthProperty().bind(editer.widthProperty());
-		editer.getChildren().add(new ModelView(ModelIO.read()));
+		//TODO
+		ModelView.showModelView(editer, ModelIO.read());
 		write();
 	}
 
@@ -225,6 +225,17 @@ public class RootController implements Initializable {
 	// Search(data.getDisplayName(),
 	// packSearch.getText())).sorted().collect(Collectors.toList()))
 	// ========編集========
+
+	private FlowPane setUpFlowEditer() {
+		FlowPane flow = new FlowPane();
+		flow.setVgap(5);
+		flow.setHgap(5);
+		flow.setOrientation(Orientation.VERTICAL);
+		flow.prefWrapLengthProperty().bind(editer.widthProperty());
+		flow.maxHeightProperty().bind(editer.heightProperty());
+		editer.getChildren().add(flow);
+		return flow;
+	}
 	public void editClear() {
 		editer.getChildren().clear();
 		nowEditItem = null;
@@ -245,7 +256,7 @@ public class RootController implements Initializable {
 			editClear();
 			nowEditItem = item;
 			log.debug(HidePack.getGunData(item.getDisplayName()).toString());
-			EditerComponent.writeGunEditer(editer, HidePack.getGunData(item.getDisplayName()));
+			EditerComponent.writeGunEditer(setUpFlowEditer(), HidePack.getGunData(item.getDisplayName()));
 		}
 	}
 
@@ -254,7 +265,7 @@ public class RootController implements Initializable {
 			editClear();
 			nowEditItem = item;
 			log.debug(HidePack.getMagazineData(item.getDisplayName()).toString());
-			EditerComponent.writeMagazineEditer(editer, HidePack.getMagazineData(item.getDisplayName()));
+			EditerComponent.writeMagazineEditer(setUpFlowEditer(), HidePack.getMagazineData(item.getDisplayName()));
 		}
 	}
 
