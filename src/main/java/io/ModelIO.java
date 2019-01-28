@@ -26,7 +26,7 @@ public class ModelIO {
 
 		float[] vertexArray = null;
 		float[] uvArray = null;
-		Map<String, ModelPart> model = new HashMap<>();
+		Map<String, int[]> model = new HashMap<>();
 
 		String part = "default";
 		try {
@@ -51,9 +51,6 @@ public class ModelIO {
 					tex[1] = 1 - tex[1];// TODO
 					uvArray = ArrayUtils.addAll(uvArray, tex);
 				} else if (key.equalsIgnoreCase("f")) {
-					// 入ってないなら初期化
-					if (!model.containsKey(part))
-						model.put(part, new ModelPart());
 					int[] poly = null;
 					for (String str : value.split(SPACE)) {
 						poly = ArrayUtils.addAll(poly, toIntegerArray(str, SLASH, 2));
@@ -74,7 +71,7 @@ public class ModelIO {
 					//	int[] v1 = ArrayUtils.subarray(triangle, 2, 4);
 					//	int[] v2 = ArrayUtils.subarray(triangle, 4, 6);//TODO
 					//	triangle =ArrayUtils.addAll(v0,  ArrayUtils.addAll(v2, v1));
-						model.get(part).faces = ArrayUtils.addAll(model.get(part).faces, triangle);
+						model.put(part,ArrayUtils.addAll(model.get(part), triangle));
 					}
 
 				}
@@ -83,7 +80,9 @@ public class ModelIO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return new HideModel(vertexArray, uvArray, model);
+		List<ModelPart> res = new ArrayList<>();
+		model.entrySet().forEach(e->res.add(new ModelPart(e.getKey(),e.getValue())));
+		return new HideModel(vertexArray, uvArray, res);
 	}
 
 	private static float[] toFloatArray(String str, String key, int length) {
