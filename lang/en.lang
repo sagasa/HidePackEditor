@@ -173,3 +173,6 @@ packuid = packuid
 property = property
 use.bulletdata = use.bulletdata
 bulletdata = bulletdata
+$jacocodata = $jacocodata
+$jacocodata = $jacocodata
+$jacocodata = $jacocodata

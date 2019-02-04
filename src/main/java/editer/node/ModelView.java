@@ -1,8 +1,10 @@
 package editer.node;
 
+import java.awt.Menu;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -11,11 +13,13 @@ import java.util.function.Function;
 import javax.imageio.ImageIO;
 
 import org.controlsfx.control.PropertySheet.Item;
+import org.controlsfx.control.textfield.TextFields;
 
 import editer.DataEntityInterface;
 import editer.HidePack;
 import editer.controller.RootController;
 import editer.controller.RootController.ColordListCell;
+import helper.AutoCompletionTextAreaBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
@@ -160,7 +164,9 @@ public class ModelView extends TabPane {
 		// ボーン
 		TreeView<Bone> bones = new TreeView<>(new BoneModelItem(model.rootBone));
 		bones.setCellFactory(new BoneCellFactory());
-		this.getTabs().add(new Tab("Bone", new Pane(new VBox(bones))));
+		TextArea text = new TextArea();
+		AutoCompletionTextAreaBinding.bindAutoCompletion(text, Arrays.asList(new String[] { "No1","No2","No3" }));
+		this.getTabs().add(new Tab("Bone", new Pane(new HBox(bones, text))));
 	}
 
 	public void clearParts() {
@@ -339,7 +345,21 @@ public class ModelView extends TabPane {
 				if (cell.getTreeItem().getParent() != null)
 					cell.getTreeItem().getParent().getChildren().remove(cell.getTreeItem());
 			});
-			cell.setContextMenu(new ContextMenu(addBone, removeBone, addModel, removeModel));
+			cell.setOnMousePressed(e -> {
+				if (e.getButton() == MouseButton.SECONDARY && !cell.isEmpty()) {
+					ContextMenu menu = new ContextMenu();
+					// メニューの内容条件分岐
+					if (((BoneModelItem) cell.getTreeItem()).model == null) {
+						menu.getItems().add(addBone);
+						menu.getItems().add(addModel);
+						if (cell.getTreeItem().getParent() != null)
+							menu.getItems().add(removeBone);
+					} else {
+						menu.getItems().add(removeModel);
+					}
+					menu.show(cell, e.getScreenX(), e.getScreenY());
+				}
+			});
 			return cell;
 		}
 
@@ -366,7 +386,7 @@ public class ModelView extends TabPane {
 			// can't drop on itself
 			if (draggedItem == null || thisItem == null || thisItem == draggedItem)
 				return;
-			// ignore if this is the root
+			// ignore if this is not pearent
 			if (draggedItem.getParent() == null || ((BoneModelItem) treeCell.getTreeItem()).model != null) {
 				clearDropLocation();
 				return;
