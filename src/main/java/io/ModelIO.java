@@ -80,9 +80,7 @@ public class ModelIO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		List<ModelPart> res = new ArrayList<>();
-		model.entrySet().forEach(e->res.add(new ModelPart(e.getKey(),e.getValue())));
-		return new HideModel(vertexArray, uvArray, res);
+		return new HideModel(vertexArray, uvArray, model);
 	}
 
 	private static float[] toFloatArray(String str, String key, int length) {

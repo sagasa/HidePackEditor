@@ -204,10 +204,12 @@ public class PackIO {
 		}
 
 		try {
+			File path = new File("./export/");
+			path.mkdirs();
 			// 全パック出力
 			for (Long id : dataMap.keySet()) {
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(// TODO 出力先指定
-						new File("./export/", HidePack.getPack(id).PACK_NAME) + ".zip"), Charset.forName("Shift_JIS"));
+						new File(path, HidePack.getPack(id).PACK_NAME) + ".zip"), Charset.forName("Shift_JIS"));
 				for (Entry data : dataMap.get(id)) {
 					ZipEntry entry = new ZipEntry(data.Name);
 					zos.putNextEntry(entry);

@@ -379,7 +379,7 @@ public class RootController implements Initializable {
 					fromList.remove(getItem());
 				});
 			}
-			delete.setStyle("-fx-background-image : url('./icon/delete.png');");
+			delete.setStyle("-fx-background-image : url('/icon/delete.png');");
 		}
 
 		@Override

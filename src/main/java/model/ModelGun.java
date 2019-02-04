@@ -26,17 +26,19 @@ public class ModelGun extends ModelBase {
 	private static final String BarrelName = "Barrel";
 	private static final String LeaverName = "Leaver";
 
+	public Bone rootBone;
+
 	private CompiledScript RenderScript;
 
-	public ModelGun(Map<String,ModelPart> model) {
-		if(model.containsKey(BodyName)){
-			ModelBody = (DisplayPart) model.get(BodyName);
-		}else if(model.containsKey(MagazineName)){
-			ModelDefaultMagazine = (DisplayPart) model.get(MagazineName);
-		}else if(model.containsKey(BarrelName)){
-			ModelDefaultBarrel = (DisplayPart) model.get(BarrelName);
-		}else if(model.containsKey(LeaverName)){
-			ModelLeaver = (DisplayPart) model.get(LeaverName);
+	public ModelGun(Map<String, ModelPart> model) {
+		if (model.containsKey(BodyName)) {
+			ModelBody = model.get(BodyName);
+		} else if (model.containsKey(MagazineName)) {
+			ModelDefaultMagazine = model.get(MagazineName);
+		} else if (model.containsKey(BarrelName)) {
+			ModelDefaultBarrel = model.get(BarrelName);
+		} else if (model.containsKey(LeaverName)) {
+			ModelLeaver = model.get(LeaverName);
 		}
 	}
 
@@ -51,14 +53,6 @@ public class ModelGun extends ModelBase {
 
 	@Override
 	protected void scriptInit(String script) throws ScriptException {
-		scriptEngine.put("Body", Body);
-		scriptEngine.put("Magazine", Magazine);
-		scriptEngine.put("Barrel", Barrel);
-		scriptEngine.put("Leaver", Leaver);
-		scriptEngine.put("reload", 0f);
-		scriptEngine.put("shoot", 0f);
-		scriptEngine.put("eqip", 0f);
-		Compilable compilingEngine = (Compilable) scriptEngine;
-		RenderScript = compilingEngine.compile(script);
+
 	}
 }

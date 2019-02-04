@@ -1,5 +1,11 @@
 package editer;
 
+import javax.script.Compilable;
+import javax.script.CompiledScript;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,18 +21,20 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
+import model.Bone;
 
 public class Main extends Application {
 	/** 開いているpath */
 	public static String packPath;
 
-	public static void main(String[] arg) {
+	public static void main(String[] arg) throws ScriptException {
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
 		LocalizeHandler.setLang("en");
 		PackIO.makePack();
 		// new MainWindow();
 		launch(arg);
+
 	}
 
 	private static final Logger log = LogManager.getLogger();

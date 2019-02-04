@@ -63,8 +63,8 @@ public class SelectList extends ListView<String> {
 	/** 上下ボタンと削除ボタン付きのリストシェル */
 	public class EditListCell extends ListCell<String> {
 
-		private ImageView up = new ImageView("./icon/up.png");
-		private ImageView down = new ImageView("./icon/down.png");
+		private ImageView up = new ImageView("/icon/up.png");
+		private ImageView down = new ImageView("/icon/down.png");
 		private Label setlabel = new Label();
 
 		private Label text = new Label();
@@ -124,7 +124,7 @@ public class SelectList extends ListView<String> {
 
 				// 選択済みなら
 				if (setList.contains(data)) {
-					setlabel.setStyle("-fx-background-image : url('./icon/remove.png');");
+					setlabel.setStyle("-fx-background-image : url('/icon/remove.png');");
 					// 1番上以外なら
 					up.setVisible(0 < getIndex());
 					// 1番下以外なら
@@ -132,7 +132,7 @@ public class SelectList extends ListView<String> {
 				} else {
 					up.setVisible(false);
 					down.setVisible(false);
-					setlabel.setStyle("-fx-background-image : url('./icon/add.png');");
+					setlabel.setStyle("-fx-background-image : url('/icon/add.png');");
 				}
 				setGraphic(root);
 				getIndex();

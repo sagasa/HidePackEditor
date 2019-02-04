@@ -21,7 +21,7 @@ import types.projectile.BulletData;
 public class HidePack {
 
 	/** 未設定時のイメージ */
-	public static final Image NullImage = new Image("./icon/notSet.png");
+	public static final Image NullImage = new Image("/icon/notSet.png");
 
 	/** 銃のList GunData */
 	public static ObservableList<GunData> GunList;

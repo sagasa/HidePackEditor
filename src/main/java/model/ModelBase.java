@@ -6,9 +6,6 @@ import javax.script.ScriptException;
 
 /** モデルの原型 */
 public abstract class ModelBase {
-	private static final ScriptEngineManager EngineManager = new ScriptEngineManager();
-	protected ScriptEngine scriptEngine = EngineManager.getEngineByName("JavaScript");
-
 	String Texture;
 
 	public float[] vertCoord;
