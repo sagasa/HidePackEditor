@@ -46,6 +46,7 @@ public class AutoCompletionTextAreaBinding<T> extends AutoCompletionBinding<T> {
 	 * * Private fields * *
 	 **************************************************************************/
 
+	private String input;
 	/**
 	 * String converter to be used to convert suggestions to strings.
 	 */
@@ -105,10 +106,13 @@ public class AutoCompletionTextAreaBinding<T> extends AutoCompletionBinding<T> {
 	/** {@inheritDoc} */
 	@Override
 	protected void completeUserInput(T completion) {
-		String newText = converter.toString(completion);
-		getCompletionTarget().setText(newText);
-		getCompletionTarget().positionCaret(newText.length());
+		String newText =converter.toString(completion).substring(input.length());
+
+		getCompletionTarget().insertText(getCompletionTarget().getCaretPosition(), newText);;
+		getCompletionTarget().positionCaret(getCompletionTarget().getCaretPosition()+newText.length());
 	}
+
+
 
 	/***************************************************************************
 	 * * Event Listeners * *
@@ -118,7 +122,22 @@ public class AutoCompletionTextAreaBinding<T> extends AutoCompletionBinding<T> {
 		@Override
 		public void changed(ObservableValue<? extends String> obs, String oldText, String newText) {
 			if (getCompletionTarget().isFocused()) {
-				setUserInput(newText);
+				String[] split = newText.split("\n");
+				int p = 0;
+				int caret = getCompletionTarget().getCaretPosition();
+
+				System.out.println("line" + split.length);
+				for (String line : split) {
+					System.out.println(p + " " + caret + " " + (p + line.length()) + " " + (p <= caret) + " "
+							+ (caret <= p + line.length()));
+					if (p <= caret && caret <= p + line.length()) {
+						System.out.println("ok " + caret + " " + newText.substring(p, p + line.length()));
+						input = newText.substring(p, p + line.length());
+						setUserInput(input);
+						break;
+					}
+					p += line.length() + 1;
+				}
 			}
 		}
 	};

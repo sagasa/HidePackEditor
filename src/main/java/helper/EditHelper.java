@@ -106,6 +106,7 @@ public class EditHelper {
 
 	/** プロパティを取得*/
 	public static Property<?> getProperty(DataBase data, String field) {
+		data.init();
 		return data.Property.get(field);
 	}
 	/** プロパティを取得*/

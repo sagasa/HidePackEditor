@@ -2,7 +2,12 @@ package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
 
 import javax.script.Compilable;
 import javax.script.CompiledScript;
@@ -10,29 +15,50 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import editer.node.ModelView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
+import types.base.DataBase;
 
-public class Bone implements IBone, Serializable {
+public class Bone extends DataBase implements IBone, Serializable {
 
 	private static final long serialVersionUID = 1512250564942897392L;
+	transient public static final List<String> autoFill;
+	static {
+		autoFill = Arrays.asList("bone.setPivot(,,);", "bone.setRotate(,);", "bone.setTranslate(,,);",
+				"bone.setScale(,,);");
+	}
 	transient private static final ScriptEngineManager EngineManager = new ScriptEngineManager();
 	transient protected ScriptEngine scriptEngine = EngineManager.getEngineByName("JavaScript");
 	transient protected CompiledScript animation;
+	transient private Map<String, Supplier<Float>> Propertis = new HashMap<>();
 
 	public String name = "default";
 
 	public List<Bone> children = new ArrayList<>();
 	public List<String> models = new ArrayList<>();
 
-	public String script = null;
+	public String script = "";
 
-	public HideModel model;
+	public IRenderProperty rootProperty;
 
 	public Bone() {
 		scriptEngine.put("bone", this);
+	}
+
+	public Bone(Set<String> models) {
+		this();
+		this.models.addAll(models);
+	}
+
+	@Override
+	public void loadIdentity() {
+		setPivot(0, 0, 0);
+		setRotate(0, 0);
+		setScale(1, 1, 1);
+		setTranslate(0, 0, 0);
 	}
 
 	public void setScript(String script) {
@@ -92,18 +118,28 @@ public class Bone implements IBone, Serializable {
 	transient private Translate translate = new Translate(0, 0, 0);
 	transient private Scale scale = new Scale(1, 1, 1);
 
-	public void init(List<Transform> move, HideModel model) {
-		this.model = model;
-		scriptEngine.put("model", model);
+	public void init(List<Transform> move, ModelView modelView, IRenderProperty property) {
+		this.rootProperty = property;
+		loadIdentity();
+		setScript(script);
+		scriptEngine.put("model", modelView.model);
+		update();
 
 		move.add(yaw);
 		move.add(pitch);
 		move.add(translate);
 		move.add(scale);
-		for(String name:models) {
-			model.modelParts.get(name);
+		for (String name : models) {
+			modelView.addPart(name, move.toArray(new Transform[move.size()]));
 		}
 		for (Bone bone : children)
-			bone.init(new ArrayList<>(move), model);
+			bone.init(new ArrayList<>(move), modelView, this);
+	}
+
+	@Override
+	public float getRenderPropery(String name) {
+		if (Propertis.containsKey(name))
+			return Propertis.get(name).get();
+		return rootProperty.getRenderPropery(name);
 	}
 }

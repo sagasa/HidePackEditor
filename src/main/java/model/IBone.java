@@ -1,13 +1,15 @@
 package model;
 
-public interface IBone {
-	public void update();
+public interface IBone extends IRenderProperty{
+	abstract public void update();
 
-	void setPivot(float x, float y, float z);
+	abstract void loadIdentity();
 
-	void setRotate(float yaw, float pitch);
+	abstract void setPivot(float x, float y, float z);
 
-	void setTranslate(float x, float y, float z);
+	abstract void setRotate(float yaw, float pitch);
 
-	void setScale(float x, float y, float z);
+	abstract void setTranslate(float x, float y, float z);
+
+	abstract void setScale(float x, float y, float z);
 }

@@ -1,46 +1,35 @@
 package editer.node;
 
-import java.awt.Menu;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
-
 import javax.imageio.ImageIO;
 
-import org.controlsfx.control.PropertySheet.Item;
-import org.controlsfx.control.textfield.TextFields;
-
-import editer.DataEntityInterface;
 import editer.HidePack;
-import editer.controller.RootController;
-import editer.controller.RootController.ColordListCell;
 import helper.AutoCompletionTextAreaBinding;
+import helper.EditHelper;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.FXCollections;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -53,9 +42,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
@@ -70,22 +57,22 @@ import model.HideModel;
 import model.ModelPart;
 import resources.HideImage;
 
-public class ModelView extends TabPane {
+public class ModelView extends Pane {
 	private SubScene modelView = new SubScene(new Group(), 400, 400, true, SceneAntialiasing.BALANCED);;
-	private Pane editPane;
 	public ListView<String> list;
 
 	public HideModel model;
+	// プロパティMap
+	private static Map<String, FloatProperty> renderPropertyMap = new HashMap<>();
 
+	// 視点移動用
 	private double mouseX;
 	private double mouseY;
 	private Rotate viewRotateX = new Rotate(0, Rotate.X_AXIS);
 	private Rotate viewRotateY = new Rotate(0, Rotate.Y_AXIS);
 	private Translate viewPoint = new Translate(0, 0, 0);
 	private DoubleProperty scale = new SimpleDoubleProperty(1);
-
-	private static final Color COLOR_TRANSIENT = Color.color(1, 1, 1, 0.2);
-	private static final Color COLOR_ENABLE = Color.color(1, 1, 1, 1);
+	private ObjectProperty<Color> color = new SimpleObjectProperty<>(Color.color(1, 1, 1, 0.3));
 
 	public static void showModelView(Pane editer, HideModel read) {
 		// テスト
@@ -135,38 +122,51 @@ public class ModelView extends TabPane {
 				scale.set(scale.get() + 0.2);
 			}
 		});
-		modelView.widthProperty().bind(widthProperty());
+		modelView.widthProperty().bind(widthProperty().subtract(250));
+		modelView.setLayoutX(250);
 		modelView.heightProperty().bind(heightProperty());
 		modelView.setCamera(camera);
 
-		// モデルチェック
-		ListView<String> list = new ListView<>();
-		list.setPrefSize(160, 200);
-		list.setItems(FXCollections.observableArrayList(model.modelParts.keySet()));
-		list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-		ToggleButton toggle = new ToggleButton("AnimetionCheck");
-
-		this.getTabs().add(new Tab("ModelCheck", new Pane(new VBox(toggle, list), modelView)));
-
-		Map<String, MeshView> viewModels = new HashMap<>();
-		for (String part : model.modelParts.keySet()) {
-			viewModels.put(part, addPart(part));
-		}
-		list.getSelectionModel().getSelectedItems().addListener((ListChangeListener<String>) c -> {
-			viewModels.entrySet().forEach(e -> {
-				if (c.getList().contains(e.getKey()))
-					((PhongMaterial) e.getValue().getMaterial()).setDiffuseColor(COLOR_ENABLE);
-				else
-					((PhongMaterial) e.getValue().getMaterial()).setDiffuseColor(COLOR_TRANSIENT);
-			});
-		});
+		// プロパティ編集
+		// ボタン
+		Button reload = new Button("reload");
+		reload.setOnAction(e -> loadBone());
 		// ボーン
-		TreeView<Bone> bones = new TreeView<>(new BoneModelItem(model.rootBone));
-		bones.setCellFactory(new BoneCellFactory());
+		TreeView<Bone> bonetree = new TreeView<>(new BoneModelItem(model.rootBone));
+		bonetree.setLayoutY(25);
+		bonetree.setPrefHeight(250);
+		bonetree.setCellFactory(new BoneCellFactory());
+		// スクリプト
 		TextArea text = new TextArea();
-		AutoCompletionTextAreaBinding.bindAutoCompletion(text, Arrays.asList(new String[] { "No1","No2","No3" }));
-		this.getTabs().add(new Tab("Bone", new Pane(new HBox(bones, text))));
+		text.setLayoutY(275);
+		text.setPrefWidth(250);
+		text.prefHeightProperty().bind(this.heightProperty().subtract(275));
+		bonetree.getSelectionModel().selectedItemProperty().addListener((v, ov, nv) -> {
+			if (ov != null && ov.getValue() != null) {
+				text.textProperty()
+						.unbindBidirectional((Property<String>) EditHelper.getProperty(ov.getValue(), "script"));
+			}
+			if (nv.getValue() != null) {
+				text.setVisible(true);
+				text.textProperty()
+						.bindBidirectional((Property<String>) EditHelper.getProperty(nv.getValue(), "script"));
+			} else {
+				text.setVisible(false);
+			}
+		});
+		text.setVisible(false);
+		AutoCompletionTextAreaBinding.bindAutoCompletion(text, Bone.autoFill);
+		this.getChildren().addAll(reload, bonetree, text, modelView);
+	}
+
+	public void loadBone() {
+		clearParts();
+		model.rootBone.init(new ArrayList<Transform>(), this, name -> {
+			if (renderPropertyMap.containsKey(name)) {
+				return renderPropertyMap.get(name).get();
+			}
+			return 0;
+		});
 	}
 
 	public void clearParts() {
@@ -181,13 +181,17 @@ public class ModelView extends TabPane {
 		mesh.getFaces().addAll(model.modelParts.get(partName));
 
 		PhongMaterial mat = new PhongMaterial();
+		mat.diffuseColorProperty().bind(color);
 		// テクスチャがあるなら
 		if (model.texture != null && HidePack.getTexture(model.texture) != null) {
 			mat.setDiffuseMap(SwingFXUtils.toFXImage(HidePack.getTexture(model.texture).Image, null));
+			color.set(Color.color(1, 1, 1, 0.3));
 		} else {
-			mat.setDiffuseColor(Color.GRAY);
+			color.set(Color.color(0.5, 0.5, 0.5, 0.3));
 		}
 		meshv.setMaterial(mat);
+		// スクリプト
+		meshv.getTransforms().addAll(move);
 		// スケール
 		meshv.scaleXProperty().bind(scale);
 		meshv.scaleYProperty().bind(scale.multiply(-1));
@@ -196,7 +200,6 @@ public class ModelView extends TabPane {
 		meshv.getTransforms().add(viewPoint);
 		// 回転
 		meshv.getTransforms().addAll(viewRotateX, viewRotateY);
-		meshv.getTransforms().addAll(move);
 
 		// mat.setDiffuseColor();
 

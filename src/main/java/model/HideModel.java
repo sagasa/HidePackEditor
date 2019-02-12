@@ -1,7 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.script.Compilable;
@@ -9,8 +7,6 @@ import javax.script.CompiledScript;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-
-import types.model.ModelInfo;
 
 public class HideModel {
 	// エディタサイドのみ
@@ -20,12 +16,13 @@ public class HideModel {
 
 	// 共通
 	public String texture;
-	public Bone rootBone = new Bone();
+	public Bone rootBone;
 
 	public HideModel(float[] vert, float[] tex, Map<String, int[]> faces) {
 		vertArray = vert;
 		texArray = tex;
 		modelParts = faces;
+		rootBone = new Bone(faces.keySet());
 	}
 
 	private static final ScriptEngineManager EngineManager = new ScriptEngineManager();
@@ -34,12 +31,6 @@ public class HideModel {
 	private CompiledScript RenderScript;
 
 	protected void scriptInit(String script) throws ScriptException {
-		/*
-		 * scriptEngine.put("Body", Body); scriptEngine.put("Magazine", Magazine);
-		 * scriptEngine.put("Barrel", Barrel); scriptEngine.put("Leaver", Leaver);
-		 * scriptEngine.put("reload", 0f); scriptEngine.put("shoot", 0f);
-		 * scriptEngine.put("eqip", 0f); //
-		 */
 		Compilable compilingEngine = (Compilable) scriptEngine;
 		RenderScript = compilingEngine.compile(script);
 	}
@@ -52,6 +43,5 @@ public class HideModel {
 		} catch (ScriptException e) {
 			e.printStackTrace();
 		}
-		// GlStateManager.enableCull();
 	}
 }
