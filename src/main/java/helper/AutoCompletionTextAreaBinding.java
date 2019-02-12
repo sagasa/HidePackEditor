@@ -106,8 +106,8 @@ public class AutoCompletionTextAreaBinding<T> extends AutoCompletionBinding<T> {
 	/** {@inheritDoc} */
 	@Override
 	protected void completeUserInput(T completion) {
-		String newText =converter.toString(completion).substring(input.length());
-
+		String newText =converter.toString(completion);
+		getCompletionTarget().deleteText(getCompletionTarget().getCaretPosition()-input.length(), getCompletionTarget().getCaretPosition());
 		getCompletionTarget().insertText(getCompletionTarget().getCaretPosition(), newText);;
 		getCompletionTarget().positionCaret(getCompletionTarget().getCaretPosition()+newText.length());
 	}

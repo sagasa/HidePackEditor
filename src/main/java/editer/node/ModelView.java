@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.imageio.ImageIO;
@@ -171,6 +172,10 @@ public class ModelView extends Pane {
 
 	public void clearParts() {
 		((Group) modelView.getRoot()).getChildren().clear();
+	}
+
+	public void addBoneView(Bone bone,List<Transform> move) {
+
 	}
 
 	public MeshView addPart(String partName, Transform... move) {
