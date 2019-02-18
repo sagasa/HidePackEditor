@@ -101,7 +101,7 @@ public class RootController implements Initializable {
 
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
-		//TODO
+		// TODO
 		ModelView.showModelView(editer, ModelIO.read());
 		write();
 	}
@@ -236,6 +236,7 @@ public class RootController implements Initializable {
 		editer.getChildren().add(flow);
 		return flow;
 	}
+
 	public void editClear() {
 		editer.getChildren().clear();
 		nowEditItem = null;
@@ -282,10 +283,12 @@ public class RootController implements Initializable {
 	public void addPack() {
 		log.debug("addPack");
 		PackInfo pack = new PackInfo();
+		if (HidePack.getPack("New Pack No." + packNamePointer) == null) {
+			packNamePointer++;
+		}
 		while (HidePack.getPack("New Pack No." + packNamePointer) != null) {
 			packNamePointer++;
 		}
-		packNamePointer++;
 		pack.PACK_NAME = "New Pack No." + packNamePointer;
 		pack.PackUID = new Random().nextLong();
 		HidePack.OpenPacks.add(pack);
@@ -311,10 +314,12 @@ public class RootController implements Initializable {
 	public void addMagazine() {
 		log.debug("addBullet");
 		MagazineData magazine = new MagazineData();
+		if (HidePack.getGunData("New Magazine No." + bulletNamePointer) == null) {
+			bulletNamePointer++;
+		}
 		while (HidePack.getGunData("New Magazine No." + bulletNamePointer) != null) {
 			bulletNamePointer++;
 		}
-		bulletNamePointer++;
 		magazine.ITEM_SHORTNAME = "magazine_" + bulletNamePointer;
 		magazine.ITEM_DISPLAYNAME = "New Magazine No." + bulletNamePointer;
 		magazine.PackUID = HidePack.DefaultPack.PackUID;
@@ -328,7 +333,6 @@ public class RootController implements Initializable {
 
 	public void importSound() {
 		PackIO.importSound();
-		;
 	}
 
 	// ===========リストセル============

@@ -16,6 +16,8 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import editer.node.ModelView;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
@@ -28,7 +30,7 @@ public class Bone extends DataBase implements IBone, Serializable {
 	transient public static final List<String> autoFill;
 	static {
 		autoFill = Arrays.asList("bone.setPivot(,,);", "bone.setRotate(,);", "bone.setTranslate(,,);",
-				"bone.setScale(,,);");
+				"bone.setScale(,,);", "bone.getRenderPropery(\"reload\");", "bone.setVisible();");
 	}
 	transient private static final ScriptEngineManager EngineManager = new ScriptEngineManager();
 	transient protected ScriptEngine scriptEngine = EngineManager.getEngineByName("JavaScript");
@@ -64,8 +66,9 @@ public class Bone extends DataBase implements IBone, Serializable {
 	public void setScript(String script) {
 		try {
 			animation = ((Compilable) scriptEngine).compile(script);
+			animation.eval();
 		} catch (ScriptException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 		this.script = script;
 	}
@@ -104,33 +107,37 @@ public class Bone extends DataBase implements IBone, Serializable {
 	}
 
 	@Override
+	public void setVisible(boolean visible) {
+		this.visible.set(visible);
+	}
+
+	@Override
 	public void update() {
 		try {
 			animation.eval();
 		} catch (ScriptException e) {
-			e.printStackTrace();
 		}
 	}
 
 	// エディタサイドでの描画用
-	transient private Rotate yaw = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
-	transient private Rotate pitch = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
-	transient private Translate translate = new Translate(0, 0, 0);
-	transient private Scale scale = new Scale(1, 1, 1);
+	transient public Rotate yaw = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
+	transient public Rotate pitch = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
+	transient public Translate translate = new Translate(0, 0, 0);
+	transient public Scale scale = new Scale(1, 1, 1);
+	transient public BooleanProperty visible = new SimpleBooleanProperty(true);
 
 	public void init(List<Transform> move, ModelView modelView, IRenderProperty property) {
 		this.rootProperty = property;
 		loadIdentity();
 		setScript(script);
-		scriptEngine.put("model", modelView.model);
 		update();
-
+		modelView.addBoneView(this, move.toArray(new Transform[move.size()]));
 		move.add(yaw);
 		move.add(pitch);
 		move.add(translate);
 		move.add(scale);
 		for (String name : models) {
-			modelView.addPart(name, move.toArray(new Transform[move.size()]));
+			modelView.addPart(name, visible, move.toArray(new Transform[move.size()]));
 		}
 		for (Bone bone : children)
 			bone.init(new ArrayList<>(move), modelView, this);

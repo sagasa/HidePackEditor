@@ -7,7 +7,10 @@ import org.controlsfx.control.textfield.AutoCompletionBinding;
 import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
@@ -82,7 +85,7 @@ public class AutoCompletionTextAreaBinding<T> extends AutoCompletionBinding<T> {
 		super(textField, suggestionProvider, converter);
 		this.converter = converter;
 
-		getCompletionTarget().textProperty().addListener(textChangeListener);
+		getCompletionTarget().addEventFilter(KeyEvent.KEY_PRESSED, autofillreq);
 		getCompletionTarget().focusedProperty().addListener(focusChangedListener);
 	}
 
@@ -99,39 +102,36 @@ public class AutoCompletionTextAreaBinding<T> extends AutoCompletionBinding<T> {
 	/** {@inheritDoc} */
 	@Override
 	public void dispose() {
-		getCompletionTarget().textProperty().removeListener(textChangeListener);
+		getCompletionTarget().removeEventFilter(KeyEvent.KEY_PRESSED, autofillreq);
 		getCompletionTarget().focusedProperty().removeListener(focusChangedListener);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected void completeUserInput(T completion) {
-		String newText =converter.toString(completion);
-		getCompletionTarget().deleteText(getCompletionTarget().getCaretPosition()-input.length(), getCompletionTarget().getCaretPosition());
-		getCompletionTarget().insertText(getCompletionTarget().getCaretPosition(), newText);;
-		getCompletionTarget().positionCaret(getCompletionTarget().getCaretPosition()+newText.length());
+		String newText = converter.toString(completion);
+		getCompletionTarget().deleteText(getCompletionTarget().getCaretPosition() - input.length(),
+				getCompletionTarget().getCaretPosition());
+		getCompletionTarget().insertText(getCompletionTarget().getCaretPosition(), newText);
+		;
+		getCompletionTarget().positionCaret(getCompletionTarget().getCaretPosition() + newText.length());
 	}
-
-
 
 	/***************************************************************************
 	 * * Event Listeners * *
 	 **************************************************************************/
 
-	private final ChangeListener<String> textChangeListener = new ChangeListener<String>() {
+	private final EventHandler<KeyEvent> autofillreq = new EventHandler<KeyEvent>() {
 		@Override
-		public void changed(ObservableValue<? extends String> obs, String oldText, String newText) {
-			if (getCompletionTarget().isFocused()) {
-				String[] split = newText.split("\n");
+		public void handle(KeyEvent e) {
+			if (e.getCode() == KeyCode.TAB && getCompletionTarget().isFocused()) {
+				e.consume();
+				String newText = getCompletionTarget().getText();
+				String[] split = newText.split("[\n|[\\s+]]");
 				int p = 0;
 				int caret = getCompletionTarget().getCaretPosition();
-
-				System.out.println("line" + split.length);
 				for (String line : split) {
-					System.out.println(p + " " + caret + " " + (p + line.length()) + " " + (p <= caret) + " "
-							+ (caret <= p + line.length()));
-					if (p <= caret && caret <= p + line.length()) {
-						System.out.println("ok " + caret + " " + newText.substring(p, p + line.length()));
+					if (p <= caret && caret <= p + line.length() && line.length() > 0) {
 						input = newText.substring(p, p + line.length());
 						setUserInput(input);
 						break;

@@ -1,6 +1,6 @@
 package model;
 
-public interface IBone extends IRenderProperty{
+public interface IBone extends IRenderProperty {
 	abstract public void update();
 
 	abstract void loadIdentity();
@@ -12,4 +12,6 @@ public interface IBone extends IRenderProperty{
 	abstract void setTranslate(float x, float y, float z);
 
 	abstract void setScale(float x, float y, float z);
+
+	abstract void setVisible(boolean visible);
 }
