@@ -37,6 +37,9 @@ public class Bone extends DataBase implements IBone, Serializable {
 	transient protected CompiledScript animation;
 	transient private Map<String, Supplier<Float>> Propertis = new HashMap<>();
 
+	/** 付与されているトランスフォーム */
+	transient public List<Transform> moves;
+
 	public String name = "default";
 
 	public List<Bone> children = new ArrayList<>();
@@ -108,7 +111,8 @@ public class Bone extends DataBase implements IBone, Serializable {
 
 	@Override
 	public void setVisible(boolean visible) {
-		this.visible.set(visible);
+		children.forEach(i -> i.setVisible(visible));
+		this.select.set(visible);
 	}
 
 	@Override
@@ -124,7 +128,7 @@ public class Bone extends DataBase implements IBone, Serializable {
 	transient public Rotate pitch = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
 	transient public Translate translate = new Translate(0, 0, 0);
 	transient public Scale scale = new Scale(1, 1, 1);
-	transient public BooleanProperty visible = new SimpleBooleanProperty(true);
+	transient public BooleanProperty select = new SimpleBooleanProperty(false);
 
 	public void init(List<Transform> move, ModelView modelView, IRenderProperty property) {
 		this.rootProperty = property;
@@ -136,9 +140,7 @@ public class Bone extends DataBase implements IBone, Serializable {
 		move.add(pitch);
 		move.add(translate);
 		move.add(scale);
-		for (String name : models) {
-			modelView.addPart(name, visible, move.toArray(new Transform[move.size()]));
-		}
+		moves = move;
 		for (Bone bone : children)
 			bone.init(new ArrayList<>(move), modelView, this);
 	}

@@ -19,6 +19,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
@@ -49,6 +50,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
@@ -74,6 +76,8 @@ public class ModelView extends Pane {
 	// プロパティMap
 	private static Map<String, FloatProperty> renderPropertyMap = new HashMap<>();
 
+	// ビュー設定
+	private BooleanProperty showLine = new SimpleBooleanProperty(true);
 	// 視点移動用
 	private double mouseX;
 	private double mouseY;
@@ -81,7 +85,6 @@ public class ModelView extends Pane {
 	private Rotate viewRotateY = new Rotate(0, Rotate.Y_AXIS);
 	private Translate viewPoint = new Translate(0, 0, 0);
 	private DoubleProperty scale = new SimpleDoubleProperty(1);
-	private ObjectProperty<Color> color = new SimpleObjectProperty<>(Color.color(1, 1, 1, 0.3));
 
 	public static void showModelView(Pane editer, HideModel read) {
 		// テスト
@@ -176,10 +179,12 @@ public class ModelView extends Pane {
 		text.prefHeightProperty().bind(this.heightProperty().subtract(275));
 		bonetree.getSelectionModel().selectedItemProperty().addListener((v, ov, nv) -> {
 			if (ov != null && ov.getValue() != null) {
+				ov.getValue().setVisible(false);
 				text.textProperty()
 						.unbindBidirectional((Property<String>) EditHelper.getProperty(ov.getValue(), "script"));
 			}
 			if (nv.getValue() != null) {
+				nv.getValue().setVisible(true);
 				text.setVisible(true);
 				text.textProperty()
 						.bindBidirectional((Property<String>) EditHelper.getProperty(nv.getValue(), "script"));
@@ -211,7 +216,7 @@ public class ModelView extends Pane {
 	 *            ボーンの始点を決定
 	 */
 	public void addBoneView(Bone bone, Transform[] transforms) {
-
+		
 		MeshView meshv = new MeshView();
 		TriangleMesh mesh = new TriangleMesh();
 
@@ -220,7 +225,10 @@ public class ModelView extends Pane {
 
 	}
 
-	public MeshView addPart(String partName, BooleanProperty visible, Transform[] move) {
+	private static final Color enableColor = Color.color(1, 1, 1, 1);
+	private static final Color disableColor = Color.color(1, 1, 1, 0.2);
+
+	public MeshView addPart(String partName, BooleanProperty select, Transform[] move) {
 		TriangleMesh mesh = new TriangleMesh();
 		mesh.getPoints().addAll(model.vertArray);
 		mesh.getTexCoords().addAll(model.texArray);
@@ -229,35 +237,44 @@ public class ModelView extends Pane {
 		Image texture = SwingFXUtils.toFXImage(HidePack.getTexture(model.texture).Image, null);
 
 		PhongMaterial mat = new PhongMaterial();
-		mat.diffuseColorProperty().bind(color);
 		// テクスチャがあるなら
 		if (model.texture != null && HidePack.getTexture(model.texture) != null) {
 			mat.setDiffuseMap(texture);
-			color.set(Color.color(1, 1, 1, 0.2));
-		} else {
-			color.set(Color.color(1, 1, 1, 0.3));
 		}
+		PhongMaterial lineMat = new PhongMaterial(Color.WHITE, texture, null, null, null);
 		// 辺表示
 		MeshView linev = new MeshView();
+		linev.visibleProperty().bind(showLine);
 		linev.setCullFace(CullFace.FRONT);
-		linev.setMaterial(new PhongMaterial(Color.WHITE, texture, null, null, null));
-		// 表示可否
-		linev.visibleProperty().bind(visible);
+		linev.setMaterial(lineMat);
 		// スクリプト
 		linev.getTransforms().addAll(move);
 		linev.setDrawMode(DrawMode.LINE);
 		linev.setMesh(mesh);
+		// 裏
+		MeshView linev2 = new MeshView();
+		linev2.visibleProperty().bind(showLine);
+		linev2.setMaterial(lineMat);
+		// スクリプト
+		linev2.getTransforms().addAll(move);
+		linev2.setDrawMode(DrawMode.LINE);
+		linev2.setMesh(mesh);
 		// 面表示
 		MeshView facev = new MeshView();
 		facev.setMaterial(mat);
 		facev.setCullFace(CullFace.FRONT);
-		// 表示可否
-		facev.visibleProperty().bind(visible);
 		// スクリプト
 		facev.getTransforms().addAll(move);
 		facev.setMesh(mesh);
+		// 選択時の見た目変更
+		select.addListener((v, ov, nv) -> {
+			if (nv)
+				mat.setDiffuseColor(enableColor);
+			else
+				mat.setDiffuseColor(disableColor);
+		});
 
-		((Group) modelView.getRoot()).getChildren().addAll(linev, facev);
+		((Group) modelView.getRoot()).getChildren().addAll(linev, linev2, facev);
 		return linev;
 	}
 
