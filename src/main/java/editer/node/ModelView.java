@@ -19,6 +19,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -171,7 +172,7 @@ public class ModelView extends Pane {
 		TreeView<Bone> bonetree = new TreeView<>(new BoneModelItem(model.rootBone));
 		bonetree.setLayoutY(25);
 		bonetree.setPrefHeight(250);
-		bonetree.setCellFactory(new BoneCellFactory());
+		bonetree.setCellFactory(new BoneCellFactory(this));
 		// スクリプト
 		TextArea text = new TextArea();
 		text.setLayoutY(275);
@@ -216,7 +217,7 @@ public class ModelView extends Pane {
 	 *            ボーンの始点を決定
 	 */
 	public void addBoneView(Bone bone, Transform[] transforms) {
-		
+
 		MeshView meshv = new MeshView();
 		TriangleMesh mesh = new TriangleMesh();
 
@@ -228,7 +229,7 @@ public class ModelView extends Pane {
 	private static final Color enableColor = Color.color(1, 1, 1, 1);
 	private static final Color disableColor = Color.color(1, 1, 1, 0.2);
 
-	public MeshView addPart(String partName, BooleanProperty select, Transform[] move) {
+	public MeshView addPart(String partName, List<Transform> moves, BooleanProperty select) {
 		TriangleMesh mesh = new TriangleMesh();
 		mesh.getPoints().addAll(model.vertArray);
 		mesh.getTexCoords().addAll(model.texArray);
@@ -248,7 +249,7 @@ public class ModelView extends Pane {
 		linev.setCullFace(CullFace.FRONT);
 		linev.setMaterial(lineMat);
 		// スクリプト
-		linev.getTransforms().addAll(move);
+		linev.getTransforms().addAll(moves);
 		linev.setDrawMode(DrawMode.LINE);
 		linev.setMesh(mesh);
 		// 裏
@@ -256,7 +257,7 @@ public class ModelView extends Pane {
 		linev2.visibleProperty().bind(showLine);
 		linev2.setMaterial(lineMat);
 		// スクリプト
-		linev2.getTransforms().addAll(move);
+		linev2.getTransforms().addAll(moves);
 		linev2.setDrawMode(DrawMode.LINE);
 		linev2.setMesh(mesh);
 		// 面表示
@@ -264,7 +265,7 @@ public class ModelView extends Pane {
 		facev.setMaterial(mat);
 		facev.setCullFace(CullFace.FRONT);
 		// スクリプト
-		facev.getTransforms().addAll(move);
+		facev.getTransforms().addAll(moves);
 		facev.setMesh(mesh);
 		// 選択時の見た目変更
 		select.addListener((v, ov, nv) -> {
@@ -278,13 +279,23 @@ public class ModelView extends Pane {
 		return linev;
 	}
 
-	/** ツリーアイテムにBoneをパースする */
-	private static class BoneModelItem extends TreeItem<Bone> {
+	/** ボーンとモデル両方に対応したツリーアイテム */
+	private class BoneModelItem extends TreeItem<Bone> {
 
 		String model = null;
+		BooleanProperty select = new SimpleBooleanProperty(false);
+
+		/** ビューにメッシュを追加する */
+		public void imageWrite() {
+			if (model != null) {
+				addPart(model, getParent().getValue().moves, select);
+			}
+			getChildren().forEach(item -> ((BoneModelItem) item).imageWrite());
+		}
 
 		public BoneModelItem(String model) {
 			this.model = model;
+
 		}
 
 		public BoneModelItem(Bone root) {
@@ -318,14 +329,22 @@ public class ModelView extends Pane {
 		}
 	}
 
-	private static class BoneCellFactory implements Callback<TreeView<Bone>, TreeCell<Bone>> {
-		private static final DataFormat JAVA_FORMAT = new DataFormat("application/x-java-serialized-object");
-		private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 2 0 2 0; -fx-padding: 3 3 1 3";
+	private static final DataFormat JAVA_FORMAT = new DataFormat("application/x-java-serialized-object");
+	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 2 0 2 0; -fx-padding: 3 3 1 3";
+
+	private class BoneCellFactory implements Callback<TreeView<Bone>, TreeCell<Bone>> {
 		private TreeCell<Bone> dropZone;
 		private TreeItem<Bone> draggedItem;
+		private ModelView modelview;
+
+		public BoneCellFactory(ModelView view) {
+			modelview = view;
+		}
 
 		@Override
 		public TreeCell<Bone> call(TreeView<Bone> treeView) {
+			// 選択状態
+			ReadOnlyObjectProperty<TreeItem<Bone>> selectModel = treeView.getSelectionModel().selectedItemProperty();
 			TreeCell<Bone> cell = new TreeCell<Bone>() {
 				@Override
 				protected void updateItem(Bone item, boolean empty) {
