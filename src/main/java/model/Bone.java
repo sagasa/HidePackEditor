@@ -112,7 +112,7 @@ public class Bone extends DataBase implements IBone, Serializable {
 	@Override
 	public void setVisible(boolean visible) {
 		children.forEach(i -> i.setVisible(visible));
-		this.select.set(visible);
+		this.visible.set(visible);
 	}
 
 	@Override
@@ -128,21 +128,20 @@ public class Bone extends DataBase implements IBone, Serializable {
 	transient public Rotate pitch = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
 	transient public Translate translate = new Translate(0, 0, 0);
 	transient public Scale scale = new Scale(1, 1, 1);
-	transient public BooleanProperty select = new SimpleBooleanProperty(false);
+	transient public BooleanProperty visible = new SimpleBooleanProperty(false);
 
-	public void init(List<Transform> move, ModelView modelView, IRenderProperty property) {
+	public void init(List<Transform> move, IRenderProperty property) {
 		this.rootProperty = property;
 		loadIdentity();
 		setScript(script);
 		update();
-		modelView.addBoneView(this, move.toArray(new Transform[move.size()]));
 		move.add(yaw);
 		move.add(pitch);
 		move.add(translate);
 		move.add(scale);
 		moves = move;
 		for (Bone bone : children)
-			bone.init(new ArrayList<>(move), modelView, this);
+			bone.init(new ArrayList<>(move), this);
 	}
 
 	@Override

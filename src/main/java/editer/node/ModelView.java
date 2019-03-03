@@ -9,20 +9,16 @@ import java.util.Map;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import editer.HidePack;
 import helper.AutoCompletionTextAreaBinding;
 import helper.EditHelper;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
@@ -31,9 +27,6 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeCell;
@@ -48,30 +41,25 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
-import javafx.scene.transform.TransformChangedEvent;
 import javafx.scene.transform.Translate;
 import javafx.util.Callback;
 import model.Bone;
 import model.HideModel;
-import model.ModelPart;
 import resources.HideImage;
 
 public class ModelView extends Pane {
 	private SubScene modelView = new SubScene(new Group(), 400, 400, true, SceneAntialiasing.BALANCED);;
-	public ListView<String> list;
+	public TreeView<Bone> bonetree;
 
 	public HideModel model;
 	// プロパティMap
@@ -169,10 +157,10 @@ public class ModelView extends Pane {
 		reload.setPrefSize(250, 25);
 		reload.setOnAction(e -> loadBone());
 		// ボーン
-		TreeView<Bone> bonetree = new TreeView<>(new BoneModelItem(model.rootBone));
+		bonetree = new TreeView<>(new BoneModelItem(model.rootBone));
 		bonetree.setLayoutY(25);
 		bonetree.setPrefHeight(250);
-		bonetree.setCellFactory(new BoneCellFactory(this));
+		bonetree.setCellFactory(new BoneCellFactory());
 		// スクリプト
 		TextArea text = new TextArea();
 		text.setLayoutY(275);
@@ -200,12 +188,14 @@ public class ModelView extends Pane {
 
 	public void loadBone() {
 		clearParts();
-		model.rootBone.init(new ArrayList<Transform>(), this, name -> {
+		model.rootBone.init(new ArrayList<Transform>(), name -> {
 			if (renderPropertyMap.containsKey(name)) {
 				return renderPropertyMap.get(name).get();
 			}
 			return 0;
 		});
+		// リスト上からのリンク更新
+		((BoneModelItem) bonetree.getRoot()).imageWrite();
 	}
 
 	public void clearParts() {
@@ -287,15 +277,29 @@ public class ModelView extends Pane {
 
 		/** ビューにメッシュを追加する */
 		public void imageWrite() {
-			if (model != null) {
+			if (isBone()) {
+
+			} else {
 				addPart(model, getParent().getValue().moves, select);
 			}
 			getChildren().forEach(item -> ((BoneModelItem) item).imageWrite());
 		}
 
+		public void setSelected(boolean select) {
+			if (select == this.select.get())
+				return;
+			this.select.set(select);
+			if (isBone()) {
+				getChildren().forEach(item -> ((BoneModelItem) item).setSelected(select));
+			}
+		}
+
+		public boolean isBone() {
+			return model == null;
+		}
+
 		public BoneModelItem(String model) {
 			this.model = model;
-
 		}
 
 		public BoneModelItem(Bone root) {
@@ -335,16 +339,9 @@ public class ModelView extends Pane {
 	private class BoneCellFactory implements Callback<TreeView<Bone>, TreeCell<Bone>> {
 		private TreeCell<Bone> dropZone;
 		private TreeItem<Bone> draggedItem;
-		private ModelView modelview;
-
-		public BoneCellFactory(ModelView view) {
-			modelview = view;
-		}
 
 		@Override
 		public TreeCell<Bone> call(TreeView<Bone> treeView) {
-			// 選択状態
-			ReadOnlyObjectProperty<TreeItem<Bone>> selectModel = treeView.getSelectionModel().selectedItemProperty();
 			TreeCell<Bone> cell = new TreeCell<Bone>() {
 				@Override
 				protected void updateItem(Bone item, boolean empty) {
@@ -402,6 +399,16 @@ public class ModelView extends Pane {
 						menu.getItems().add(removeModel);
 					}
 					menu.show(cell, e.getScreenX(), e.getScreenY());
+				}
+			});
+			// 選択状態を下に伝達
+			ReadOnlyObjectProperty<TreeItem<Bone>> selectModel = treeView.getSelectionModel().selectedItemProperty();
+			selectModel.addListener((v, ov, nv) -> {
+				if (cell.getTreeItem() != null && nv == cell.getTreeItem()) {
+					// 選択対象変更前に前の選択対象をもとに戻す
+					if (ov != null)
+						((BoneModelItem) ov).setSelected(false);
+					((BoneModelItem) nv).setSelected(true);
 				}
 			});
 			return cell;
