@@ -3,6 +3,7 @@ package editer.node;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,8 +46,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
+import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -73,6 +76,8 @@ public class ModelView extends Pane {
 	private Rotate viewRotateX = new Rotate(0, Rotate.X_AXIS);
 	private Rotate viewRotateY = new Rotate(0, Rotate.Y_AXIS);
 	private Translate viewPoint = new Translate(0, 0, 0);
+	private DoubleProperty zoom = new SimpleDoubleProperty(1);
+	/**モデルの最大サイズ*/
 	private DoubleProperty scale = new SimpleDoubleProperty(1);
 
 	public static void showModelView(Pane editer, HideModel read) {
@@ -91,6 +96,13 @@ public class ModelView extends Pane {
 	public ModelView(HideModel model, Pane editer) {
 		// this.root = editer;
 		this.model = model;
+		// モデルのスケール
+		for (float vert : model.vertArray)
+			if (scale.get() < vert)
+				scale.set(vert);
+
+		System.out.println(scale.get());
+
 		prefWidthProperty().bind(editer.widthProperty());
 		prefHeightProperty().bind(editer.heightProperty());
 		PerspectiveCamera camera = new PerspectiveCamera(false);
@@ -107,8 +119,8 @@ public class ModelView extends Pane {
 		Scale cameraZoom = new Scale(1, 1);
 		// cameraZoom.pivotXProperty()
 		// cameraZoom.pivotYProperty()
-		cameraZoom.xProperty().bind(scale);
-		cameraZoom.yProperty().bind(scale);
+		cameraZoom.xProperty().bind(zoom);
+		cameraZoom.yProperty().bind(zoom);
 
 		Translate cameraCenter = new Translate();
 		cameraCenter.xProperty().bind(modelPane.widthProperty().divide(-2));
@@ -122,6 +134,9 @@ public class ModelView extends Pane {
 		modelView.widthProperty().bind(widthProperty().subtract(250));
 		modelView.heightProperty().bind(heightProperty());
 		modelView.setCamera(camera);
+
+		// 光源
+		// ((Group) modelView.getRoot()).getChildren().add(new AmbientLight());
 
 		// 支点操作インターフェース
 		modelPane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
@@ -137,17 +152,17 @@ public class ModelView extends Pane {
 				viewRotateX.setAngle(viewRotateX.getAngle() + dy / 2);
 				viewRotateY.setAngle(viewRotateY.getAngle() - dx / 2);
 			} else if (e.getButton() == MouseButton.PRIMARY) {
-				viewPoint.setX(viewPoint.getX() + dx * scale.get());
-				viewPoint.setY(viewPoint.getY() + dy * scale.get());
+				viewPoint.setX(viewPoint.getX() + dx * zoom.get());
+				viewPoint.setY(viewPoint.getY() + dy * zoom.get());
 			}
 			mouseX = nowX;
 			mouseY = nowY;
 		});
 		modelPane.addEventHandler(ScrollEvent.SCROLL, e -> {
 			if (e.getDeltaX() + e.getDeltaY() < 0) {
-				scale.set(scale.get() * 1.1);
+				zoom.set(zoom.get() * 1.1);
 			} else {
-				scale.set(scale.get() * 0.9);
+				zoom.set(zoom.get() * 0.9);
 			}
 		});
 
@@ -203,23 +218,48 @@ public class ModelView extends Pane {
 	}
 
 	/**
-	 * @param transforms
+	 * @param moves
 	 *            ボーンの始点を決定
 	 */
-	public void addBoneView(Bone bone, Transform[] transforms) {
-
-		MeshView meshv = new MeshView();
+	public void addBoneView(Bone bone, List<Transform> moves) {
 		TriangleMesh mesh = new TriangleMesh();
 
-		mesh.getPoints().addAll();
-		mesh.getFaces().addAll();
+		mesh.getTexCoords().addAll(0, 0);
+		mesh.getPoints().addAll(0f, 0f, 0f, 0.2f, 0.2f, 0.2f, -0.2f, 0.2f, 0.2f, -0.2f, 0.2f, -0.2f, 0.2f, 0.2f, -0.2f,
+				0f, 1f, 0f);
+		mesh.getFaces().addAll(0, 0, 1, 0, 2, 0, 0, 0, 2, 0, 3, 0, 0, 0, 3, 0, 4, 0, 0, 0, 4, 0, 1, 0, 2, 0, 1, 0, 5, 0,
+				3, 0, 2, 0, 5, 0, 4, 0, 3, 0, 5, 0, 1, 0, 4, 0, 5, 0);
 
+		MeshView front = new MeshView();
+		front.getTransforms().addAll(moves);
+		MeshView back = new MeshView();
+		back.getTransforms().addAll(moves);
+
+		front.setMesh(mesh);
+		front.setScaleY(10);
+
+		back.setMesh(mesh);
+		back.setScaleY(10);
+
+		bone.translate.xProperty();
+
+		front.scaleXProperty().bind(scale.divide(25));
+		front.scaleZProperty().bind(scale.divide(25));
+
+		PhongMaterial mat = new PhongMaterial(Color.color(0, 0, 1));
+		front.setMaterial(mat);
+		back.setMaterial(mat);
+
+		front.setCullFace(CullFace.FRONT);
+		front.setDrawMode(DrawMode.LINE);
+		back.setDrawMode(DrawMode.LINE);
+		((Group) modelView.getRoot()).getChildren().addAll(front, back);
 	}
 
-	private static final Color enableColor = Color.color(1, 1, 1, 1);
+	private static final Color enableColor = Color.color(1, 1, 1, 0.6);
 	private static final Color disableColor = Color.color(1, 1, 1, 0.2);
 
-	public MeshView addPart(String partName, List<Transform> moves, BooleanProperty select) {
+	public MeshView addPartView(String partName, List<Transform> moves, BooleanProperty select) {
 		TriangleMesh mesh = new TriangleMesh();
 		mesh.getPoints().addAll(model.vertArray);
 		mesh.getTexCoords().addAll(model.texArray);
@@ -227,7 +267,7 @@ public class ModelView extends Pane {
 
 		Image texture = SwingFXUtils.toFXImage(HidePack.getTexture(model.texture).Image, null);
 
-		PhongMaterial mat = new PhongMaterial();
+		PhongMaterial mat = new PhongMaterial(enableColor);
 		// テクスチャがあるなら
 		if (model.texture != null && HidePack.getTexture(model.texture) != null) {
 			mat.setDiffuseMap(texture);
@@ -278,9 +318,9 @@ public class ModelView extends Pane {
 		/** ビューにメッシュを追加する */
 		public void imageWrite() {
 			if (isBone()) {
-
+				addBoneView(getValue(), getValue().moves);
 			} else {
-				addPart(model, getParent().getValue().moves, select);
+				addPartView(model, getParent().getValue().moves, select);
 			}
 			getChildren().forEach(item -> ((BoneModelItem) item).imageWrite());
 		}
