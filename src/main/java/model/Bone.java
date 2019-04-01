@@ -1,6 +1,5 @@
 package model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import editer.node.ModelView;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.transform.Rotate;
@@ -24,9 +22,9 @@ import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import types.base.DataBase;
 
-public class Bone extends DataBase implements IBone, Serializable {
+/** モデルのアニメーション用 */
+public class Bone extends DataBase implements IBone {
 
-	private static final long serialVersionUID = 1512250564942897392L;
 	transient public static final List<String> autoFill;
 	static {
 		autoFill = Arrays.asList("bone.setPivot(,,);", "bone.setRotate(,);", "bone.setTranslate(,,);",
@@ -40,14 +38,13 @@ public class Bone extends DataBase implements IBone, Serializable {
 	/** 付与されているトランスフォーム */
 	transient public List<Transform> moves;
 
-	public String name = "default";
-
 	public List<Bone> children = new ArrayList<>();
-	public List<String> models = new ArrayList<>();
+	public List<ModelSelector> models = new ArrayList<>();
 
 	public String script = "";
 
-	public IRenderProperty rootProperty;
+	/** プロパティの取得元 */
+	transient public IRenderProperty rootProperty;
 
 	public Bone() {
 		scriptEngine.put("bone", this);
@@ -55,7 +52,7 @@ public class Bone extends DataBase implements IBone, Serializable {
 
 	public Bone(Set<String> models) {
 		this();
-		this.models.addAll(models);
+		models.forEach(name -> this.models.add(new ModelSelector(name)));
 	}
 
 	@Override

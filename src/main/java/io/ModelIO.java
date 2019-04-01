@@ -2,20 +2,14 @@ package io;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 
 import model.HideModel;
-import model.ModelPart;
 
 public class ModelIO {
 	public static final String SPACE = " ";// TODO

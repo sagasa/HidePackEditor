@@ -1,5 +1,11 @@
 package editer;
 
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.script.Compilable;
 import javax.script.CompiledScript;
 import javax.script.ScriptEngine;
@@ -8,6 +14,8 @@ import javax.script.ScriptException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.gson.Gson;
 
 import editer.controller.RootController;
 import io.ModelIO;
@@ -22,6 +30,9 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
 import model.Bone;
+import types.attachments.GunCustomizePart;
+import types.attachments.ValueChange;
+import types.attachments.ValueChange.ChangeType;
 
 public class Main extends Application {
 	/** 開いているpath */
@@ -33,9 +44,26 @@ public class Main extends Application {
 		LocalizeHandler.setLang("en");
 		PackIO.makePack();
 		// new MainWindow();
-		launch(arg);
+		// launch(arg);
 
+		Gson gson = new Gson();
+		GunCustomizePart item = new GunCustomizePart();
+		item.change.add(new ValueChange("TEST", ChangeType.ADD_FLOAT, "AAAA"));
+		System.out.println(item.change);
+		GunCustomizePart item2 = gson.fromJson(gson.toJson(item), GunCustomizePart.class);
+		try {
+			System.out.println(item2.change);
+			for (ValueChange change : item2.change) {
+				System.out.println(change.getClass().getField("TYPE").getGenericType());
+			}
+		} catch (NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
+
+
+		System.exit(0);
 	}
+
 
 	private static final Logger log = LogManager.getLogger();
 	private static final Point2D STAGE_SIZE = new Point2D(1280, 720);

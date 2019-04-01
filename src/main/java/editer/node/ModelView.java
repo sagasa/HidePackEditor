@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+
 import javax.imageio.ImageIO;
 
 import editer.HidePack;
@@ -20,6 +22,7 @@ import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
@@ -27,6 +30,7 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
@@ -58,6 +62,7 @@ import javafx.scene.transform.Translate;
 import javafx.util.Callback;
 import model.Bone;
 import model.HideModel;
+import model.ModelSelector;
 import resources.HideImage;
 
 public class ModelView extends Pane {
@@ -77,7 +82,7 @@ public class ModelView extends Pane {
 	private Rotate viewRotateY = new Rotate(0, Rotate.Y_AXIS);
 	private Translate viewPoint = new Translate(0, 0, 0);
 	private DoubleProperty zoom = new SimpleDoubleProperty(1);
-	/**モデルの最大サイズ*/
+	/** モデルの最大サイズ */
 	private DoubleProperty scale = new SimpleDoubleProperty(1);
 
 	public static void showModelView(Pane editer, HideModel read) {
@@ -197,8 +202,13 @@ public class ModelView extends Pane {
 			}
 		});
 		text.setVisible(false);
+		// モデルセレクタ編集
+		ComboBox<String> comboBox = new ComboBox<>();
+		comboBox.setEditable(true);
+		comboBox.setLayoutY(275);
+
 		AutoCompletionTextAreaBinding.bindAutoCompletion(text, Bone.autoFill);
-		this.getChildren().addAll(reload, bonetree, text, modelPane);
+		this.getChildren().addAll(reload, bonetree, text, modelPane, comboBox);
 	}
 
 	public void loadBone() {
@@ -256,10 +266,17 @@ public class ModelView extends Pane {
 		((Group) modelView.getRoot()).getChildren().addAll(front, back);
 	}
 
-	private static final Color enableColor = Color.color(1, 1, 1, 0.6);
+	private static final Color clearColor = Color.color(1, 1, 1, 0.0);
+	private static final Color enableColor = Color.color(1, 1, 1, 0.9);
 	private static final Color disableColor = Color.color(1, 1, 1, 0.2);
 
-	public MeshView addPartView(String partName, List<Transform> moves, BooleanProperty select) {
+	private void addPartView(ModelSelector model, List<Transform> moves, BooleanProperty select) {
+		addPartView(model.defaultModel, model.nowViewModel, moves, select);
+		model.item_model.values().forEach(name -> addPartView(name, model.nowViewModel, moves, select));
+	}
+
+	private MeshView addPartView(String partName, StringProperty nowselect, List<Transform> moves,
+			BooleanProperty listselect) {
 		TriangleMesh mesh = new TriangleMesh();
 		mesh.getPoints().addAll(model.vertArray);
 		mesh.getTexCoords().addAll(model.texArray);
@@ -297,13 +314,23 @@ public class ModelView extends Pane {
 		// スクリプト
 		facev.getTransforms().addAll(moves);
 		facev.setMesh(mesh);
-		// 選択時の見た目変更
-		select.addListener((v, ov, nv) -> {
-			if (nv)
-				mat.setDiffuseColor(enableColor);
+
+		// Matの色で表示切替
+		BiConsumer<Boolean, Boolean> viewChange = (select, enable) -> {
+			if (enable)
+				if (select)
+					mat.setDiffuseColor(enableColor);
+				else
+					mat.setDiffuseColor(disableColor);
 			else
-				mat.setDiffuseColor(disableColor);
+				mat.setDiffuseColor(clearColor);
+		};
+		// list選択時の見た目変更
+		listselect.addListener((v, ov, nv) -> {
+			viewChange.accept(nv, nowselect.get().equals(partName));
 		});
+		// セレクターの反映
+		nowselect.addListener((v, ov, nv) -> viewChange.accept(listselect.get(), nv.equals(partName)));
 
 		((Group) modelView.getRoot()).getChildren().addAll(linev, linev2, facev);
 		return linev;
@@ -312,7 +339,7 @@ public class ModelView extends Pane {
 	/** ボーンとモデル両方に対応したツリーアイテム */
 	private class BoneModelItem extends TreeItem<Bone> {
 
-		String model = null;
+		ModelSelector model = null;
 		BooleanProperty select = new SimpleBooleanProperty(false);
 
 		/** ビューにメッシュを追加する */
@@ -338,14 +365,14 @@ public class ModelView extends Pane {
 			return model == null;
 		}
 
-		public BoneModelItem(String model) {
+		public BoneModelItem(ModelSelector model) {
 			this.model = model;
 		}
 
-		public BoneModelItem(Bone root) {
-			super(root);
-			root.models.forEach(name -> getChildren().add(new BoneModelItem(name)));
-			root.children.forEach(bone -> getChildren().add(new BoneModelItem(bone)));
+		public BoneModelItem(Bone bone) {
+			super(bone);
+			bone.models.forEach(name -> getChildren().add(new BoneModelItem(name)));
+			bone.children.forEach(child -> getChildren().add(new BoneModelItem(child)));
 			ListChangeListener<? super TreeItem<Bone>> listener = e -> {
 				while (e.next()) {
 					if (e.wasAdded()) {
@@ -391,9 +418,9 @@ public class ModelView extends Pane {
 						setText(null);
 					} else {
 						if (treeitem.model == null)
-							setText("Bone " + item.name);
+							setText("Bone");
 						else {
-							setText("Model " + treeitem.model);
+							setText("Model " + treeitem.model.nowViewModel.get());
 						}
 					}
 				}
@@ -417,7 +444,7 @@ public class ModelView extends Pane {
 			MenuItem addModel = new MenuItem("Add Model");
 			addModel.setOnAction(e -> {
 				if (cell.getItem() != null) {
-					cell.getTreeItem().getChildren().add(new BoneModelItem(""));
+					cell.getTreeItem().getChildren().add(new BoneModelItem(new ModelSelector()));
 					cell.getTreeItem().setExpanded(true);
 				}
 			});
