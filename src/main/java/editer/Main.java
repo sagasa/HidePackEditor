@@ -33,10 +33,12 @@ import model.Bone;
 import types.attachments.GunCustomizePart;
 import types.attachments.ValueChange;
 import types.attachments.ValueChange.ChangeType;
+import types.items.GunData;
 
 public class Main extends Application {
 	/** 開いているpath */
 	public static String packPath;
+
 
 	public static void main(String[] arg) throws ScriptException {
 		LocalizeHandler.init();
@@ -46,21 +48,20 @@ public class Main extends Application {
 		// new MainWindow();
 		// launch(arg);
 
+		GunData data = new GunData();
+		Class<Number> clazz = Number.class;
 		Gson gson = new Gson();
 		GunCustomizePart item = new GunCustomizePart();
-		item.change.add(new ValueChange("TEST", ChangeType.ADD_FLOAT, "AAAA"));
-		System.out.println(item.change);
+		item.CHANGE_LIST.add(new ValueChange("BULLET_POWER", ChangeType.ADD_FLOAT, 1.5));
+		System.out.println(item.CHANGE_LIST);
 		GunCustomizePart item2 = gson.fromJson(gson.toJson(item), GunCustomizePart.class);
-		try {
-			System.out.println(item2.change);
-			for (ValueChange change : item2.change) {
-				System.out.println(change.getClass().getField("TYPE").getGenericType());
-			}
-		} catch (NoSuchFieldException | SecurityException e) {
-			e.printStackTrace();
+			System.out.println(item2.CHANGE_LIST+" ");
+
+		System.out.println(data.BULLET_POWER);
+		for(ValueChange c:item2.CHANGE_LIST) {
+			c.apply(data);
 		}
-
-
+		System.out.println(data.BULLET_POWER);
 		System.exit(0);
 	}
 

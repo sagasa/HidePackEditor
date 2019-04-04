@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
@@ -32,6 +33,7 @@ import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeCell;
@@ -206,6 +208,8 @@ public class ModelView extends Pane {
 		ComboBox<String> comboBox = new ComboBox<>();
 		comboBox.setEditable(true);
 		comboBox.setLayoutY(275);
+		ListView<Entry<String, String>> model_itemMap = new ListView<>();
+
 
 		AutoCompletionTextAreaBinding.bindAutoCompletion(text, Bone.autoFill);
 		this.getChildren().addAll(reload, bonetree, text, modelPane, comboBox);

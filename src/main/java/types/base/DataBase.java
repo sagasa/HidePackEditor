@@ -1,6 +1,8 @@
 package types.base;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +20,10 @@ import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener.Change;
+import types.attachments.CustomizePart;
+import types.attachments.ValueChange;
+import types.attachments.ValueChange.ChangeType;
 import types.wrapper.BooleanWrapper;
 import types.wrapper.FloatWrapper;
 import types.wrapper.IntegerWrapper;
@@ -78,48 +84,6 @@ public abstract class DataBase implements Cloneable {
 		return gson.toJson(this);
 	}
 
-	/** Mapから変更を適応する */
-	public void setString(Map<String, String> valueMap) {
-		for (String key : valueMap.keySet()) {
-			// 型確認
-			Class<?> clazz = getType(this, key);
-			if (String.class.isAssignableFrom(clazz)) {
-				setValue(this, key, valueMap.get(key));
-			} else {
-				log.error(key + " is not String field");
-			}
-		}
-	}
-
-	/** Mapから変更を適応する */
-	public void addFloat(Map<String, Float> valueMap) {
-		for (String key : valueMap.keySet()) {
-			// 型確認
-			Class<?> clazz = getType(this, key);
-			if (int.class.isAssignableFrom(clazz) || Integer.class.isAssignableFrom(clazz)) {
-				setValue(this, key, (int) ((int) getValue(this, key) + valueMap.get(key)));
-			} else if (float.class.isAssignableFrom(clazz) || Float.class.isAssignableFrom(clazz)) {
-				setValue(this, key, (float) ((float) getValue(this, key) + valueMap.get(key)));
-			} else {
-				log.error(key + " is not int,float field");
-			}
-		}
-	}
-
-	/** Mapから変更を適応する */
-	public void multiplyFloat(Map<String, Float> valueMap) {
-		for (String key : valueMap.keySet()) {
-			// 型確認
-			Class<?> clazz = getType(this, key);
-			if (int.class.isAssignableFrom(clazz) || Integer.class.isAssignableFrom(clazz)) {
-				setValue(this, key, (int) ((int) getValue(this, key) * valueMap.get(key)));
-			} else if (float.class.isAssignableFrom(clazz) || Float.class.isAssignableFrom(clazz)) {
-				setValue(this, key, (float) ((float) getValue(this, key) * valueMap.get(key)));
-			} else {
-				log.error(key + " is not int,float field");
-			}
-		}
-	}
 
 	/** .区切りのフィールド名のパスにの型取得する */
 	public Class<?> getType(String path) {
