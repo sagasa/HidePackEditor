@@ -21,22 +21,12 @@ public class ValueChange {
 	public void apply(DataBase data) {
 		try {
 			Field field = data.getClass().getField(TARGET);
-
-			if (TYPE.valueType == NUMBER) {
-				Double value = field.getDouble(data);
-				if (TYPE == ChangeType.ADD_FLOAT)
-					value = value + (Double) VALUE;
-				else if (TYPE == ChangeType.DIA_FLOAT)
-					value = value * (Double) VALUE;
-				else if (TYPE == ChangeType.SET_FLOAT)
-					value = (Double) VALUE;
-
-				Class<?> clazz = field.getType();
-				if (int.class.isAssignableFrom(clazz) || Integer.class.isAssignableFrom(clazz)) {
-					field.set(data, (float) value);
-				} else if (float.class.isAssignableFrom(clazz) || Float.class.isAssignableFrom(clazz)) {
-					field.set(data, value);
-				}
+			Class<?> type = null;
+			Class<?> clazz = field.getType();
+			if (int.class.isAssignableFrom(clazz) || Integer.class.isAssignableFrom(clazz)) {
+				type = int.class;
+			} else if (float.class.isAssignableFrom(clazz) || Float.class.isAssignableFrom(clazz)) {
+				type = float.class;
 			}
 			switch (TYPE) {
 			case ADD_LIST_STRING:
@@ -44,6 +34,25 @@ public class ValueChange {
 				break;
 			case REMOVE_LIST_STRING:
 				((List<String>) field.get(data)).remove((String) VALUE);
+				break;
+			case ADD_FLOAT:
+				if (type == int.class)
+					field.setInt(data, (int) (field.getInt(data) + (double) VALUE));
+				else if (type == float.class)
+					field.setFloat(data, (float) (field.getFloat(data) + (double) VALUE));
+				break;
+			case DIA_FLOAT:
+				if (type == int.class)
+					field.setInt(data, (int) (field.getInt(data) * (double) VALUE));
+				else if (type == float.class)
+					field.setFloat(data, (float) (field.getFloat(data) + (double) VALUE));
+				break;
+			case SET_FLOAT:
+				if (type == int.class)
+					field.setInt(data, (int) ((double) VALUE));
+				else if (type == float.class)
+					field.setFloat(data, (float) ((double) VALUE));
+
 				break;
 			default:
 				break;

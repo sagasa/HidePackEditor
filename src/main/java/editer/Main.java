@@ -46,8 +46,9 @@ public class Main extends Application {
 		LocalizeHandler.setLang("en");
 		PackIO.makePack();
 		// new MainWindow();
-		// launch(arg);
+		launch(arg);
 
+		/*
 		GunData data = new GunData();
 		Class<Number> clazz = Number.class;
 		Gson gson = new Gson();
@@ -63,6 +64,7 @@ public class Main extends Application {
 		}
 		System.out.println(data.BULLET_POWER);
 		System.exit(0);
+		//*/
 	}
 
 
