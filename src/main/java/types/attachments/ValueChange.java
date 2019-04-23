@@ -35,19 +35,19 @@ public class ValueChange {
 			case REMOVE_LIST_STRING:
 				((List<String>) field.get(data)).remove((String) VALUE);
 				break;
-			case ADD_FLOAT:
+			case ADD_NUMBER:
 				if (type == int.class)
 					field.setInt(data, (int) (field.getInt(data) + (double) VALUE));
 				else if (type == float.class)
 					field.setFloat(data, (float) (field.getFloat(data) + (double) VALUE));
 				break;
-			case DIA_FLOAT:
+			case DIA_NUMBER:
 				if (type == int.class)
 					field.setInt(data, (int) (field.getInt(data) * (double) VALUE));
 				else if (type == float.class)
 					field.setFloat(data, (float) (field.getFloat(data) + (double) VALUE));
 				break;
-			case SET_FLOAT:
+			case SET_NUMBER:
 				if (type == int.class)
 					field.setInt(data, (int) ((double) VALUE));
 				else if (type == float.class)
@@ -74,7 +74,7 @@ public class ValueChange {
 
 	public enum ChangeType {
 
-		ADD_FLOAT(NUMBER), DIA_FLOAT(NUMBER), SET_FLOAT(NUMBER), ADD_LIST_STRING(STRING), REMOVE_LIST_STRING(STRING);
+		ADD_NUMBER(NUMBER), DIA_NUMBER(NUMBER), SET_NUMBER(NUMBER), ADD_LIST_STRING(STRING), REMOVE_LIST_STRING(STRING);
 		private ChangeType(int type) {
 			valueType = type;
 		}

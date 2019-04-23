@@ -46,14 +46,14 @@ public class Main extends Application {
 		LocalizeHandler.setLang("en");
 		PackIO.makePack();
 		// new MainWindow();
-		launch(arg);
+		//launch(arg);
 
-		/*
+
 		GunData data = new GunData();
 		Class<Number> clazz = Number.class;
 		Gson gson = new Gson();
 		GunCustomizePart item = new GunCustomizePart();
-		item.CHANGE_LIST.add(new ValueChange("BULLET_POWER", ChangeType.ADD_FLOAT, 1.5));
+		item.CHANGE_LIST.add(new ValueChange("BULLET_POWER", ChangeType.ADD_NUMBER, 2.5));
 		System.out.println(item.CHANGE_LIST);
 		GunCustomizePart item2 = gson.fromJson(gson.toJson(item), GunCustomizePart.class);
 			System.out.println(item2.CHANGE_LIST+" ");
