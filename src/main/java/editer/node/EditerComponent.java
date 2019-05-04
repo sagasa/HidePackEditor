@@ -1,6 +1,7 @@
 package editer.node;
 
 import java.lang.reflect.Field;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -198,11 +199,11 @@ public class EditerComponent {
 		for (Field field : data.getClass().getFields()) {
 			int c = EditHelper.getCate(data.getClass(), field.getName());
 			if (c == cate) {
-				if (EditHelper.isString(data, field.getName())) {
+				if (EditHelper.isString(data.getClass(), field.getName())) {
 					root.getChildren().add(EditNodeBuilder.makeStringSetNode(data, field.getName()).build());
-				} else if (EditHelper.isBoolean(data, field.getName())) {
+				} else if (EditHelper.isBoolean(data.getClass(), field.getName())) {
 					root.getChildren().add(EditNodeBuilder.makeBooleanSetNode(data, field.getName()).build());
-				} else if (EditHelper.isNumber(data, field.getName())) {
+				} else if (EditHelper.isNumber(data.getClass(), field.getName())) {
 					root.getChildren().add(EditNodeBuilder.makeNumberSetNode(data, field.getName()).build());
 				}
 			}

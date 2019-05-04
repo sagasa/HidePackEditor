@@ -2,7 +2,6 @@ package types.items;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import helper.EditHelper;
@@ -75,6 +74,12 @@ public class GunData extends ItemData {
 	/** まとめてリロードできるか : boolean型 */
 	@Info(Cate = 0)
 	public boolean RELOAD_ALL = false;
+	/** リロード時にマガジンの抜き取りを行うかどうか */
+	@Info(Cate = 0)
+	public boolean UNLOAD_IN_RELOADING = true;
+	/** マガジンをアンロードできるか */
+	@Info(Cate = 0)
+	public boolean USE_UNLOAD = true;
 	/** 分間発射数 : int型 **/
 	@Info(Cate = 0, Min = 0, Scale = "10")
 	public int RPM = 600;

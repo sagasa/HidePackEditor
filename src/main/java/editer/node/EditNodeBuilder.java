@@ -12,6 +12,7 @@ import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest
 import org.controlsfx.control.textfield.TextFields;
 
 import editer.DataEntityInterface;
+import editer.node.EditNode.EditNodeType;
 import helper.ArrayEditer;
 import helper.EditHelper;
 import javafx.beans.property.ListProperty;
@@ -46,10 +47,6 @@ import types.base.DataBase;
 public class EditNodeBuilder {
 
 	private static final Logger log = LogManager.getLogger();
-
-	private enum EditNodeType {
-		Text, TextFromList, Integer, Float, Boolean, StringList
-	}
 
 	/** 作成するノードの種類 */
 	private final EditNodeType Type;
@@ -199,8 +196,7 @@ public class EditNodeBuilder {
 	/** テキストフィールドの幅 テキストフィールドを使用しない場合は無効 */
 	public EditNodeBuilder setAutoFillList(ObservableList<DataEntityInterface> list) {
 		fromList = list;
-		return this;
-	}
+	%
 
 	// ========================= スクロール処理 =========================
 	private BiConsumer<Boolean, Boolean> Scroll = new BiConsumer<Boolean, Boolean>() {

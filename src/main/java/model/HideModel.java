@@ -2,13 +2,9 @@ package model;
 
 import java.util.Map;
 
-import javax.script.Compilable;
-import javax.script.CompiledScript;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import types.base.DataBase;
 
-public class HideModel {
+public class HideModel extends DataBase{
 	// エディタサイドのみ
 	transient public float[] vertArray;
 	transient public float[] texArray;
@@ -23,25 +19,5 @@ public class HideModel {
 		texArray = tex;
 		modelParts = faces;
 		rootBone = new Bone(faces.keySet());
-	}
-
-	private static final ScriptEngineManager EngineManager = new ScriptEngineManager();
-	protected ScriptEngine scriptEngine = EngineManager.getEngineByName("JavaScript");
-
-	private CompiledScript RenderScript;
-
-	protected void scriptInit(String script) throws ScriptException {
-		Compilable compilingEngine = (Compilable) scriptEngine;
-		RenderScript = compilingEngine.compile(script);
-	}
-
-	/** モデルを描画 */
-	public void render(double x, double y, double z, float yaw, float pitch, float scale) {
-		// スクリプト実行
-		try {
-			RenderScript.eval();
-		} catch (ScriptException e) {
-			e.printStackTrace();
-		}
 	}
 }

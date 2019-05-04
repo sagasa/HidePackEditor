@@ -5,11 +5,17 @@ import java.util.List;
 
 import types.base.DataBase;
 
-public class ValueChange {
+public class ValueChange extends DataBase {
+
+	public static final String SPLIT = "\\.";
 
 	public String TARGET;
 	public ChangeType TYPE;
 	public Object VALUE;
+
+	public ValueChange() {
+
+	}
 
 	public ValueChange(String target, ChangeType type, Object value) {
 		TARGET = target;
@@ -17,10 +23,20 @@ public class ValueChange {
 		VALUE = value;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void apply(DataBase data) {
+		apply(data, TARGET);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void apply(DataBase data, String target) {
 		try {
-			Field field = data.getClass().getField(TARGET);
+			//階層化されているか
+			String[] split = target.split(SPLIT, 2);
+			Field field = data.getClass().getField(split[0]);
+			if (split.length > 1) {
+				apply((DataBase) field.get(data), split[1]);
+				return;
+			}
 			Class<?> type = null;
 			Class<?> clazz = field.getType();
 			if (int.class.isAssignableFrom(clazz) || Integer.class.isAssignableFrom(clazz)) {

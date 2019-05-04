@@ -176,3 +176,5 @@ bulletdata = bulletdata
 $jacocodata = $jacocodata
 $jacocodata = $jacocodata
 $jacocodata = $jacocodata
+unload.in.reloading = unload.in.reloading
+use.unload = use.unload

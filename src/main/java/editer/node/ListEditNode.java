@@ -1,50 +1,83 @@
 package editer.node;
 
 import editer.DataEntityInterface;
+import editer.node.EditPanels.EditType;
 import helper.ArrayEditer;
 import javafx.beans.property.ListProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 
 /** 母集団のリストから任意に選択するListView */
-public class SelectList extends ListView<String> {
+public class ListEditNode extends EditNode {
 
-	private ObservableList<? extends DataEntityInterface> motherList;
+	private ListView<String> listview;
 	private ListProperty<String> setList;
 	private String SearchKey = null;
 	private ListChangeListener<DataEntityInterface> listener;
-//TODO 要素の最大、最小数の指定を
+
+	//TODO 要素の最大、最小数の指定を
 	/**
 	 * @param fromList
 	 *            母集団
-	 * @param list
-	 *            選択先
 	 */
-	public SelectList(ObservableList<? extends DataEntityInterface> fromList, ListProperty<String> list) {
+	public ListEditNode(EditType edit, String path,
+			ObservableList<? extends DataEntityInterface> fromList) {
+		super(edit, path, EditNodeType.StringList);
 		motherList = fromList;
-		setList = list;
 		listener = new ListChangeListener<DataEntityInterface>() {
 			@Override
 			public void onChanged(Change<? extends DataEntityInterface> arg0) {
 				writeList();
 			}
 		};
-		fromList.addListener(new WeakListChangeListener<>(listener));
-		setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+		motherList.addListener(new WeakListChangeListener<>(listener));
+
+		listview = new ListView<>();
+
+		this.setPrefHeight(200);
+
+		Label label = new Label(Name);
+		label.setAlignment(Pos.CENTER);
+
+		TextField text = new TextField();
+		text.textProperty().addListener((value, oldvalue, newvalue) -> setSearch(newvalue));
+		label.setLayoutX(5);
+		label.setLayoutY(2);
+		label.setPrefHeight(20);
+		label.prefWidthProperty().bind(this.widthProperty().subtract(10));
+		listview.setLayoutX(5);
+		listview.setLayoutY(24);
+		listview.prefWidthProperty().bind(this.widthProperty().subtract(10));
+		listview.prefHeightProperty().bind(this.heightProperty().subtract(56));
+		listview.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
 			@Override
 			public ListCell<String> call(ListView<String> arg0) {
 				return new EditListCell();
 			}
 		});
+		text.prefWidthProperty().bind(this.widthProperty().subtract(10));
+		text.setPrefHeight(24);
+		text.setLayoutX(5);
+		text.layoutYProperty().bind(heightProperty().subtract(29));
+		this.getChildren().addAll(label, listview, text);
 		writeList();
+	}
+
+	/**
+	 * @param list
+	 *選択先*/
+	public void setList(ListProperty<String> list) {
+		setList = list;
 	}
 
 	/**フィルターをセット*/
@@ -55,9 +88,13 @@ public class SelectList extends ListView<String> {
 
 	/** リストを読み取って値をセット */
 	private void writeList() {
-		getItems().clear();
-		getItems().addAll(setList);
-		motherList.stream().map(data -> data.getDisplayName()).filter(str->(!setList.contains(str)&&ArrayEditer.Search(str, SearchKey))).forEach(str->getItems().add(str));
+		listview.getItems().clear();
+		if (setList == null)
+			return;
+		listview.getItems().addAll(setList);
+		motherList.stream().map(data -> data.getDisplayName())
+				.filter(str -> (!setList.contains(str) && ArrayEditer.Search(str, SearchKey)))
+				.forEach(str -> listview.getItems().add(str));
 	}
 
 	/** 上下ボタンと削除ボタン付きのリストシェル */

@@ -1,9 +1,6 @@
 package types.base;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,10 +17,6 @@ import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener.Change;
-import types.attachments.CustomizePart;
-import types.attachments.ValueChange;
-import types.attachments.ValueChange.ChangeType;
 import types.wrapper.BooleanWrapper;
 import types.wrapper.FloatWrapper;
 import types.wrapper.IntegerWrapper;
@@ -34,7 +27,7 @@ import types.wrapper.StringWrapper;
  * transient注釈が付いたフィールドはエディターでのみ使用 インスタンス生成後にinit(）を呼ぶこと
  */
 public abstract class DataBase implements Cloneable {
-	private final static Logger log = LogManager.getLogger();
+	protected final static Logger log = LogManager.getLogger();
 
 	/** パックデータ エディタでのみ使用 */
 	transient public long PackUID;
