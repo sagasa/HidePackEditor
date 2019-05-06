@@ -3,6 +3,7 @@ package editer.node;
 import editer.HidePack;
 import editer.node.EditPanels.EditType;
 import helper.EditHelper;
+import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -37,13 +38,14 @@ public class HideImageView extends ImageView implements ChangeListener<DataBase>
 		setImage(image == null ? HidePack.NullImage : SwingFXUtils.toFXImage(image.Image, null));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
 		if (oldValue != null && Type.Clazz == oldValue.getClass()) {
-
+			((Property<String>) EditHelper.getProperty(oldValue, Path)).removeListener(nameListener);
 		}
 		if (newValue != null && Type.Clazz == newValue.getClass()) {
-
+			((Property<String>) EditHelper.getProperty(newValue, Path)).addListener(nameListener);
 		}
 	}
 }

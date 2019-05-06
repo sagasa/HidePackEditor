@@ -91,7 +91,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	protected ObservableList<? extends DataEntityInterface> motherList;
 
 	/**autodillとlistEditで利用*/
-	public EditNode setFromList(ObservableList<DataEntityInterface> list) {
+	public EditNode setFromList(ObservableList<? extends DataEntityInterface> list) {
 		motherList = list;
 		return this;
 	}
@@ -157,7 +157,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 
 	@SuppressWarnings("unchecked")
 	private void build() {
-		if (Type == EditNodeType.Float || Type == EditNodeType.Integer || Type == EditNodeType.Text
+		if (Type == EditNodeType.Float || Type == EditNodeType.Integer || Type == EditNodeType.String
 				|| Type == EditNodeType.StringFromList) {
 			// テキストセット
 			TextField text = new TextField();
@@ -173,7 +173,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 				for (Runnable run : ChangeListener)
 					run.run();
 			});
-			if (Type == EditNodeType.Text || Type == EditNodeType.StringFromList) {
+			if (Type == EditNodeType.String || Type == EditNodeType.StringFromList) {
 				editerProperty = text.textProperty();
 				if (Type == EditNodeType.StringFromList) {
 					// test
@@ -314,6 +314,6 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	}
 
 	public enum EditNodeType {
-		Text, StringFromList, Integer, Float, Boolean, StringList, Number
+		String, StringFromList, Integer, Float, Boolean, StringList, Number
 	}
 }

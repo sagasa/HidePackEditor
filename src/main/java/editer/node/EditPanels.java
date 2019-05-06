@@ -3,8 +3,6 @@ package editer.node;
 import java.lang.reflect.Field;
 import java.util.EnumMap;
 
-import org.apache.logging.log4j.core.config.Property;
-
 import editer.HidePack;
 import editer.controller.RootController;
 import editer.node.EditNode.EditNodeType;
@@ -12,7 +10,6 @@ import helper.EditHelper;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,15 +22,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import localize.LocalizeHandler;
 import resources.HideImage;
 import types.base.DataBase;
 import types.base.GunFireMode;
-import types.effect.Recoil;
-import types.effect.Sound;
 import types.items.GunData;
+import types.items.ItemData;
 import types.items.MagazineData;
-import types.projectile.BulletData;
 
 /**編集パネルのルート*/
 public class EditPanels extends AnchorPane {
@@ -99,119 +93,119 @@ public class EditPanels extends AnchorPane {
 
 		// scope
 		Pane scope = makeImageNode(type, "SCOPE_NAME", HidePack.ScopeList);
-		scope.getChildren().add(makeCateEditPanel(data, 2));
+		scope.getChildren().add(makeCateEditPanel(EditType.Gun, 2));
 		this.getChildren().add(scope);
 		// shootSound
 		this.getChildren().add(
-				setDefault(makeSoundEditer(data.SOUND_SHOOT, LocalizeHandler.getLocalizedName(data, "SOUND_SHOOT"))));
+				setDefault(makeSoundEditer(type, "SOUND_SHOOT")));
 		// reloadSound
 		this.getChildren().add(
-				setDefault(makeSoundEditer(data.SOUND_RELOAD, LocalizeHandler.getLocalizedName(data, "SOUND_SHOOT"))));
+				setDefault(makeSoundEditer(type, "SOUND_SHOOT")));
 		// recoil
-		this.getChildren().add(setDefault(makeRecoilEditer(data)));
+		this.getChildren().add(setDefault(makeRecoilEditer(type)));
 	}
 
 	/** MagazineData */
-	public static void writeMagazineEditer(Pane editer, MagazineData data) {
+	public void writeMagazineEditer() {
+		final EditType type = EditType.Magazine;
 		// ItemName
-		editer.getChildren().add(makeItemInfoNode(data));
+		this.getChildren().add(makeItemInfoNode(type));
 		// icon
-		editer.getChildren().add(makeImageNode(data, "ITEM_ICONNAME", HidePack.IconList));
+		this.getChildren().add(makeImageNode(type, "ITEM_ICONNAME", HidePack.IconList));
 		// Cate0
-		editer.getChildren().add(makeCateEditPanel(data, 0));
+		this.getChildren().add(makeCateEditPanel(type, 0));
 
-		writeBulletEditer(editer, data.BULLETDATA);// TODO
-	}
-
-	/** BulletData */
-	public static void writeBulletEditer(Pane editer, BulletData data) {
 		// Cate0
-		editer.getChildren().add(makeCateEditPanel(data, 0));
+		this.getChildren().add(makeCateEditPanel(type, 0));
 		// Cate1
-		editer.getChildren().add(makeCateEditPanel(data, 1));
+		this.getChildren().add(makeCateEditPanel(type, 1));
 		// Cate2
-		editer.getChildren().add(makeCateEditPanel(data, 2));
+		this.getChildren().add(makeCateEditPanel(type, 2));
 		// Cate3
-		editer.getChildren().add(makeCateEditPanel(data, 3));
+		this.getChildren().add(makeCateEditPanel(type, 3));
 		// sound
-		editer.getChildren().add(setDefault(
-				makeSoundEditer(data.SOUND_HIT_ENTITY, LocalizeHandler.getLocalizedName(data, "SOUND_HIT_ENTITY"))));
+		this.getChildren().add(setDefault(
+				makeSoundEditer(type, "SOUND_HIT_ENTITY")));
 		// sound
-		editer.getChildren().add(setDefault(
-				makeSoundEditer(data.SOUND_HIT_GROUND, LocalizeHandler.getLocalizedName(data, "SOUND_HIT_GROUND"))));
+		this.getChildren().add(setDefault(
+				makeSoundEditer(type, "SOUND_HIT_GROUND")));
 		// sound
-		editer.getChildren().add(setDefault(
-				makeSoundEditer(data.SOUND_PASSING, LocalizeHandler.getLocalizedName(data, "SOUND_PASSING"))));
+		this.getChildren().add(setDefault(
+				makeSoundEditer(type, "SOUND_PASSING")));
 
 	}
 
 	/** Recoil */
-	private static Region makeRecoilEditer(GunData data) {
+	private Region makeRecoilEditer(EditType type) {
 		TabPane root = new TabPane();
 		root.setMaxWidth(200);
-		Tab Default = new Tab("Default", makeRecoilEditer(data.RECOIL_DEFAULT));
+		Tab Default = new Tab("Default", makeRecoilEditer(type, "RECOIL_DEFAULT"));
 		Default.setClosable(false);
-		Tab ADS = new Tab("ADS", makeRecoilEditer(data.RECOIL_ADS));
+		Tab ADS = new Tab("ADS", makeRecoilEditer(type, "RECOIL_ADS"));
 		ADS.setClosable(false);
-		Tab Sneak = new Tab("Sneak", makeRecoilEditer(data.RECOIL_SNEAK));
+		Tab Sneak = new Tab("Sneak", makeRecoilEditer(type, "RECOIL_SNEAK"));
 		Sneak.setClosable(false);
-		Tab SneakADS = new Tab("Sneak+ADS", makeRecoilEditer(data.RECOIL_SNEAK_ADS));
+		Tab SneakADS = new Tab("Sneak+ADS", makeRecoilEditer(type, "RECOIL_SNEAK_ADS"));
 		SneakADS.setClosable(false);
 		root.getTabs().addAll(Default, Sneak, ADS, SneakADS);
 		return root;
 	}
 
 	/** Soundの詳細 */
-	private static Region makeSoundEditer(Sound sound, String name) {
+	private static Region makeSoundEditer(EditType type, String path) {
 		VBox root = new VBox();
-		Label label = new Label(name);
+		Label label = new Label(path);
 		label.setPrefWidth(200);
 		label.setAlignment(Pos.CENTER);
 		root.getChildren().add(label);
 		// 数値系
-		root.getChildren().add(EditNodeBuilder.makeStringAutoFillNode(sound, "NAME", HidePack.SoundList).build());
-		root.getChildren().add(makeCateEditPanel(sound, -1));
+		root.getChildren().add(new EditNode(type, path, EditNodeType.StringFromList).setFromList(HidePack.SoundList));
+		root.getChildren().add(makeCateEditPanel(type, -1, path));
 		return root;
 	}
 
-	private static Region makeRecoilEditer(Recoil recoil) {
+	private Region makeRecoilEditer(EditType type, String fieldName) {
 		VBox root = new VBox();
 		// 数値系
-		Pane pane = makeCateEditPanel(recoil, -1);
+		Pane pane = makeCateEditPanel(type, -1, fieldName);
 
 		// バインドチェック
-		boolean value = recoil.USE;
+		/*boolean value = recoil.USE;
 		EditHelper.getProperty(recoil, "USE", boolean.class).setValue(!value);
 		EditHelper.getProperty(recoil, "USE", boolean.class).setValue(value);
+		//*/
 		// 使用可否
-		Node use = EditNodeBuilder.makeBooleanSetNode(recoil, "USE").setChangeListner(() -> {
-			pane.setDisable(!recoil.USE);
-		}).build();
+		Node use = new EditNode(type, "USE", EditNodeType.Boolean).setChangeListner(() -> {
+			pane.setDisable(!(boolean) EditHelper.getData(editValue.get(), fieldName + "." + "USE"));
+		});
 		root.getChildren().addAll(use, pane);
 		return root;
 	}
 
 	/** ItemData用名称+アイコン編集ノード */
-	private static Pane makeItemInfoNode(EditType gun) {
+	@SuppressWarnings("unchecked")
+	private Pane makeItemInfoNode(EditType type) {
 		VBox root = new VBox();
 		setDefault(root);
 
 		// 短縮名
-		Node shortname = EditNodeBuilder.makeStringSetNode(gun, "ITEM_SHORTNAME").build();
+		Node shortname = new EditNode(type, "ITEM_SHORTNAME", EditNodeType.String);
 		// 表示名
-		Node dizplayname = EditNodeBuilder.makeStringSetNode(gun, "ITEM_DISPLAYNAME")
-				.setChangeListner(() -> RootController.refreshList()).build();
+		Node dizplayname = new EditNode(type, "ITEM_DISPLAYNAME", EditNodeType.String)
+				.setChangeListner(() -> RootController.refreshList());
 		// 短縮名の使用可否
-		Node useshortname = EditNodeBuilder.makeBooleanSetNode(gun, "USE_SHORTNAME").setChangeListner(() -> {
-			shortname.setDisable(!gun.USE_SHORTNAME);
-			if (!gun.USE_SHORTNAME) {
-				EditHelper.getProperty(gun, "ITEM_SHORTNAME")
-						.bindBidirectional((Property) EditHelper.getProperty(gun, "ITEM_DISPLAYNAME"));
+		Runnable run = () -> {
+			boolean use = (boolean) EditHelper.getData((ItemData) editValue.get(), "USE_SHORTNAME");
+			shortname.setDisable(!use);
+			if (!use) {
+				EditHelper.getProperty(editValue.get(), "ITEM_SHORTNAME", String.class)
+						.bindBidirectional(EditHelper.getProperty(editValue.get(), "ITEM_DISPLAYNAME", String.class));
 			} else {
-				EditHelper.getProperty(gun, "ITEM_SHORTNAME")
-						.unbindBidirectional((Property) EditHelper.getProperty(gun, "ITEM_DISPLAYNAME"));
+				EditHelper.getProperty(editValue.get(), "ITEM_SHORTNAME", String.class)
+						.unbindBidirectional(EditHelper.getProperty(editValue.get(), "ITEM_DISPLAYNAME", String.class));
 			}
-		}).build();
+		};
+		Node useshortname = new EditNode(type, "USE_SHORTNAME", EditNodeType.Boolean).setChangeListner();
 		root.getChildren().addAll(dizplayname, useshortname, shortname);
 		root.setPrefSize(200, 72);
 		return root;
@@ -221,7 +215,7 @@ public class EditPanels extends AnchorPane {
 	private static Pane makeImageNode(EditType type, String fieldName, ObservableList<HideImage> list) {
 		VBox root = new VBox();
 		setDefault(root);
-		ImageView iconview = new HideImageView(list, (ObservableValue<String>) EditHelper.getProperty(data, fieldName));
+		ImageView iconview = new HideImageView(type, fieldName, list);
 		iconview.setFitWidth(64);
 		iconview.setFitHeight(64);
 		VBox.setMargin(iconview, new Insets(5, 0, 0, 5));
@@ -232,18 +226,31 @@ public class EditPanels extends AnchorPane {
 	}
 
 	/** カテゴリが付いた値を編集するノード */
-	private static Pane makeCateEditPanel(EditType gun, int cate) {
+	@SuppressWarnings("unchecked")
+	private static Pane makeCateEditPanel(EditType type, int cate) {
+		return makeCateEditPanel(type, cate, null);
+	}
+
+	/** カテゴリが付いた値を編集するノード */
+	@SuppressWarnings("unchecked")
+	private static Pane makeCateEditPanel(EditType type, int cate, String path) {
 		VBox root = new VBox();
+		Class<? extends DataBase> clazz;
+		if (path != null) {
+			clazz = (Class<? extends DataBase>) EditHelper.getType(type.Clazz, path);
+		} else {
+			clazz = type.Clazz;
+		}
 		setDefault(root);
-		for (Field field : gun.getClass().getFields()) {
-			int c = EditHelper.getCate(gun.getClass(), field.getName());
+		for (Field field : clazz.getFields()) {
+			int c = EditHelper.getCate(clazz, field.getName());
 			if (c == cate) {
-				if (EditHelper.isString(gun.getClass(), field.getName())) {
-					root.getChildren().add(EditNodeBuilder.makeStringSetNode(gun, field.getName()).build());
-				} else if (EditHelper.isBoolean(gun.getClass(), field.getName())) {
-					root.getChildren().add(EditNodeBuilder.makeBooleanSetNode(gun, field.getName()).build());
-				} else if (EditHelper.isNumber(gun.getClass(), field.getName())) {
-					root.getChildren().add(EditNodeBuilder.makeNumberSetNode(gun, field.getName()).build());
+				if (EditHelper.isString(clazz, field.getName())) {
+					root.getChildren().add(new EditNode(type, field.getName(), EditNodeType.String));
+				} else if (EditHelper.isBoolean(clazz, field.getName())) {
+					root.getChildren().add(new EditNode(type, field.getName(), EditNodeType.Boolean));
+				} else if (EditHelper.isNumber(clazz, field.getName())) {
+					root.getChildren().add(new EditNode(type, field.getName(), EditNodeType.Number));
 				}
 			}
 		}

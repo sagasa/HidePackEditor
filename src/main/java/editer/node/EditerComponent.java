@@ -1,4 +1,4 @@
-package editer.node;
+]package editer.node;
 
 import java.lang.reflect.Field;
 
@@ -9,7 +9,6 @@ import editer.HidePack;
 import editer.controller.RootController;
 import helper.EditHelper;
 import javafx.beans.property.Property;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -182,7 +181,7 @@ public class EditerComponent {
 	private static Pane makeImageNode(ItemData data, String fieldName, ObservableList<HideImage> list) {
 		VBox root = new VBox();
 		setDefault(root);
-		ImageView iconview = new HideImageView(list, (ObservableValue<String>) EditHelper.getProperty(data, fieldName));
+		ImageView iconview = new HideImageView(type, fieldName, list);
 		iconview.setFitWidth(64);
 		iconview.setFitHeight(64);
 		VBox.setMargin(iconview, new Insets(5, 0, 0, 5));
