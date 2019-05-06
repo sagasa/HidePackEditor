@@ -158,7 +158,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	@SuppressWarnings("unchecked")
 	private void build() {
 		if (Type == EditNodeType.Float || Type == EditNodeType.Integer || Type == EditNodeType.Text
-				|| Type == EditNodeType.TextFromList) {
+				|| Type == EditNodeType.StringFromList) {
 			// テキストセット
 			TextField text = new TextField();
 			text.setAlignment(Pos.CENTER);
@@ -173,9 +173,9 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 				for (Runnable run : ChangeListener)
 					run.run();
 			});
-			if (Type == EditNodeType.Text || Type == EditNodeType.TextFromList) {
+			if (Type == EditNodeType.Text || Type == EditNodeType.StringFromList) {
 				editerProperty = text.textProperty();
-				if (Type == EditNodeType.TextFromList) {
+				if (Type == EditNodeType.StringFromList) {
 					// test
 					TextFields.bindAutoCompletion(text, new Callback<ISuggestionRequest, Collection<String>>() {
 						@Override
@@ -314,6 +314,6 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	}
 
 	public enum EditNodeType {
-		Text, TextFromList, Integer, Float, Boolean, StringList, Number
+		Text, StringFromList, Integer, Float, Boolean, StringList, Number
 	}
 }

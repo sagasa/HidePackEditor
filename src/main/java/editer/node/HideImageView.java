@@ -1,34 +1,49 @@
 package editer.node;
 
 import editer.HidePack;
+import editer.node.EditPanels.EditType;
+import helper.EditHelper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.beans.value.WeakChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.ImageView;
 import resources.HideImage;
+import types.base.DataBase;
 
 /**自動更新されるImageView*/
-public class HideImageView extends ImageView {
+public class HideImageView extends ImageView implements ChangeListener<DataBase> {
 	private ObservableList<HideImage> List;
-	private ObservableValue<String> Name;
+	private final String Path;
+	private EditType Type;
+
+	private DataBase now;
 
 	private ListChangeListener<HideImage> listListener = change -> reflesh();
 	private ChangeListener<String> nameListener = (value, oldValue, newValue) -> reflesh();
 
-	public HideImageView(ObservableList<HideImage> list, ObservableValue<String> name) {
+	public HideImageView(EditType type, String path, ObservableList<HideImage> list) {
 		List = list;
-		Name = name;
+		Type = type;
+		Path = path;
 		List.addListener(new WeakListChangeListener<>(listListener));
-		Name.addListener(new WeakChangeListener<>(nameListener));
 		reflesh();
 	}
 
 	public void reflesh() {
-		HideImage image = HidePack.getDataByName(List, Name.getValue());
+		HideImage image = HidePack.getDataByName(List, (String) EditHelper.getData(now, Path));
 		setImage(image == null ? HidePack.NullImage : SwingFXUtils.toFXImage(image.Image, null));
+	}
+
+	@Override
+	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
+		if (oldValue != null && Type.Clazz == oldValue.getClass()) {
+
+		}
+		if (newValue != null && Type.Clazz == newValue.getClass()) {
+
+		}
 	}
 }
