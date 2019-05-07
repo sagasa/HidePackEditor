@@ -9,6 +9,7 @@ import editer.node.EditNode.EditNodeType;
 import helper.EditHelper;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -31,21 +32,21 @@ import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
 
-/**編集パネルのルート*/
-public class EditPanels extends AnchorPane {
+/** 編集パネルのルート */
+public class EditPanels extends Pane {
 
-	/**編集パネルの対象*/
+	/** 編集パネルの対象 */
 	public enum EditType {
-	Gun(GunData.class), Magazine(MagazineData.class);
+		Gun(GunData.class), Magazine(MagazineData.class);
 
-		/**判別用の型*/
+		/** 判別用の型 */
 		public Class<? extends DataBase> Clazz;
 
 		private EditType(Class<? extends DataBase> clazz) {
 			Clazz = clazz;
 		}
 
-		/**型からエディタを選択*/
+		/** 型からエディタを選択 */
 		public static EditType getType(DataBase data) {
 			for (EditType type : values()) {
 				if (type.Clazz.equals(data.getClass()))
@@ -55,17 +56,22 @@ public class EditPanels extends AnchorPane {
 		}
 	}
 
-	/**編集対象	*/
+	/** 編集対象 */
 	private ObjectProperty<DataBase> editValue = new SimpleObjectProperty<>();
 
-	private EnumMap<EditType, BooleanProperty> editers = new EnumMap<>(EditType.class);
+	/** 各編集パネルの表示状態管理用プロパティ */
+	private EnumMap<EditType, BooleanProperty> editModes = new EnumMap<>(EditType.class);
 
 	public EditPanels() {
+		//
+		for (EditType type : EditType.values()) {
+			editModes.put(type, new SimpleBooleanProperty(false));
+		}
 		writeGunEditer();
-		//	writeMagazineEditer();
+		// writeMagazineEditer();
 	}
 
-	/**エディタの内容設定*/
+	/** エディタの内容設定 */
 	public void setEditValue(DataBase data) {
 		editValue.set(data);
 	}
@@ -81,18 +87,16 @@ public class EditPanels extends AnchorPane {
 		editer.setVgap(5);
 		editer.setHgap(5);
 		editer.setOrientation(Orientation.VERTICAL);
-		editer.prefWrapLengthProperty().bind(this.heightProperty().subtract(3));
+		editer.prefWrapLengthProperty().bind(this.heightProperty());
 		editer.maxHeightProperty().bind(this.heightProperty());
 		editer.setStyle("-fx-background-color: gray;");
-		editer.setVisible(false);
-		editer.setVisible(true);
 		this.widthProperty().addListener((v, ov, nv) -> System.out
 				.println(this.widthProperty().get() + " " + this.heightProperty() + " | " + editer));
 		editValue.addListener((v, ov, nv) -> {
 			if (nv != null && nv.getClass() == type.Clazz) {
 				editer.setVisible(true);
 				System.out.println(ov + " " + nv + " " + (nv.getClass() == type.Clazz));
-				System.out.println("みえる！！");
+				System.out.println("みえる！！" + this.getLayoutBounds());
 			} else {
 				editer.setVisible(false);
 				System.out.println(ov + " " + nv + " " + (nv.getClass() == type.Clazz));
@@ -107,7 +111,7 @@ public class EditPanels extends AnchorPane {
 	public Pane writeGunEditer() {
 		final EditType type = EditType.Gun;
 		Pane editer = setUpFlow(type);
-		//*
+		// *
 		// ItemName
 		editer.getChildren().add(makeItemInfoNode(EditType.Gun));
 		// icon
@@ -117,25 +121,21 @@ public class EditPanels extends AnchorPane {
 		// Cate1
 		editer.getChildren().add(makeCateEditPanel(EditType.Gun, 1));
 		// useBullet
-		editer.getChildren().add(
-				setDefault(new ListEditNode(editValue, type, "MAGAZINE_USE", HidePack.MagazineList)));
+		editer.getChildren().add(setDefault(new ListEditNode(editValue, type, "MAGAZINE_USE", HidePack.MagazineList)));
 		// fireMode
-		editer.getChildren()
-				.add(setDefault(new ListEditNode(editValue, type, "FIREMODE", GunFireMode.getList())));
+		editer.getChildren().add(setDefault(new ListEditNode(editValue, type, "FIREMODE", GunFireMode.getList())));
 
 		// scope
 		Pane scope = makeImageNode(type, "SCOPE_NAME", HidePack.ScopeList);
 		scope.getChildren().add(makeCateEditPanel(EditType.Gun, 2));
 		editer.getChildren().add(scope);
 		// shootSound
-		editer.getChildren().add(
-				setDefault(makeSoundEditer(type, "SOUND_SHOOT")));
+		editer.getChildren().add(setDefault(makeSoundEditer(type, "SOUND_SHOOT")));
 		// reloadSound
-		editer.getChildren().add(
-				setDefault(makeSoundEditer(type, "SOUND_SHOOT")));
+		editer.getChildren().add(setDefault(makeSoundEditer(type, "SOUND_SHOOT")));
 		// recoil
 		editer.getChildren().add(setDefault(makeRecoilEditer(type)));
-		//*/
+		// */
 		return editer;
 	}
 
@@ -166,14 +166,11 @@ public class EditPanels extends AnchorPane {
 		// Cate3
 		editer.getChildren().add(makeCateEditPanel(type, 3, top));
 		// sound
-		editer.getChildren().add(setDefault(
-				makeSoundEditer(type, top + ".SOUND_HIT_ENTITY")));
+		editer.getChildren().add(setDefault(makeSoundEditer(type, top + ".SOUND_HIT_ENTITY")));
 		// sound
-		editer.getChildren().add(setDefault(
-				makeSoundEditer(type, top + ".SOUND_HIT_GROUND")));
+		editer.getChildren().add(setDefault(makeSoundEditer(type, top + ".SOUND_HIT_GROUND")));
 		// sound
-		editer.getChildren().add(setDefault(
-				makeSoundEditer(type, top + ".SOUND_PASSING")));
+		editer.getChildren().add(setDefault(makeSoundEditer(type, top + ".SOUND_PASSING")));
 	}
 
 	/** Recoil */
@@ -200,9 +197,8 @@ public class EditPanels extends AnchorPane {
 		label.setAlignment(Pos.CENTER);
 		root.getChildren().add(label);
 		// 数値系
-		root.getChildren()
-				.add(new EditNode(editValue, type, path + ".NAME", EditNodeType.StringFromList)
-						.setFromList(HidePack.SoundList));
+		root.getChildren().add(new EditNode(editValue, type, path + ".NAME", EditNodeType.StringFromList)
+				.setFromList(HidePack.SoundList));
 		root.getChildren().add(makeCateEditPanel(type, -1, path));
 		return root;
 	}
@@ -213,10 +209,11 @@ public class EditPanels extends AnchorPane {
 		Pane pane = makeCateEditPanel(type, -1, fieldName);
 
 		// バインドチェック
-		/*boolean value = recoil.USE;
-		EditHelper.getProperty(recoil, "USE", boolean.class).setValue(!value);
-		EditHelper.getProperty(recoil, "USE", boolean.class).setValue(value);
-		//*/
+		/*
+		 * boolean value = recoil.USE; EditHelper.getProperty(recoil, "USE",
+		 * boolean.class).setValue(!value); EditHelper.getProperty(recoil, "USE",
+		 * boolean.class).setValue(value); //
+		 */
 		// 使用可否
 		Node use = new EditNode(editValue, type, fieldName + ".USE", EditNodeType.Boolean).setChangeListner(() -> {
 			pane.setDisable(!(boolean) EditHelper.getData(editValue.get(), fieldName + "." + "USE"));
@@ -289,14 +286,11 @@ public class EditPanels extends AnchorPane {
 			int c = EditHelper.getCate(clazz, field.getName());
 			if (c == cate) {
 				if (EditHelper.isString(clazz, field.getName())) {
-					root.getChildren()
-							.add(new EditNode(editValue, type, top + field.getName(), EditNodeType.String));
+					root.getChildren().add(new EditNode(editValue, type, top + field.getName(), EditNodeType.String));
 				} else if (EditHelper.isBoolean(clazz, field.getName())) {
-					root.getChildren()
-							.add(new EditNode(editValue, type, top + field.getName(), EditNodeType.Boolean));
+					root.getChildren().add(new EditNode(editValue, type, top + field.getName(), EditNodeType.Boolean));
 				} else if (EditHelper.isNumber(clazz, field.getName())) {
-					root.getChildren()
-							.add(new EditNode(editValue, type, top + field.getName(), EditNodeType.Number));
+					root.getChildren().add(new EditNode(editValue, type, top + field.getName(), EditNodeType.Number));
 				}
 			}
 		}

@@ -55,7 +55,7 @@ public class RootController implements Initializable {
 	public static RootController INSTANCE;
 	public static Stage STAGE;
 
-	public Pane editer;
+	public EditPanels editer;
 
 	public TextField packSearch;
 	public ListView<DataEntityInterface> packList;
@@ -67,8 +67,6 @@ public class RootController implements Initializable {
 	public ListView<DataEntityInterface> soundList;
 	public ListView<DataEntityInterface> iconList;
 	public ListView<DataEntityInterface> modelList;
-
-	public EditPanels editPane;
 
 	/** writeのリスナー */
 	private ListChangeListener<DataEntityInterface> writeListener = change -> write();
@@ -104,11 +102,9 @@ public class RootController implements Initializable {
 		ModelView.showModelView(editer, ModelIO.read());
 
 		//エディタ初期化
-		editPane = new EditPanels();
-		editPane.prefHeightProperty().bind(editer.heightProperty());
-		editPane.prefWidthProperty().bind(editer.widthProperty());
-		editPane.setStyle("-fx-background-color: red;");
-		editer.getChildren().add(editPane);
+		editer.prefHeightProperty().bind(editer.heightProperty());
+		editer.prefWidthProperty().bind(editer.widthProperty());
+		editer.setStyle("-fx-background-color: red;");
 		write();
 	}
 
@@ -252,7 +248,7 @@ public class RootController implements Initializable {
 			editClear();
 			nowEditItem = item;
 			log.debug(HidePack.getGunData(item.getDisplayName()).toString());
-			editPane.setEditValue(HidePack.getGunData(item.getDisplayName()));
+			editer.setEditValue(HidePack.getGunData(item.getDisplayName()));
 		}
 	}
 
@@ -261,7 +257,7 @@ public class RootController implements Initializable {
 			editClear();
 			nowEditItem = item;
 			log.debug(HidePack.getMagazineData(item.getDisplayName()).toString());
-			editPane.setEditValue(HidePack.getGunData(item.getDisplayName()));
+			editer.setEditValue(HidePack.getMagazineData(item.getDisplayName()));
 		}
 	}
 

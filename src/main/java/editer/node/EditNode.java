@@ -308,11 +308,11 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	@Override
 	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
 		if (oldValue != null && oldValue.getClass() == Clazz) {
-			System.out.println("old match");
+		//	System.out.println("old match");
 			EditHelper.getProperty(oldValue, Path).unbindBidirectional((Property) editerProperty);
 		}
 		if (newValue != null && newValue.getClass() == Clazz) {
-			System.out.println("new match " + Path +" "+ EditHelper.getProperty(newValue, Path) + " " + editerProperty);
+		//	System.out.println("new match " + Path +" "+ EditHelper.getProperty(newValue, Path) + " " + editerProperty);
 			EditHelper.getProperty(newValue, Path).bindBidirectional((Property) editerProperty);
 		}
 
