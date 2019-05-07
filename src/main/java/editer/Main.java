@@ -6,8 +6,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import editer.controller.RootController;
+import editer.node.EditPanels;
+import helper.EditHelper;
 import io.PackIO;
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
@@ -15,11 +19,11 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
+import types.items.GunData;
 
 public class Main extends Application {
 	/** 開いているpath */
 	public static String packPath;
-
 
 	public static void main(String[] arg) throws ScriptException {
 		LocalizeHandler.init();
@@ -27,32 +31,30 @@ public class Main extends Application {
 		LocalizeHandler.setLang("en");
 		PackIO.makePack();
 		// new MainWindow();
-/*
-		System.out.println(EditHelper.getMin(GunData.class, "RECOIL_DEFAULT.MAX_YAW_SPREAD"));
-		new EditPanels().setEditValue(new GunData());
+		/*
+		BooleanProperty a = new SimpleBooleanProperty(true);
+		BooleanProperty b = new SimpleBooleanProperty(false);
+		System.out.println(a + " " + b);
+		a.bindBidirectional(b);
+		System.out.println(a + " " + b);
+
 		System.exit(0);
-//*/
+		// */
 		launch(arg);
 
-/*
-		GunData data = new GunData();
-		Class<Number> clazz = Number.class;
-		Gson gson = new Gson();
-		GunCustomizePart item = new GunCustomizePart();
-		item.CHANGE_LIST.add(new ValueChange("RECOIL_DEFAULT.MAX_YAW_BASE", ChangeType.ADD_NUMBER, 2.5));
-		System.out.println(item.CHANGE_LIST);
-		GunCustomizePart item2 = gson.fromJson(gson.toJson(item), GunCustomizePart.class);
-			System.out.println(item2.CHANGE_LIST+" ");
-
-		System.out.println(data.RECOIL_DEFAULT.MAX_YAW_BASE);
-		for(ValueChange c:item2.CHANGE_LIST) {
-			c.apply(data);
-		}
-		System.out.println(data.RECOIL_DEFAULT.MAX_YAW_BASE);
-		System.exit(0);
-		//*/
+		/*
+		 * GunData data = new GunData(); Class<Number> clazz = Number.class; Gson gson =
+		 * new Gson(); GunCustomizePart item = new GunCustomizePart();
+		 * item.CHANGE_LIST.add(new ValueChange("RECOIL_DEFAULT.MAX_YAW_BASE",
+		 * ChangeType.ADD_NUMBER, 2.5)); System.out.println(item.CHANGE_LIST);
+		 * GunCustomizePart item2 = gson.fromJson(gson.toJson(item),
+		 * GunCustomizePart.class); System.out.println(item2.CHANGE_LIST+" ");
+		 *
+		 * System.out.println(data.RECOIL_DEFAULT.MAX_YAW_BASE); for(ValueChange
+		 * c:item2.CHANGE_LIST) { c.apply(data); }
+		 * System.out.println(data.RECOIL_DEFAULT.MAX_YAW_BASE); System.exit(0); //
+		 */
 	}
-
 
 	private static final Logger log = LogManager.getLogger();
 	private static final Point2D STAGE_SIZE = new Point2D(1280, 720);

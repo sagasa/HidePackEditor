@@ -47,6 +47,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import types.PackInfo;
+import types.base.DataBase;
 import types.items.GunData;
 import types.items.MagazineData;
 
@@ -69,7 +70,12 @@ public class RootController implements Initializable {
 	public ListView<DataEntityInterface> modelList;
 
 	/** writeのリスナー */
-	private ListChangeListener<DataEntityInterface> writeListener = change -> write();
+	private ListChangeListener<DataEntityInterface> writeListener = change -> {
+		write();
+		while (change.next()) {
+			change.getRemoved().forEach(remove -> cancelEdit(remove));
+		}
+	};
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -99,12 +105,7 @@ public class RootController implements Initializable {
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
 		// TODO
-		ModelView.showModelView(editer, ModelIO.read());
-
-		//エディタ初期化
-		editer.prefHeightProperty().bind(editer.heightProperty());
-		editer.prefWidthProperty().bind(editer.widthProperty());
-		editer.setStyle("-fx-background-color: red;");
+		// ModelView.showModelView(editer, ModelIO.read());
 		write();
 	}
 
@@ -114,6 +115,13 @@ public class RootController implements Initializable {
 				if (c.getList().size() > 0)
 					run.accept(c.getList().get(0));
 		};
+	}
+
+	/** パックから要素が削除されたとき編集中なら編集を中止する */
+	private void cancelEdit(DataEntityInterface obj) {
+		if (editer.getEditValue() == obj) {
+			editer.setEditValue(null);
+		}
 	}
 
 	/** リストをリフレッシュ */
@@ -229,8 +237,7 @@ public class RootController implements Initializable {
 	// ========編集========
 
 	public void editClear() {
-		editer.getChildren().clear();
-		nowEditItem = null;
+		editer.setEditValue(null);
 	}
 
 	private DataEntityInterface nowEditItem = null;
@@ -247,7 +254,7 @@ public class RootController implements Initializable {
 		if (item != null && !item.equals(nowEditItem)) {
 			editClear();
 			nowEditItem = item;
-			log.debug(HidePack.getGunData(item.getDisplayName()).toString());
+			log.debug(HidePack.getGunData(item.getDisplayName()).toString() + HidePack.GunList);
 			editer.setEditValue(HidePack.getGunData(item.getDisplayName()));
 		}
 	}

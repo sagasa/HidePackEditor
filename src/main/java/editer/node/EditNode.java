@@ -3,6 +3,7 @@ package editer.node;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -42,15 +43,15 @@ import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import types.base.DataBase;
 
-/**リスナを実装した編集用ノード*/
+/** リスナを実装した編集用ノード */
 public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 
-	/**変更対象*/
+	/** 変更対象 */
 	protected final Class<? extends DataBase> Clazz;
 	protected final String Path;
 	protected final EditNodeType Type;
 
-	/**型にあったプロパティ*/
+	/** 型にあったプロパティ */
 	protected Property<?> editerProperty;
 
 	// TODO ローカライズは検討中
@@ -90,20 +91,20 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 
 	protected ObservableList<? extends DataEntityInterface> motherList;
 
-	/**autodillとlistEditで利用*/
+	/** autodillとlistEditで利用 */
 	public EditNode setFromList(ObservableList<? extends DataEntityInterface> list) {
 		motherList = list;
 		return this;
 	}
 
 	/** 変更されたタイミングで呼ばれる */
-	public EditNode setChangeListner(Runnable... listener) {
+	public EditNode setChangeListner(Consumer<?>... listener) {
 		ChangeListener = listener;
 		return this;
 	}
 
 	/** 変更通知リスナー */
-	private Runnable[] ChangeListener = new Runnable[0];
+	protected Consumer<?>[] ChangeListener = new Consumer<?>[0];
 
 	/** 数値以外のパターン */
 	private static final Pattern FloatPattern = Pattern.compile("[^0-9\\.-]+");
@@ -137,7 +138,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	public EditNode(ObservableValue<DataBase> observable, EditType edit, String path, EditNodeType type) {
 		Path = path;
 		Clazz = edit.Clazz;
-		if(path.equals("SOUND_SHOOT")) {
+		if (path.equals("SOUND_SHOOT")) {
 			throw new NullPointerException();
 		}
 
@@ -160,7 +161,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 		build();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void build() {
 		if (Type == EditNodeType.Float || Type == EditNodeType.Integer || Type == EditNodeType.String
 				|| Type == EditNodeType.StringFromList) {
@@ -175,8 +176,8 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 					this.requestFocus();
 			});
 			text.textProperty().addListener((change, old, newv) -> {
-				for (Runnable run : ChangeListener)
-					run.run();
+				for (Consumer<?> run : ChangeListener)
+					((Consumer<String>) run).accept(newv);
 			});
 			if (Type == EditNodeType.String || Type == EditNodeType.StringFromList) {
 				editerProperty = text.textProperty();
@@ -224,7 +225,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 						}
 					};
 				} else {
-					//int なら
+					// int なら
 					editerProperty = new SimpleIntegerProperty();
 					converter = new IntegerStringConverter() {
 						@Override
@@ -285,9 +286,9 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 			label.setAlignment(Pos.CENTER_RIGHT);
 			CheckBox check = new CheckBox();
 			editerProperty = check.selectedProperty();
-			check.selectedProperty().addListener((value, newvalue, oldvalue) -> {
-				for (Runnable run : ChangeListener)
-					run.run();
+			check.selectedProperty().addListener((value, oldvalue, newvalue) -> {
+				for (Consumer<?> run : ChangeListener)
+					((Consumer<Boolean>) run).accept(newvalue);
 			});
 			check.prefWidthProperty().bind(this.heightProperty());
 			check.prefHeightProperty().bind(this.heightProperty());
@@ -295,25 +296,22 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.prefWidthProperty().bind(this.widthProperty().subtract(this.heightProperty()));
 			this.getChildren().addAll(check, label);
-			// 1回変更イベントを呼んでおく
-			for (Runnable listener : ChangeListener) {
-				listener.run();
-			}
 		} else if (Type == EditNodeType.StringList) {
 
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
 		if (oldValue != null && oldValue.getClass() == Clazz) {
-		//	System.out.println("old match");
-			EditHelper.getProperty(oldValue, Path).unbindBidirectional((Property) editerProperty);
+			// System.out.println("old match");
+			editerProperty.unbindBidirectional((Property) EditHelper.getProperty(oldValue, Path));
 		}
 		if (newValue != null && newValue.getClass() == Clazz) {
-		//	System.out.println("new match " + Path +" "+ EditHelper.getProperty(newValue, Path) + " " + editerProperty);
-			EditHelper.getProperty(newValue, Path).bindBidirectional((Property) editerProperty);
+			// System.out.println("new match " + Path +" "+ EditHelper.getProperty(newValue,
+			// Path) + " " + editerProperty);
+			editerProperty.bindBidirectional((Property) EditHelper.getProperty(newValue, Path));
 		}
 
 	}
