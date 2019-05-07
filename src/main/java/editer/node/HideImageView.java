@@ -30,7 +30,6 @@ public class HideImageView extends ImageView implements ChangeListener<DataBase>
 		Type = type;
 		Path = path;
 		List.addListener(new WeakListChangeListener<>(listListener));
-		reflesh();
 	}
 
 	public void reflesh() {

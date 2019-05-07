@@ -13,13 +13,12 @@ import org.apache.logging.log4j.Logger;
 
 import editer.DataEntityInterface;
 import editer.HidePack;
-import editer.node.EditerComponent;
+import editer.node.EditPanels;
 import editer.node.ModelView;
 import helper.ArrayEditer;
 import io.ModelIO;
 import io.PackCash;
 import io.PackIO;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -27,7 +26,6 @@ import javafx.collections.WeakListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -40,7 +38,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -70,6 +67,8 @@ public class RootController implements Initializable {
 	public ListView<DataEntityInterface> soundList;
 	public ListView<DataEntityInterface> iconList;
 	public ListView<DataEntityInterface> modelList;
+
+	public EditPanels editPane;
 
 	/** writeのリスナー */
 	private ListChangeListener<DataEntityInterface> writeListener = change -> write();
@@ -103,6 +102,13 @@ public class RootController implements Initializable {
 
 		// TODO
 		ModelView.showModelView(editer, ModelIO.read());
+
+		//エディタ初期化
+		editPane = new EditPanels();
+		editPane.prefHeightProperty().bind(editer.heightProperty());
+		editPane.prefWidthProperty().bind(editer.widthProperty());
+		editPane.setStyle("-fx-background-color: red;");
+		editer.getChildren().add(editPane);
 		write();
 	}
 
@@ -226,17 +232,6 @@ public class RootController implements Initializable {
 	// packSearch.getText())).sorted().collect(Collectors.toList()))
 	// ========編集========
 
-	private FlowPane setUpFlowEditer() {
-		FlowPane flow = new FlowPane();
-		flow.setVgap(5);
-		flow.setHgap(5);
-		flow.setOrientation(Orientation.VERTICAL);
-		flow.prefWrapLengthProperty().bind(editer.widthProperty());
-		flow.maxHeightProperty().bind(editer.heightProperty());
-		editer.getChildren().add(flow);
-		return flow;
-	}
-
 	public void editClear() {
 		editer.getChildren().clear();
 		nowEditItem = null;
@@ -257,7 +252,7 @@ public class RootController implements Initializable {
 			editClear();
 			nowEditItem = item;
 			log.debug(HidePack.getGunData(item.getDisplayName()).toString());
-			EditerComponent.writeGunEditer(setUpFlowEditer(), HidePack.getGunData(item.getDisplayName()));
+			editPane.setEditValue(HidePack.getGunData(item.getDisplayName()));
 		}
 	}
 
@@ -266,7 +261,7 @@ public class RootController implements Initializable {
 			editClear();
 			nowEditItem = item;
 			log.debug(HidePack.getMagazineData(item.getDisplayName()).toString());
-			EditerComponent.writeMagazineEditer(setUpFlowEditer(), HidePack.getMagazineData(item.getDisplayName()));
+			editPane.setEditValue(HidePack.getGunData(item.getDisplayName()));
 		}
 	}
 

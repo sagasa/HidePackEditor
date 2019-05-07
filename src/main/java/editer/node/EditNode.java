@@ -51,7 +51,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	protected final EditNodeType Type;
 
 	/**型にあったプロパティ*/
-	private Property<?> editerProperty;
+	protected Property<?> editerProperty;
 
 	// TODO ローカライズは検討中
 	protected String Name = "???";
@@ -134,9 +134,14 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 		}
 	};
 
-	public EditNode(EditType edit, String path, EditNodeType type) {
+	public EditNode(ObservableValue<DataBase> observable, EditType edit, String path, EditNodeType type) {
 		Path = path;
 		Clazz = edit.Clazz;
+		if(path.equals("SOUND_SHOOT")) {
+			throw new NullPointerException();
+		}
+
+		observable.addListener(this);
 
 		if (type == EditNodeType.Number) {
 			if (EditHelper.isFloat(Clazz, Path))
@@ -307,7 +312,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 			EditHelper.getProperty(oldValue, Path).unbindBidirectional((Property) editerProperty);
 		}
 		if (newValue != null && newValue.getClass() == Clazz) {
-			System.out.println("new match");
+			System.out.println("new match " + Path +" "+ EditHelper.getProperty(newValue, Path) + " " + editerProperty);
 			EditHelper.getProperty(newValue, Path).bindBidirectional((Property) editerProperty);
 		}
 

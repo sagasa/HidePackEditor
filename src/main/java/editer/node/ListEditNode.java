@@ -4,6 +4,8 @@ import editer.DataEntityInterface;
 import editer.node.EditPanels.EditType;
 import helper.ArrayEditer;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
@@ -16,24 +18,30 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
+import types.base.DataBase;
 
 /** 母集団のリストから任意に選択するListView */
 public class ListEditNode extends EditNode {
 
 	private ListView<String> listview;
-	private ListProperty<String> setList;
 	private String SearchKey = null;
 	private ListChangeListener<DataEntityInterface> listener;
+
+	@SuppressWarnings("unchecked")
+	private ListProperty<String> getSetList() {
+		return (ListProperty<String>) editerProperty;
+	}
 
 	//TODO 要素の最大、最小数の指定を
 	/**
 	 * @param fromList
 	 *            母集団
 	 */
-	public ListEditNode(EditType edit, String path,
+	public ListEditNode(ObservableValue<DataBase> observable, EditType edit, String path,
 			ObservableList<? extends DataEntityInterface> fromList) {
-		super(edit, path, EditNodeType.StringList);
+		super(observable, edit, path, EditNodeType.StringList);
 		motherList = fromList;
+		editerProperty = new SimpleListProperty<>();
 		listener = new ListChangeListener<DataEntityInterface>() {
 			@Override
 			public void onChanged(Change<? extends DataEntityInterface> arg0) {
@@ -68,7 +76,7 @@ public class ListEditNode extends EditNode {
 		text.prefWidthProperty().bind(this.widthProperty().subtract(10));
 		text.setPrefHeight(24);
 		text.setLayoutX(5);
-		text.layoutYProperty().bind(heightProperty().subtract(29));
+		text.translateYProperty().bind(heightProperty().subtract(29));
 		this.getChildren().addAll(label, listview, text);
 		writeList();
 	}
@@ -77,7 +85,7 @@ public class ListEditNode extends EditNode {
 	 * @param list
 	 *選択先*/
 	public void setList(ListProperty<String> list) {
-		setList = list;
+		editerProperty = list;
 	}
 
 	/**フィルターをセット*/
@@ -89,11 +97,11 @@ public class ListEditNode extends EditNode {
 	/** リストを読み取って値をセット */
 	private void writeList() {
 		listview.getItems().clear();
-		if (setList == null)
+		if (getSetList() == null)
 			return;
-		listview.getItems().addAll(setList);
+		listview.getItems().addAll(getSetList());
 		motherList.stream().map(data -> data.getDisplayName())
-				.filter(str -> (!setList.contains(str) && ArrayEditer.Search(str, SearchKey)))
+				.filter(str -> (!getSetList().contains(str) && ArrayEditer.Search(str, SearchKey)))
 				.forEach(str -> listview.getItems().add(str));
 	}
 
@@ -118,10 +126,10 @@ public class ListEditNode extends EditNode {
 				rep(getIndex(), getIndex() + 1);
 			});
 			setlabel.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-				if (setList.contains(getItem())) {
-					setList.remove(getItem());
+				if (getSetList().contains(getItem())) {
+					getSetList().remove(getItem());
 				} else {
-					setList.add(getItem());
+					getSetList().add(getItem());
 				}
 				writeList();
 			});
@@ -160,12 +168,12 @@ public class ListEditNode extends EditNode {
 				text.setText(data);
 
 				// 選択済みなら
-				if (setList.contains(data)) {
+				if (getSetList().contains(data)) {
 					setlabel.setStyle("-fx-background-image : url('/icon/remove.png');");
 					// 1番上以外なら
 					up.setVisible(0 < getIndex());
 					// 1番下以外なら
-					down.setVisible(setList.size() - 1 > getIndex());
+					down.setVisible(getSetList().size() - 1 > getIndex());
 				} else {
 					up.setVisible(false);
 					down.setVisible(false);

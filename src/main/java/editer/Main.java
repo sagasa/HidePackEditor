@@ -6,8 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import editer.controller.RootController;
-import editer.node.EditPanels;
-import helper.EditHelper;
 import io.PackIO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
-import types.items.GunData;
 
 public class Main extends Application {
 	/** 開いているpath */
@@ -30,11 +27,11 @@ public class Main extends Application {
 		LocalizeHandler.setLang("en");
 		PackIO.makePack();
 		// new MainWindow();
-
+/*
 		System.out.println(EditHelper.getMin(GunData.class, "RECOIL_DEFAULT.MAX_YAW_SPREAD"));
 		new EditPanels().setEditValue(new GunData());
 		System.exit(0);
-
+//*/
 		launch(arg);
 
 /*
