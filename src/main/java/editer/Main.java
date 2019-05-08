@@ -1,17 +1,18 @@
 package editer;
 
-import javax.script.ScriptException;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import editer.controller.RootController;
-import editer.node.EditPanels;
-import helper.EditHelper;
 import io.PackIO;
 import javafx.application.Application;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
@@ -19,24 +20,40 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
-import types.items.GunData;
 
 public class Main extends Application {
 	/** 開いているpath */
 	public static String packPath;
 
-	public static void main(String[] arg) throws ScriptException {
+	public static void main(String[] arg) {
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
 		LocalizeHandler.setLang("en");
 		PackIO.makePack();
 		// new MainWindow();
-		/*
-		BooleanProperty a = new SimpleBooleanProperty(true);
-		BooleanProperty b = new SimpleBooleanProperty(false);
-		System.out.println(a + " " + b);
-		a.bindBidirectional(b);
-		System.out.println(a + " " + b);
+		//*
+
+		Locale jp = new Locale("jp");
+
+		try {
+			URLClassLoader cl = new URLClassLoader(new URL[] { new File("./RESOURCE").toURL() });
+			System.out.println(cl.getResourceAsStream("test.lang"));
+			ResourceBundle rb = ResourceBundle.getBundle("lang", Locale.JAPAN, cl);
+			cl.close();
+
+			for(String name:Locale.getISOCountries()) {
+
+			}
+			System.out.println();
+			System.out.println(rb.getString("test"));
+
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+
+		ClassLoader a;
+		ResourceBundle rb;
 
 		System.exit(0);
 		// */
