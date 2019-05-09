@@ -31,29 +31,9 @@ public class Main extends Application {
 		LocalizeHandler.setLang("en");
 		PackIO.makePack();
 		// new MainWindow();
-		//*
+		// *
 
 		Locale jp = new Locale("jp");
-
-		try {
-			URLClassLoader cl = new URLClassLoader(new URL[] { new File("./RESOURCE").toURL() });
-			System.out.println(cl.getResourceAsStream("test.lang"));
-			ResourceBundle rb = ResourceBundle.getBundle("lang", Locale.JAPAN, cl);
-			cl.close();
-
-			for(String name:Locale.getISOCountries()) {
-
-			}
-			System.out.println();
-			System.out.println(rb.getString("test"));
-
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
-
-		ClassLoader a;
-		ResourceBundle rb;
 
 		System.exit(0);
 		// */
