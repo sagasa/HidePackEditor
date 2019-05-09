@@ -1,19 +1,14 @@
 package localize;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import helper.EditHelper;
@@ -31,9 +26,11 @@ public class LocalizeHandler {
 	/** UnlocalizedNameのリスト */
 	static private ArrayList<String> UnlocalizedNames = new ArrayList<String>();
 	/** ロードされたlangリスト */
-	static private LinkedHashMap<String, HashMap<String, LangCell>> LangMap = new LinkedHashMap<String, HashMap<String, LangCell>>();
+	static private LinkedHashMap<String, ResourceBundle> LangMap = new LinkedHashMap<String, ResourceBundle>();
 	/** 現在使用中のLang */
 	static private String nowLang = "default";
+
+	static private ResourceBundle defaultRB;
 
 	/** ここですべての登録するlangを追加する */
 	public static void init() {
@@ -64,10 +61,8 @@ public class LocalizeHandler {
 		if (!langDir.exists() || !langDir.isDirectory()) {
 			langDir.mkdir();
 		}
-		File defaultLang = new File(langDir, "default.lang");
-		try {
-			defaultLang.createNewFile();
-			FileWriter writer = new FileWriter(defaultLang);
+		// デフォルトを書き込み
+		try (FileWriter writer = new FileWriter("./lang/lang.default.properties", false)) {
 			for (String name : UnlocalizedNames) {
 				writer.write(name + " = " + name + "\n");
 			}
@@ -79,74 +74,26 @@ public class LocalizeHandler {
 
 	/** langディレクトリをあさってLangを読む */
 	public static void loadLang() {
+		//デフォルトLangを読み込み
+		defaultRB = ResourceBundle.getBundle("lang");
+		//jar外のLang読み取り
 		File langDir = new File("./lang");
 		if (!langDir.exists() || !langDir.isDirectory()) {
 			langDir.mkdir();
 		}
 		// クラスローダーを用意
-		try (URLClassLoader cl = new URLClassLoader(new URL[] { langDir.toURI().toURL() });) {
-			cl = new URLClassLoader(new URL[] { langDir.toURI().toURL() });
+		try (URLClassLoader cl = new URLClassLoader(new URL[] { langDir.toURI().toURL() })) {
 			for (File file : langDir.listFiles()) {
 				if (file.getName().endsWith(".properties") && file.getName().startsWith("lang_")) {
 					String lang = file.getName().replace(".properties", "").replace("lang_", "");
 					ResourceBundle rb = ResourceBundle.getBundle("lang", new Locale(lang), cl);
 
-					System.out.println(rb);
+					System.out.println(rb.getString("file"));
 				}
 			}
 
-		} catch (MalformedURLException e1) {
+		} catch (IOException e1) {
 			e1.printStackTrace();
-		}
-		// ファイルをあさる
-		for (File file : langDir.listFiles()) {
-			if (file.getName().endsWith(".properties") && file.getName().startsWith("lang_")) {
-
-				String langName = file.getName().replace(".properties", "").replace("lang_", "");
-
-				ResourceBundle rb = ResourceBundle.getBundle("lang", new Locale(langName), cl);
-
-				try {
-
-					// Mapを用意
-					HashMap<String, LangCell> lang = new HashMap<>();
-					// 不足分を確認
-					@SuppressWarnings("unchecked")
-					ArrayList<String> list = (ArrayList<String>) UnlocalizedNames.clone();
-					FileReader r = new FileReader(file);
-					BufferedReader reader = new BufferedReader(r);
-					// 読み込む
-					String line;
-					while ((line = reader.readLine()) != null) {
-						String[] split = line.split("=", 2);
-						if (1 < split.length) {
-							String key = split[0].trim();
-							String value = split[1].trim();
-							split = value.split("$", 2);
-							String name = split[0].trim();
-							String lore = split[1] == null ? "" : split[0].trim();
-
-							if (UnlocalizedNames.contains(key)) {
-								lang.put(key, new LangCell(name, lore));
-								list.remove(key);
-							}
-						}
-					}
-					reader.close();
-					r.close();
-					// ファイル末尾に足りない分を記述 + 登録
-					FileWriter writer = new FileWriter(file, true);
-					for (String name : list) {
-						writer.write(name + " = " + name + "\n");
-						lang.put(name, new LangCell(name, null));
-					}
-					writer.close();
-					// Mapを登録
-					LangMap.put(file.getName().replace(".lang", ""), lang);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
@@ -175,23 +122,16 @@ public class LocalizeHandler {
 	}
 
 	static public String getLocalizedName(String unlocalizedName) {
-		Map<String, LangCell> lang = LangMap.get(nowLang);
-		if (lang.containsKey(unlocalizedName)) {
-			return lang.get(unlocalizedName).LocalName;
-		}
-		return null;
-	}
-
-	static public String getLocalizedLore(String unlocalizedName) {
-		Map<String, LangCell> lang = LangMap.get(nowLang);
-		if (lang.containsKey(unlocalizedName)) {
-			return lang.get(unlocalizedName).Lore;
-		}
+		ResourceBundle lang = LangMap.get(nowLang);
+		if (lang != null && lang.containsKey(unlocalizedName))
+			return lang.getString(unlocalizedName);
+		if (defaultRB.containsKey(unlocalizedName))
+			defaultRB.getString(unlocalizedName);
 		return null;
 	}
 
 	static public String getLocalizedName(DataBase data, String field) {
-		return getLocalizedLore(EditHelper.getUnlocalizedName(data.getClass(), field));
+		return getLocalizedName(EditHelper.getUnlocalizedName(data.getClass(), field));
 	}
 
 	/** メニュー用ローカライズデータ取得 */

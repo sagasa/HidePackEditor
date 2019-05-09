@@ -1,12 +1,5 @@
 package editer;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,10 +23,7 @@ public class Main extends Application {
 		LocalizeHandler.loadLang();
 		LocalizeHandler.setLang("en");
 		PackIO.makePack();
-		// new MainWindow();
-		// *
-
-		Locale jp = new Locale("jp");
+		/*
 
 		System.exit(0);
 		// */
@@ -56,6 +46,7 @@ public class Main extends Application {
 	private static final Logger log = LogManager.getLogger();
 	private static final Point2D STAGE_SIZE = new Point2D(1280, 720);
 
+	@Override
 	public void start(Stage stage) throws Exception {
 		String fxmlFile = "/fxml/editer.fxml";
 		log.debug("Loading FXML for main view from: {}", fxmlFile);

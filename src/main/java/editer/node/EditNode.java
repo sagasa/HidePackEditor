@@ -55,7 +55,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	protected Property<?> editerProperty;
 
 	// TODO ローカライズは検討中
-	protected String Name = "???";
+	protected String Name;
 
 	protected float MaxValue = Float.MAX_VALUE;
 
@@ -138,6 +138,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	public EditNode(ObservableValue<DataBase> observable, EditType edit, String path, EditNodeType type) {
 		Path = path;
 		Clazz = edit.Clazz;
+		Name = EditHelper.getLocalizedName(Clazz, Path);
 		if (path.equals("SOUND_SHOOT")) {
 			throw new NullPointerException();
 		}

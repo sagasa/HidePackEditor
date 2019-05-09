@@ -197,8 +197,8 @@ public class EditHelper {
 	}
 
 	/** ローカライズした名前を取得 */
-	public static String getLocalizedName(DataBase data, String field) {
-		return LocalizeHandler.getLocalizedName(getUnlocalizedName(data.getClass(), field));
+	public static String getLocalizedName(Class<? extends DataBase> clazz, String field) {
+		return LocalizeHandler.getLocalizedName(getUnlocalizedName(clazz, field));
 	}
 
 	/** UnlocalizedNameのフォーマット */
