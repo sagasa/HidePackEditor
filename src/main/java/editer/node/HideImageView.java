@@ -22,8 +22,8 @@ public class HideImageView extends ImageView implements ChangeListener<DataBase>
 
 	private DataBase now;
 
-	private ListChangeListener<HideImage> listListener = change -> reflesh();
-	private ChangeListener<String> nameListener = (value, oldValue, newValue) -> reflesh();
+	private ListChangeListener<HideImage> listListener = change -> reflesh(null);
+	private ChangeListener<String> nameListener = (value, oldValue, newValue) -> reflesh(newValue);
 
 	public HideImageView(EditType type, String path, ObservableList<HideImage> list) {
 		List = list;
@@ -32,8 +32,14 @@ public class HideImageView extends ImageView implements ChangeListener<DataBase>
 		List.addListener(new WeakListChangeListener<>(listListener));
 	}
 
-	public void reflesh() {
-		HideImage image = HidePack.getDataByName(List, (String) EditHelper.getData(now, Path));
+	public void reflesh(String name) {
+		if (now == null)
+			return;
+		HideImage image;
+		if (name != null)
+			image = HidePack.getDataByName(List, name);
+		else
+			image = HidePack.getDataByName(List, (String) EditHelper.getData(now, Path));
 		setImage(image == null ? HidePack.NullImage : SwingFXUtils.toFXImage(image.Image, null));
 	}
 
@@ -45,6 +51,8 @@ public class HideImageView extends ImageView implements ChangeListener<DataBase>
 		}
 		if (newValue != null && Type.Clazz == newValue.getClass()) {
 			((Property<String>) EditHelper.getProperty(newValue, Path)).addListener(nameListener);
+			now = newValue;
+			reflesh(null);
 		}
 	}
 }

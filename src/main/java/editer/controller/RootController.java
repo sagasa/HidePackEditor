@@ -94,9 +94,9 @@ public class RootController implements Initializable {
 		HidePack.SoundList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.OpenPacks.addListener(new WeakListChangeListener<>(writeListener));
 
-		packList.getSelectionModel().getSelectedItems().addListener(makeListListener((item) -> editPack(item)));
-		gunList.getSelectionModel().getSelectedItems().addListener(makeListListener((item) -> editGun(item)));
-		magazineList.getSelectionModel().getSelectedItems().addListener(makeListListener((item) -> editMagazine(item)));
+		bindEditer(packList, (item) -> editPack(item));
+		bindEditer(gunList, (item) -> editGun(item));
+		bindEditer(magazineList, (item) -> editMagazine(item));
 
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
@@ -105,12 +105,16 @@ public class RootController implements Initializable {
 		write();
 	}
 
-	private static ListChangeListener<DataEntityInterface> makeListListener(Consumer<DataEntityInterface> run) {
-		return c -> {
-			while (c.next())
-				if (c.getList().size() > 0)
-					run.accept(c.getList().get(0));
-		};
+	private static void bindEditer(ListView<DataEntityInterface> list, Consumer<DataEntityInterface> run) {
+		//フォーカスが切れたら選択解除
+		list.focusedProperty().addListener((v, ov, nv) -> {
+			if (!nv)
+				list.getSelectionModel().clearSelection();
+		});
+		list.getSelectionModel().selectedItemProperty().addListener((v, ov, nv) -> {
+			if (nv != null)
+				run.accept(nv);
+		});
 	}
 
 	/** パックから要素が削除されたとき編集中なら編集を中止する */
@@ -236,29 +240,22 @@ public class RootController implements Initializable {
 		editer.setEditValue(null);
 	}
 
-	private DataEntityInterface nowEditItem = null;
-
 	public void editPack(DataEntityInterface item) {
-		if (item != null && !item.equals(nowEditItem)) {
-			editClear();
-			nowEditItem = item;
+		if (item != null) {
 			log.debug(HidePack.getPack(item.getDisplayName()).toString());
+			editer.setEditValue(HidePack.getPack(item.getDisplayName()));
 		}
 	}
 
 	public void editGun(DataEntityInterface item) {
-		if (item != null && !item.equals(nowEditItem)) {
-			editClear();
-			nowEditItem = item;
+		if (item != null) {
 			log.debug(HidePack.getGunData(item.getDisplayName()).toString() + HidePack.GunList);
 			editer.setEditValue(HidePack.getGunData(item.getDisplayName()));
 		}
 	}
 
 	public void editMagazine(DataEntityInterface item) {
-		if (item != null && !item.equals(nowEditItem)) {
-			editClear();
-			nowEditItem = item;
+		if (item != null) {
 			log.debug(HidePack.getMagazineData(item.getDisplayName()).toString());
 			editer.setEditValue(HidePack.getMagazineData(item.getDisplayName()));
 		}

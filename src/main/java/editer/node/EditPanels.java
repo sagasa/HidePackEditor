@@ -1,7 +1,10 @@
 package editer.node;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 import editer.HidePack;
@@ -20,7 +23,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -29,6 +31,7 @@ import resources.HideImage;
 import types.base.DataBase;
 import types.base.GunFireMode;
 import types.items.GunData;
+import types.items.ItemData;
 import types.items.MagazineData;
 
 /** 編集パネルのルート */
@@ -36,7 +39,7 @@ public class EditPanels extends Pane {
 
 	/** 編集パネルの対象 */
 	public enum EditType {
-		Gun(GunData.class), Magazine(MagazineData.class);
+	Item(ItemData.class), Gun(GunData.class), Magazine(MagazineData.class);
 
 		/** 判別用の型 */
 		public Class<? extends DataBase> Clazz;
@@ -45,13 +48,19 @@ public class EditPanels extends Pane {
 			Clazz = clazz;
 		}
 
+		public boolean isType(DataBase data) {
+			return Clazz.isAssignableFrom(data.getClass());
+		}
+
 		/** 型からエディタを選択 */
-		public static EditType getType(DataBase data) {
-			for (EditType type : values()) {
-				if (type.Clazz.equals(data.getClass()))
-					return type;
-			}
-			return null;
+		public static Collection<EditType> getType(DataBase data) {
+			List<EditType> set = new ArrayList<>();
+			if (data != null)
+				for (EditType type : values()) {
+					if (type.Clazz.isAssignableFrom(data.getClass()))
+						set.add(type);
+				}
+			return set;
 		}
 	}
 
@@ -79,10 +88,12 @@ public class EditPanels extends Pane {
 		editValue.addListener((v, ov, nv) -> {
 			// Modeの切り替え
 			if (ov != null)
-				editModes.get(EditType.getType(ov)).set(false);
+				EditType.getType(ov).forEach(type -> editModes.get(type).set(false));
 			if (nv != null)
-				editModes.get(EditType.getType(nv)).set(true);
+				EditType.getType(nv).forEach(type -> editModes.get(type).set(true));
 		});
+		// ItemName
+		addEditPane(makeItemInfoNode(EditType.Item), EditType.Item);
 		writeGunEditer();
 		writeMagazineEditer();
 	}
@@ -104,11 +115,9 @@ public class EditPanels extends Pane {
 	}
 
 	/** GunEditer */
-	public void writeGunEditer() {
+	private void writeGunEditer() {
 		final EditType type = EditType.Gun;
 		// *
-		// ItemName
-		addEditPane(makeItemInfoNode(EditType.Gun), type);
 		// icon
 		addEditPane(makeImageNode(EditType.Gun, "ITEM_ICONNAME", HidePack.IconList), type);
 		// Cate0
@@ -136,8 +145,6 @@ public class EditPanels extends Pane {
 	/** MagazineData */
 	public void writeMagazineEditer() {
 		final EditType type = EditType.Magazine;
-		// ItemName
-		addEditPane(makeItemInfoNode(type), type);
 		// icon
 		addEditPane(makeImageNode(type, "ITEM_ICONNAME", HidePack.IconList), type);
 		// Cate0
@@ -212,7 +219,7 @@ public class EditPanels extends Pane {
 					pane.setDisable(!v);
 				});
 		editValue.addListener((v, ov, nv) -> {
-			if (nv != null && EditType.getType(nv) == type) {
+			if (nv != null && EditType.getType(nv).contains(type)) {
 				pane.setDisable(!(boolean) EditHelper.getData(editValue.get(), fieldName + ".USE"));
 			}
 		});
@@ -248,12 +255,13 @@ public class EditPanels extends Pane {
 	/** StringでListからImageを選択し表示するパネル設定パネル */
 	private Pane makeImageNode(EditType type, String fieldName, ObservableList<HideImage> list) {
 		VBox root = new VBox();
-		ImageView iconview = new HideImageView(type, fieldName, list);
+		HideImageView iconview = new HideImageView(type, fieldName, list);
 		iconview.setFitWidth(64);
 		iconview.setFitHeight(64);
 		VBox.setMargin(iconview, new Insets(5, 0, 0, 5));
 		iconview.setPreserveRatio(true);
-		Node name = new EditNode(editValue, type, fieldName, EditNodeType.StringFromList);
+		this.editValue.addListener(iconview);
+		Node name = new EditNode(editValue, type, fieldName, EditNodeType.StringFromList).setFromList(list);
 		root.getChildren().addAll(iconview, name);
 		return root;
 	}

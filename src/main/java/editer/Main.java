@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import editer.controller.RootController;
+import editer.node.EditPanels.EditType;
 import io.PackIO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +14,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
+import types.items.GunData;
+import types.items.ItemData;
 
 public class Main extends Application {
 	/** 開いているpath */
@@ -24,9 +27,10 @@ public class Main extends Application {
 		LocalizeHandler.setLang("en");
 		PackIO.makePack();
 		/*
-
 		System.exit(0);
 		// */
+		System.out.println(ItemData.class.isAssignableFrom(GunData.class));
+		System.out.println(EditType.getType(new GunData()));
 		launch(arg);
 
 		/*

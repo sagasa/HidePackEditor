@@ -305,11 +305,11 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
-		if (oldValue != null && oldValue.getClass() == Clazz) {
+		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getClass())) {
 			// System.out.println("old match");
 			editerProperty.unbindBidirectional((Property) EditHelper.getProperty(oldValue, Path));
 		}
-		if (newValue != null && newValue.getClass() == Clazz) {
+		if (newValue != null && Clazz.isAssignableFrom(newValue.getClass())) {
 			// System.out.println("new match " + Path +" "+ EditHelper.getProperty(newValue,
 			// Path) + " " + editerProperty);
 			editerProperty.bindBidirectional((Property) EditHelper.getProperty(newValue, Path));
