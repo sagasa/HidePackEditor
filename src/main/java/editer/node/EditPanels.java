@@ -127,7 +127,7 @@ public class EditPanels extends Pane {
 		// shootSound
 		addEditPane(makeSoundEditer(type, "SOUND_SHOOT"), type);
 		// reloadSound
-		addEditPane(makeSoundEditer(type, "SOUND_SHOOT"), type);
+		addEditPane(makeSoundEditer(type, "SOUND_RELOAD"), type);
 		// recoil
 		addEditPane(makeRecoilEditer(type), type);
 		// */

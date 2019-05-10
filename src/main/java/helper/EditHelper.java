@@ -18,19 +18,23 @@ public class EditHelper {
 		return getType(data.getClass(), path);
 	}
 
-	/** 型取得 */
 	@SuppressWarnings("unchecked")
-	public static Class<?> getType(Class<? extends DataBase> clazz, String path) {
+	private static Field getField(Class<? extends DataBase> clazz, String path) {
 		try {
 			String[] split = path.split(SPLIT, 2);
 			Field field = clazz.getField(split[0]);
 			if (split.length > 1) {
-				return getType((Class<? extends DataBase>) field.getType(), split[1]);
+				return getField((Class<? extends DataBase>) field.getType(), split[1]);
 			}
-			return field.getType();
+			return field;
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException e) {
 			return null;
 		}
+	}
+
+	/** 型取得 */
+	public static Class<?> getType(Class<? extends DataBase> clazz, String path) {
+		return getField(clazz, path).getType();
 	}
 
 	/**
@@ -130,7 +134,7 @@ public class EditHelper {
 		}
 	}
 
-	/** プロパティを取得*/
+	/** プロパティを取得 */
 	public static Property<?> getProperty(DataBase data, String path) {
 		data.init();
 		String[] split = path.split(SPLIT, 2);
@@ -145,7 +149,7 @@ public class EditHelper {
 		return data.Property.get(split[0]);
 	}
 
-	/** プロパティを取得*/
+	/** プロパティを取得 */
 	@SuppressWarnings("unchecked")
 	public static <T> Property<T> getProperty(DataBase data, String field, Class<T> clazz) {
 		return (Property<T>) data.Property.get(field);
@@ -204,8 +208,9 @@ public class EditHelper {
 	/** UnlocalizedNameのフォーマット */
 	public static String getUnlocalizedName(Class<? extends DataBase> clazz, String field) {
 		try {
-			return (clazz.getField(field).getName().replaceAll("_", ".")).toLowerCase();
-		} catch (NoSuchFieldException | SecurityException e) {
+
+			return (getField(clazz, field).getName().replaceAll("_", ".")).toLowerCase();
+		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
 		return null;

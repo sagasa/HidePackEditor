@@ -126,7 +126,7 @@ public class LocalizeHandler {
 		if (lang != null && lang.containsKey(unlocalizedName))
 			return lang.getString(unlocalizedName);
 		if (defaultRB.containsKey(unlocalizedName))
-			defaultRB.getString(unlocalizedName);
+			return defaultRB.getString(unlocalizedName);
 		return null;
 	}
 
