@@ -314,7 +314,6 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 			// Path) + " " + editerProperty);
 			editerProperty.bindBidirectional((Property) EditHelper.getProperty(newValue, Path));
 		}
-
 	}
 
 	public enum EditNodeType {

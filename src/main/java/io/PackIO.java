@@ -37,7 +37,6 @@ import resources.Sound;
 import types.PackInfo;
 import types.items.GunData;
 import types.items.MagazineData;
-import types.projectile.BulletData;
 
 public class PackIO {
 	private static final Logger log = LogManager.getLogger();
@@ -135,13 +134,13 @@ public class PackIO {
 	/** パッキングして出力する */
 	public static void export() {
 		// データをまとめる
-		Map<Long, List<Entry>> dataMap = new HashMap<>();
+		Map<PackInfo, List<Entry>> dataMap = new HashMap<>();
 		for (PackInfo pack : HidePack.OpenPacks) {
 			// 参照では無ければ
 			if (!pack.isReference()) {
-				dataMap.put(pack.PackUID, new ArrayList<>());
+				dataMap.put(pack, new ArrayList<>());
 				// パックデータ
-				dataMap.get(pack.PackUID)
+				dataMap.get(pack)
 						.add(new Entry("pack.json", new ByteArrayInputStream(pack.MakeJsonData().getBytes())));
 			}
 		}
@@ -150,7 +149,7 @@ public class PackIO {
 		for (GunData d : HidePack.GunList) {
 			// 参照ではなければ
 			if (!d.isReference()) {
-				dataMap.get(d.PackUID).add(new Entry(PackPattern.GUN.toPath(d.getDisplayName()),
+				dataMap.get(d.RootPack.get()).add(new Entry(PackPattern.GUN.toPath(d.getDisplayName()),
 						new ByteArrayInputStream(d.MakeJsonData().getBytes())));
 			}
 		}
@@ -158,7 +157,7 @@ public class PackIO {
 		for (MagazineData d : HidePack.MagazineList) {
 			// 参照ではなければ
 			if (!d.isReference()) {
-				dataMap.get(d.PackUID).add(new Entry(PackPattern.MAGAZINE.toPath(d.getDisplayName()),
+				dataMap.get(d.RootPack.get()).add(new Entry(PackPattern.MAGAZINE.toPath(d.getDisplayName()),
 						new ByteArrayInputStream(d.MakeJsonData().getBytes())));
 			}
 		}
@@ -171,7 +170,7 @@ public class PackIO {
 				if (!d.isReference()) {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					ImageIO.write(d.Image, "png", out);
-					dataMap.get(d.PackUID).add(new Entry(PackPattern.ICON.toPath(d.getDisplayName()),
+					dataMap.get(d.RootPack.get()).add(new Entry(PackPattern.ICON.toPath(d.getDisplayName()),
 							new ByteArrayInputStream(out.toByteArray())));
 				}
 			}
@@ -181,7 +180,7 @@ public class PackIO {
 				if (!d.isReference()) {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					ImageIO.write(d.Image, "png", out);
-					dataMap.get(d.PackUID).add(new Entry(PackPattern.SCOPE.toPath(d.getDisplayName()),
+					dataMap.get(d.RootPack.get()).add(new Entry(PackPattern.SCOPE.toPath(d.getDisplayName()),
 							new ByteArrayInputStream(out.toByteArray())));
 				}
 			}
@@ -191,15 +190,15 @@ public class PackIO {
 		for (Sound d : HidePack.SoundList) {
 			// 参照ではなければ
 			if (!d.isReference()) {
-				dataMap.get(d.PackUID).add(
+				dataMap.get(d.RootPack.get()).add(
 						new Entry(PackPattern.SOUND.toPath(d.getDisplayName()), new ByteArrayInputStream(d.Sound)));
 			}
 		}
 		// 内容がないエントリを削除
-		for (Long id : dataMap.keySet()) {
-			if (dataMap.get(id).size() <= 1) {
-				dataMap.remove(id);
-				log.debug(HidePack.getPack(id).PACK_NAME + " dont have any contents");
+		for (PackInfo pack : dataMap.keySet()) {
+			if (dataMap.get(pack).size() <= 1) {
+				dataMap.remove(pack);
+				log.debug(pack.PACK_NAME + " dont have any contents");
 			}
 		}
 
@@ -207,10 +206,10 @@ public class PackIO {
 			File path = new File("./export/");
 			path.mkdirs();
 			// 全パック出力
-			for (Long id : dataMap.keySet()) {
+			for (PackInfo pack : dataMap.keySet()) {
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(// TODO 出力先指定
-						new File(path, HidePack.getPack(id).PACK_NAME) + ".zip"), Charset.forName("Shift_JIS"));
-				for (Entry data : dataMap.get(id)) {
+						new File(path, pack.PACK_NAME) + ".zip"), Charset.forName("Shift_JIS"));
+				for (Entry data : dataMap.get(pack)) {
 					ZipEntry entry = new ZipEntry(data.Name);
 					zos.putNextEntry(entry);
 					try (InputStream is = new BufferedInputStream(data.Data)) {

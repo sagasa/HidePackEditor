@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import editer.HidePack;
 import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
@@ -20,6 +19,7 @@ import javafx.collections.FXCollections;
 import types.wrapper.BooleanWrapper;
 import types.wrapper.FloatWrapper;
 import types.wrapper.IntegerWrapper;
+import types.wrapper.ObjectWrapper;
 import types.wrapper.StringWrapper;
 
 /**
@@ -29,19 +29,13 @@ import types.wrapper.StringWrapper;
 public abstract class DataBase implements Cloneable {
 	protected final static Logger log = LogManager.getLogger();
 
-	/** パックデータ エディタでのみ使用 */
-	transient public long PackUID;
 	/** パックデータ エディタでのみ使用 Integer Float Boolean String のフィールドのプロパティ */
 	transient public Map<String, Property<?>> Property;
-
-	/** 参照データか確認 */
-	public boolean isReference() {
-		return HidePack.getPack(PackUID).isReference;
-	}
 
 	transient private boolean doinit = false;
 
 	/** エディター側のみのプロパティ関連の初期化 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void init() {
 		if (!doinit) {
 			Property = new HashMap<>();
@@ -62,9 +56,12 @@ public abstract class DataBase implements Cloneable {
 					Property.put(field.getName(), new StringWrapper(this, field.getName()));
 				} else if (field.getType().isAssignableFrom(List.class)) {
 					Property.put(field.getName(), new SimpleListProperty<>(
-							FXCollections.observableList((List<String>) EditHelper.getData(this, field.getName()))));
+							FXCollections.observableList((List) EditHelper.getData(this, field.getName()))));
 				} else if (DataBase.class.isAssignableFrom(field.getType())) {
 					((DataBase) EditHelper.getData(this, field.getName())).init();
+				} else {
+					Property.put(field.getName(),
+							new ObjectWrapper(this, field.getName()));
 				}
 			}
 			doinit = true;
@@ -76,7 +73,6 @@ public abstract class DataBase implements Cloneable {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		return gson.toJson(this);
 	}
-
 
 	/** .区切りのフィールド名のパスにの型取得する */
 	public Class<?> getType(String path) {
@@ -150,6 +146,7 @@ public abstract class DataBase implements Cloneable {
 	}
 
 	/** データ型にファンクションを適応 */
+	@SuppressWarnings("unchecked")
 	public static <V> void changeFieldsByType(DataBase target, Class<V> key, BiFunction<V, Field, V> change,
 			boolean deep) {
 		try {

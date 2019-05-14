@@ -63,11 +63,9 @@ public class HidePack {
 		TextureList = FXCollections.observableArrayList();
 		OpenPacks = FXCollections.observableArrayList();
 		DefaultPack = new PackInfo();
-		DefaultPack.PackUID = random.nextLong();
 		DefaultPack.PACK_NAME = "default";
 		DefaultPack.PACK_ROOTNAME = "default";
 		DefaultPack.PACK_VER = "";
-		DefaultPack.isDefault = true;
 		DefaultPack.PackColor = Color.GRAY;
 		OpenPacks.add(DefaultPack);
 		// DataBaseを追加時にinitを呼ぶリスナー
@@ -143,15 +141,6 @@ public class HidePack {
 		return null;
 	}
 
-	/** パック取得 */
-	public static PackInfo getPack(long uid) {
-		for (PackInfo data : OpenPacks) {
-			if (data.PackUID == uid) {
-				return data;
-			}
-		}
-		return null;
-	}
 
 	/** アイコン取得 */
 	public static HideImage getIcon(String string) {

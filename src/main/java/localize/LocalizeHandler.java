@@ -87,8 +87,7 @@ public class LocalizeHandler {
 				if (file.getName().endsWith(".properties") && file.getName().startsWith("lang_")) {
 					String lang = file.getName().replace(".properties", "").replace("lang_", "");
 					ResourceBundle rb = ResourceBundle.getBundle("lang", new Locale(lang), cl);
-
-					System.out.println(rb.getString("file"));
+					LangMap.put(lang, rb);
 				}
 			}
 

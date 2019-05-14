@@ -9,7 +9,6 @@ import resources.Sound;
 import types.PackInfo;
 import types.items.GunData;
 import types.items.MagazineData;
-import types.projectile.BulletData;
 
 public class PackCash {
 	/** 銃のList GunData */
@@ -28,14 +27,14 @@ public class PackCash {
 	/** パック情報を付与 trueでデフォルトパック 同じ名前があったら統合 */
 	public void setPack(boolean useDefault) {
 		Pack = useDefault ? HidePack.DefaultPack : Pack;
-		long uid = HidePack.getPack(Pack.PACK_NAME) != null ? HidePack.getPack(Pack.PACK_NAME).PackUID
-				: Pack.PackUID;
+		PackInfo pack = HidePack.getPack(Pack.PACK_NAME) != null ? HidePack.getPack(Pack.PACK_NAME)
+				: Pack;
 		if (HidePack.getPack(Pack.PACK_NAME) != null)
 			Pack = null;
-		GunList.forEach(data -> data.PackUID = uid);
-		MagazineList.forEach(data -> data.PackUID = uid);
-		IconList.forEach(data -> data.PackUID = uid);
-		ScopeList.forEach(data -> data.PackUID = uid);
-		SoundList.forEach(data -> data.PackUID = uid);
+		GunList.forEach(data -> data.RootPack.set(pack));
+		MagazineList.forEach(data -> data.RootPack.set(pack));
+		IconList.forEach(data -> data.RootPack.set(pack));
+		ScopeList.forEach(data -> data.RootPack.set(pack));
+		SoundList.forEach(data -> data.RootPack.set(pack));
 	}
 }

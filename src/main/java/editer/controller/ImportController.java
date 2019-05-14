@@ -48,8 +48,7 @@ public class ImportController implements Initializable {
 	public void setPack(PackCash pack) {
 		Pack = pack.Pack;
 		pack.GunList.forEach(data -> {
-			gunList.getItems().add(new ImportEntry(data, (uid) -> {
-				data.PackUID = uid;
+			gunList.getItems().add(new ImportEntry(data, (packinfo) -> {
 				HidePack.GunList.add(data);
 				System.out.println(data);
 			}));
@@ -103,27 +102,27 @@ public class ImportController implements Initializable {
 			Pack.isReference = isReference.isCache();
 			Pack = HidePack.addPack(Pack);
 		}
-		long uid = toDefault.isSelected() ? HidePack.DefaultPack.PackUID : Pack.PackUID;
-		getAll().forEach(entry -> entry.doImport(uid));
+		PackInfo packinfo = toDefault.isSelected() ? HidePack.DefaultPack : Pack;
+		getAll().forEach(entry -> entry.doImport(packinfo));
 
 		gunList.getScene().getWindow().hide();
 		RootController.writeList();
 	}
 
 	private static class ImportEntry {
-		Consumer<Long> doImport;
+		Consumer<PackInfo> doImport;
 		boolean isImport;
 		DataEntityInterface Data;
 
-		public ImportEntry(DataEntityInterface name, Consumer<Long> action) {
+		public ImportEntry(DataEntityInterface name, Consumer<PackInfo> action) {
 			doImport = action;
 			Data = name;
 		}
 
 		/** インポートを実行 useがtrueなら実行 */
-		public boolean doImport(long uid) {
+		public boolean doImport(PackInfo packinfo) {
 			if (isImport) {
-				doImport.accept(uid);
+				doImport.accept(packinfo);
 			}
 			return isImport;
 		}

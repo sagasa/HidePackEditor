@@ -28,6 +28,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import resources.HideImage;
+import types.PackInfo;
 import types.base.DataBase;
 import types.base.GunFireMode;
 import types.items.GunData;
@@ -39,7 +40,7 @@ public class EditPanels extends Pane {
 
 	/** 編集パネルの対象 */
 	public enum EditType {
-	Item(ItemData.class), Gun(GunData.class), Magazine(MagazineData.class);
+	Item(ItemData.class), Gun(GunData.class), Magazine(MagazineData.class),PakcInfo(PackInfo.class);
 
 		/** 判別用の型 */
 		public Class<? extends DataBase> Clazz;
@@ -96,6 +97,7 @@ public class EditPanels extends Pane {
 		addEditPane(makeItemInfoNode(EditType.Item), EditType.Item);
 		writeGunEditer();
 		writeMagazineEditer();
+		writePackEditer();
 	}
 
 	/** エディタの内容設定 */
@@ -112,6 +114,12 @@ public class EditPanels extends Pane {
 		node.managedProperty().bind(editModes.get(type));
 		node.visibleProperty().bind(editModes.get(type));
 		rootPane.getChildren().add(node);
+	}
+
+	private void writePackEditer() {
+		final EditType type = EditType.PakcInfo;
+		addEditPane(makeCateEditPanel(type, -1), type);
+		addEditPane(new VBox(new ColorEditNode(editValue, type, "PackColor", null)), type);
 	}
 
 	/** GunEditer */

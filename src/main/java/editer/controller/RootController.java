@@ -3,7 +3,6 @@ package editer.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -15,8 +14,10 @@ import editer.DataEntityInterface;
 import editer.HidePack;
 import editer.node.EditPanels;
 import helper.ArrayEditer;
+import helper.EditHelper;
 import io.PackCash;
 import io.PackIO;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -36,6 +37,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -281,7 +283,6 @@ public class RootController implements Initializable {
 			packNamePointer++;
 		}
 		pack.PACK_NAME = "New Pack No." + packNamePointer;
-		pack.PackUID = new Random().nextLong();
 		HidePack.OpenPacks.add(pack);
 		write();
 	}
@@ -297,7 +298,7 @@ public class RootController implements Initializable {
 		}
 		newGun.ITEM_SHORTNAME = "gun_" + gunNamePointer;
 		newGun.ITEM_DISPLAYNAME = "New Gun No." + gunNamePointer;
-		newGun.PackUID = HidePack.DefaultPack.PackUID;
+		newGun.RootPack.set(HidePack.DefaultPack);
 		HidePack.GunList.add(newGun);
 		write();
 	}
@@ -313,7 +314,7 @@ public class RootController implements Initializable {
 		}
 		magazine.ITEM_SHORTNAME = "magazine_" + bulletNamePointer;
 		magazine.ITEM_DISPLAYNAME = "New Magazine No." + bulletNamePointer;
-		magazine.PackUID = HidePack.DefaultPack.PackUID;
+		magazine.RootPack.set(HidePack.DefaultPack);
 		HidePack.MagazineList.add(magazine);
 		write();
 	}
@@ -354,7 +355,7 @@ public class RootController implements Initializable {
 			};
 		}
 
-		/** 削除ボタンを*出すかどうかの判定 */
+		/** 削除ボタンを出すかどうかの判定 */
 		private Function<DataEntityInterface, Boolean> canDelete = null;
 		private Label delete = new Label();
 		private Rectangle color = new Rectangle(20, 20);
@@ -377,6 +378,7 @@ public class RootController implements Initializable {
 			delete.setStyle("-fx-background-image : url('/icon/delete.png');");
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		protected void updateItem(DataEntityInterface data, boolean empty) {
 			super.updateItem(data, empty);
@@ -395,7 +397,9 @@ public class RootController implements Initializable {
 			if (!empty) {
 				delete.setVisible(canDelete == null || canDelete.apply(data));
 				text.setText(data.getDisplayName());
-				color.setFill(HidePack.getPack(data.getPackUID()).PackColor);
+				if(data.getRootPack()!=null) {
+					color.fillProperty().bind((ObservableValue<? extends Paint>) EditHelper.getProperty(data.getRootPack().get(), "PackColor"));
+				}
 				setGraphic(root);
 				getIndex();
 				getListView().getItems().size();
