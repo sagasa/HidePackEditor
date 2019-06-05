@@ -62,7 +62,7 @@ public class LocalizeHandler {
 			langDir.mkdir();
 		}
 		// デフォルトを書き込み
-		try (FileWriter writer = new FileWriter("./lang/lang.default.properties", false)) {
+		try (FileWriter writer = new FileWriter("./lang/lang_default.properties", false)) {
 			for (String name : UnlocalizedNames) {
 				writer.write(name + " = " + name + "\n");
 			}
@@ -90,7 +90,6 @@ public class LocalizeHandler {
 					LangMap.put(lang, rb);
 				}
 			}
-
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -98,7 +97,8 @@ public class LocalizeHandler {
 
 	/** langのリストに_を.に変換して全部小文字にして追加 */
 	public static void addName(String name) {
-		UnlocalizedNames.add(name);
+		if (!UnlocalizedNames.contains(name))
+			UnlocalizedNames.add(name);
 	}
 
 	/** 有効なLang名の配列を返す */

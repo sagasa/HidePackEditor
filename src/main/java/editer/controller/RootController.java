@@ -384,6 +384,7 @@ public class RootController implements Initializable {
 			super.updateItem(data, empty);
 			// 初期化
 			if (!isBind) {
+				setMaxSize(40, 24);
 				root.prefWidthProperty().bind(widthProperty().subtract(14));
 				root.prefHeightProperty().bind(heightProperty().subtract(6));
 				delete.prefWidthProperty().bind(root.heightProperty());
@@ -400,11 +401,13 @@ public class RootController implements Initializable {
 				if(data.getRootPack()!=null) {
 					color.fillProperty().bind((ObservableValue<? extends Paint>) EditHelper.getProperty(data.getRootPack().get(), "PackColor"));
 				}
+				setStyle("-fx-border-color: orange; -fx-border-width: 0 4 0 4; -fx-padding: 3 3 1 3");
 				setGraphic(root);
 				getIndex();
 				getListView().getItems().size();
 			} else {
 				setGraphic(null);
+				setStyle(null);
 			}
 		}
 	}

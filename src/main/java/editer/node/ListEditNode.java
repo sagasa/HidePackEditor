@@ -105,6 +105,13 @@ public class ListEditNode extends EditNode {
 				.forEach(str -> listview.getItems().add(str));
 	}
 
+	//リストの更新だけ
+	@Override
+	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
+		super.changed(observable, oldValue, newValue);
+		writeList();
+	}
+
 	/** 上下ボタンと削除ボタン付きのリストシェル */
 	public class EditListCell extends ListCell<String> {
 

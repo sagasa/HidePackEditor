@@ -12,10 +12,10 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import types.Info;
 import types.wrapper.BooleanWrapper;
 import types.wrapper.FloatWrapper;
 import types.wrapper.IntegerWrapper;
@@ -26,7 +26,24 @@ import types.wrapper.StringWrapper;
  * パックのデータのスーパークラス クローン可能 publicフィールドはすべてクローン可能なクラスにしてください
  * transient注釈が付いたフィールドはエディターでのみ使用 インスタンス生成後にinit(）を呼ぶこと
  */
-public abstract class DataBase implements Cloneable {
+public abstract class DataBase implements IEditData {
+
+	@Override
+	public Property<?> getProperty(String path) {
+		init();
+		return Property.get(path);
+	}
+
+	@Override
+	public Info getInfo() {
+		return null;
+	}
+
+	@Override
+	public Class<? extends IEditData> getType() {
+		return this.getClass();
+	}
+
 	protected final static Logger log = LogManager.getLogger();
 
 	/** パックデータ エディタでのみ使用 Integer Float Boolean String のフィールドのプロパティ */
@@ -38,31 +55,37 @@ public abstract class DataBase implements Cloneable {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void init() {
 		if (!doinit) {
-			Property = new HashMap<>();
-			for (Field field : this.getClass().getFields()) {
-				if (field.getType().isAssignableFrom(int.class) || field.getType().isAssignableFrom(Integer.class)) {
-					// Integer
-					Property.put(field.getName(), new IntegerWrapper(this, field.getName()));
-				} else if (field.getType().isAssignableFrom(float.class)
-						|| field.getType().isAssignableFrom(Float.class)) {
-					// Float
-					Property.put(field.getName(), new FloatWrapper(this, field.getName()));
-				} else if (field.getType().isAssignableFrom(boolean.class)
-						|| field.getType().isAssignableFrom(Boolean.class)) {
-					// Boolean
-					Property.put(field.getName(), new BooleanWrapper(this, field.getName()));
-				} else if (field.getType().isAssignableFrom(String.class)) {
-					// String
-					Property.put(field.getName(), new StringWrapper(this, field.getName()));
-				} else if (field.getType().isAssignableFrom(List.class)) {
-					Property.put(field.getName(), new SimpleListProperty<>(
-							FXCollections.observableList((List) EditHelper.getData(this, field.getName()))));
-				} else if (DataBase.class.isAssignableFrom(field.getType())) {
-					((DataBase) EditHelper.getData(this, field.getName())).init();
-				} else {
-					Property.put(field.getName(),
-							new ObjectWrapper(this, field.getName()));
+			try {
+				Property = new HashMap<>();
+				for (Field field : this.getClass().getFields()) {
+					if (field.getType().isAssignableFrom(int.class)
+							|| field.getType().isAssignableFrom(Integer.class)) {
+						// Integer
+						Property.put(field.getName(), new IntegerWrapper(this, field.getName()));
+					} else if (field.getType().isAssignableFrom(float.class)
+							|| field.getType().isAssignableFrom(Float.class)) {
+						// Float
+						Property.put(field.getName(), new FloatWrapper(this, field.getName()));
+					} else if (field.getType().isAssignableFrom(boolean.class)
+							|| field.getType().isAssignableFrom(Boolean.class)) {
+						// Boolean
+						Property.put(field.getName(), new BooleanWrapper(this, field.getName()));
+					} else if (field.getType().isAssignableFrom(String.class)) {
+						// String
+						Property.put(field.getName(), new StringWrapper(this, field.getName()));
+					} else if (field.getType().isAssignableFrom(List.class)) {
+						Property.put(field.getName(), new SimpleListProperty<>(
+								FXCollections.observableList((List) field.get(this))));
+
+					} else if (DataBase.class.isAssignableFrom(field.getType())) {
+						((DataBase) field.get(this)).init();
+					} else {
+						Property.put(field.getName(),
+								new ObjectWrapper(this, field.getName()));
+					}
 				}
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
 			}
 			doinit = true;
 		}

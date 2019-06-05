@@ -193,6 +193,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 					});
 				}
 			} else if (Type == EditNodeType.Float || Type == EditNodeType.Integer) {
+				textFieldWidth.set(50);
 				// 入力を数値のみに
 				TextFormatter<Number> formatter;
 				// FloatかIntegerか判別
@@ -317,6 +318,6 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	}
 
 	public enum EditNodeType {
-		String, StringFromList, Integer, Float, Boolean, StringList, Number
+		String, StringFromList, Integer, Float, Boolean, StringList, Number,RootPack
 	}
 }
