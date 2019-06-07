@@ -2,6 +2,7 @@ package editer.node;
 
 import editer.HidePack;
 import editer.node.EditPanels.EditType;
+import helper.DataPath;
 import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
@@ -17,7 +18,7 @@ import types.base.DataBase;
 /**自動更新されるImageView*/
 public class HideImageView extends ImageView implements ChangeListener<DataBase> {
 	private ObservableList<HideImage> List;
-	private final String Path;
+	private final DataPath Path;
 	private EditType Type;
 
 	private DataBase now;
@@ -25,10 +26,10 @@ public class HideImageView extends ImageView implements ChangeListener<DataBase>
 	private ListChangeListener<HideImage> listListener = change -> reflesh(null);
 	private ChangeListener<String> nameListener = (value, oldValue, newValue) -> reflesh(newValue);
 
-	public HideImageView(EditType type, String path, ObservableList<HideImage> list) {
+	public HideImageView(EditType type, DataPath dataPath, ObservableList<HideImage> list) {
 		List = list;
 		Type = type;
-		Path = path;
+		Path = dataPath;
 		List.addListener(new WeakListChangeListener<>(listListener));
 	}
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import helper.EditHelper;
 import javafx.beans.property.Property;
 import types.Info;
 import types.effect.Recoil;
@@ -21,17 +20,18 @@ public class GunData extends ItemData {
 	}
 
 	/** リコイル非使用時のバインド用 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void bindRecoil(Recoil from, Recoil to) {
-		EditHelper.getProperty(to, "USE").addListener((value, oldV, newV) -> {
-			from.Property.keySet().forEach(str -> {
+		to.getProperty("USE").addListener((value, oldV, newV) -> {
+			for (String str : from.getPropertyNames()) {
 				if (!str.equals("USE")) {
 					if ((boolean) newV) {
-						to.Property.get(str).unbind();
+						to.getProperty(str).unbind();
 					} else {
-						EditHelper.getProperty(to, str).bind((Property) EditHelper.getProperty(from, str));
+						to.getProperty(str).bind((Property) from.getProperty(str));
 					}
 				}
-			});
+			}
 		});
 	}
 

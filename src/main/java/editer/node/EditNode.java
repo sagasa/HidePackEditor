@@ -13,6 +13,7 @@ import org.controlsfx.control.textfield.TextFields;
 import editer.DataEntityInterface;
 import editer.node.EditPanels.EditType;
 import helper.ArrayEditer;
+import helper.DataPath;
 import helper.EditHelper;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
@@ -48,7 +49,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 
 	/** 変更対象 */
 	protected final Class<? extends DataBase> Clazz;
-	protected final String Path;
+	protected final DataPath Path;
 	protected final EditNodeType Type;
 
 	/** 型にあったプロパティ */
@@ -135,13 +136,12 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 		}
 	};
 
-	public EditNode(ObservableValue<DataBase> observable, EditType edit, String path, EditNodeType type) {
+	/**末端編集ノード
+	 * @param observable リスナー追加先*/
+	public EditNode(ObservableValue<DataBase> observable, EditType edit, DataPath path, EditNodeType type) {
 		Path = path;
 		Clazz = edit.Clazz;
 		Name = EditHelper.getLocalizedName(Clazz, Path);
-		if (path.equals("SOUND_SHOOT")) {
-			throw new NullPointerException();
-		}
 
 		observable.addListener(this);
 
@@ -318,6 +318,6 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	}
 
 	public enum EditNodeType {
-		String, StringFromList, Integer, Float, Boolean, StringList, Number,RootPack
+		String, StringFromList, Integer, Float, Boolean, StringList, Number, RootPack
 	}
 }

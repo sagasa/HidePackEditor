@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import helper.DataPath;
 import helper.EditHelper;
 import types.PackInfo;
 import types.base.DataBase;
@@ -51,7 +52,7 @@ public class LocalizeHandler {
 
 	private static void makeLocalize(Class<? extends DataBase> clazz) {
 		for (Field field : clazz.getFields()) {
-			LocalizeHandler.addName(EditHelper.getUnlocalizedName(clazz, field.getName()));
+			LocalizeHandler.addName(EditHelper.getUnlocalizedName(clazz, new DataPath(field.getName())));
 		}
 	}
 
@@ -129,8 +130,8 @@ public class LocalizeHandler {
 		return null;
 	}
 
-	static public String getLocalizedName(DataBase data, String field) {
-		return getLocalizedName(EditHelper.getUnlocalizedName(data.getClass(), field));
+	static public String getLocalizedName(DataBase data, DataPath path) {
+		return getLocalizedName(EditHelper.getUnlocalizedName(data.getClass(), path));
 	}
 
 	/** メニュー用ローカライズデータ取得 */

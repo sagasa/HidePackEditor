@@ -13,8 +13,11 @@ import org.apache.logging.log4j.Logger;
 import editer.DataEntityInterface;
 import editer.HidePack;
 import editer.node.EditPanels;
+import editer.node.ModelView;
 import helper.ArrayEditer;
+import helper.DataPath;
 import helper.EditHelper;
+import io.ModelIO;
 import io.PackCash;
 import io.PackIO;
 import javafx.beans.value.ObservableValue;
@@ -103,7 +106,7 @@ public class RootController implements Initializable {
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
 		// TODO
-		// ModelView.showModelView(editer, ModelIO.read());
+		 ModelView.showModelView(editer, ModelIO.read());
 		write();
 	}
 
@@ -398,8 +401,9 @@ public class RootController implements Initializable {
 			if (!empty) {
 				delete.setVisible(canDelete == null || canDelete.apply(data));
 				text.setText(data.getDisplayName());
-				if(data.getRootPack()!=null) {
-					color.fillProperty().bind((ObservableValue<? extends Paint>) EditHelper.getProperty(data.getRootPack().get(), "PackColor"));
+				if (data.getRootPack() != null) {
+					color.fillProperty().bind((ObservableValue<? extends Paint>) EditHelper
+							.getProperty(data.getRootPack().get(), new DataPath("PackColor")));
 				}
 				setStyle("-fx-border-color: orange; -fx-border-width: 0 4 0 4; -fx-padding: 3 3 1 3");
 				setGraphic(root);

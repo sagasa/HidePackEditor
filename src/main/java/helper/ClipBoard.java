@@ -10,9 +10,14 @@ public class ClipBoard {
 	static class ClipObject {
 		private ObservableMap<String, ClipBoard> data = FXCollections.observableHashMap();
 		private Class<? extends DataBase> clazz = null;
-		/**同じクラスならデータを上書き追加 */
-		public void addClip() {
 
+		/**同じクラスならデータを上書き追加 */
+		public void addClip(DataBase obj, List<String> path) {
+			if (obj.getClass().equals(clazz)) {
+				path.forEach(str -> {
+
+				});
+			}
 		}
 	}
 
@@ -27,6 +32,6 @@ public class ClipBoard {
 	/**クリップに追加*/
 	public void addclip(DataBase data, List<String> path) {
 		ClipObject clip = clipMap.get(DEFAULT);
-		 path.forEach(str -> clip.data.put(str, data.getValue(str)));
+		path.forEach(str -> clip.data.put(str, data.getValue(str)));
 	}
 }

@@ -3,6 +3,7 @@ package editer.node;
 import editer.DataEntityInterface;
 import editer.node.EditPanels.EditType;
 import helper.ArrayEditer;
+import helper.DataPath;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ObservableValue;
@@ -37,7 +38,7 @@ public class ListEditNode extends EditNode {
 	 * @param fromList
 	 *            母集団
 	 */
-	public ListEditNode(ObservableValue<DataBase> observable, EditType edit, String path,
+	public ListEditNode(ObservableValue<DataBase> observable, EditType edit, DataPath path,
 			ObservableList<? extends DataEntityInterface> fromList) {
 		super(observable, edit, path, EditNodeType.StringList);
 		motherList = fromList;

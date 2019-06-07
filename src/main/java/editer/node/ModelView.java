@@ -3,7 +3,6 @@ package editer.node;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,7 @@ import javax.imageio.ImageIO;
 
 import editer.HidePack;
 import helper.AutoCompletionTextAreaBinding;
+import helper.DataPath;
 import helper.EditHelper;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -52,10 +52,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
-import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -192,13 +190,15 @@ public class ModelView extends Pane {
 			if (ov != null && ov.getValue() != null) {
 				ov.getValue().setVisible(false);
 				text.textProperty()
-						.unbindBidirectional((Property<String>) EditHelper.getProperty(ov.getValue(), "script"));
+						.unbindBidirectional(
+								(Property<String>) EditHelper.getProperty(ov.getValue(), new DataPath("script")));
 			}
 			if (nv.getValue() != null) {
 				nv.getValue().setVisible(true);
 				text.setVisible(true);
 				text.textProperty()
-						.bindBidirectional((Property<String>) EditHelper.getProperty(nv.getValue(), "script"));
+						.bindBidirectional(
+								(Property<String>) EditHelper.getProperty(nv.getValue(), new DataPath("script")));
 			} else {
 				text.setVisible(false);
 			}
@@ -209,7 +209,6 @@ public class ModelView extends Pane {
 		comboBox.setEditable(true);
 		comboBox.setLayoutY(275);
 		ListView<Entry<String, String>> model_itemMap = new ListView<>();
-
 
 		AutoCompletionTextAreaBinding.bindAutoCompletion(text, Bone.autoFill);
 		this.getChildren().addAll(reload, bonetree, text, modelPane, comboBox);

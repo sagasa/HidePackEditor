@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
-import types.items.GunData;
 
 public class Main extends Application {
 	/** 開いているpath */
@@ -23,9 +22,9 @@ public class Main extends Application {
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
 		LocalizeHandler.setLang("ja");
-		System.out.println(LocalizeHandler.getLocalizedName(new GunData(),"ITEM_DISPLAYNAME"));
+
 		PackIO.makePack();
-		//*
+		/*
 		System.exit(0);
 		// */
 

@@ -1,10 +1,9 @@
 package types.wrapper;
 
-import helper.EditHelper;
 import javafx.beans.property.SimpleObjectProperty;
 import types.base.DataBase;
 
-public class ObjectWrapper extends SimpleObjectProperty<Object> implements TypesUpdate {
+public class ObjectWrapper<T> extends SimpleObjectProperty<T> {
 	private DataBase Data;
 	private String Field;
 	private boolean isinit = false;
@@ -15,18 +14,22 @@ public class ObjectWrapper extends SimpleObjectProperty<Object> implements Types
 	}
 
 	@Override
-	public void set(Object arg0) {
+	public void set(T arg0) {
 		super.set(arg0);
-		EditHelper.setData(Data, Field, arg0);
+		try {
+			Data.getClass().getField(Field).set(Data, arg0);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void setValue(Object arg0) {
-		super.setValue(arg0);
+	public void setValue(T arg0) {
+		this.set(arg0);
 	}
 
 	@Override
-	public Object get() {
+	public T get() {
 		if (!isinit) {
 			updateValue();
 			isinit = true;
@@ -35,13 +38,16 @@ public class ObjectWrapper extends SimpleObjectProperty<Object> implements Types
 	}
 
 	@Override
-	public Object getValue() {
+	public T getValue() {
 		return this.get();
 	}
 
-	@Override
-	public void updateValue() {
-		super.setValue((Object) EditHelper.getData(Data, Field));
+	public void updateValue() {;
+		try {
+			super.setValue((T) Data.getClass().getField(Field).get(Data));
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -2,13 +2,13 @@ package types.base;
 
 import java.io.Serializable;
 
+import helper.DataPath;
 import javafx.beans.property.Property;
-import types.Info;
 
 public interface IEditData extends Serializable, Cloneable {
+	/**構造体のクラスを取得*/
 	public abstract Class<? extends IEditData> getType();
 
-	public abstract Property<?> getProperty(String path);
-
-	public abstract Info getInfo();
+	/**プロパティをパスから取得 型チェック？？知らんな*/
+	public abstract Property<?> getProperty(DataPath path);
 }

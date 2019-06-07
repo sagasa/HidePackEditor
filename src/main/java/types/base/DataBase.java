@@ -12,15 +12,11 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import helper.DataPath;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import types.Info;
-import types.wrapper.BooleanWrapper;
-import types.wrapper.FloatWrapper;
-import types.wrapper.IntegerWrapper;
 import types.wrapper.ObjectWrapper;
-import types.wrapper.StringWrapper;
 
 /**
  * パックのデータのスーパークラス クローン可能 publicフィールドはすべてクローン可能なクラスにしてください
@@ -29,14 +25,17 @@ import types.wrapper.StringWrapper;
 public abstract class DataBase implements IEditData {
 
 	@Override
-	public Property<?> getProperty(String path) {
-		init();
-		return Property.get(path);
-	}
+	public Property<?> getProperty(DataPath path) {
+		initProp();
+		if (path.hasChild) {
+			try {
+				return ((IEditData) getClass().getField(path.fastName).get(this)).getProperty(path.nextPath);
 
-	@Override
-	public Info getInfo() {
-		return null;
+			} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException | SecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		return propertyMap.get(path.fastName);
 	}
 
 	@Override
@@ -44,43 +43,41 @@ public abstract class DataBase implements IEditData {
 		return this.getClass();
 	}
 
+	public String[] getPropertyNames() {
+		return propertyMap.keySet().toArray(new String[propertyMap.keySet().size()]);
+	}
+
+	/**パスではなくフィールド名からプロパティを取得する*/
+	 public Property<?> getProperty(String name) {
+		 return propertyMap.get(name);
+	 }
+
 	protected final static Logger log = LogManager.getLogger();
 
 	/** パックデータ エディタでのみ使用 Integer Float Boolean String のフィールドのプロパティ */
-	transient public Map<String, Property<?>> Property;
+	transient private Map<String, Property<?>> propertyMap;
 
 	transient private boolean doinit = false;
 
+	public void init() {
+		initProp();
+	}
+
 	/** エディター側のみのプロパティ関連の初期化 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void init() {
+	public void initProp() {
 		if (!doinit) {
 			try {
-				Property = new HashMap<>();
+				propertyMap = new HashMap<>();
 				for (Field field : this.getClass().getFields()) {
-					if (field.getType().isAssignableFrom(int.class)
-							|| field.getType().isAssignableFrom(Integer.class)) {
-						// Integer
-						Property.put(field.getName(), new IntegerWrapper(this, field.getName()));
-					} else if (field.getType().isAssignableFrom(float.class)
-							|| field.getType().isAssignableFrom(Float.class)) {
-						// Float
-						Property.put(field.getName(), new FloatWrapper(this, field.getName()));
-					} else if (field.getType().isAssignableFrom(boolean.class)
-							|| field.getType().isAssignableFrom(Boolean.class)) {
-						// Boolean
-						Property.put(field.getName(), new BooleanWrapper(this, field.getName()));
-					} else if (field.getType().isAssignableFrom(String.class)) {
-						// String
-						Property.put(field.getName(), new StringWrapper(this, field.getName()));
-					} else if (field.getType().isAssignableFrom(List.class)) {
-						Property.put(field.getName(), new SimpleListProperty<>(
+					if (field.getType().isAssignableFrom(List.class)) {
+						propertyMap.put(field.getName(), new SimpleListProperty<>(
 								FXCollections.observableList((List) field.get(this))));
 
 					} else if (DataBase.class.isAssignableFrom(field.getType())) {
 						((DataBase) field.get(this)).init();
 					} else {
-						Property.put(field.getName(),
+						propertyMap.put(field.getName(),
 								new ObjectWrapper(this, field.getName()));
 					}
 				}
@@ -95,77 +92,6 @@ public abstract class DataBase implements IEditData {
 	public String MakeJsonData() {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		return gson.toJson(this);
-	}
-
-	/** .区切りのフィールド名のパスにの型取得する */
-	public Class<?> getType(String path) {
-		return getType(this, path);
-	}
-
-	/** .区切りのフィールド名のパスにの型取得する */
-	public static Class<?> getType(DataBase data, String path) {
-		String[] split = path.split("\\.", 2);
-		try {
-			// フィールド取得
-			Field field = data.getClass().getField(split[0]);
-			if (split.length == 2) {
-				return getType((DataBase) field.get(data), split[1]);
-			} else if (split.length == 1) {
-				return field.getType();
-			}
-		} catch (NoSuchFieldException e) {
-			log.error("cant find field : " + path + " from " + data.getClass().getSimpleName());
-		} catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/** .区切りのフィールド名のパスにデータを書き込む */
-	public void setValue(String path, Object value) {
-		setValue(this, path, value);
-	}
-
-	/** .区切りのフィールド名のパスにデータを書き込む */
-	public static void setValue(DataBase data, String path, Object value) {
-		String[] split = path.split("\\.", 2);
-		try {
-			// フィールド取得
-			Field field = data.getClass().getField(split[0]);
-			if (split.length == 2) {
-				setValue((DataBase) field.get(data), split[1], value);
-			} else if (split.length == 1) {
-				field.set(data, value);
-			}
-		} catch (NoSuchFieldException e) {
-			log.error("cant find field : " + path + " from " + data.getClass().getSimpleName());
-		} catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/** .区切りのフィールド名のパスからデータを取得する */
-	public Object getValue(String path) {
-		return getValue(this, path);
-	}
-
-	/** .区切りのフィールド名のパスからデータを取得する */
-	public static Object getValue(DataBase data, String path) {
-		String[] split = path.split("\\.", 2);
-		try {
-			// フィールド取得
-			Field field = data.getClass().getField(split[0]);
-			if (split.length == 2) {
-				return getValue((DataBase) field.get(data), split[1]);
-			} else if (split.length == 1) {
-				return field.get(data);
-			}
-		} catch (NoSuchFieldException e) {
-			log.error("cant find field : " + path + " from " + data.getClass().getSimpleName());
-		} catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	/** データ型にファンクションを適応 */
