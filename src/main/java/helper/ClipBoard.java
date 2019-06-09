@@ -26,12 +26,13 @@ public class ClipBoard {
 
 	/**保存する型をチェック*/
 	public boolean checkClass(DataBase data) {
-		return clazz.equals(data.getClass());
+		return false;
+	//	return clazz.equals(data.getClass());
 	}
 
 	/**クリップに追加*/
 	public void addclip(DataBase data, List<String> path) {
 		ClipObject clip = clipMap.get(DEFAULT);
-		path.forEach(str -> clip.data.put(str, data.getValue(str)));
+	//	path.forEach(str -> clip.data.put(str, data.getValue(str)));
 	}
 }

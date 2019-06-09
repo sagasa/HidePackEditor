@@ -136,8 +136,11 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 		}
 	};
 
-	/**末端編集ノード
-	 * @param observable リスナー追加先*/
+	/**
+	 * 末端編集ノード
+	 *
+	 * @param observable リスナー追加先
+	 */
 	public EditNode(ObservableValue<DataBase> observable, EditType edit, DataPath path, EditNodeType type) {
 		Path = path;
 		Clazz = edit.Clazz;
@@ -308,12 +311,19 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
 		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getClass())) {
 			// System.out.println("old match");
-			editerProperty.unbindBidirectional((Property) EditHelper.getProperty(oldValue, Path));
+			// 編集不能なら
+			if (EditHelper.getProperty(oldValue, Path) != null)
+				editerProperty.unbindBidirectional((Property) EditHelper.getProperty(oldValue, Path));
+			else
+				setDisable(false);
 		}
 		if (newValue != null && Clazz.isAssignableFrom(newValue.getClass())) {
 			// System.out.println("new match " + Path +" "+ EditHelper.getProperty(newValue,
 			// Path) + " " + editerProperty);
-			editerProperty.bindBidirectional((Property) EditHelper.getProperty(newValue, Path));
+			if (EditHelper.getProperty(newValue, Path) != null)
+				editerProperty.bindBidirectional((Property) EditHelper.getProperty(newValue, Path));
+			else
+				setDisable(true);
 		}
 	}
 

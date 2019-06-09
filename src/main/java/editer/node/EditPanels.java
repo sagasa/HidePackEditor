@@ -128,11 +128,11 @@ public class EditPanels extends Pane {
 		final EditType type = EditType.Gun;
 		// *
 		// icon
-		addEditPane(makeImageNode(EditType.Gun, new DataPath("ITEM_ICONNAME"), HidePack.IconList), type);
+		addEditPane(makeImageNode(type, new DataPath("ITEM_ICONNAME"), HidePack.IconList), type);
 		// Cate0
-		addEditPane(makeCateEditPanel(EditType.Gun, 0), type);
+		addEditPane(makeCateEditPanel(type, 0), type);
 		// Cate1
-		addEditPane(makeCateEditPanel(EditType.Gun, 1), type);
+		addEditPane(makeCateEditPanel(type, 1), type);
 		// useBullet
 		addEditPane(new ListEditNode(editValue, type, new DataPath("MAGAZINE_USE"), HidePack.MagazineList), type);
 		// fireMode
@@ -244,7 +244,11 @@ public class EditPanels extends Pane {
 		// 表示名
 		Node dizplayname = new EditNode(editValue, type, new DataPath("ITEM_DISPLAYNAME"), EditNodeType.String)
 				.setChangeListner((v) -> RootController.refreshList());
-		Node useshortname = new EditNode(editValue, type, new DataPath("USE_SHORTNAME"), EditNodeType.Boolean);
+		Consumer<Boolean> run = (use) -> {
+			shortname.setDisable(!use);
+		};
+		Node useshortname = new EditNode(editValue, type, new DataPath("USE_SHORTNAME"), EditNodeType.Boolean)
+				.setChangeListner(run);
 		root.getChildren().addAll(dizplayname, useshortname, shortname);
 		root.setPrefSize(200, 72);
 		return root;
@@ -273,7 +277,9 @@ public class EditPanels extends Pane {
 	private Pane makeCateEditPanel(EditType type, int cate, DataPath path) {
 		VBox root = new VBox();
 		Class<? extends DataBase> clazz = type.Clazz;
-		for (Field field : clazz.getFields()) {
+		// pathがあるなら指定されたクラスで実行
+		for (Field field : (path == null ? clazz.getFields() : EditHelper.getType(type.Clazz, path).getFields())) {
+			// pathが無いなら作る
 			DataPath fieldPath = path == null ? new DataPath(field.getName()) : path.append(field.getName());
 			int c = EditHelper.getCate(clazz, fieldPath);
 			if (c == cate) {

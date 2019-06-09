@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane dividerPositions="0.05300859598853868" orientation="VERTICAL" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="editer.controller.ClipController">
+   <items>
+      <Pane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Button layoutX="171.0" layoutY="5.0" mnemonicParsing="false" text="add" />
+            <ChoiceBox layoutX="14.0" layoutY="5.0" prefWidth="150.0" />
+         </children>
+      </Pane>
+      <SplitPane dividerPositions="0.20641282565130262" prefHeight="200.0" prefWidth="200.0">
+         <items>
+            <ListView fx:id="list" prefHeight="200.0" prefWidth="200.0" />
+            <Pane prefHeight="200.0" prefWidth="200.0" />
+         </items>
+      </SplitPane>
+   </items>
+</SplitPane>

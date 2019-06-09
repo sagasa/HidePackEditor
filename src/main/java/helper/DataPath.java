@@ -1,7 +1,5 @@
 package helper;
 
-import com.sun.istack.internal.NotNull;
-
 public final class DataPath {
 	private static final String SPLIT = "\\.";
 
@@ -33,7 +31,7 @@ public final class DataPath {
 	}
 
 	/**末尾にフィールド名を追加する 長さが０ならこの何もしない*/
-	public DataPath append(@NotNull String name) {
+	public DataPath append(String name) {
 		if (name.length() == 0)
 			return this;
 		return new DataPath(this.Path + "." + name);

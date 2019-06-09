@@ -17,9 +17,6 @@ public class EditHelper {
 
 	/** 型取得 */
 	public static Class<?> getType(Class<? extends IEditData> clazz, DataPath path) {
-		if (getField(clazz, path)==null) {
-			System.out.println("null "+ clazz+" "+path);
-		}
 		return getField(clazz, path).getType();
 	}
 
@@ -46,8 +43,11 @@ public class EditHelper {
 		return prop.getValue();
 	}
 
-	/** データ上書き
-	 * @param <T>*/
+	/**
+	 * データ上書き
+	 *
+	 * @param <T>
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void setData(IEditData data, DataPath path, Object value) {
 		Property prop = getProperty(data, path, value.getClass());

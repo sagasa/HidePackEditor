@@ -42,6 +42,7 @@ public class ObjectWrapper<T> extends SimpleObjectProperty<T> {
 		return this.get();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void updateValue() {;
 		try {
 			super.setValue((T) Data.getClass().getField(Field).get(Data));

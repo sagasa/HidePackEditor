@@ -13,11 +13,9 @@ import org.apache.logging.log4j.Logger;
 import editer.DataEntityInterface;
 import editer.HidePack;
 import editer.node.EditPanels;
-import editer.node.ModelView;
 import helper.ArrayEditer;
 import helper.DataPath;
 import helper.EditHelper;
-import io.ModelIO;
 import io.PackCash;
 import io.PackIO;
 import javafx.beans.value.ObservableValue;
@@ -106,7 +104,8 @@ public class RootController implements Initializable {
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
 		// TODO
-		 ModelView.showModelView(editer, ModelIO.read());
+		// ModelView.showModelView(editer, ModelIO.read());
+		clip();
 		write();
 	}
 
@@ -193,6 +192,25 @@ public class RootController implements Initializable {
 	@FXML
 	public void crick() {
 
+	}
+
+	public void clip() {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/clip.fxml"));
+		try {
+			loader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Parent root = loader.getRoot();
+		ClipController controller = loader.getController();
+		Scene scene = new Scene(root);
+		Stage confirmDialog = new Stage(StageStyle.UTILITY);
+		confirmDialog.setScene(scene);
+		confirmDialog.initOwner(STAGE);
+		confirmDialog.initModality(Modality.WINDOW_MODAL);
+		confirmDialog.setResizable(false);
+		confirmDialog.setTitle("Select an Option");
+		confirmDialog.show();
 	}
 
 	// ========メニュー操作========
