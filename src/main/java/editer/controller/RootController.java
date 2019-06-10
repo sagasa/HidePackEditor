@@ -68,6 +68,10 @@ public class RootController implements Initializable {
 	public ListView<DataEntityInterface> iconList;
 	public ListView<DataEntityInterface> modelList;
 
+	/**クリップエディタ*/
+	private ClipController clipController;
+	private Stage clipEditer;
+
 	/** writeのリスナー */
 	private ListChangeListener<DataEntityInterface> writeListener = change -> {
 		write();
@@ -105,8 +109,28 @@ public class RootController implements Initializable {
 
 		// TODO
 		// ModelView.showModelView(editer, ModelIO.read());
-		clip();
 		write();
+
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/clip.fxml"));
+		try {
+			System.out.println(loader.load().toString());;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Parent root = loader.getRoot();
+		clipController = loader.getController();
+		Scene scene = new Scene(root);
+		clipEditer = new Stage(StageStyle.UTILITY);
+		clipEditer.setScene(scene);
+		clipEditer.initOwner(STAGE);
+		clipEditer.initModality(Modality.NONE);
+		clipEditer.setResizable(false);
+		clipEditer.setTitle("ClipBord");
+		clipEditer.showingProperty().addListener((v,ov,nv)->{
+			if(!nv) {
+
+			}
+		});
 	}
 
 	private static void bindEditer(ListView<DataEntityInterface> list, Consumer<DataEntityInterface> run) {
@@ -194,24 +218,6 @@ public class RootController implements Initializable {
 
 	}
 
-	public void clip() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/clip.fxml"));
-		try {
-			loader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Parent root = loader.getRoot();
-		ClipController controller = loader.getController();
-		Scene scene = new Scene(root);
-		Stage confirmDialog = new Stage(StageStyle.UTILITY);
-		confirmDialog.setScene(scene);
-		confirmDialog.initOwner(STAGE);
-		confirmDialog.initModality(Modality.WINDOW_MODAL);
-		confirmDialog.setResizable(false);
-		confirmDialog.setTitle("Select an Option");
-		confirmDialog.show();
-	}
 
 	// ========メニュー操作========
 	public void openPack() {
@@ -309,6 +315,7 @@ public class RootController implements Initializable {
 	}
 
 	public void addGun() {
+		clipEditer.show();
 		log.debug("addGun");
 		GunData newGun = new GunData();
 		if (HidePack.getGunData("New Gun No." + gunNamePointer) == null) {
