@@ -124,7 +124,7 @@ public class RootController implements Initializable {
 		clipEditer.setScene(scene);
 		clipEditer.initOwner(STAGE);
 		clipEditer.initModality(Modality.NONE);
-		clipEditer.setResizable(false);
+		//clipEditer.setResizable(false);
 		clipEditer.setTitle("ClipBord");
 		clipEditer.showingProperty().addListener((v,ov,nv)->{
 			if(!nv) {
