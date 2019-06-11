@@ -43,14 +43,29 @@ public abstract class DataBase implements IEditData {
 		return this.getClass();
 	}
 
+	@Override
+	public boolean canEdit() {
+		return false;
+	}
+
+	@Override
+	public boolean addProperty(DataPath path) {
+		return false;
+	}
+
+	@Override
+	public boolean removeProperty(DataPath path) {
+		return false;
+	}
+
 	public String[] getPropertyNames() {
 		return propertyMap.keySet().toArray(new String[propertyMap.keySet().size()]);
 	}
 
 	/**パスではなくフィールド名からプロパティを取得する*/
-	 public Property<?> getProperty(String name) {
-		 return propertyMap.get(name);
-	 }
+	public Property<?> getProperty(String name) {
+		return propertyMap.get(name);
+	}
 
 	protected final static Logger log = LogManager.getLogger();
 
@@ -65,7 +80,7 @@ public abstract class DataBase implements IEditData {
 
 	/** エディター側のみのプロパティ関連の初期化 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void initProp() {
+	private void initProp() {
 		if (!doinit) {
 			try {
 				propertyMap = new HashMap<>();

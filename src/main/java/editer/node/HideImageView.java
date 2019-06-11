@@ -13,15 +13,15 @@ import javafx.collections.WeakListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.ImageView;
 import resources.HideImage;
-import types.base.DataBase;
+import types.base.IEditData;
 
 /**自動更新されるImageView*/
-public class HideImageView extends ImageView implements ChangeListener<DataBase> {
+public class HideImageView extends ImageView implements ChangeListener<IEditData> {
 	private ObservableList<HideImage> List;
 	private final DataPath Path;
 	private EditType Type;
 
-	private DataBase now;
+	private IEditData now;
 
 	private ListChangeListener<HideImage> listListener = change -> reflesh(null);
 	private ChangeListener<String> nameListener = (value, oldValue, newValue) -> reflesh(newValue);
@@ -46,7 +46,7 @@ public class HideImageView extends ImageView implements ChangeListener<DataBase>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
+	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
 		if (oldValue != null && Type.Clazz == oldValue.getClass()) {
 			((Property<String>) EditHelper.getProperty(oldValue, Path)).removeListener(nameListener);
 		}

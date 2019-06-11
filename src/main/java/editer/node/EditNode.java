@@ -16,6 +16,7 @@ import helper.ArrayEditer;
 import helper.DataPath;
 import helper.EditHelper;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -43,9 +44,10 @@ import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import types.base.DataBase;
+import types.base.IEditData;
 
 /** リスナを実装した編集用ノード */
-public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
+public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 
 	/** 変更対象 */
 	protected final Class<? extends DataBase> Clazz;
@@ -55,7 +57,6 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	/** 型にあったプロパティ */
 	protected Property<?> editerProperty;
 
-	// TODO ローカライズは検討中
 	protected String Name;
 
 	protected float MaxValue = Float.MAX_VALUE;
@@ -139,14 +140,14 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 	/**
 	 * 末端編集ノード
 	 *
-	 * @param observable リスナー追加先
+	 * @param editValue リスナー追加先
 	 */
-	public EditNode(ObservableValue<DataBase> observable, EditType edit, DataPath path, EditNodeType type) {
+	public EditNode(ObjectProperty<IEditData> editValue, EditType edit, DataPath path, EditNodeType type) {
 		Path = path;
 		Clazz = edit.Clazz;
 		Name = EditHelper.getLocalizedName(Clazz, Path);
 
-		observable.addListener(this);
+		editValue.addListener(this);
 
 		if (type == EditNodeType.Number) {
 			if (EditHelper.isFloat(Clazz, Path))
@@ -308,7 +309,7 @@ public class EditNode extends AnchorPane implements ChangeListener<DataBase> {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
+	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
 		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getClass())) {
 			// System.out.println("old match");
 			// 編集不能なら

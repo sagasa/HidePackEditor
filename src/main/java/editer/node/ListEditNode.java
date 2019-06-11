@@ -5,6 +5,7 @@ import editer.node.EditPanels.EditType;
 import helper.ArrayEditer;
 import helper.DataPath;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -19,7 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
-import types.base.DataBase;
+import types.base.IEditData;
 
 /** 母集団のリストから任意に選択するListView */
 public class ListEditNode extends EditNode {
@@ -38,9 +39,9 @@ public class ListEditNode extends EditNode {
 	 * @param fromList
 	 *            母集団
 	 */
-	public ListEditNode(ObservableValue<DataBase> observable, EditType edit, DataPath path,
+	public ListEditNode(ObjectProperty<IEditData> editValue, EditType edit, DataPath path,
 			ObservableList<? extends DataEntityInterface> fromList) {
-		super(observable, edit, path, EditNodeType.StringList);
+		super(editValue, edit, path, EditNodeType.StringList);
 		motherList = fromList;
 		editerProperty = new SimpleListProperty<>();
 		listener = new ListChangeListener<DataEntityInterface>() {
@@ -108,7 +109,7 @@ public class ListEditNode extends EditNode {
 
 	//リストの更新だけ
 	@Override
-	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
+	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
 		super.changed(observable, oldValue, newValue);
 		writeList();
 	}

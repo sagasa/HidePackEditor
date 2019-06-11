@@ -24,6 +24,8 @@ public class Main extends Application {
 		LocalizeHandler.setLang("ja");
 
 		PackIO.makePack();
+
+
 		/*
 		System.exit(0);
 		// */

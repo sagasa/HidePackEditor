@@ -11,4 +11,10 @@ public interface IEditData extends Serializable, Cloneable {
 
 	/**プロパティをパスから取得 型チェック？？知らんな*/
 	public abstract Property<?> getProperty(DataPath path);
+
+	public boolean canEdit();
+
+	public boolean addProperty(DataPath path);
+
+	public boolean removeProperty(DataPath path);
 }

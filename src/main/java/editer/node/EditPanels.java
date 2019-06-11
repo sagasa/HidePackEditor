@@ -32,6 +32,7 @@ import resources.HideImage;
 import types.PackInfo;
 import types.base.DataBase;
 import types.base.GunFireMode;
+import types.base.IEditData;
 import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
@@ -55,11 +56,11 @@ public class EditPanels extends Pane {
 		}
 
 		/** 型からエディタを選択 */
-		public static Collection<EditType> getType(DataBase data) {
+		public static Collection<EditType> getType(IEditData data) {
 			List<EditType> set = new ArrayList<>();
 			if (data != null)
 				for (EditType type : values()) {
-					if (type.Clazz.isAssignableFrom(data.getClass()))
+					if (type.Clazz.isAssignableFrom(data.getType()))
 						set.add(type);
 				}
 			return set;
@@ -69,7 +70,7 @@ public class EditPanels extends Pane {
 	private FlowPane rootPane;
 
 	/** 編集対象 */
-	private ObjectProperty<DataBase> editValue = new SimpleObjectProperty<>();
+	private ObjectProperty<IEditData> editValue = new SimpleObjectProperty<>();
 
 	/** 各編集パネルの表示状態管理用プロパティ */
 	private EnumMap<EditType, BooleanProperty> editModes = new EnumMap<>(EditType.class);
@@ -102,11 +103,11 @@ public class EditPanels extends Pane {
 	}
 
 	/** エディタの内容設定 */
-	public void setEditValue(DataBase data) {
+	public void setEditValue(IEditData data) {
 		editValue.set(data);
 	}
 
-	public DataBase getEditValue() {
+	public IEditData getEditValue() {
 		return editValue.get();
 	}
 
@@ -223,15 +224,10 @@ public class EditPanels extends Pane {
 		 * boolean.class).setValue(value); //
 		 */
 		// 使用可否
-		Node use = new EditNode(editValue, type, path.append("USE"), EditNodeType.Boolean)
+		EditNode use = new EditNode(editValue, type, path.append("USE"), EditNodeType.Boolean)
 				.setChangeListner((Consumer<Boolean>) (v) -> {
 					pane.setDisable(!v);
 				});
-		editValue.addListener((v, ov, nv) -> {
-			if (nv != null && EditType.getType(nv).contains(type)) {
-				pane.setDisable(!(boolean) EditHelper.getData(editValue.get(), path.append("USE")));
-			}
-		});
 		root.getChildren().addAll(use, pane);
 		return root;
 	}
