@@ -30,12 +30,17 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -162,8 +167,19 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		MaxValue = EditHelper.getMax(Clazz, Path);
 		MinValue = EditHelper.getMin(Clazz, Path);
 		Scale = EditHelper.getScale(Clazz, Path);
+		ImageView image = new ImageView("/icon/delete.png");
+		Label label = new Label();
+		label.setPrefSize(24, 24);
+		  Border border2 = new Border(new BorderStroke(Color.RED, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+		label.setBorder(border2);
+		label.setOnMouseClicked(e->{
+			System.out.println(e.getButton());
+		});
+		label.setGraphic(image);
+		//プロパティ編集
 		this.setPrefSize(200, 24);
 		build();
+		getChildren().add(label);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -179,10 +195,6 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 			text.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
 				if (e.getCode() == KeyCode.ENTER)
 					this.requestFocus();
-			});
-			text.textProperty().addListener((change, old, newv) -> {
-				for (Consumer<?> run : ChangeListener)
-					((Consumer<String>) run).accept(newv);
 			});
 			if (Type == EditNodeType.String || Type == EditNodeType.StringFromList) {
 				editerProperty = text.textProperty();
@@ -214,6 +226,7 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 						return change;
 					});
 					converter = new FloatStringConverter() {
+
 						@Override
 						public Float fromString(String str) {
 							Float res;
@@ -260,7 +273,9 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 				}
 				text.setTextFormatter(formatter);
 				text.textProperty().bindBidirectional((Property) editerProperty, converter);
-				text.focusedProperty().addListener((observable, newvalue, oldvalue) -> {
+				text.focusedProperty().addListener((observable, newvalue, oldvalue) ->
+
+				{
 					if (!newvalue) {
 						text.setText(editerProperty.getValue().toString());
 					}
@@ -286,22 +301,27 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 			label.setAlignment(Pos.CENTER_RIGHT);
 
 			this.getChildren().addAll(text, label);
-
+			//リスナ
+			editerProperty.addListener((v, ov, nv) -> {
+				for (Consumer<?> run : ChangeListener)
+					((Consumer) run).accept(nv);
+			});
 		} else if (Type == EditNodeType.Boolean) {
 			Label label = new Label(Name + ":");
 			label.setAlignment(Pos.CENTER_RIGHT);
 			CheckBox check = new CheckBox();
 			editerProperty = check.selectedProperty();
-			check.selectedProperty().addListener((value, oldvalue, newvalue) -> {
-				for (Consumer<?> run : ChangeListener)
-					((Consumer<Boolean>) run).accept(newvalue);
-			});
 			check.prefWidthProperty().bind(this.heightProperty());
 			check.prefHeightProperty().bind(this.heightProperty());
 			check.translateXProperty().bind(this.widthProperty().subtract(this.heightProperty()));
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.prefWidthProperty().bind(this.widthProperty().subtract(this.heightProperty()));
 			this.getChildren().addAll(check, label);
+			//リスナ
+			editerProperty.addListener((v, ov, nv) -> {
+				for (Consumer<?> run : ChangeListener)
+					((Consumer) run).accept(nv);
+			});
 		} else if (Type == EditNodeType.StringList) {
 
 		}
@@ -310,7 +330,7 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
-		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getClass())) {
+		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getType())) {
 			// System.out.println("old match");
 			// 編集不能なら
 			if (EditHelper.getProperty(oldValue, Path) != null)
@@ -318,12 +338,14 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 			else
 				setDisable(false);
 		}
-		if (newValue != null && Clazz.isAssignableFrom(newValue.getClass())) {
-			// System.out.println("new match " + Path +" "+ EditHelper.getProperty(newValue,
-			// Path) + " " + editerProperty);
-			if (EditHelper.getProperty(newValue, Path) != null)
+		if (newValue != null && Clazz.isAssignableFrom(newValue.getType())) {
+			//System.out.println("new match " + Path + " " + EditHelper.getProperty(newValue,
+			//		Path) + " " + editerProperty);
+			if (EditHelper.getProperty(newValue, Path) != null) {
 				editerProperty.bindBidirectional((Property) EditHelper.getProperty(newValue, Path));
-			else
+				for (Consumer<?> run : ChangeListener)
+					((Consumer) run).accept(editerProperty.getValue());
+			} else
 				setDisable(true);
 		}
 	}

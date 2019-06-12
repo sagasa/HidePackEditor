@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import editer.node.EditPanels;
+import helper.DataPath;
 import javafx.fxml.Initializable;
 import types.items.GunData;
 import types.wrapper.ClipData;
@@ -14,12 +15,8 @@ public class ClipController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		ClipData data = new ClipData(GunData.class);
-		//data.addProperty(path)
+		data.addProperty(new DataPath("SCOPE_SIZE"));
 		editor.setEditValue(data);
-		editor.boundsInLocalProperty().addListener((v,ov,nv)->{
-			System.out.println(nv);
-		});
-		System.out.println(editor.getBoundsInLocal());
 	}
 
 }
