@@ -15,6 +15,7 @@ import editer.node.EditPanels.EditType;
 import helper.ArrayEditer;
 import helper.DataPath;
 import helper.EditHelper;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
@@ -88,7 +89,12 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		return this;
 	}
 
+	/**値編集フィールドの幅*/
 	protected DoubleProperty textFieldWidth = new SimpleDoubleProperty(100);
+	/**プロパティの追加ボタンの有無*/
+	protected DoubleProperty editBottonWidth = new SimpleDoubleProperty(0);
+	/**ラベルの幅*/
+	protected DoubleBinding labelWidth;
 
 	/** テキストフィールドの幅 テキストフィールドを使用しない場合は無効 */
 	public EditNode setTextFieldWidth(double width) {
@@ -167,19 +173,36 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		MaxValue = EditHelper.getMax(Clazz, Path);
 		MinValue = EditHelper.getMin(Clazz, Path);
 		Scale = EditHelper.getScale(Clazz, Path);
-		ImageView image = new ImageView("/icon/delete.png");
-		Label label = new Label();
-		label.setPrefSize(24, 24);
-		  Border border2 = new Border(new BorderStroke(Color.RED, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT));
-		label.setBorder(border2);
-		label.setOnMouseClicked(e->{
+
+		//サイズのプロパティの定義
+		labelWidth = widthProperty().subtract(textFieldWidth).subtract(editBottonWidth);
+
+		ImageView addImage = new ImageView("/icon/add.png");
+		ImageView removeImage = new ImageView("/icon/remove.png");
+		Label propertyEdit = new Label();
+		propertyEdit.setPrefSize(24, 24);
+		Border border2 = new Border(
+				new BorderStroke(Color.RED, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+		propertyEdit.setBorder(border2);
+		propertyEdit.setOnMouseClicked(e -> {
 			System.out.println(e.getButton());
 		});
-		label.setGraphic(image);
+		propertyEdit.setAlignment(Pos.CENTER);
+		propertyEdit.setGraphic(addImage);
+		propertyEdit.translateXProperty().bind(labelWidth.add(textFieldWidth));
+		propertyEdit.prefWidthProperty().bind(editBottonWidth);
 		//プロパティ編集
 		this.setPrefSize(200, 24);
+
+		editValue.addListener((v, ov, nv) -> {
+			if (nv.canEdit()) {
+				propertyEdit.setGraphic(nv.getProperty(Path) == null ? addImage : removeImage);
+				editBottonWidth.set(20);
+			} else
+				editBottonWidth.set(0);
+		});
 		build();
-		getChildren().add(label);
+		getChildren().add(propertyEdit);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -292,11 +315,11 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 			// サイズプロパティの関連
 			text.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), new Insets(2))));
 			text.setFont(Font.font(10));
-			text.translateXProperty().bind(this.widthProperty().subtract(textFieldWidth));
+			text.translateXProperty().bind(labelWidth);
 			text.prefWidthProperty().bind(textFieldWidth);
 			text.prefHeightProperty().bind(this.heightProperty());
 
-			label.prefWidthProperty().bind(this.widthProperty().subtract(textFieldWidth.subtract(2)));
+			label.prefWidthProperty().bind(labelWidth.add(2));
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.setAlignment(Pos.CENTER_RIGHT);
 
@@ -311,11 +334,12 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 			label.setAlignment(Pos.CENTER_RIGHT);
 			CheckBox check = new CheckBox();
 			editerProperty = check.selectedProperty();
+			textFieldWidth.bind(heightProperty());
 			check.prefWidthProperty().bind(this.heightProperty());
 			check.prefHeightProperty().bind(this.heightProperty());
-			check.translateXProperty().bind(this.widthProperty().subtract(this.heightProperty()));
+			check.translateXProperty().bind(textFieldWidth);
 			label.prefHeightProperty().bind(this.heightProperty());
-			label.prefWidthProperty().bind(this.widthProperty().subtract(this.heightProperty()));
+			label.prefWidthProperty().bind(labelWidth);
 			this.getChildren().addAll(check, label);
 			//リスナ
 			editerProperty.addListener((v, ov, nv) -> {
@@ -325,6 +349,13 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		} else if (Type == EditNodeType.StringList) {
 
 		}
+	}
+
+	private void bind(boolean flag) {
+
+	}
+	private void setEnable() {
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
