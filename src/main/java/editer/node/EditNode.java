@@ -40,10 +40,6 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -334,9 +330,6 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 					((Consumer) run).accept(nv);
 			});
 		} else if (Type == EditNodeType.Boolean) {
-			Border b = new Border(
-					new BorderStroke(Color.RED, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT));
-
 			Label label = new Label(Name + ":");
 			label.setAlignment(Pos.CENTER_RIGHT);
 			CheckBox check = new CheckBox();
@@ -344,12 +337,10 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 			textFieldWidth.bind(heightProperty());
 			check.prefWidthProperty().bind(this.heightProperty());
 			check.prefHeightProperty().bind(this.heightProperty());
-			check.translateXProperty().bind(textFieldWidth);
+			check.translateXProperty().bind(labelWidth.add(2));
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.prefWidthProperty().bind(labelWidth);
 			this.getChildren().addAll(label,check);
-
-			label.setBorder(b);
 
 			//有効化切り替え
 			label.disableProperty().bind(disable);
