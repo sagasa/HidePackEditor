@@ -58,13 +58,12 @@ public class ListEditNode extends EditNode {
 
 		Label label = new Label(Name);
 		label.setAlignment(Pos.CENTER);
-
 		TextField text = new TextField();
 		text.textProperty().addListener((value, oldvalue, newvalue) -> setSearch(newvalue));
-		label.setLayoutX(5);
+		label.translateXProperty().bind(editBottonWidth);
 		label.setLayoutY(2);
 		label.setPrefHeight(20);
-		label.prefWidthProperty().bind(this.widthProperty().subtract(10));
+		label.prefWidthProperty().bind(this.widthProperty().subtract(editBottonWidth.multiply(2)));
 		listview.setLayoutX(5);
 		listview.setLayoutY(24);
 		listview.prefWidthProperty().bind(this.widthProperty().subtract(10));
@@ -79,6 +78,9 @@ public class ListEditNode extends EditNode {
 		text.setPrefHeight(24);
 		text.setLayoutX(5);
 		text.translateYProperty().bind(heightProperty().subtract(29));
+		label.disableProperty().bind(disable);
+		listview.disableProperty().bind(disable);
+		text.disableProperty().bind(disable);
 		this.getChildren().addAll(label, listview, text);
 		writeList();
 	}
@@ -108,6 +110,12 @@ public class ListEditNode extends EditNode {
 	}
 
 	//リストの更新だけ
+	@Override
+	protected void bind(IEditData data) {
+		writeList();
+		super.bind(data);
+	}
+
 	@Override
 	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
 		super.changed(observable, oldValue, newValue);

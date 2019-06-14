@@ -180,18 +180,17 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		Scale = EditHelper.getScale(Clazz, Path);
 
 		//サイズのプロパティの定義
+		this.setPrefSize(200, 24);
 		labelWidth = widthProperty().subtract(textFieldWidth).subtract(editBottonWidth);
 
+		//プロパティ編集
 		ImageView addImage = new ImageView("/icon/add.png");
 		ImageView removeImage = new ImageView("/icon/remove.png");
 		Label propertyEdit = new Label();
 		propertyEdit.setPrefSize(24, 24);
-		Border border2 = new Border(
-				new BorderStroke(Color.RED, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT));
-		propertyEdit.setBorder(border2);
 		propertyEdit.setOnMouseClicked(e -> {
 			if (editValue.get().canEdit()) {
-				if (editValue.get().getProperty(Path) != null) {
+				if (hasProperty(editValue.get())) {
 					unbind(editValue.get());
 					editValue.get().removeProperty(Path);
 					propertyEdit.setGraphic(addImage);
@@ -208,16 +207,17 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		propertyEdit.setGraphic(addImage);
 		propertyEdit.translateXProperty().bind(labelWidth.add(textFieldWidth));
 		propertyEdit.prefWidthProperty().bind(editBottonWidth);
-		//プロパティ編集
-		this.setPrefSize(200, 24);
 
 		editValue.addListener((v, ov, nv) -> {
 			if (nv.canEdit()) {
-				propertyEdit.setGraphic(nv.getProperty(Path) == null ? addImage : removeImage);
+				//初期の表示を選択
+				propertyEdit.setGraphic(hasProperty(nv) ? removeImage : addImage);
 				editBottonWidth.set(20);
 			} else
 				editBottonWidth.set(0);
 		});
+
+
 		build();
 		getChildren().add(propertyEdit);
 	}
@@ -334,6 +334,9 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 					((Consumer) run).accept(nv);
 			});
 		} else if (Type == EditNodeType.Boolean) {
+			Border b = new Border(
+					new BorderStroke(Color.RED, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+
 			Label label = new Label(Name + ":");
 			label.setAlignment(Pos.CENTER_RIGHT);
 			CheckBox check = new CheckBox();
@@ -344,7 +347,9 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 			check.translateXProperty().bind(textFieldWidth);
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.prefWidthProperty().bind(labelWidth);
-			this.getChildren().addAll(check, label);
+			this.getChildren().addAll(label,check);
+
+			label.setBorder(b);
 
 			//有効化切り替え
 			label.disableProperty().bind(disable);
@@ -359,15 +364,20 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		}
 	}
 
+	/**プロパティが設定されているかの判断*/
+	protected boolean hasProperty(IEditData data) {
+		return EditHelper.getProperty(data, Path) != null && EditHelper.getProperty(data, Path).getValue() != null;
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void bind(IEditData data) {
+	protected void bind(IEditData data) {
 		editerProperty.bindBidirectional((Property) EditHelper.getProperty(data, Path));
 		for (Consumer<?> run : ChangeListener)
 			((Consumer) run).accept(editerProperty.getValue());
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void unbind(IEditData data) {
+	protected void unbind(IEditData data) {
 		editerProperty.unbindBidirectional((Property) EditHelper.getProperty(data, Path));
 	}
 
@@ -376,7 +386,7 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getType())) {
 			// System.out.println("old match");
 			// 編集不能なら
-			if (EditHelper.getProperty(oldValue, Path) != null)
+			if (hasProperty(oldValue))
 				unbind(oldValue);
 			else
 				disable.set(false);
@@ -384,7 +394,7 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		if (newValue != null && Clazz.isAssignableFrom(newValue.getType())) {
 			//System.out.println("new match " + Path + " " + EditHelper.getProperty(newValue,
 			//		Path) + " " + editerProperty);
-			if (EditHelper.getProperty(newValue, Path) != null) {
+			if (hasProperty(newValue)) {
 				bind(newValue);
 			} else
 				disable.set(true);
