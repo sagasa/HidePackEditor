@@ -41,7 +41,7 @@ public class ClipData implements IEditData {
 
 	@Override
 	public boolean removeProperty(DataPath path) {
-		// TODO 自動生成されたメソッド・スタブ
+		propertyMap.remove(path);
 		return false;
 	}
 

@@ -16,9 +16,11 @@ import helper.ArrayEditer;
 import helper.DataPath;
 import helper.EditHelper;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -119,6 +121,9 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 	/** 変更通知リスナー */
 	protected Consumer<?>[] ChangeListener = new Consumer<?>[0];
 
+	/**有効化切り替え*/
+	protected BooleanProperty disable = new SimpleBooleanProperty();
+
 	/** 数値以外のパターン */
 	private static final Pattern FloatPattern = Pattern.compile("[^0-9\\.-]+");
 	private static final Pattern IntPattern = Pattern.compile("[^0-9-]+");
@@ -185,7 +190,19 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 				new BorderStroke(Color.RED, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 		propertyEdit.setBorder(border2);
 		propertyEdit.setOnMouseClicked(e -> {
-			System.out.println(e.getButton());
+			if (editValue.get().canEdit()) {
+				if (editValue.get().getProperty(Path) != null) {
+					unbind(editValue.get());
+					editValue.get().removeProperty(Path);
+					propertyEdit.setGraphic(addImage);
+					disable.set(true);
+				} else {
+					editValue.get().addProperty(Path);
+					bind(editValue.get());
+					propertyEdit.setGraphic(removeImage);
+					disable.set(false);
+				}
+			}
 		});
 		propertyEdit.setAlignment(Pos.CENTER);
 		propertyEdit.setGraphic(addImage);
@@ -248,24 +265,7 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 						change.setText(newStr);
 						return change;
 					});
-					converter = new FloatStringConverter() {
-
-						@Override
-						public Float fromString(String str) {
-							Float res;
-							try {
-								res = super.fromString(str);
-							} catch (Exception e) {
-								res = (Float) editerProperty.getValue();
-								text.setText(String.valueOf(res));
-							}
-							// 範囲チェック
-							res = Math.min(res, MaxValue);
-							res = Math.max(res, MinValue);
-
-							return res;
-						}
-					};
+					converter = new FloatStringConverter();
 				} else {
 					// int なら
 					editerProperty = new SimpleIntegerProperty();
@@ -323,6 +323,10 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.setAlignment(Pos.CENTER_RIGHT);
 
+			//有効化切り替え
+			label.disableProperty().bind(disable);
+			text.disableProperty().bind(disable);
+
 			this.getChildren().addAll(text, label);
 			//リスナ
 			editerProperty.addListener((v, ov, nv) -> {
@@ -341,6 +345,10 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.prefWidthProperty().bind(labelWidth);
 			this.getChildren().addAll(check, label);
+
+			//有効化切り替え
+			label.disableProperty().bind(disable);
+			check.disableProperty().bind(disable);
 			//リスナ
 			editerProperty.addListener((v, ov, nv) -> {
 				for (Consumer<?> run : ChangeListener)
@@ -351,33 +359,35 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		}
 	}
 
-	private void bind(boolean flag) {
-
-	}
-	private void setEnable() {
-
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void bind(IEditData data) {
+		editerProperty.bindBidirectional((Property) EditHelper.getProperty(data, Path));
+		for (Consumer<?> run : ChangeListener)
+			((Consumer) run).accept(editerProperty.getValue());
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void unbind(IEditData data) {
+		editerProperty.unbindBidirectional((Property) EditHelper.getProperty(data, Path));
+	}
+
 	@Override
 	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
 		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getType())) {
 			// System.out.println("old match");
 			// 編集不能なら
 			if (EditHelper.getProperty(oldValue, Path) != null)
-				editerProperty.unbindBidirectional((Property) EditHelper.getProperty(oldValue, Path));
+				unbind(oldValue);
 			else
-				setDisable(false);
+				disable.set(false);
 		}
 		if (newValue != null && Clazz.isAssignableFrom(newValue.getType())) {
 			//System.out.println("new match " + Path + " " + EditHelper.getProperty(newValue,
 			//		Path) + " " + editerProperty);
 			if (EditHelper.getProperty(newValue, Path) != null) {
-				editerProperty.bindBidirectional((Property) EditHelper.getProperty(newValue, Path));
-				for (Consumer<?> run : ChangeListener)
-					((Consumer) run).accept(editerProperty.getValue());
+				bind(newValue);
 			} else
-				setDisable(true);
+				disable.set(true);
 		}
 	}
 
