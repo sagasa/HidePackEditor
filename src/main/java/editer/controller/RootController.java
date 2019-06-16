@@ -315,7 +315,7 @@ public class RootController implements Initializable {
 	}
 
 	public void addGun() {
-		clipEditer.show();
+		//clipEditer.show();//TODO
 		log.debug("addGun");
 		GunData newGun = new GunData();
 		if (HidePack.getGunData("New Gun No." + gunNamePointer) == null) {

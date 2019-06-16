@@ -9,12 +9,13 @@ import types.PackInfo;
 import types.base.DataBase;
 
 public abstract class ItemData extends DataBase implements DataEntityInterface {
+	/** パックデータ エディタでのみ使用 */
+	transient public ObjectProperty<PackInfo> RootPack = new SimpleObjectProperty<>();
+
 	/** 表示名 */
 	public String ITEM_DISPLAYNAME = "sample";
 	/**ショートネームを使用するか 使用しない場合表示名の編集をショートネームにも代入する*/
 	transient public boolean USE_SHORTNAME = false;
-	/** パックデータ エディタでのみ使用 */
-	transient public ObjectProperty<PackInfo> RootPack = new SimpleObjectProperty<>();
 	/** 短縮名 */
 	@Info(isName = true)
 	public String ITEM_SHORTNAME = "sample";

@@ -23,6 +23,10 @@ public class ClipController implements Initializable {
 		ClipData data = new ClipData(GunData.class);
 		data.addProperty(new DataPath("SCOPE_SIZE"));
 		editor.setEditValue(data);
+
+		list.getItems().add(data);
 	}
+
+
 
 }

@@ -47,10 +47,10 @@ public class HideImageView extends ImageView implements ChangeListener<IEditData
 	@SuppressWarnings("unchecked")
 	@Override
 	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
-		if (oldValue != null && Type.Clazz == oldValue.getClass()) {
+		if (oldValue != null && Type.Clazz == oldValue.getType()) {
 			((Property<String>) EditHelper.getProperty(oldValue, Path)).removeListener(nameListener);
 		}
-		if (newValue != null && Type.Clazz == newValue.getClass()) {
+		if (newValue != null && Type.Clazz == newValue.getType()) {
 			((Property<String>) EditHelper.getProperty(newValue, Path)).addListener(nameListener);
 			now = newValue;
 			reflesh(null);

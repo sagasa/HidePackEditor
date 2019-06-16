@@ -16,8 +16,16 @@ import types.base.IEditData;
 public class ClipData implements IEditData {
 	public ClipData(Class<? extends DataBase> clazz) {
 		editClass = clazz;
+		try {
+			defaultValue = editClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
 		init(null, editClass);
 	}
+
+	/**初期値参照用*/
+	DataBase defaultValue;
 
 	@SuppressWarnings("unchecked")
 	private void init(DataPath path, Class<? extends DataBase> clazz) {
@@ -57,20 +65,10 @@ public class ClipData implements IEditData {
 		return false;
 	}
 
-	/**default値参照用Map*/
-	private static Map<Class<?>, DataBase> defaultMap = new HashMap<>();
 
 	@SuppressWarnings("unchecked")
 	private <T> T getDefault(DataPath path) {
-		try {
-			//正直効果があるかわからんメモリ節約
-			if (!defaultMap.containsKey(editClass))
-				defaultMap.put(editClass, editClass.newInstance());
-			return (T) EditHelper.getData(defaultMap.get(editClass), path);
-		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return (T) EditHelper.getData(defaultValue, path);
 	}
 
 	@Override
@@ -80,5 +78,4 @@ public class ClipData implements IEditData {
 		propertyMap.get(path).setValue(null);
 		return true;
 	}
-
 }

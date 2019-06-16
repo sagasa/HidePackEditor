@@ -85,13 +85,6 @@ public class ListEditNode extends EditNode {
 		writeList();
 	}
 
-	/**
-	 * @param list
-	 *選択先*/
-	public void setList(ListProperty<String> list) {
-		editerProperty = list;
-	}
-
 	/**フィルターをセット*/
 	public void setSearch(String key) {
 		SearchKey = key;
