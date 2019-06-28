@@ -82,7 +82,7 @@ public class GunData extends ItemData {
 	public boolean USE_UNLOAD = true;
 	/** 分間発射数 : int型 **/
 	@Info(Cate = 0, Min = 0, Scale = "10")
-	public int RPM = 600;
+	public float RPM = 600;
 	/** 射撃モード : String配列型 **/
 	public List<String> FIREMODE = new ArrayList<>(Arrays.asList("semiauto"));
 	/** 貫通力 貫通力体のMOBにダメージが与えられる -1で∞ : int型 **/
@@ -90,7 +90,7 @@ public class GunData extends ItemData {
 	public int BULLET_POWER = 1;
 	/** バーストの分間発射数 : int型 **/
 	@Info(Cate = 0, Min = 0, Scale = "10")
-	public int BURST_RPM = 800;
+	public float BURST_RPM = 800;
 	/** バーストの発射数 : int型 **/
 	@Info(Cate = 0, Min = 1)
 	public int BURST_BULLET_NUM = 3;
