@@ -321,7 +321,7 @@ public class PackIO {
 	private enum PackPattern {
 		GUN("guns", "json"), MAGAZINE("magazines", "json"), PACKINFO(Pattern.compile("^(.*)pack\\.json$"),
 				"json"), ICON("icons", "png"), SCOPE("scopes",
-						"png"), TEXTURE("textures", "png"), SOUND("soubds", "ogg"), MODEL("models", "obj");
+						"png"), TEXTURE("textures", "png"), SOUND("sounds", "ogg"), MODEL("models", "obj");
 
 		private PackPattern(Pattern mache, String end) {
 			this.mache = mache;
