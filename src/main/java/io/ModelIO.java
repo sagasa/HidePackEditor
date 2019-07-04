@@ -60,14 +60,8 @@ public class ModelIO {
 						for (int j2 = 0; j2 < triangle.length; j2++) {
 							triangle[j2] = triangle[j2] - 1;
 						}
-					//	System.out.println(ArrayUtils.toString(triangle));
-					//	int[] v0 = ArrayUtils.subarray(triangle, 0, 2);
-					//	int[] v1 = ArrayUtils.subarray(triangle, 2, 4);
-					//	int[] v2 = ArrayUtils.subarray(triangle, 4, 6);//TODO
-					//	triangle =ArrayUtils.addAll(v0,  ArrayUtils.addAll(v2, v1));
-						model.put(part,ArrayUtils.addAll(model.get(part), triangle));
+						model.put(part, ArrayUtils.addAll(model.get(part), triangle));
 					}
-
 				}
 			}
 			in.close();

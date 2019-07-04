@@ -13,9 +13,11 @@ import org.apache.logging.log4j.Logger;
 import editer.DataEntityInterface;
 import editer.HidePack;
 import editer.node.EditPanels;
+import editer.node.ModelView;
 import helper.ArrayEditer;
 import helper.DataPath;
 import helper.EditHelper;
+import io.ModelIO;
 import io.PackCash;
 import io.PackIO;
 import javafx.beans.value.ObservableValue;
@@ -38,6 +40,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -108,7 +111,20 @@ public class RootController implements Initializable {
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
 		// TODO
-		// ModelView.showModelView(editer, ModelIO.read());
+		Pane modelV = new Pane();
+
+		Stage modelView = new Stage(StageStyle.UTILITY);
+		ModelView.showModelView(modelV, ModelIO.read());
+		modelView = new Stage(StageStyle.UTILITY);
+		modelView.setScene(new Scene(modelV));
+		modelView.initOwner(STAGE);
+		modelView.initModality(Modality.NONE);
+		//clipEditer.setResizable(false);
+		modelView.setTitle("ModelView");
+		modelView.show();
+
+
+
 		write();
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/clip.fxml"));

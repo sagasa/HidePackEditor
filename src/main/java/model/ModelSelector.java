@@ -25,6 +25,4 @@ public class ModelSelector extends DataBase {
 		defaultModel = model;
 		nowViewModel.set(model);
 	}
-
-
 }

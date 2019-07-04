@@ -87,11 +87,11 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		return this;
 	}
 
-	/**値編集フィールドの幅*/
+	/** 値編集フィールドの幅 */
 	protected DoubleProperty textFieldWidth = new SimpleDoubleProperty(100);
-	/**プロパティの追加ボタンの有無*/
+	/** プロパティの追加ボタンの有無 */
 	protected DoubleProperty editBottonWidth = new SimpleDoubleProperty(0);
-	/**ラベルの幅*/
+	/** ラベルの幅 */
 	protected DoubleBinding labelWidth;
 
 	/** テキストフィールドの幅 テキストフィールドを使用しない場合は無効 */
@@ -117,7 +117,7 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 	/** 変更通知リスナー */
 	protected Consumer<?>[] ChangeListener = new Consumer<?>[0];
 
-	/**有効化切り替え*/
+	/** 有効化切り替え */
 	protected BooleanProperty disable = new SimpleBooleanProperty();
 
 	/** 数値以外のパターン */
@@ -175,11 +175,11 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		MinValue = EditHelper.getMin(Clazz, Path);
 		Scale = EditHelper.getScale(Clazz, Path);
 
-		//サイズのプロパティの定義
+		// サイズのプロパティの定義
 		this.setPrefSize(200, 24);
 		labelWidth = widthProperty().subtract(textFieldWidth).subtract(editBottonWidth);
 
-		//プロパティ編集
+		// プロパティ編集
 		ImageView addImage = new ImageView("/icon/add.png");
 		ImageView removeImage = new ImageView("/icon/remove.png");
 		Label propertyEdit = new Label();
@@ -206,15 +206,15 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 
 		editValue.addListener((v, ov, nv) -> {
 			if (nv.canEdit()) {
-				//初期の表示を選択
+				// 初期の表示を選択
 				propertyEdit.setVisible(true);
 				propertyEdit.setGraphic(hasProperty(nv) ? removeImage : addImage);
 				editBottonWidth.set(20);
-			} else
+			} else {
 				propertyEdit.setVisible(false);
 				editBottonWidth.set(0);
+			}
 		});
-
 
 		build();
 		getChildren().add(propertyEdit);
@@ -321,12 +321,12 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.setAlignment(Pos.CENTER_RIGHT);
 
-			//有効化切り替え
+			// 有効化切り替え
 			label.disableProperty().bind(disable);
 			text.disableProperty().bind(disable);
 
 			this.getChildren().addAll(text, label);
-			//リスナ
+			// リスナ
 			editerProperty.addListener((v, ov, nv) -> {
 				for (Consumer<?> run : ChangeListener)
 					((Consumer) run).accept(nv);
@@ -342,12 +342,12 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 			check.translateXProperty().bind(labelWidth.add(2));
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.prefWidthProperty().bind(labelWidth);
-			this.getChildren().addAll(label,check);
+			this.getChildren().addAll(label, check);
 
-			//有効化切り替え
+			// 有効化切り替え
 			label.disableProperty().bind(disable);
 			check.disableProperty().bind(disable);
-			//リスナ
+			// リスナ
 			editerProperty.addListener((v, ov, nv) -> {
 				for (Consumer<?> run : ChangeListener)
 					((Consumer) run).accept(nv);
@@ -357,7 +357,7 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		}
 	}
 
-	/**プロパティが設定されているかの判断*/
+	/** プロパティが設定されているかの判断 */
 	protected boolean hasProperty(IEditData data) {
 		return EditHelper.getProperty(data, Path) != null && EditHelper.getProperty(data, Path).getValue() != null;
 	}
@@ -385,8 +385,9 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 				disable.set(false);
 		}
 		if (newValue != null && Clazz.isAssignableFrom(newValue.getType())) {
-			//System.out.println("new match " + Path + " " + EditHelper.getProperty(newValue,
-			//		Path) + " " + editerProperty);
+			// System.out.println("new match " + Path + " " +
+			// EditHelper.getProperty(newValue,
+			// Path) + " " + editerProperty);
 			if (hasProperty(newValue)) {
 				bind(newValue);
 			} else
