@@ -98,6 +98,7 @@ public class ModelView extends Pane {
 		editer.getChildren().addAll(mv);
 	}
 
+	@SuppressWarnings("unchecked")
 	public ModelView(HideModel model, Pane editer) {
 		// this.root = editer;
 		this.model = model;

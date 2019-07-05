@@ -14,6 +14,8 @@ public class HideModel extends DataBase{
 	public String texture;
 	public Bone rootBone;
 
+	public float scaleX;//TODO
+
 	public HideModel(float[] vert, float[] tex, Map<String, int[]> faces) {
 		vertArray = vert;
 		texArray = tex;
