@@ -37,12 +37,16 @@ import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
 
+import model.Bone;
+import model.ModelSelector;
+
 /** 編集パネルのルート */
 public class EditPanels extends Pane {
 
 	/** 編集パネルの対象 */
 	public enum EditType {
-	Item(ItemData.class), Gun(GunData.class), Magazine(MagazineData.class), PakcInfo(PackInfo.class);
+	Item(ItemData.class), Gun(GunData.class), Magazine(MagazineData.class), PakcInfo(PackInfo.class),
+	ModelBone(Bone.class), ModelSelector(ModelSelector.class);
 
 		/** 判別用の型 */
 		public Class<? extends DataBase> Clazz;

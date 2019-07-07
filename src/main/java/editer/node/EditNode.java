@@ -154,7 +154,7 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 	 *
 	 * @param editValue リスナー追加先
 	 */
-	public EditNode(ObjectProperty<IEditData> editValue, EditType edit, DataPath path, EditNodeType type) {
+	public EditNode(Property<IEditData> editValue, EditType edit, DataPath path, EditNodeType type) {
 		Path = path;
 		Clazz = edit.Clazz;
 		Name = EditHelper.getLocalizedName(Clazz, Path);
@@ -185,15 +185,15 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 		Label propertyEdit = new Label();
 		propertyEdit.setPrefSize(24, 24);
 		propertyEdit.setOnMouseClicked(e -> {
-			if (editValue.get().canEdit()) {
-				if (hasProperty(editValue.get())) {
-					unbind(editValue.get());
-					editValue.get().removeProperty(Path);
+			if (editValue.getValue().canEdit()) {
+				if (hasProperty(editValue.getValue())) {
+					unbind(editValue.getValue());
+					editValue.getValue().removeProperty(Path);
 					propertyEdit.setGraphic(addImage);
 					disable.set(true);
 				} else {
-					editValue.get().addProperty(Path);
-					bind(editValue.get());
+					editValue.getValue().addProperty(Path);
+					bind(editValue.getValue());
 					propertyEdit.setGraphic(removeImage);
 					disable.set(false);
 				}

@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 
 import helper.DataPath;
 import helper.EditHelper;
+import model.ModelSelector;
 import types.PackInfo;
 import types.base.DataBase;
 import types.effect.Explosion;
@@ -46,6 +47,7 @@ public class LocalizeHandler {
 		makeLocalize(Explosion.class);
 		makeLocalize(PackInfo.class);
 		makeLocalize(MagazineData.class);
+		makeLocalize(ModelSelector.class);
 
 		writeDefaultLang();
 	}

@@ -71,7 +71,7 @@ public class RootController implements Initializable {
 	public ListView<DataEntityInterface> iconList;
 	public ListView<DataEntityInterface> modelList;
 
-	/**クリップエディタ*/
+	/** クリップエディタ */
 	private ClipController clipController;
 	private Stage clipEditer;
 
@@ -114,22 +114,22 @@ public class RootController implements Initializable {
 		Pane modelV = new Pane();
 
 		Stage modelView = new Stage(StageStyle.UTILITY);
-		ModelView.showModelView(modelV, ModelIO.read());
+		ModelView mv = new ModelView(modelV);
+		mv.showModelView(ModelIO.read());
 		modelView = new Stage(StageStyle.UTILITY);
 		modelView.setScene(new Scene(modelV));
 		modelView.initOwner(STAGE);
 		modelView.initModality(Modality.NONE);
-		//clipEditer.setResizable(false);
+		// clipEditer.setResizable(false);
 		modelView.setTitle("ModelView");
 		modelView.show();
-
-
 
 		write();
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/clip.fxml"));
 		try {
-			System.out.println(loader.load().toString());;
+			System.out.println(loader.load().toString());
+			;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -140,17 +140,17 @@ public class RootController implements Initializable {
 		clipEditer.setScene(scene);
 		clipEditer.initOwner(STAGE);
 		clipEditer.initModality(Modality.NONE);
-		//clipEditer.setResizable(false);
+		// clipEditer.setResizable(false);
 		clipEditer.setTitle("ClipBord");
-		clipEditer.showingProperty().addListener((v,ov,nv)->{
-			if(!nv) {
+		clipEditer.showingProperty().addListener((v, ov, nv) -> {
+			if (!nv) {
 
 			}
 		});
 	}
 
 	private static void bindEditer(ListView<DataEntityInterface> list, Consumer<DataEntityInterface> run) {
-		//フォーカスが切れたら選択解除
+		// フォーカスが切れたら選択解除
 		list.focusedProperty().addListener((v, ov, nv) -> {
 			if (!nv)
 				list.getSelectionModel().clearSelection();
@@ -233,7 +233,6 @@ public class RootController implements Initializable {
 	public void crick() {
 
 	}
-
 
 	// ========メニュー操作========
 	public void openPack() {
@@ -331,7 +330,7 @@ public class RootController implements Initializable {
 	}
 
 	public void addGun() {
-		//clipEditer.show();//TODO
+		// clipEditer.show();//TODO
 		log.debug("addGun");
 		GunData newGun = new GunData();
 		if (HidePack.getGunData("New Gun No." + gunNamePointer) == null) {
@@ -383,10 +382,8 @@ public class RootController implements Initializable {
 		/**
 		 * ファクトリー
 		 *
-		 * @param fromList
-		 *            削除元になるリスト Null許容
-		 * @param candelete
-		 *            削除ボタンの表示判定 Null許容
+		 * @param fromList  削除元になるリスト Null許容
+		 * @param candelete 削除ボタンの表示判定 Null許容
 		 */
 		public static Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>> getCellFactory(
 				ObservableList<? extends DataEntityInterface> fromList,

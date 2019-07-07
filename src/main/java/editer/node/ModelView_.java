@@ -13,8 +13,6 @@ import java.util.function.BiConsumer;
 import javax.imageio.ImageIO;
 
 import editer.HidePack;
-import editer.node.EditNode.EditNodeType;
-import editer.node.EditPanels.EditType;
 import helper.AutoCompletionTextAreaBinding;
 import helper.DataPath;
 import helper.EditHelper;
@@ -25,17 +23,14 @@ import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
@@ -69,9 +64,8 @@ import model.Bone;
 import model.HideModel;
 import model.ModelSelector;
 import resources.HideImage;
-import types.base.IEditData;
 
-public class ModelView extends Pane {
+public class ModelView_ extends Pane {
 	private SubScene modelView = new SubScene(new Group(), 400, 400, true, SceneAntialiasing.BALANCED);;
 	public TreeView<Bone> bonetree;
 
@@ -88,8 +82,10 @@ public class ModelView extends Pane {
 	private Rotate viewRotateY = new Rotate(0, Rotate.Y_AXIS);
 	private Translate viewPoint = new Translate(0, 0, 0);
 	private DoubleProperty zoom = new SimpleDoubleProperty(1);
+	/** モデルの最大サイズ */
+	private DoubleProperty scale = new SimpleDoubleProperty(1);
 
-	public void showModelView(HideModel read) {
+	public static void showModelView(Pane editer, HideModel read) {
 		// テスト
 		try {
 			HidePack.TextureList.add(new HideImage("test", ImageIO.read(new File("./[AR1]StG44/SkinStG44.png"))));
@@ -97,24 +93,38 @@ public class ModelView extends Pane {
 			e.printStackTrace();
 		}
 		read.texture = "test";
-		model = read;
-		bonetree.setRoot(new BoneModelItem(model.rootBone));
-		loadBone();
+
+		ModelView mv = new ModelView(read, editer);
+		editer.getChildren().addAll(mv);
 	}
 
-	public ModelView(Pane editer) {
-		editer.getChildren().addAll(this);
+	@SuppressWarnings("unchecked")
+	public ModelView(HideModel model, Pane editer) {
+		// this.root = editer;
+		this.model = model;
+		// モデルのスケール
+		for (float vert : model.vertArray)
+			if (scale.get() < vert)
+				scale.set(vert);
+
+		System.out.println(scale.get());
+
 		prefWidthProperty().bind(editer.widthProperty());
 		prefHeightProperty().bind(editer.heightProperty());
 		PerspectiveCamera camera = new PerspectiveCamera(false);
 		camera.setFieldOfView(70.0);
-
+		/*
+		 * camera.scaleXProperty().bind(scale);
+		 * camera.scaleYProperty().bind(scale.multiply(-1));
+		 * camera.scaleZProperty().bind(scale);//
+		 */
 		camera.setScaleY(-1);
 		camera.getTransforms().addAll(viewRotateY, viewRotateX, viewPoint);
 
 		Pane modelPane = new Pane(modelView);
 		Scale cameraZoom = new Scale(1, 1);
-
+		// cameraZoom.pivotXProperty()
+		// cameraZoom.pivotYProperty()
 		cameraZoom.xProperty().bind(zoom);
 		cameraZoom.yProperty().bind(zoom);
 
@@ -130,6 +140,9 @@ public class ModelView extends Pane {
 		modelView.widthProperty().bind(widthProperty().subtract(250));
 		modelView.heightProperty().bind(heightProperty());
 		modelView.setCamera(camera);
+
+		// 光源
+		// ((Group) modelView.getRoot()).getChildren().add(new AmbientLight());
 
 		// 支点操作インターフェース
 		modelPane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
@@ -165,71 +178,43 @@ public class ModelView extends Pane {
 		reload.setPrefSize(250, 25);
 		reload.setOnAction(e -> loadBone());
 		// ボーン
-		bonetree = new TreeView<>();
+		bonetree = new TreeView<>(new BoneModelItem(model.rootBone));
 		bonetree.setLayoutY(25);
 		bonetree.setPrefHeight(250);
 		bonetree.setCellFactory(new BoneCellFactory());
 		// スクリプト
-
-		selectItem = bonetree.getSelectionModel().selectedItemProperty();
-
+		TextArea text = new TextArea();
+		text.setLayoutY(275);
+		text.setPrefWidth(250);
+		text.prefHeightProperty().bind(this.heightProperty().subtract(275));
+		bonetree.getSelectionModel().selectedItemProperty().addListener((v, ov, nv) -> {
+			if (ov != null && ov.getValue() != null) {
+				ov.getValue().setVisible(false);
+				text.textProperty()
+						.unbindBidirectional(
+								(Property<String>) EditHelper.getProperty(ov.getValue(), new DataPath("script")));
+			}
+			if (nv.getValue() != null) {
+				nv.getValue().setVisible(true);
+				text.setVisible(true);
+				text.textProperty()
+						.bindBidirectional(
+								(Property<String>) EditHelper.getProperty(nv.getValue(), new DataPath("script")));
+			} else {
+				text.setVisible(false);
+			}
+		});
+		text.setVisible(false);
 		// モデルセレクタ編集
 		ComboBox<String> comboBox = new ComboBox<>();
 		comboBox.setEditable(true);
 		comboBox.setLayoutY(275);
 		ListView<Entry<String, String>> model_itemMap = new ListView<>();
 
-		this.getChildren().addAll(reload, bonetree, modelPane);
-
-		selectItem.addListener((v, ov, nv) -> {
-			if (nv != null && ((BoneModelItem) nv).model != null)
-				ms.setValue(((BoneModelItem) nv).model);
-			;
-		});
-		writeBoneEditer();
-		writeMSEditer();
-	}
-
-	/** ボーンツリー上で現在選択されているアイテム */
-	protected ReadOnlyObjectProperty<TreeItem<Bone>> selectItem;
-	Property<IEditData> ms = new SimpleObjectProperty<>();
-
-	@SuppressWarnings("unchecked")
-	private void writeMSEditer() {
-		EditNode defaultModel = new EditNode(ms, EditType.ModelSelector, new DataPath("defaultModel"),
-				EditNodeType.StringFromList);
-		defaultModel.translateYProperty().set(350);
-		this.getChildren().addAll(defaultModel);
-	}
-
-	@SuppressWarnings("unchecked")
-	private void writeBoneEditer() {
-		TextArea text = new TextArea();
-		text.setLayoutY(275);
-		text.setPrefWidth(250);
-		text.setVisible(false);
-		text.prefHeightProperty().bind(this.heightProperty().subtract(275));
 		AutoCompletionTextAreaBinding.bindAutoCompletion(text, Bone.autoFill);
-
-		this.getChildren().addAll(text);
-		selectItem.addListener((v, ov, nv) -> {
-			if (ov != null && ov.getValue() != null) {
-				ov.getValue().setVisible(false);
-				text.textProperty().unbindBidirectional(
-						(Property<String>) EditHelper.getProperty(ov.getValue(), new DataPath("script")));
-			}
-			if (nv.getValue() != null) {
-				nv.getValue().setVisible(true);
-				text.setVisible(true);
-				text.textProperty().bindBidirectional(
-						(Property<String>) EditHelper.getProperty(nv.getValue(), new DataPath("script")));
-			} else {
-				text.setVisible(false);
-			}
-		});
+		this.getChildren().addAll(reload, bonetree, text, modelPane, comboBox);
 	}
 
-	/** 現在の状態を反映 */
 	public void loadBone() {
 		clearParts();
 		model.rootBone.init(new ArrayList<Transform>(), name -> {
@@ -247,7 +232,8 @@ public class ModelView extends Pane {
 	}
 
 	/**
-	 * @param moves ボーンの始点を決定
+	 * @param moves
+	 *            ボーンの始点を決定
 	 */
 	public void addBoneView(Bone bone, List<Transform> moves) {
 		TriangleMesh mesh = new TriangleMesh();
@@ -271,8 +257,8 @@ public class ModelView extends Pane {
 
 		bone.translate.xProperty();
 
-		// front.scaleXProperty().bind(scale.divide(25));
-		// front.scaleZProperty().bind(scale.divide(25));
+		front.scaleXProperty().bind(scale.divide(25));
+		front.scaleZProperty().bind(scale.divide(25));
 
 		PhongMaterial mat = new PhongMaterial(Color.color(0, 0, 1));
 		front.setMaterial(mat);
@@ -293,10 +279,8 @@ public class ModelView extends Pane {
 		model.item_model.values().forEach(name -> addPartView(name, model.nowViewModel, moves, select));
 	}
 
-	private boolean addPartView(String partName, StringProperty nowselect, List<Transform> moves,
+	private MeshView addPartView(String partName, StringProperty nowselect, List<Transform> moves,
 			BooleanProperty listselect) {
-		if (!model.modelParts.containsKey(partName))
-			return false;
 		TriangleMesh mesh = new TriangleMesh();
 		mesh.getPoints().addAll(model.vertArray);
 		mesh.getTexCoords().addAll(model.texArray);
@@ -353,7 +337,7 @@ public class ModelView extends Pane {
 		nowselect.addListener((v, ov, nv) -> viewChange.accept(listselect.get(), nv.equals(partName)));
 
 		((Group) modelView.getRoot()).getChildren().addAll(linev, linev2, facev);
-		return true;
+		return linev;
 	}
 
 	/** ボーンとモデル両方に対応したツリーアイテム */

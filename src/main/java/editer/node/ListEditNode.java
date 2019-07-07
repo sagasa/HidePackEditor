@@ -6,6 +6,7 @@ import helper.ArrayEditer;
 import helper.DataPath;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -39,7 +40,7 @@ public class ListEditNode extends EditNode {
 	 * @param fromList
 	 *            母集団
 	 */
-	public ListEditNode(ObjectProperty<IEditData> editValue, EditType edit, DataPath path,
+	public ListEditNode(Property<IEditData> editValue, EditType edit, DataPath path,
 			ObservableList<? extends DataEntityInterface> fromList) {
 		super(editValue, edit, path, EditNodeType.StringList);
 		motherList = fromList;
