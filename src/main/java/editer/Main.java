@@ -25,8 +25,7 @@ public class Main extends Application {
 
 		PackIO.makePack();
 
-
-		/*
+		//*
 		System.exit(0);
 		// */
 

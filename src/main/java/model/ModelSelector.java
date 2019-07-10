@@ -22,7 +22,7 @@ public class ModelSelector extends DataBase {
 	}
 
 	public ModelSelector(String model) {
-		defaultModel = model;
-		nowViewModel.set(model);
+		nowViewModel.bind(getProperty("defaultModel"));
+		getProperty("defaultModel").setValue(model);
 	}
 }

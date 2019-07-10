@@ -23,19 +23,19 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
@@ -194,7 +194,6 @@ public class ModelView extends Pane {
 	protected ReadOnlyObjectProperty<TreeItem<Bone>> selectItem;
 	Property<IEditData> ms = new SimpleObjectProperty<>();
 
-	@SuppressWarnings("unchecked")
 	private void writeMSEditer() {
 		EditNode defaultModel = new EditNode(ms, EditType.ModelSelector, new DataPath("defaultModel"),
 				EditNodeType.StringFromList);
@@ -422,6 +421,7 @@ public class ModelView extends Pane {
 
 	private static final DataFormat JAVA_FORMAT = new DataFormat("application/x-java-serialized-object");
 	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 2 0 2 0; -fx-padding: 3 3 1 3";
+	private static final ReadOnlyStringProperty Model = new SimpleStringProperty("Model ");
 
 	private class BoneCellFactory implements Callback<TreeView<Bone>, TreeCell<Bone>> {
 		private TreeCell<Bone> dropZone;
@@ -435,12 +435,14 @@ public class ModelView extends Pane {
 					super.updateItem(item, empty);
 					BoneModelItem treeitem = (BoneModelItem) getTreeItem();
 					if (empty) {
+						textProperty().unbind();
 						setText(null);
 					} else {
-						if (treeitem.model == null)
+						if (treeitem.model == null) {
+							textProperty().unbind();
 							setText("Bone");
-						else {
-							setText("Model " + treeitem.model.nowViewModel.get());
+						} else {
+							textProperty().bind(Model.concat(treeitem.model.nowViewModel));
 						}
 					}
 				}

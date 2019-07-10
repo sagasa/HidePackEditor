@@ -59,12 +59,16 @@ public abstract class DataBase implements IEditData {
 	}
 
 	public String[] getPropertyNames() {
+		initProp();
 		return propertyMap.keySet().toArray(new String[propertyMap.keySet().size()]);
 	}
 
-	/**パスではなくフィールド名からプロパティを取得する*/
-	public Property<?> getProperty(String name) {
-		return propertyMap.get(name);
+	/**パスではなくフィールド名からプロパティを取得する
+	 * @param <T>*/
+	@SuppressWarnings("unchecked")
+	public <T> Property<T> getProperty(String name) {
+		initProp();
+		return (Property<T>) propertyMap.get(name);
 	}
 
 	protected final static Logger log = LogManager.getLogger();

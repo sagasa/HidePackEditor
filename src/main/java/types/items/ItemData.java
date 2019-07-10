@@ -2,7 +2,6 @@ package types.items;
 
 import editer.DataEntityInterface;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import types.Info;
 import types.PackInfo;
@@ -38,21 +37,21 @@ public abstract class ItemData extends DataBase implements DataEntityInterface {
 	public float ITEM_ATTACK_DAMAGE = 0f;
 
 	/**表示名と短縮名が同じならUSE_SHORTNAMEをtrueに*/
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ })
 	@Override
 	public void init() {
 		super.init();
-		((Property<Boolean>) getProperty("USE_SHORTNAME")).addListener((v, ov, nv) -> {
-			if (!nv) {
+		getProperty("USE_SHORTNAME").addListener((v, ov, nv) -> {
+			if (!(boolean) nv) {
 				getProperty("ITEM_SHORTNAME")
-						.bindBidirectional((Property) getProperty("ITEM_DISPLAYNAME"));
+						.bindBidirectional(getProperty("ITEM_DISPLAYNAME"));
 			} else {
 				getProperty("ITEM_SHORTNAME")
-						.unbindBidirectional((Property) getProperty("ITEM_DISPLAYNAME"));
+						.unbindBidirectional(getProperty("ITEM_DISPLAYNAME"));
 			}
 		});
 		if (!ITEM_DISPLAYNAME.equals(ITEM_SHORTNAME)) {
-			((Property<Boolean>) getProperty("USE_SHORTNAME")).setValue(true);
+			getProperty("USE_SHORTNAME").setValue(true);
 		}
 	}
 

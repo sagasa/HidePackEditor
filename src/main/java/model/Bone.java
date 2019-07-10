@@ -36,7 +36,7 @@ public class Bone extends DataBase implements IBone {
 	transient private Map<String, Supplier<Float>> Propertis = new HashMap<>();
 
 	/** 付与されているトランスフォーム */
-	transient public List<Transform> moves;
+	transient public List<Transform> moves = new ArrayList<>();
 
 	public List<Bone> children = new ArrayList<>();
 	public List<ModelSelector> models = new ArrayList<>();
