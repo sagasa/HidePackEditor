@@ -1,18 +1,19 @@
 package localize;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import helper.DataPath;
 import helper.EditHelper;
+import jdk.internal.util.xml.impl.ReaderUTF8;
 import model.ModelSelector;
 import types.PackInfo;
 import types.base.DataBase;
@@ -65,10 +66,13 @@ public class LocalizeHandler {
 			langDir.mkdir();
 		}
 		// デフォルトを書き込み
-		try (FileWriter writer = new FileWriter("./lang/lang_default.properties", false)) {
+		try (FileWriter writer = new FileWriter("./lang/default.properties", false)) {
+			Map<String, String> map = new HashMap<>();
 			for (String name : UnlocalizedNames) {
 				writer.write(name + " = " + name + "\n");
+				map.put(name, name);
 			}
+			defaultRB = new HideLocalizeResource(map);
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -77,20 +81,19 @@ public class LocalizeHandler {
 
 	/** langディレクトリをあさってLangを読む */
 	public static void loadLang() {
-		//デフォルトLangを読み込み
-		defaultRB = ResourceBundle.getBundle("lang");
-		//jar外のLang読み取り
+		// デフォルトLangを読み込み
+		// jar外のLang読み取り
 		File langDir = new File("./lang");
 		if (!langDir.exists() || !langDir.isDirectory()) {
 			langDir.mkdir();
 		}
-		// クラスローダーを用意
-		try (URLClassLoader cl = new URLClassLoader(new URL[] { langDir.toURI().toURL() })) {
+		try {
 			for (File file : langDir.listFiles()) {
-				if (file.getName().endsWith(".properties") && file.getName().startsWith("lang_")) {
-					String lang = file.getName().replace(".properties", "").replace("lang_", "");
-					ResourceBundle rb = ResourceBundle.getBundle("lang", new Locale(lang), cl);
-					LangMap.put(lang, rb);
+				if (file.getName().endsWith(".properties")) {
+					String lang = file.getName().replace(".properties", "");
+					ReaderUTF8 reader = new ReaderUTF8(new FileInputStream(file));
+					LangMap.put(lang, new HideLocalizeResource(reader, defaultRB));
+					reader.close();
 				}
 			}
 		} catch (IOException e1) {
@@ -112,6 +115,10 @@ public class LocalizeHandler {
 	/** 今のLang名を取得 */
 	public static String getLang() {
 		return nowLang;
+	}
+
+	public static ResourceBundle getResourceBundle() {
+		return LangMap.containsKey(nowLang) ? LangMap.get(nowLang) : defaultRB;
 	}
 
 	/** Langをセット できなければfalse */
@@ -143,6 +150,7 @@ public class LocalizeHandler {
 
 	/** メニュー用Lang */
 	public enum Lang {
-		File, Edit, New, Open, Save, SaveAs, Import, Gun, Magazine, Armor, Attachment, Icon, Sound, Scope, Lang, Exit,
+		File, Edit, Help, New, NewOpen, Open, Save, SaveAs, Import, Gun, Magazine, Armor, Attachment, Icon, Sound,
+		Scope, Lang, Exit,
 	}
 }

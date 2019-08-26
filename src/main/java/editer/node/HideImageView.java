@@ -15,7 +15,7 @@ import javafx.scene.image.ImageView;
 import resources.HideImage;
 import types.base.IEditData;
 
-/**自動更新されるImageView*/
+/** 自動更新されるImageView */
 public class HideImageView extends ImageView implements ChangeListener<IEditData> {
 	private ObservableList<HideImage> List;
 	private final DataPath Path;
@@ -47,10 +47,10 @@ public class HideImageView extends ImageView implements ChangeListener<IEditData
 	@SuppressWarnings("unchecked")
 	@Override
 	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
-		if (oldValue != null && Type.Clazz == oldValue.getType()) {
+		if (oldValue != null && Type.isType(oldValue)) {
 			((Property<String>) EditHelper.getProperty(oldValue, Path)).removeListener(nameListener);
 		}
-		if (newValue != null && Type.Clazz == newValue.getType()) {
+		if (newValue != null && Type.isType(newValue)) {
 			((Property<String>) EditHelper.getProperty(newValue, Path)).addListener(nameListener);
 			now = newValue;
 			reflesh(null);

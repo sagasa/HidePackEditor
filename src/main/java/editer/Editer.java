@@ -14,7 +14,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
 
-public class Main extends Application {
+public class Editer extends Application {
 	/** 開いているpath */
 	public static String packPath;
 
@@ -25,9 +25,9 @@ public class Main extends Application {
 
 		PackIO.makePack();
 
-		//*
-		System.exit(0);
-		// */
+		/*
+		 * System.exit(0); //
+		 */
 
 		launch(arg);
 
@@ -52,7 +52,7 @@ public class Main extends Application {
 	public void start(Stage stage) throws Exception {
 		String fxmlFile = "/fxml/editer.fxml";
 		log.debug("Loading FXML for main view from: {}", fxmlFile);
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile), LocalizeHandler.getResourceBundle());
 		Parent rootNode = (Parent) loader.load();
 		RootController.STAGE = stage;
 		log.debug("Showing JFX scene");

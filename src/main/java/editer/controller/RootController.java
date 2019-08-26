@@ -13,11 +13,9 @@ import org.apache.logging.log4j.Logger;
 import editer.DataEntityInterface;
 import editer.HidePack;
 import editer.node.EditPanels;
-import editer.node.ModelView;
 import helper.ArrayEditer;
 import helper.DataPath;
 import helper.EditHelper;
-import io.ModelIO;
 import io.PackCash;
 import io.PackIO;
 import javafx.beans.value.ObservableValue;
@@ -40,7 +38,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -110,9 +107,10 @@ public class RootController implements Initializable {
 
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
-		// TODO
-		Pane modelV = new Pane();
 
+		// TODO
+		/*
+		Pane modelV = new Pane();
 		Stage modelView = new Stage(StageStyle.UTILITY);
 		ModelView mv = new ModelView(modelV);
 		mv.showModelView(ModelIO.read());
@@ -122,7 +120,7 @@ public class RootController implements Initializable {
 		modelView.initModality(Modality.NONE);
 		// clipEditer.setResizable(false);
 		modelView.setTitle("ModelView");
-		modelView.show();
+		modelView.show();//*/
 
 		write();
 
@@ -229,10 +227,14 @@ public class RootController implements Initializable {
 		e.consume();
 	}
 
-	@FXML
-	public void crick() {
+	public void newPack() {
 
 	}
+
+	public void openNewPack() {
+
+	}
+
 
 	// ========メニュー操作========
 	public void openPack() {
@@ -271,7 +273,11 @@ public class RootController implements Initializable {
 		}
 	}
 
-	public void savePack() {
+	public void save() {
+		PackIO.export();
+	}
+
+	public void saveas() {
 		PackIO.export();
 	}
 

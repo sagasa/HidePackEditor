@@ -28,6 +28,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import model.Bone;
+import model.ModelSelector;
 import resources.HideImage;
 import types.PackInfo;
 import types.base.DataBase;
@@ -36,9 +38,6 @@ import types.base.IEditData;
 import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
-
-import model.Bone;
-import model.ModelSelector;
 
 /** 編集パネルのルート */
 public class EditPanels extends Pane {
@@ -55,8 +54,8 @@ public class EditPanels extends Pane {
 			Clazz = clazz;
 		}
 
-		public boolean isType(DataBase data) {
-			return Clazz.isAssignableFrom(data.getClass());
+		public boolean isType(IEditData data) {
+			return Clazz.isAssignableFrom(data.getType());
 		}
 
 		/** 型からエディタを選択 */
@@ -132,8 +131,6 @@ public class EditPanels extends Pane {
 	private void writeGunEditer() {
 		final EditType type = EditType.Gun;
 		// *
-		// icon
-		addEditPane(makeImageNode(type, new DataPath("ITEM_ICONNAME"), HidePack.IconList), type);
 		// Cate0
 		addEditPane(makeCateEditPanel(type, 0), type);
 		// Cate1
@@ -157,7 +154,7 @@ public class EditPanels extends Pane {
 	}
 
 	/** MagazineData */
-	public void writeMagazineEditer() {
+	private void writeMagazineEditer() {
 		final EditType type = EditType.Magazine;
 		// icon
 		addEditPane(makeImageNode(type, new DataPath("ITEM_ICONNAME"), HidePack.IconList), type);
@@ -249,8 +246,15 @@ public class EditPanels extends Pane {
 		};
 		Node useshortname = new EditNode(editValue, type, new DataPath("USE_SHORTNAME"), EditNodeType.Boolean)
 				.setChangeListner(run);
-		root.getChildren().addAll(dizplayname, useshortname, shortname);
-		root.setPrefSize(200, 72);
+
+		// icon
+		Node icon = makeImageNode(type, new DataPath("ITEM_ICONNAME"), HidePack.IconList);
+		// model
+		Node model = new EditNode(editValue, type, new DataPath("ITEM_MODELNAME"), EditNodeType.StringFromList)
+				.setFromList(HidePack.IconList);
+
+		root.getChildren().addAll(dizplayname, useshortname, shortname,icon,model);
+		// root.setPrefSize(200, 72);
 		return root;
 	}
 

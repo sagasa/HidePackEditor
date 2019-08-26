@@ -11,21 +11,21 @@
 	<top>
 		<MenuBar BorderPane.alignment="CENTER">
 			<menus>
-				<Menu mnemonicParsing="false" text="File">
+				<Menu mnemonicParsing="false" text="%file">
 					<items>
-					<MenuItem mnemonicParsing="false" onAction="#savePack" text="new" />
-						<MenuItem mnemonicParsing="false" onAction="#openPack" text="new+open" />
-						<MenuItem mnemonicParsing="false" onAction="#savePack" text="open" />
-                  <MenuItem mnemonicParsing="false" onAction="#savePack" text="save" />
-                  <MenuItem mnemonicParsing="false" onAction="#savePack" text="Save" />
+					<MenuItem mnemonicParsing="false" onAction="#newPack" text="%new" />
+						<MenuItem mnemonicParsing="false" onAction="#openNewPack" text="%newopen" />
+						<MenuItem mnemonicParsing="false" onAction="#openPack" text="%open" />
+                  <MenuItem mnemonicParsing="false" onAction="#save" text="%save" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveas" text="%saveas" />
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="Edit">
+				<Menu mnemonicParsing="false" text="%edit">
 					<items>
 						<MenuItem mnemonicParsing="false" text="Delete" />
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="Help">
+				<Menu mnemonicParsing="false" text="%help">
 					<items>
 						<MenuItem mnemonicParsing="false" text="About" />
 					</items>
