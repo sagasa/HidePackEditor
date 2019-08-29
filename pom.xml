@@ -28,7 +28,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>editer.Main</mainClass>
+							<mainClass>editer.Editer</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
