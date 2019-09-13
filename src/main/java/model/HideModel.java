@@ -5,6 +5,11 @@ import java.util.Map;
 import types.base.DataBase;
 
 public class HideModel extends DataBase{
+
+	public static class Pos3f {
+		public float X = 0, Y = 0, Z = 0;
+	}
+
 	// エディタサイドのみ
 	transient public float[] vertArray;
 	transient public float[] texArray;
@@ -13,6 +18,8 @@ public class HideModel extends DataBase{
 	// 共通
 	public String texture;
 	public Bone rootBone;
+
+	public Pos3f offsetFirstPerson = new Pos3f();
 
 	public float scaleX;//TODO
 
