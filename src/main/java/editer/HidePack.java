@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import resources.HideImage;
+import resources.Model;
 import resources.Sound;
 import types.PackInfo;
 import types.base.DataBase;
@@ -37,6 +38,8 @@ public class HidePack {
 	public static ObservableList<Sound> SoundList;
 	/** TextureのList Image */
 	public static ObservableList<HideImage> TextureList;
+	/** ModelのList Model */
+	public static ObservableList<Model> ModelList;
 	/** 編集中のパック デフォルトを含む */
 	public static ObservableList<PackInfo> OpenPacks;
 	/** デフォルトパック */

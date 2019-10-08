@@ -13,9 +13,11 @@ import org.apache.logging.log4j.Logger;
 import editer.DataEntityInterface;
 import editer.HidePack;
 import editer.node.EditPanels;
+import editer.node.ModelView;
 import helper.ArrayEditer;
 import helper.DataPath;
 import helper.EditHelper;
+import io.ModelIO;
 import io.PackCash;
 import io.PackIO;
 import javafx.beans.value.ObservableValue;
@@ -38,6 +40,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -67,6 +70,7 @@ public class RootController implements Initializable {
 	public ListView<DataEntityInterface> soundList;
 	public ListView<DataEntityInterface> iconList;
 	public ListView<DataEntityInterface> modelList;
+	public ListView<DataEntityInterface> modelInfoList;
 
 	/** クリップエディタ */
 	private ClipController clipController;
@@ -104,12 +108,13 @@ public class RootController implements Initializable {
 		bindEditer(packList, (item) -> editPack(item));
 		bindEditer(gunList, (item) -> editGun(item));
 		bindEditer(magazineList, (item) -> editMagazine(item));
+		bindEditer(modelInfoList, (item) -> editModelInfo(item));
 
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
 
 		// TODO
-		/*
+		//*
 		Pane modelV = new Pane();
 		Stage modelView = new Stage(StageStyle.UTILITY);
 		ModelView mv = new ModelView(modelV);
@@ -305,6 +310,13 @@ public class RootController implements Initializable {
 	}
 
 	public void editMagazine(DataEntityInterface item) {
+		if (item != null) {
+			log.debug(HidePack.getMagazineData(item.getDisplayName()).toString());
+			editer.setEditValue(HidePack.getMagazineData(item.getDisplayName()));
+		}
+	}
+
+	public void editModelInfo(DataEntityInterface item) {
 		if (item != null) {
 			log.debug(HidePack.getMagazineData(item.getDisplayName()).toString());
 			editer.setEditValue(HidePack.getMagazineData(item.getDisplayName()));

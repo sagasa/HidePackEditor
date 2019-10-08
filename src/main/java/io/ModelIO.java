@@ -16,6 +16,9 @@ public class ModelIO {
 	public static final String SLASH = "/";
 
 	public static HideModel read() {
+	}
+
+	public static HideModel read(String data) {
 		File file = new File("./[AR1]StG44/ModelStG44.obj");
 
 		float[] vertexArray = null;
