@@ -305,6 +305,7 @@ public class PackIO {
 		}
 		// model
 		if (PackPattern.MODEL.mache(name)) {
+			ModelIO.read(new String(data, UTF8));
 			// System.out.println("model");
 		}
 		// texture

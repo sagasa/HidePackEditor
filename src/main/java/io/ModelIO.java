@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -20,7 +23,9 @@ public class ModelIO {
 	public static HideModel read() {
 		File file = new File("./[AR1]StG44/ModelStG44.obj");
 		try {
-			return read(String.join("", Files.readAllLines(file.toPath(), PackIO.UTF8)));
+			System.out.println(file);
+			return read(Files.lines(Paths.get(file.getPath()), PackIO.UTF8)
+					.collect(Collectors.joining(System.getProperty("line.separator"))));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -28,6 +33,7 @@ public class ModelIO {
 	}
 
 	public static HideModel read(String data) {
+		System.out.println(data);
 		float[] vertexArray = null;
 		float[] uvArray = null;
 		Map<String, int[]> model = new HashMap<>();
@@ -56,6 +62,7 @@ public class ModelIO {
 					uvArray = ArrayUtils.addAll(uvArray, tex);
 				} else if (key.equalsIgnoreCase("f")) {
 					int[] poly = null;
+					// すべて
 					for (String str : value.split(SPACE)) {
 						poly = ArrayUtils.addAll(poly, toIntegerArray(str, SLASH, 2));
 					}
