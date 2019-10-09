@@ -2,8 +2,9 @@ package io;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,19 +16,25 @@ public class ModelIO {
 	public static final String SPACE = " ";// TODO
 	public static final String SLASH = "/";
 
+	@Deprecated
 	public static HideModel read() {
+		File file = new File("./[AR1]StG44/ModelStG44.obj");
+		try {
+			return read(String.join("", Files.readAllLines(file.toPath(), PackIO.UTF8)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static HideModel read(String data) {
-		File file = new File("./[AR1]StG44/ModelStG44.obj");
-
 		float[] vertexArray = null;
 		float[] uvArray = null;
 		Map<String, int[]> model = new HashMap<>();
 
 		String part = "default";
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(file));
+			BufferedReader in = new BufferedReader(new StringReader(data));
 			String line;
 
 			String[] split;

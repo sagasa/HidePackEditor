@@ -140,8 +140,7 @@ public class PackIO {
 			if (!pack.isReference()) {
 				dataMap.put(pack, new ArrayList<>());
 				// パックデータ
-				dataMap.get(pack)
-						.add(new Entry("pack.json", new ByteArrayInputStream(pack.MakeJsonData().getBytes())));
+				dataMap.get(pack).add(new Entry("pack.json", new ByteArrayInputStream(pack.MakeJsonData().getBytes())));
 			}
 		}
 
@@ -261,6 +260,9 @@ public class PackIO {
 		return pack;
 	}
 
+	/** Cgarset UTF-8 使え！！！ */
+	public static final Charset UTF8 = Charset.forName("UTF-8");
+
 	/**
 	 * byte配列とNameからパックの要素の当てはめる
 	 *
@@ -271,20 +273,20 @@ public class PackIO {
 		// data.length)), JsonObject.class);
 		// Gun認識
 		if (PackPattern.GUN.mache(name)) {
-			GunData newGun = gson.fromJson(new String(data, Charset.forName("UTF-8")), GunData.class);
+			GunData newGun = gson.fromJson(new String(data, UTF8), GunData.class);
 			pack.GunList.add(newGun);
 			// System.out.println("gun");
 		}
 		// bullet認識
 		else if (PackPattern.MAGAZINE.mache(name)) {
-			MagazineData newBullet = gson.fromJson(new String(data, Charset.forName("UTF-8")), MagazineData.class);
+			MagazineData newBullet = gson.fromJson(new String(data, UTF8), MagazineData.class);
 			pack.MagazineList.add(newBullet);
 			// System.out.println("bullet");
 		}
 		// packInfo認識
 		else if (PackPattern.PACKINFO.mache(name)) {
 			pack.Pack = new PackInfo();
-			pack.Pack = gson.fromJson(new String(data, Charset.forName("UTF-8")), PackInfo.class);
+			pack.Pack = gson.fromJson(new String(data, UTF8), PackInfo.class);
 			// System.out.println("pack");
 		}
 
@@ -319,9 +321,9 @@ public class PackIO {
 
 	/** パック認識用パターン エディター側と完全互換 */
 	private enum PackPattern {
-		GUN("guns", "json"), MAGAZINE("magazines", "json"), PACKINFO(Pattern.compile("^(.*)pack\\.json$"),
-				"json"), ICON("icons", "png"), SCOPE("scopes",
-						"png"), TEXTURE("textures", "png"), SOUND("sounds", "ogg"), MODEL("models", "obj");
+		GUN("guns", "json"), MAGAZINE("magazines", "json"), PACKINFO(Pattern.compile("^(.*)pack\\.json$"), "json"),
+		ICON("icons", "png"), SCOPE("scopes", "png"), TEXTURE("textures", "png"), SOUND("sounds", "ogg"),
+		MODEL("models", "obj"), MODEL_INFO("models", "json");
 
 		private PackPattern(Pattern mache, String end) {
 			this.mache = mache;
