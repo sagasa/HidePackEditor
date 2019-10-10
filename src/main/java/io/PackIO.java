@@ -33,6 +33,7 @@ import helper.ArrayEditer;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import resources.HideImage;
+import resources.Model;
 import resources.Sound;
 import types.PackInfo;
 import types.items.GunData;
@@ -305,7 +306,7 @@ public class PackIO {
 		}
 		// model
 		if (PackPattern.MODEL.mache(name)) {
-			ModelIO.read(new String(data, UTF8));
+			pack.ModelList.add(ModelIO.read(new Model(PackPattern.MODEL.trim(name)), new String(data, UTF8)));
 			// System.out.println("model");
 		}
 		// texture

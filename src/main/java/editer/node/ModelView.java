@@ -29,6 +29,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
@@ -65,17 +66,18 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import javafx.util.Callback;
-import model.Bone;
-import model.HideModel;
-import model.ModelSelector;
 import resources.HideImage;
+import resources.Model;
 import types.base.IEditData;
+import types.model.Bone;
+import types.model.HideModel;
+import types.model.ModelSelector;
 
 public class ModelView extends Pane {
 	private SubScene modelView = new SubScene(new Group(), 400, 400, true, SceneAntialiasing.BALANCED);;
 	public TreeView<Bone> bonetree;
 
-	public HideModel model;
+	public HideModel hideModel;
 	// プロパティMap
 	private static Map<String, FloatProperty> renderPropertyMap = new HashMap<>();
 
@@ -88,6 +90,10 @@ public class ModelView extends Pane {
 	private Rotate viewRotateY = new Rotate(0, Rotate.Y_AXIS);
 	private Translate viewPoint = new Translate(0, 0, 0);
 	private DoubleProperty zoom = new SimpleDoubleProperty(1);
+	/** モデル再描画リスナ */
+	private ChangeListener<Model> modelListener = (v, ov, nv) -> {
+
+	};
 
 	public void showModelView(HideModel read) {
 		// テスト
@@ -96,9 +102,12 @@ public class ModelView extends Pane {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		read.texture = "test";
-		model = read;
-		bonetree.setRoot(new BoneModelItem(model.rootBone));
+		read.textureName = "test";
+		if (hideModel != null)
+			hideModel.getModel().removeListener(modelListener);
+		hideModel = read;
+		hideModel.getModel().addListener(modelListener);
+		bonetree.setRoot(new BoneModelItem(hideModel.rootBone));
 		loadBone();
 	}
 
@@ -231,7 +240,8 @@ public class ModelView extends Pane {
 	/** 現在の状態を反映 */
 	public void loadBone() {
 		clearParts();
-		model.rootBone.init(new ArrayList<Transform>(), name -> {
+		System.out.println(hideModel.getModel().get().modelParts);
+		hideModel.rootBone.init(new ArrayList<Transform>(), name -> {
 			if (renderPropertyMap.containsKey(name)) {
 				return renderPropertyMap.get(name).get();
 			}
@@ -287,13 +297,16 @@ public class ModelView extends Pane {
 	private static final Color enableColor = Color.color(1, 1, 1, 0.9);
 	private static final Color disableColor = Color.color(1, 1, 1, 0.2);
 
+	/** セレクター全てのモデルを登録 */
 	private void addPartView(ModelSelector model, List<Transform> moves, BooleanProperty select) {
 		addPartView(model.defaultModel, model.nowViewModel, moves, select);
 		model.item_model.values().forEach(name -> addPartView(name, model.nowViewModel, moves, select));
 	}
 
+	/** セレクターの選択から表示を切り替える */
 	private boolean addPartView(String partName, StringProperty nowselect, List<Transform> moves,
 			BooleanProperty listselect) {
+		Model model = hideModel.getModel().get();
 		if (!model.modelParts.containsKey(partName))
 			return false;
 		TriangleMesh mesh = new TriangleMesh();
@@ -301,11 +314,11 @@ public class ModelView extends Pane {
 		mesh.getTexCoords().addAll(model.texArray);
 		mesh.getFaces().addAll(model.modelParts.get(partName));
 
-		Image texture = SwingFXUtils.toFXImage(HidePack.getTexture(model.texture).Image, null);
+		Image texture = SwingFXUtils.toFXImage(HidePack.getTexture(hideModel.textureName).Image, null);
 
 		PhongMaterial mat = new PhongMaterial(enableColor);
 		// テクスチャがあるなら
-		if (model.texture != null && HidePack.getTexture(model.texture) != null) {
+		if (hideModel.textureName != null && HidePack.getTexture(hideModel.textureName) != null) {
 			mat.setDiffuseMap(texture);
 		}
 		PhongMaterial lineMat = new PhongMaterial(Color.WHITE, texture, null, null, null);

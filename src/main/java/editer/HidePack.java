@@ -16,6 +16,7 @@ import types.PackInfo;
 import types.base.DataBase;
 import types.items.GunData;
 import types.items.MagazineData;
+import types.model.HideModel;
 import types.projectile.BulletData;
 
 /** パック本体 */
@@ -40,6 +41,8 @@ public class HidePack {
 	public static ObservableList<HideImage> TextureList;
 	/** ModelのList Model */
 	public static ObservableList<Model> ModelList;
+	/** ModelInfoのList HideModel */
+	public static ObservableList<HideModel> ModelInfoList;
 	/** 編集中のパック デフォルトを含む */
 	public static ObservableList<PackInfo> OpenPacks;
 	/** デフォルトパック */
@@ -65,6 +68,8 @@ public class HidePack {
 		SoundList = FXCollections.observableArrayList();
 		TextureList = FXCollections.observableArrayList();
 		OpenPacks = FXCollections.observableArrayList();
+		ModelList = FXCollections.observableArrayList();
+		ModelInfoList = FXCollections.observableArrayList();
 		DefaultPack = new PackInfo();
 		DefaultPack.PACK_NAME = "default";
 		DefaultPack.PACK_ROOTNAME = "default";
@@ -81,6 +86,7 @@ public class HidePack {
 		GunList.addListener(propertyInit);
 		MagazineList.addListener(propertyInit);
 		OpenPacks.addListener(propertyInit);
+		ModelInfoList.addListener(propertyInit);
 	}
 
 	/** PackCashインポート */
@@ -116,51 +122,36 @@ public class HidePack {
 
 	/** 銃取得 */
 	public static GunData getGunData(String displayName) {
-		for (GunData data : GunList) {
-			if (data.ITEM_DISPLAYNAME.equals(displayName)) {
-				return data;
-			}
-		}
-		return null;
+		return getDataByName(GunList, displayName);
 	}
 
 	/** 弾取得 */
 	public static MagazineData getMagazineData(String displayName) {
-		for (MagazineData data : MagazineList) {
-			if (data.ITEM_DISPLAYNAME.equals(displayName)) {
-				return data;
-			}
-		}
-		return null;
+		return getDataByName(MagazineList, displayName);
 	}
 
 	/** パック取得 */
 	public static PackInfo getPack(String packName) {
-		for (PackInfo data : OpenPacks) {
-			if (data.PACK_NAME.equals(packName)) {
-				return data;
-			}
-		}
-		return null;
+		return getDataByName(OpenPacks, packName);
 	}
-
 
 	/** アイコン取得 */
-	public static HideImage getIcon(String string) {
-		for (HideImage data : IconList) {
-			if (data.getDisplayName().equals(string)) {
-				return data;
-			}
-		}
-		return null;
+	public static HideImage getIcon(String displayName) {
+		return getDataByName(IconList, displayName);
 	}
+
+	/** Model取得 */
+	public static Model getModel(String displayName) {
+		return getDataByName(ModelList, displayName);
+	}
+
+	/** ModelInfo取得 */
+	public static HideModel getModelInfo(String displayName) {
+		return getDataByName(ModelInfoList, displayName);
+	}
+
 	/** テクスチャ取得 */
-	public static HideImage getTexture(String string) {
-		for (HideImage data : TextureList) {
-			if (data.getDisplayName().equals(string)) {
-				return data;
-			}
-		}
-		return null;
+	public static HideImage getTexture(String displayName) {
+		return getDataByName(TextureList, displayName);
 	}
 }

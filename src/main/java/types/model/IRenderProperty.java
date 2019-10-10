@@ -1,4 +1,4 @@
-package model;
+package types.model;
 
 public interface IRenderProperty {
 	/** レンダー時のオプションプロパティ取得 */

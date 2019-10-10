@@ -1,4 +1,4 @@
-package model;
+package types.model;
 
 public interface IBone extends IRenderProperty {
 	abstract public void update();

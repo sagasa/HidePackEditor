@@ -52,6 +52,7 @@ import javafx.util.Callback;
 import types.PackInfo;
 import types.items.GunData;
 import types.items.MagazineData;
+import types.model.HideModel;
 
 public class RootController implements Initializable {
 	private static final Logger log = LogManager.getLogger();
@@ -112,20 +113,19 @@ public class RootController implements Initializable {
 
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
-
 		// TODO
-		//*
+		// *
 		Pane modelV = new Pane();
 		Stage modelView = new Stage(StageStyle.UTILITY);
 		ModelView mv = new ModelView(modelV);
-		mv.showModelView(ModelIO.read());
+		mv.showModelView(new HideModel(ModelIO.read()));
 		modelView = new Stage(StageStyle.UTILITY);
 		modelView.setScene(new Scene(modelV));
 		modelView.initOwner(STAGE);
 		modelView.initModality(Modality.NONE);
 		// clipEditer.setResizable(false);
 		modelView.setTitle("ModelView");
-		modelView.show();//*/
+		modelView.show();// */
 
 		write();
 
@@ -239,7 +239,6 @@ public class RootController implements Initializable {
 	public void openNewPack() {
 
 	}
-
 
 	// ========メニュー操作========
 	public void openPack() {

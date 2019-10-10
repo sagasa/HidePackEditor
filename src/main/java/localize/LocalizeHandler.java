@@ -14,7 +14,6 @@ import java.util.ResourceBundle;
 import helper.DataPath;
 import helper.EditHelper;
 import jdk.internal.util.xml.impl.ReaderUTF8;
-import model.ModelSelector;
 import types.PackInfo;
 import types.base.DataBase;
 import types.effect.Explosion;
@@ -22,6 +21,7 @@ import types.effect.Recoil;
 import types.effect.Sound;
 import types.items.GunData;
 import types.items.MagazineData;
+import types.model.ModelSelector;
 import types.projectile.BulletData;
 
 /** langの読み込みと表示用 + 説明書きも対応 */

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -13,18 +12,17 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import model.HideModel;
+import resources.Model;
 
 public class ModelIO {
 	public static final String SPACE = " ";// TODO
 	public static final String SLASH = "/";
 
 	@Deprecated
-	public static HideModel read() {
+	public static Model read() {
 		File file = new File("./[AR1]StG44/ModelStG44.obj");
 		try {
-			System.out.println(file);
-			return read(Files.lines(Paths.get(file.getPath()), PackIO.UTF8)
+			return read(new Model("stg44"), Files.lines(Paths.get(file.getPath()), PackIO.UTF8)
 					.collect(Collectors.joining(System.getProperty("line.separator"))));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -32,11 +30,11 @@ public class ModelIO {
 		return null;
 	}
 
-	public static HideModel read(String data) {
-		System.out.println(data);
+	/** Modelに頂点情報を書き込む */
+	public static Model read(Model model, String data) {
 		float[] vertexArray = null;
 		float[] uvArray = null;
-		Map<String, int[]> model = new HashMap<>();
+		Map<String, int[]> polygons = new HashMap<>();
 
 		String part = "default";
 		try {
@@ -62,7 +60,6 @@ public class ModelIO {
 					uvArray = ArrayUtils.addAll(uvArray, tex);
 				} else if (key.equalsIgnoreCase("f")) {
 					int[] poly = null;
-					// すべて
 					for (String str : value.split(SPACE)) {
 						poly = ArrayUtils.addAll(poly, toIntegerArray(str, SLASH, 2));
 					}
@@ -77,7 +74,7 @@ public class ModelIO {
 						for (int j2 = 0; j2 < triangle.length; j2++) {
 							triangle[j2] = triangle[j2] - 1;
 						}
-						model.put(part, ArrayUtils.addAll(model.get(part), triangle));
+						polygons.put(part, ArrayUtils.addAll(polygons.get(part), triangle));
 					}
 				}
 			}
@@ -85,7 +82,10 @@ public class ModelIO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return new HideModel(vertexArray, uvArray, model);
+		model.modelParts = polygons;
+		model.texArray = uvArray;
+		model.vertArray = vertexArray;
+		return model;
 	}
 
 	private static float[] toFloatArray(String str, String key, int length) {

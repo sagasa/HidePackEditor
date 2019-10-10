@@ -28,8 +28,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import model.Bone;
-import model.ModelSelector;
 import resources.HideImage;
 import types.PackInfo;
 import types.base.DataBase;
@@ -38,6 +36,8 @@ import types.base.IEditData;
 import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
+import types.model.Bone;
+import types.model.ModelSelector;
 
 /** 編集パネルのルート */
 public class EditPanels extends Pane {
