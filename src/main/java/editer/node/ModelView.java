@@ -15,12 +15,10 @@ import javax.imageio.ImageIO;
 import editer.HidePack;
 import editer.node.EditNode.EditNodeType;
 import editer.node.EditPanels.EditType;
-import helper.AutoCompletionTextAreaBinding;
 import helper.DataPath;
 import helper.EditHelper;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.FloatProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -31,6 +29,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
@@ -41,7 +40,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -69,8 +67,11 @@ import javafx.util.Callback;
 import resources.HideImage;
 import resources.Model;
 import types.base.IEditData;
+import types.model.AnimationKey;
+import types.model.AnimationType;
 import types.model.Bone;
 import types.model.HideModel;
+import types.model.IRenderProperty;
 import types.model.ModelSelector;
 
 public class ModelView extends Pane {
@@ -79,7 +80,8 @@ public class ModelView extends Pane {
 
 	public HideModel hideModel;
 	// プロパティMap
-	private static Map<String, FloatProperty> renderPropertyMap = new HashMap<>();
+	private static Map<AnimationType, Float> renderPropertyMap = new HashMap<>();
+	private static Map<String,String> partsPropertyMap = new HashMap<>();
 
 	// ビュー設定
 	private BooleanProperty showLine = new SimpleBooleanProperty(true);
@@ -212,27 +214,25 @@ public class ModelView extends Pane {
 
 	@SuppressWarnings("unchecked")
 	private void writeBoneEditer() {
-		TextArea text = new TextArea();
-		text.setLayoutY(275);
-		text.setPrefWidth(250);
-		text.setVisible(false);
-		text.prefHeightProperty().bind(this.heightProperty().subtract(275));
-		AutoCompletionTextAreaBinding.bindAutoCompletion(text, Bone.autoFill);
+		ListView<AnimationKey> animationList = new ListView<>();
+		animationList.setLayoutY(275);
+		animationList.setPrefWidth(250);
+		animationList.setVisible(false);
+		animationList.prefHeightProperty().bind(this.heightProperty().subtract(275));
+	//	AutoCompletionTextAreaBinding.bindAutoCompletion(text, Bone.autoFill);
 
-		this.getChildren().addAll(text);
+		this.getChildren().addAll(animationList);
 		selectItem.addListener((v, ov, nv) -> {
 			if (ov != null && ov.getValue() != null) {
-				ov.getValue().setVisible(false);
-				text.textProperty().unbindBidirectional(
-						(Property<String>) EditHelper.getProperty(ov.getValue(), new DataPath("script")));
+				ov.getValue().visible.set(false);
 			}
 			if (nv.getValue() != null) {
-				nv.getValue().setVisible(true);
-				text.setVisible(true);
-				text.textProperty().bindBidirectional(
-						(Property<String>) EditHelper.getProperty(nv.getValue(), new DataPath("script")));
+				nv.getValue().visible.set(true);
+				animationList.setVisible(true);
+				animationList.itemsProperty().set(
+						(ObservableList<AnimationKey>) EditHelper.getProperty(nv.getValue(), new DataPath("script")));
 			} else {
-				text.setVisible(false);
+				animationList.setVisible(false);
 			}
 		});
 	}
@@ -241,11 +241,18 @@ public class ModelView extends Pane {
 	public void loadBone() {
 		clearParts();
 		System.out.println(hideModel.getModel().get().modelParts);
-		hideModel.rootBone.init(new ArrayList<Transform>(), name -> {
-			if (renderPropertyMap.containsKey(name)) {
-				return renderPropertyMap.get(name).get();
+		hideModel.rootBone.init(new ArrayList<Transform>(), new IRenderProperty() {
+
+			@Override
+			public Map<AnimationType, Float> getRenderPropery() {
+				return renderPropertyMap;
 			}
-			return 0;
+
+			@Override
+			public Map<String, List<String>> getPartPropery() {
+				// TODO 自動生成されたメソッド・スタブ
+				return null;
+			}
 		});
 		// リスト上からのリンク更新
 		((BoneModelItem) bonetree.getRoot()).imageWrite();
