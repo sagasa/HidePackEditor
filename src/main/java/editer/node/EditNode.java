@@ -18,7 +18,6 @@ import helper.EditHelper;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -37,10 +36,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
@@ -51,7 +50,7 @@ import types.base.DataBase;
 import types.base.IEditData;
 
 /** リスナを実装した編集用ノード */
-public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
+public class EditNode extends Pane implements ChangeListener<IEditData> {
 
 	/** 変更対象 */
 	protected final Class<? extends DataBase> Clazz;
@@ -396,6 +395,6 @@ public class EditNode extends AnchorPane implements ChangeListener<IEditData> {
 	}
 
 	public enum EditNodeType {
-		String, StringFromList, Integer, Float, Boolean, StringList, Number, RootPack
+		String, StringFromList, Integer, Float, Boolean, StringList, Number, RootPack,AnimationList
 	}
 }

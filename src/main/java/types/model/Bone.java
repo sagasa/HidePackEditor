@@ -1,10 +1,19 @@
 package types.model;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,15 +35,37 @@ public class Bone extends DataBase {
 
 	HideModel rootModel;
 
+	// Gson変換オプション
+	static {
+		DataBase.addGsonOption(Bone.class, new JsonSerializer<Bone>() {
+			@Override
+			public JsonElement serialize(Bone src, Type typeOfSrc, JsonSerializationContext context) {
+				return null;
+			}
+		});
+		DataBase.addGsonOption(Bone.class, new TypeAdapter<Bone>() {
+
+			@Override
+			public void write(JsonWriter out, Bone value) throws IOException {
+
+			}
+
+			@Override
+			public Bone read(JsonReader in) throws IOException {
+				return null;
+			}
+
+		});
+	}
+
 	public Bone() {
-		for(AnimationType type:AnimationType.values()){
+		for (AnimationType type : AnimationType.values()) {
 			animation.put(type, new ArrayList<>());
 		}
 
 	}
 
 	public Bone(Set<String> keySet) {
-		this();
 		keySet.forEach(name -> this.models.add(new ModelSelector(name)));
 	}
 

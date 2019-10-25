@@ -18,7 +18,7 @@ public class AnimationKey extends DataBase implements Comparable<AnimationKey> {
 		if (list.size() < 1)
 			return;
 		//降順でソート
-		Collections.sort(list);
+		Collections.sort(list);//TODO 最適化!!
 		/**keyの値が低いほう*/
 		AnimationKey keyStart = null;
 		/**keyの値が高いほう*/

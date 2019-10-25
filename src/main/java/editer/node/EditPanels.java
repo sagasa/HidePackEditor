@@ -45,7 +45,7 @@ public class EditPanels extends Pane {
 	/** 編集パネルの対象 */
 	public enum EditType {
 	Item(ItemData.class), Gun(GunData.class), Magazine(MagazineData.class), PakcInfo(PackInfo.class),
-	ModelBone(Bone.class), ModelSelector(ModelSelector.class);
+	ModelBone(Bone.class), ModelSelector(ModelSelector.class), Bone(Bone.class);
 
 		/** 判別用の型 */
 		public Class<? extends DataBase> Clazz;
@@ -253,7 +253,7 @@ public class EditPanels extends Pane {
 		Node model = new EditNode(editValue, type, new DataPath("ITEM_MODELNAME"), EditNodeType.StringFromList)
 				.setFromList(HidePack.IconList);
 
-		root.getChildren().addAll(dizplayname, useshortname, shortname,icon,model);
+		root.getChildren().addAll(dizplayname, useshortname, shortname, icon, model);
 		// root.setPrefSize(200, 72);
 		return root;
 	}

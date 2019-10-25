@@ -5,7 +5,6 @@ import java.util.Random;
 
 import io.PackCash;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -13,7 +12,6 @@ import resources.HideImage;
 import resources.Model;
 import resources.Sound;
 import types.PackInfo;
-import types.base.DataBase;
 import types.items.GunData;
 import types.items.MagazineData;
 import types.model.HideModel;
@@ -76,17 +74,6 @@ public class HidePack {
 		DefaultPack.PACK_VER = "";
 		DefaultPack.PackColor = Color.GRAY;
 		OpenPacks.add(DefaultPack);
-		// DataBaseを追加時にinitを呼ぶリスナー
-		ListChangeListener<DataBase> propertyInit = change -> {
-			while (change.next()) {
-				change.getAddedSubList().forEach(data -> data.init());
-			}
-		};
-
-		GunList.addListener(propertyInit);
-		MagazineList.addListener(propertyInit);
-		OpenPacks.addListener(propertyInit);
-		ModelInfoList.addListener(propertyInit);
 	}
 
 	/** PackCashインポート */
