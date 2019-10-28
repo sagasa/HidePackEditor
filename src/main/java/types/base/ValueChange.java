@@ -6,7 +6,7 @@ public class ValueChange extends DataBase{
 
 	public Operater OPERATER = Operater.Set;
 
-	public Float VALUE_F = null;
+	public String VALUE = null;
 
 	public enum Operater{
 		Set,Add,Multiply,ListAdd,ListRemove

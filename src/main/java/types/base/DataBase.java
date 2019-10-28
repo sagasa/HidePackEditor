@@ -12,12 +12,14 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSerializer;
 
 import helper.DataPath;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
+import types.model.Bone;
 import types.wrapper.ObjectWrapper;
 
 /**
@@ -26,7 +28,8 @@ import types.wrapper.ObjectWrapper;
  */
 public abstract class DataBase implements IEditData {
 
-	private static final List<Entry> JsonOptions = new ArrayList<>();
+	private static Gson gson = null;
+
 	// Gsonオプション系
 	public static class Entry {
 		public Entry(Type type, Object value) {
@@ -39,8 +42,22 @@ public abstract class DataBase implements IEditData {
 	}
 
 	/** オプションを登録 */
-	public static final void addGsonOption(Type type, Object option) {
-		JsonOptions.add(new Entry(type, option));
+	public static void initGson() {
+		List<Entry> jsonOptions = new ArrayList<>();
+		// オプション
+
+		GsonBuilder gb = new GsonBuilder().setPrettyPrinting();
+		jsonOptions.forEach(entry -> {
+			gb.registerTypeAdapter(entry.Type, entry.Value);
+		});
+		gson = gb.create();
+	}
+
+	/** カスタムシリアライザ使用のGson */
+	public static final Gson getGson() {
+		if (gson == null)
+			initGson();
+		return gson;
 	}
 
 	/** .区切りのフィールド名のパスにの型取得する */
@@ -60,15 +77,6 @@ public abstract class DataBase implements IEditData {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	/** カスタムシリアライザ使用のGson */
-	public static Gson getGson() {
-		GsonBuilder gson = new GsonBuilder().setPrettyPrinting();
-		JsonOptions.forEach(entry -> {
-			gson.registerTypeAdapter(entry.Type, entry.Value);
-		});
-		return gson.create();
 	}
 
 	@Override
@@ -141,10 +149,10 @@ public abstract class DataBase implements IEditData {
 		try {
 			propertyMap = new HashMap<>();
 			for (Field field : this.getClass().getFields()) {
-				if (field.getType().isAssignableFrom(List.class)) {
+				if (List.class.isAssignableFrom(field.getType())) {
 					propertyMap.put(field.getName(),
 							new SimpleListProperty<>(FXCollections.observableList((List) field.get(this))));
-				} else if (field.getType().isAssignableFrom(Map.class)) {
+				} else if (Map.class.isAssignableFrom(field.getType())) {
 					propertyMap.put(field.getName(),
 							new SimpleMapProperty<>(FXCollections.observableMap((Map) field.get(this))));
 				} else {
