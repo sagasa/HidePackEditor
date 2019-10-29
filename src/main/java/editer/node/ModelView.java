@@ -285,7 +285,6 @@ public class ModelView extends Pane {
 		back.setMesh(mesh);
 		back.setScaleY(10);
 
-		bone.translate.xProperty();
 
 		// front.scaleXProperty().bind(scale.divide(25));
 		// front.scaleZProperty().bind(scale.divide(25));

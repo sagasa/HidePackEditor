@@ -3,8 +3,6 @@ package editer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
-
 import editer.controller.RootController;
 import io.PackIO;
 import javafx.application.Application;
@@ -15,9 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
-import types.base.DataBase;
-import types.base.ValueChange;
-import types.items.GunData;
 
 public class Editer extends Application {
 	/** 開いているpath */
@@ -30,16 +25,18 @@ public class Editer extends Application {
 
 		PackIO.makePack();
 
-		new ValueChange();
-
-		Gson gson = DataBase.getGson();
-		ValueChange change = new ValueChange();
-		change.VALUE_F = 1f;
-		change = gson.fromJson(gson.toJson(change), ValueChange.class);
-		System.out.println(change.VALUE_F+" "+(change.VALUE_F)*2);
-		System.out.println(DataBase.getType(new GunData(), "BULLET_SPEED"));
-
-		System.exit(0);
+//		new ValueChange();
+//
+//		Gson gson = DataBase.getGson();
+//		ValueChange change = new ValueChange();
+//		change.VALUE = "1.0";
+//		change.PATH = "BULLET_SPEED";
+//		change = gson.fromJson(gson.toJson(change), ValueChange.class);
+//		change.makeCash(GunData.class);
+//		System.out.println(change.VALUE_CASH+" "+(change.VALUE_CASH.getClass()));
+//		System.out.println();
+//
+//		System.exit(0);
 
 		launch(arg);
 

@@ -12,14 +12,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSerializer;
 
 import helper.DataPath;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
-import types.model.Bone;
 import types.wrapper.ObjectWrapper;
 
 /**
@@ -58,25 +56,6 @@ public abstract class DataBase implements IEditData {
 		if (gson == null)
 			initGson();
 		return gson;
-	}
-
-	/** .区切りのフィールド名のパスにの型取得する */
-	public static Class<?> getType(DataBase data, String path) {
-		String[] split = path.split("\\.", 2);
-		try {
-			// フィールド取得
-			Field field = data.getClass().getField(split[0]);
-			if (split.length == 2) {
-				return getType((DataBase) field.get(data), split[1]);
-			} else if (split.length == 1) {
-				return field.getType();
-			}
-		} catch (NoSuchFieldException e) {
-			log.error("cant find field : " + path + " from " + data.getClass().getSimpleName());
-		} catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@Override
@@ -183,6 +162,55 @@ public abstract class DataBase implements IEditData {
 			}
 			return clone;
 		} catch (CloneNotSupportedException | IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	//編集では使用しない
+	/** .区切りのフィールド名のパスの型取得する */
+	protected final static Class<?> getType(DataBase data, String path) {
+		return getType(data.getClass(), path);
+	}
+
+	/** .区切りのフィールド名のパスの型取得する */
+	protected final static Class<?> getType(Class<?> type, String path) {
+		String[] split = path.split("\\.", 2);
+		try {
+			// フィールド取得
+			Field field = type.getField(split[0]);
+			if (split.length == 2) {
+				return getType(field.getType(), split[1]);
+			} else if (split.length == 1) {
+				return field.getType();
+			}
+		} catch (NoSuchFieldException e) {
+			log.error("cant find field : " + path + " from " + type.getSimpleName());
+		} catch (SecurityException | IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**あんまり遅いんでキャッシュ*/
+	private static final Map<String, Type> fieldTypeMap = new HashMap<>();
+
+	/** .区切りのフィールド名のパスの型取得する */
+	protected final static Type getGenericType(Class<?> type, String path) {
+		String[] split = path.split("\\.", 2);
+		try {
+			// フィールド取得
+			Field field = type.getField(split[0]);
+			if (split.length == 2) {
+				return getGenericType(field.getType(), split[1]);
+			} else if (split.length == 1) {
+				if (!fieldTypeMap.containsKey(path))
+					fieldTypeMap.put(path, field.getGenericType());
+				return fieldTypeMap.get(path);
+			}
+		} catch (NoSuchFieldException e) {
+			log.error("cant find field : " + path + " from " + type.getSimpleName());
+		} catch (SecurityException | IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 		return null;

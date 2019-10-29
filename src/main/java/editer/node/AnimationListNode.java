@@ -3,14 +3,19 @@ package editer.node;
 import editer.node.EditPanels.EditType;
 import helper.DataPath;
 import javafx.beans.property.Property;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import types.base.IEditData;
+import types.model.AnimationKey;
 
 /** アニメーション */
 public class AnimationListNode extends EditNode {
+
+	private TabPane tab = new TabPane();
+	private ListView<AnimationKey> listView = new ListView<>();
 
 	public AnimationListNode(Property<IEditData> editValue, DataPath path) {
 		super(editValue, EditType.Bone, path, EditNodeType.AnimationList);
@@ -23,17 +28,8 @@ public class AnimationListNode extends EditNode {
 		private boolean isBind = false;
 
 		public KeyEditCell() {
-			root.getChildren().addAll( text);
+			root.getChildren().addAll(text);
 		}
-
-		private void rep(int index0, int index1) {
-			ObservableList<String> list = getListView().getItems();
-			String cash = list.get(index0);
-			list.set(index0, list.get(index1));
-			list.set(index1, cash);
-		}
-
-
 
 		@Override
 		protected void updateItem(String data, boolean empty) {
