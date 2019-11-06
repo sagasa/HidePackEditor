@@ -18,10 +18,10 @@ public class AnimationListNode extends EditNode {
 	private ListView<AnimationKey> listView = new ListView<>();
 
 	public AnimationListNode(Property<IEditData> editValue, DataPath path) {
-		super(editValue, EditType.Bone, path, EditNodeType.AnimationList);
-
+		super(editValue, EditType.Model, path, EditNodeType.AnimationList);
 
 	}
+
 	public class KeyEditCell extends ListCell<String> {
 		private Label text = new Label();
 		private AnchorPane root = new AnchorPane();
@@ -43,7 +43,6 @@ public class AnimationListNode extends EditNode {
 			if (!empty) {
 
 				text.setText(data);
-
 
 				setGraphic(root);
 				getIndex();

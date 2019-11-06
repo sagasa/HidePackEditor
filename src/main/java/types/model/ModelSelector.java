@@ -19,6 +19,7 @@ public class ModelSelector extends DataBase {
 	transient public StringProperty nowViewModel = new SimpleStringProperty("");
 
 	public ModelSelector() {
+		nowViewModel.bind(getProperty("defaultModel"));//TODO
 	}
 
 	public ModelSelector(String model) {

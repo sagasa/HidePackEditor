@@ -36,7 +36,7 @@ import types.base.IEditData;
 import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
-import types.model.Bone;
+import types.model.HideModel;
 import types.model.ModelSelector;
 
 /** 編集パネルのルート */
@@ -45,7 +45,7 @@ public class EditPanels extends Pane {
 	/** 編集パネルの対象 */
 	public enum EditType {
 	Item(ItemData.class), Gun(GunData.class), Magazine(MagazineData.class), PakcInfo(PackInfo.class),
-	ModelBone(Bone.class), ModelSelector(ModelSelector.class), Bone(Bone.class);
+	Model(HideModel.class), ModelSelector(ModelSelector.class);
 
 		/** 判別用の型 */
 		public Class<? extends DataBase> Clazz;
