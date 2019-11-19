@@ -113,6 +113,19 @@
                                     </ListView>
       									</content>
       								</Tab>
+                              <Tab text="HideModel">
+                                 <content>
+                                    <ListView id="gunlist" fx:id="modelInfoList" onDragOver="#isGun" prefHeight="200.0" prefWidth="200.0">
+                                       <contextMenu>
+                                          <ContextMenu>
+                                             <items>
+                                                <MenuItem mnemonicParsing="false" onAction="#addGun" text="AddNewGun" />
+                                             </items>
+                                          </ContextMenu>
+                                       </contextMenu>
+                                    </ListView>
+                                 </content>
+                              </Tab>
       							</tabs>
       						</TabPane>
                      </items>
@@ -167,12 +180,7 @@
 						</Tab>
 						<Tab text="Model">
                      <content>
-                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
-                          <items>
-      								<ListView fx:id="modelList" prefHeight="200.0" prefWidth="200.0" />
-                              <ListView fx:id="modelInfoList" prefHeight="200.0" prefWidth="200.0" />
-                          </items>
-                        </SplitPane>
+                        <ListView fx:id="modelList" prefHeight="200.0" prefWidth="200.0" />
                      </content>
 						</Tab>
 					</tabs>

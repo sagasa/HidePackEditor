@@ -29,6 +29,7 @@ public class EditHelper {
 			}
 			return field;
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

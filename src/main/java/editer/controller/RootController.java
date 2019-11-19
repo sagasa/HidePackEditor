@@ -152,6 +152,7 @@ public class RootController implements Initializable {
 		});
 	}
 
+	/**選択されたら実行*/
 	private static void bindEditer(ListView<DataEntityInterface> list, Consumer<DataEntityInterface> run) {
 		// フォーカスが切れたら選択解除
 		list.focusedProperty().addListener((v, ov, nv) -> {

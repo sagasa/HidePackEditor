@@ -10,7 +10,7 @@ import types.base.DataBase;
 /** Modelはパックから名前で参照する */
 public class HideModel extends DataBase implements DataEntityInterface {
 
-	public static class Pos3f {
+	public static class Pos3f extends DataBase {
 		public float X = 0, Y = 0, Z = 0;
 	}
 

@@ -103,6 +103,7 @@ public class EditPanels extends Pane {
 		writeGunEditer();
 		writeMagazineEditer();
 		writePackEditer();
+		writeModelEditer();
 	}
 
 	/** エディタの内容設定 */
@@ -164,6 +165,12 @@ public class EditPanels extends Pane {
 		addBulletEditer(this);
 	}
 
+	/** HideModel */
+	private void writeModelEditer() {
+		final EditType type = EditType.Model;
+		addEditPane(makePos3Editer(type, new DataPath("offsetFirstPerson")), type);
+	}
+
 	private void addBulletEditer(Pane editer) {
 		final EditType type = EditType.Magazine;
 		final DataPath top = new DataPath("BULLETDATA");
@@ -181,6 +188,18 @@ public class EditPanels extends Pane {
 		addEditPane(makeSoundEditer(type, top.append("SOUND_HIT_GROUND")), type);
 		// sound
 		addEditPane(makeSoundEditer(type, top.append("SOUND_PASSING")), type);
+	}
+
+	/** Recoil */
+	private Region makePos3Editer(EditType type, DataPath path) {
+		VBox root = new VBox();
+		Label label = new Label(EditHelper.getLocalizedName(type.Clazz, path));
+		label.setPrefWidth(200);
+		label.setAlignment(Pos.CENTER);
+		root.getChildren().add(label);
+		// 数値系
+		root.getChildren().add(makeCateEditPanel(type, -1, path));
+		return root;
 	}
 
 	/** Recoil */

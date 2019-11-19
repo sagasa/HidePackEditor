@@ -21,6 +21,8 @@ import types.effect.Recoil;
 import types.effect.Sound;
 import types.items.GunData;
 import types.items.MagazineData;
+import types.model.HideModel;
+import types.model.HideModel.Pos3f;
 import types.model.ModelSelector;
 import types.projectile.BulletData;
 
@@ -49,6 +51,8 @@ public class LocalizeHandler {
 		makeLocalize(PackInfo.class);
 		makeLocalize(MagazineData.class);
 		makeLocalize(ModelSelector.class);
+		makeLocalize(Pos3f.class);
+		makeLocalize(HideModel.class);
 
 		writeDefaultLang();
 	}
