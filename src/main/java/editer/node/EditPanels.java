@@ -25,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -169,6 +170,7 @@ public class EditPanels extends Pane {
 	private void writeModelEditer() {
 		final EditType type = EditType.Model;
 		addEditPane(makePos3Editer(type, new DataPath("offsetFirstPerson")), type);
+
 	}
 
 	private void addBulletEditer(Pane editer) {
@@ -198,8 +200,17 @@ public class EditPanels extends Pane {
 		label.setAlignment(Pos.CENTER);
 		root.getChildren().add(label);
 		// 数値系
-		root.getChildren().add(makeCateEditPanel(type, -1, path));
+		HBox hbox = new HBox();
+		hbox.getChildren().add(setSize(new EditNode(editValue, type, path.append("X"), EditNodeType.Number), 65, 24));
+		hbox.getChildren().add(setSize(new EditNode(editValue, type, path.append("Y"), EditNodeType.Number), 65, 24));
+		hbox.getChildren().add(setSize(new EditNode(editValue, type, path.append("Z"), EditNodeType.Number), 65, 24));
+		root.getChildren().add(hbox);
 		return root;
+	}
+
+	private Region setSize(Region node,double x,double y) {
+		node.setPrefSize(x, y);
+		return node;
 	}
 
 	/** Recoil */

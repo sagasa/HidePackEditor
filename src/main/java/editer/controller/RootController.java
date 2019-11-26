@@ -111,6 +111,8 @@ public class RootController implements Initializable {
 		bindEditer(magazineList, (item) -> editMagazine(item));
 		bindEditer(modelInfoList, (item) -> editModelInfo(item));
 
+		HidePack.ModelInfoList.add(new HideModel(ModelIO.read()));
+
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
 		// TODO
@@ -152,7 +154,7 @@ public class RootController implements Initializable {
 		});
 	}
 
-	/**選択されたら実行*/
+	/** 選択されたら実行 */
 	private static void bindEditer(ListView<DataEntityInterface> list, Consumer<DataEntityInterface> run) {
 		// フォーカスが切れたら選択解除
 		list.focusedProperty().addListener((v, ov, nv) -> {
@@ -208,6 +210,8 @@ public class RootController implements Initializable {
 		// Sound
 		soundList.setItems(
 				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.SoundList, itemSearch.getText())));
+		modelInfoList.setItems(
+				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.ModelInfoList, itemSearch.getText())));
 	}
 
 	/** タブ切り替え時にアイテムエディタを描画 */
@@ -318,8 +322,8 @@ public class RootController implements Initializable {
 
 	public void editModelInfo(DataEntityInterface item) {
 		if (item != null) {
-			log.debug(HidePack.getMagazineData(item.getDisplayName()).toString());
-			editer.setEditValue(HidePack.getMagazineData(item.getDisplayName()));
+			log.debug(HidePack.getModelInfo(item.getDisplayName()).toString());
+			editer.setEditValue(HidePack.getModelInfo(item.getDisplayName()));
 		}
 	}
 
