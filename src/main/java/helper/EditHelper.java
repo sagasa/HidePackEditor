@@ -80,7 +80,7 @@ public class EditHelper {
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
-		return Float.MIN_VALUE;
+		return -Float.MAX_VALUE;
 	}
 
 	/** pathからカテゴリを取得 */
