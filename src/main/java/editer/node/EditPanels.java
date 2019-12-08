@@ -39,6 +39,7 @@ import types.base.IEditData;
 import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
+import types.model.AnimationType;
 import types.model.HideModel;
 import types.model.ModelSelector;
 
@@ -200,7 +201,10 @@ public class EditPanels extends Pane {
 		label.setPrefWidth(200);
 		label.setAlignment(Pos.CENTER);
 
-		boneEditer.getChildren().addAll(label, defaultModel);
+		for(AnimationType animation:AnimationType.values())
+		TabPane animation = new TabPane();
+
+		boneEditer.getChildren().addAll(label);
 
 		boneEditer.setStyle("-fx-background-color: lightGray;");
 		boneEditer.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
@@ -230,8 +234,12 @@ public class EditPanels extends Pane {
 		addEditPane(makeSoundEditer(type, top.append("SOUND_PASSING")), type);
 	}
 
-	/** Recoil */
 	private Region makePos3Editer(EditType type, DataPath path) {
+		return makePos3Editer(editValue, type, path);
+	}
+
+	/** Pos3f */
+	private Region makePos3Editer(ObjectProperty<IEditData> value, EditType type, DataPath path) {
 		VBox root = new VBox();
 		Label label = new Label(EditHelper.getLocalizedName(type.Clazz, path));
 		label.setPrefWidth(200);
@@ -239,9 +247,9 @@ public class EditPanels extends Pane {
 		root.getChildren().add(label);
 		// 数値系
 		HBox hbox = new HBox();
-		hbox.getChildren().add(setSize(new EditNode(editValue, type, path.append("X"), EditNodeType.Number), 65, 24));
-		hbox.getChildren().add(setSize(new EditNode(editValue, type, path.append("Y"), EditNodeType.Number), 65, 24));
-		hbox.getChildren().add(setSize(new EditNode(editValue, type, path.append("Z"), EditNodeType.Number), 65, 24));
+		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("X"), EditNodeType.Number), 65, 24));
+		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("Y"), EditNodeType.Number), 65, 24));
+		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("Z"), EditNodeType.Number), 65, 24));
 		root.getChildren().add(hbox);
 		return root;
 	}
