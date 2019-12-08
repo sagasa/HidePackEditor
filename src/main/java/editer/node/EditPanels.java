@@ -10,6 +10,8 @@ import java.util.function.Consumer;
 import editer.HidePack;
 import editer.controller.RootController;
 import editer.node.EditNode.EditNodeType;
+import editer.node.model.ModelTreeView;
+import editer.node.model.ModelView;
 import helper.DataPath;
 import helper.EditHelper;
 import javafx.beans.property.BooleanProperty;
@@ -162,7 +164,6 @@ public class EditPanels extends Pane {
 		addEditPane(makeImageNode(type, new DataPath("ITEM_ICONNAME"), HidePack.IconList), type);
 		// Cate0
 		addEditPane(makeCateEditPanel(type, 0), type);
-
 		addBulletEditer(this);
 	}
 
@@ -170,7 +171,44 @@ public class EditPanels extends Pane {
 	private void writeModelEditer() {
 		final EditType type = EditType.Model;
 		addEditPane(makePos3Editer(type, new DataPath("offsetFirstPerson")), type);
+		// 右側にモデル確認ビューを置く
+		ModelView modelView = new ModelView(editValue);
+		modelView.translateXProperty().bind(rootPane.widthProperty().add(5));
+		modelView.prefWidthProperty().bind(widthProperty().subtract(rootPane.widthProperty()).add(-5));
+		modelView.prefHeightProperty().bind(heightProperty());
 
+		ModelTreeView treeView = new ModelTreeView(editValue, modelView);
+		addEditPane(treeView, type);
+		// MSEditer
+		VBox msEditer = new VBox();
+		Label label = new Label("ModelSelecter");
+		label.setPrefWidth(200);
+		label.setAlignment(Pos.CENTER);
+
+		EditNode defaultModel = new EditNode(treeView.currentItem, EditType.ModelSelector, new DataPath("defaultModel"),
+				EditNodeType.StringFromList);
+
+		msEditer.getChildren().addAll(label, defaultModel);
+
+		msEditer.setStyle("-fx-background-color: lightGray;");
+		msEditer.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone.not()));
+		msEditer.visibleProperty().bind(editModes.get(type).and(treeView.currentItemIsBone.not()));
+
+		// BoneEditer
+		VBox boneEditer = new VBox();
+		label = new Label("Bone");
+		label.setPrefWidth(200);
+		label.setAlignment(Pos.CENTER);
+
+		boneEditer.getChildren().addAll(label, defaultModel);
+
+		boneEditer.setStyle("-fx-background-color: lightGray;");
+		boneEditer.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
+		boneEditer.visibleProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
+
+		rootPane.getChildren().addAll(msEditer, boneEditer);
+
+		this.getChildren().addAll(modelView);
 	}
 
 	private void addBulletEditer(Pane editer) {
@@ -208,7 +246,7 @@ public class EditPanels extends Pane {
 		return root;
 	}
 
-	private Region setSize(Region node,double x,double y) {
+	private Region setSize(Region node, double x, double y) {
 		node.setPrefSize(x, y);
 		return node;
 	}

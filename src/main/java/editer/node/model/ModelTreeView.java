@@ -1,4 +1,4 @@
-package editer.node;
+package editer.node.model;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.util.function.BiConsumer;
 import javax.imageio.ImageIO;
 
 import editer.HidePack;
+import editer.node.EditNode;
 import editer.node.EditNode.EditNodeType;
 import editer.node.EditPanels.EditType;
 import helper.DataPath;
@@ -24,6 +25,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -66,6 +68,7 @@ import javafx.scene.transform.Translate;
 import javafx.util.Callback;
 import resources.HideImage;
 import resources.Model;
+import types.base.DataBase;
 import types.base.IEditData;
 import types.model.AnimationKey;
 import types.model.AnimationType;
@@ -74,111 +77,30 @@ import types.model.HideModel;
 import types.model.IRenderProperty;
 import types.model.ModelSelector;
 
-public class ModelView extends Pane {
-	private SubScene modelView = new SubScene(new Group(), 400, 400, true, SceneAntialiasing.BALANCED);;
+public class ModelTreeView extends EditNode {
 	public TreeView<Bone> bonetree;
 
-	public HideModel hideModel;
+	//表示
+	private ModelView modelView;
 	// プロパティMap
 	private static Map<AnimationType, Float> renderPropertyMap = new HashMap<>();
-	private static Map<String,String> partsPropertyMap = new HashMap<>();
+	private static Map<String, String> partsPropertyMap = new HashMap<>();
 
-	// ビュー設定
-	private BooleanProperty showLine = new SimpleBooleanProperty(true);
-	// 視点移動用
-	private double mouseX;
-	private double mouseY;
-	private Rotate viewRotateX = new Rotate(0, Rotate.X_AXIS);
-	private Rotate viewRotateY = new Rotate(0, Rotate.Y_AXIS);
-	private Translate viewPoint = new Translate(0, 0, 0);
-	private DoubleProperty zoom = new SimpleDoubleProperty(1);
-	/** モデル再描画リスナ */
-	private ChangeListener<Model> modelListener = (v, ov, nv) -> {
 
-	};
-
-	public void showModelView(HideModel read) {
-		// テスト
-		try {
-			HidePack.TextureList.add(new HideImage("test", ImageIO.read(new File("./[AR1]StG44/SkinStG44.png"))));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		read.textureName = "test";
-		if (hideModel != null)
-			hideModel.getModel().removeListener(modelListener);
-		hideModel = read;
-		hideModel.getModel().addListener(modelListener);
-		bonetree.setRoot(new BoneModelItem(hideModel.rootBone));
-		loadBone();
-	}
-
-	public ModelView(Pane editer) {
-		editer.getChildren().addAll(this);
-		prefWidthProperty().bind(editer.widthProperty());
-		prefHeightProperty().bind(editer.heightProperty());
-		PerspectiveCamera camera = new PerspectiveCamera(false);
-		camera.setFieldOfView(70.0);
-
-		camera.setScaleY(-1);
-		camera.getTransforms().addAll(viewRotateY, viewRotateX, viewPoint);
-
-		Pane modelPane = new Pane(modelView);
-		Scale cameraZoom = new Scale(1, 1);
-
-		cameraZoom.xProperty().bind(zoom);
-		cameraZoom.yProperty().bind(zoom);
-
-		Translate cameraCenter = new Translate();
-		cameraCenter.xProperty().bind(modelPane.widthProperty().divide(-2));
-		cameraCenter.yProperty().bind(modelPane.heightProperty().divide(-2));
-
-		camera.getTransforms().addAll(cameraZoom, cameraCenter);
-
-		modelPane.setLayoutX(250);
-		modelPane.prefWidthProperty().bind(widthProperty().subtract(250));
-		modelPane.prefHeightProperty().bind(heightProperty());
-		modelView.widthProperty().bind(widthProperty().subtract(250));
-		modelView.heightProperty().bind(heightProperty());
-		modelView.setCamera(camera);
-
-		// 支点操作インターフェース
-		modelPane.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-			mouseX = e.getSceneX();
-			mouseY = e.getSceneY();
-		});
-		modelPane.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
-			double nowX = e.getSceneX();
-			double nowY = e.getSceneY();
-			double dx = mouseX - nowX;
-			double dy = mouseY - nowY;
-			if (e.getButton() == MouseButton.SECONDARY) {
-				viewRotateX.setAngle(viewRotateX.getAngle() + dy / 2);
-				viewRotateY.setAngle(viewRotateY.getAngle() - dx / 2);
-			} else if (e.getButton() == MouseButton.PRIMARY) {
-				viewPoint.setX(viewPoint.getX() + dx * zoom.get());
-				viewPoint.setY(viewPoint.getY() + dy * zoom.get());
-			}
-			mouseX = nowX;
-			mouseY = nowY;
-		});
-		modelPane.addEventHandler(ScrollEvent.SCROLL, e -> {
-			if (e.getDeltaX() + e.getDeltaY() < 0) {
-				zoom.set(zoom.get() * 1.1);
-			} else {
-				zoom.set(zoom.get() * 0.9);
-			}
-		});
-
+	public ModelTreeView(Property<IEditData> editValue,ModelView view) {
+		super(editValue, EditType.Model, new DataPath("rootBone"), EditNodeType.Other);
+		modelView = view;
 		// プロパティ編集
+		editerProperty = new SimpleObjectProperty<>();
 		// ボタン
 		Button reload = new Button("reload");
-		reload.setPrefSize(250, 25);
-		reload.setOnAction(e -> loadBone());
+		reload.setPrefSize(200, 25);
+		reload.setOnAction(e -> write());
 		// ボーン
 		bonetree = new TreeView<>();
 		bonetree.setLayoutY(25);
-		bonetree.setPrefHeight(250);
+		bonetree.setPrefWidth(200);
+		bonetree.setPrefHeight(220);
 		bonetree.setCellFactory(new BoneCellFactory());
 		// スクリプト
 
@@ -190,58 +112,47 @@ public class ModelView extends Pane {
 		comboBox.setLayoutY(275);
 		ListView<Entry<String, String>> model_itemMap = new ListView<>();
 
-		this.getChildren().addAll(reload, bonetree, modelPane);
+		this.getChildren().addAll(reload, bonetree);
 
 		selectItem.addListener((v, ov, nv) -> {
-			if (nv != null && ((BoneModelItem) nv).model != null)
-				ms.setValue(((BoneModelItem) nv).model);
-			;
+			if (nv != null) {
+				currentItem.setValue( ((BoneModelItem)nv).getEditValue());
+				currentItemIsBone.set(((BoneModelItem)nv).isBone());
+			}
 		});
-		writeBoneEditer();
-		writeMSEditer();
+		this.setPrefHeight(246);
 	}
 
 	/** ボーンツリー上で現在選択されているアイテム */
 	protected ReadOnlyObjectProperty<TreeItem<Bone>> selectItem;
-	Property<IEditData> ms = new SimpleObjectProperty<>();
+	public Property<IEditData> currentItem = new SimpleObjectProperty<>();
+	public BooleanProperty currentItemIsBone = new SimpleBooleanProperty();
 
 	private void writeMSEditer() {
-		EditNode defaultModel = new EditNode(ms, EditType.ModelSelector, new DataPath("defaultModel"),
+		EditNode defaultModel = new EditNode(currentItem, EditType.ModelSelector, new DataPath("defaultModel"),
 				EditNodeType.StringFromList);
 		defaultModel.translateYProperty().set(350);
 		this.getChildren().addAll(defaultModel);
 	}
 
-	@SuppressWarnings("unchecked")
-	private void writeBoneEditer() {
-		ListView<AnimationKey> animationList = new ListView<>();
-		animationList.setLayoutY(275);
-		animationList.setPrefWidth(250);
-		animationList.setVisible(false);
-		animationList.prefHeightProperty().bind(this.heightProperty().subtract(275));
-	//	AutoCompletionTextAreaBinding.bindAutoCompletion(text, Bone.autoFill);
+	@Override
+	protected void bind(IEditData data) {
+		super.bind(data);
+		BoneModelItem root = new BoneModelItem(getRootBone());
+		bonetree.setRoot(root);
+		write();
+		bonetree.getSelectionModel().select(root);
+	}
 
-		this.getChildren().addAll(animationList);
-		selectItem.addListener((v, ov, nv) -> {
-			if (ov != null && ov.getValue() != null) {
-				ov.getValue().visible.set(false);
-			}
-			if (nv.getValue() != null) {
-				nv.getValue().visible.set(true);
-				animationList.setVisible(true);
-				animationList.itemsProperty().set(
-						(ObservableList<AnimationKey>) EditHelper.getProperty(nv.getValue(), new DataPath("script")));
-			} else {
-				animationList.setVisible(false);
-			}
-		});
+	/**チェックしてないから注意*/
+	private Bone getRootBone() {
+		return ((Bone)editerProperty.getValue());
 	}
 
 	/** 現在の状態を反映 */
-	public void loadBone() {
-		clearParts();
-		System.out.println(hideModel.getModel().get().modelParts);
-		hideModel.rootBone.init(new ArrayList<Transform>(), new IRenderProperty() {
+	public void write() {
+		modelView.clearView();
+		getRootBone().init(new ArrayList<Transform>(), new IRenderProperty() {
 
 			@Override
 			public Map<AnimationType, Float> getRenderPropery() {
@@ -258,122 +169,6 @@ public class ModelView extends Pane {
 		((BoneModelItem) bonetree.getRoot()).imageWrite();
 	}
 
-	public void clearParts() {
-		((Group) modelView.getRoot()).getChildren().clear();
-	}
-
-	/**
-	 * @param moves ボーンの始点を決定
-	 */
-	public void addBoneView(Bone bone, List<Transform> moves) {
-		TriangleMesh mesh = new TriangleMesh();
-
-		mesh.getTexCoords().addAll(0, 0);
-		mesh.getPoints().addAll(0f, 0f, 0f, 0.2f, 0.2f, 0.2f, -0.2f, 0.2f, 0.2f, -0.2f, 0.2f, -0.2f, 0.2f, 0.2f, -0.2f,
-				0f, 1f, 0f);
-		mesh.getFaces().addAll(0, 0, 1, 0, 2, 0, 0, 0, 2, 0, 3, 0, 0, 0, 3, 0, 4, 0, 0, 0, 4, 0, 1, 0, 2, 0, 1, 0, 5, 0,
-				3, 0, 2, 0, 5, 0, 4, 0, 3, 0, 5, 0, 1, 0, 4, 0, 5, 0);
-
-		MeshView front = new MeshView();
-		front.getTransforms().addAll(moves);
-		MeshView back = new MeshView();
-		back.getTransforms().addAll(moves);
-
-		front.setMesh(mesh);
-		front.setScaleY(10);
-
-		back.setMesh(mesh);
-		back.setScaleY(10);
-
-
-		// front.scaleXProperty().bind(scale.divide(25));
-		// front.scaleZProperty().bind(scale.divide(25));
-
-		PhongMaterial mat = new PhongMaterial(Color.color(0, 0, 1));
-		front.setMaterial(mat);
-		back.setMaterial(mat);
-
-		front.setCullFace(CullFace.FRONT);
-		front.setDrawMode(DrawMode.LINE);
-		back.setDrawMode(DrawMode.LINE);
-		((Group) modelView.getRoot()).getChildren().addAll(front, back);
-	}
-
-	private static final Color clearColor = Color.color(1, 1, 1, 0.0);
-	private static final Color enableColor = Color.color(1, 1, 1, 0.9);
-	private static final Color disableColor = Color.color(1, 1, 1, 0.2);
-
-	/** セレクター全てのモデルを登録 */
-	private void addPartView(ModelSelector model, List<Transform> moves, BooleanProperty select) {
-		addPartView(model.defaultModel, model.nowViewModel, moves, select);
-		model.item_model.values().forEach(name -> addPartView(name, model.nowViewModel, moves, select));
-	}
-
-	/** セレクターの選択から表示を切り替える */
-	private boolean addPartView(String partName, StringProperty nowselect, List<Transform> moves,
-			BooleanProperty listselect) {
-		Model model = hideModel.getModel().get();
-		if (!model.modelParts.containsKey(partName))
-			return false;
-		TriangleMesh mesh = new TriangleMesh();
-		mesh.getPoints().addAll(model.vertArray);
-		mesh.getTexCoords().addAll(model.texArray);
-		mesh.getFaces().addAll(model.modelParts.get(partName));
-
-		Image texture = SwingFXUtils.toFXImage(HidePack.getTexture(hideModel.textureName).Image, null);
-
-		PhongMaterial mat = new PhongMaterial(enableColor);
-		// テクスチャがあるなら
-		if (hideModel.textureName != null && HidePack.getTexture(hideModel.textureName) != null) {
-			mat.setDiffuseMap(texture);
-		}
-		PhongMaterial lineMat = new PhongMaterial(Color.WHITE, texture, null, null, null);
-		// 辺表示
-		MeshView linev = new MeshView();
-		linev.visibleProperty().bind(showLine);
-		linev.setCullFace(CullFace.FRONT);
-		linev.setMaterial(lineMat);
-		// スクリプト
-		linev.getTransforms().addAll(moves);
-		linev.setDrawMode(DrawMode.LINE);
-		linev.setMesh(mesh);
-		// 裏
-		MeshView linev2 = new MeshView();
-		linev2.visibleProperty().bind(showLine);
-		linev2.setMaterial(lineMat);
-		// スクリプト
-		linev2.getTransforms().addAll(moves);
-		linev2.setDrawMode(DrawMode.LINE);
-		linev2.setMesh(mesh);
-		// 面表示
-		MeshView facev = new MeshView();
-		facev.setMaterial(mat);
-		facev.setCullFace(CullFace.FRONT);
-		// スクリプト
-		facev.getTransforms().addAll(moves);
-		facev.setMesh(mesh);
-
-		// Matの色で表示切替
-		BiConsumer<Boolean, Boolean> viewChange = (select, enable) -> {
-			if (enable)
-				if (select)
-					mat.setDiffuseColor(enableColor);
-				else
-					mat.setDiffuseColor(disableColor);
-			else
-				mat.setDiffuseColor(clearColor);
-		};
-		// list選択時の見た目変更
-		listselect.addListener((v, ov, nv) -> {
-			viewChange.accept(nv, nowselect.get().equals(partName));
-		});
-		// セレクターの反映
-		nowselect.addListener((v, ov, nv) -> viewChange.accept(listselect.get(), nv.equals(partName)));
-
-		((Group) modelView.getRoot()).getChildren().addAll(linev, linev2, facev);
-		return true;
-	}
-
 	/** ボーンとモデル両方に対応したツリーアイテム */
 	private class BoneModelItem extends TreeItem<Bone> {
 
@@ -383,9 +178,9 @@ public class ModelView extends Pane {
 		/** ビューにメッシュを追加する */
 		public void imageWrite() {
 			if (isBone()) {
-				addBoneView(getValue(), getValue().moves);
+				modelView.addBoneView(getValue(), getValue().moves);
 			} else {
-				addPartView(model, getParent().getValue().moves, select);
+				modelView.addPartView(model, getParent().getValue().moves, select);
 			}
 			getChildren().forEach(item -> ((BoneModelItem) item).imageWrite());
 		}
@@ -401,6 +196,11 @@ public class ModelView extends Pane {
 
 		public boolean isBone() {
 			return model == null;
+		}
+
+		/**BoneかMSかを判断して返す*/
+		public DataBase getEditValue() {
+			return isBone() ? getValue() : model;
 		}
 
 		public BoneModelItem(ModelSelector model) {

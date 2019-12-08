@@ -52,11 +52,7 @@ public class Bone extends DataBase {
 	public void init(List<Transform> move, IRenderProperty property) {
 		this.Propertis = property;
 		transforms.values().forEach(tr->{
-			move.add(tr.translate);
-			move.add(tr.rotateX);
-			move.add(tr.rotateY);
-			move.add(tr.rotateZ);
-			move.add(tr.scale);
+			tr.addAll(move);
 		});
 		moves = move;
 		for (Bone bone : children)
@@ -75,11 +71,19 @@ public class Bone extends DataBase {
 		}
 	}
 
+	/**JavaFXのトランスフォーム*/
 	public static class ModelTransforms{
 		public Rotate rotateX = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
 		public Rotate rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
 		public Rotate rotateZ = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
 		public Translate translate = new Translate(0, 0, 0);
 		public Scale scale = new Scale(1, 1, 1);
+		public void addAll(List<Transform> move) {
+			move.add(translate);
+			move.add(rotateX);
+			move.add(rotateY);
+			move.add(rotateZ);
+			move.add(scale);
+		}
 	}
 }

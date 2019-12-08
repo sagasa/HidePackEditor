@@ -7,13 +7,15 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import javax.imageio.ImageIO;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import editer.DataEntityInterface;
 import editer.HidePack;
 import editer.node.EditPanels;
-import editer.node.ModelView;
+import editer.node.model.ModelView;
 import helper.ArrayEditer;
 import helper.DataPath;
 import helper.EditHelper;
@@ -49,6 +51,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import resources.HideImage;
 import types.PackInfo;
 import types.items.GunData;
 import types.items.MagazineData;
@@ -111,16 +114,18 @@ public class RootController implements Initializable {
 		bindEditer(magazineList, (item) -> editMagazine(item));
 		bindEditer(modelInfoList, (item) -> editModelInfo(item));
 
-		HidePack.ModelInfoList.add(new HideModel(ModelIO.read()));
+
+		HidePack.ModelInfoList.add(ModelIO.read());
+
+
 
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
 		// TODO
-		// *
+		/*
 		Pane modelV = new Pane();
 		Stage modelView = new Stage(StageStyle.UTILITY);
 		ModelView mv = new ModelView(modelV);
-		mv.showModelView(new HideModel(ModelIO.read()));
 		modelView = new Stage(StageStyle.UTILITY);
 		modelView.setScene(new Scene(modelV));
 		modelView.initOwner(STAGE);

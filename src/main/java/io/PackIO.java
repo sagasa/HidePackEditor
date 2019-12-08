@@ -306,7 +306,7 @@ public class PackIO {
 		}
 		// model
 		if (PackPattern.MODEL.mache(name)) {
-			pack.ModelList.add(ModelIO.read(new Model(PackPattern.MODEL.trim(name)), new String(data, UTF8)));
+			pack.ModelList.add(ModelIO.read(PackPattern.MODEL.trim(name), new String(data, UTF8)));
 			// System.out.println("model");
 		}
 		// texture

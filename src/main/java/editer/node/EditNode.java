@@ -395,6 +395,6 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 	}
 
 	public enum EditNodeType {
-		String, StringFromList, Integer, Float, Boolean, StringList, Number, RootPack,AnimationList
+		String, StringFromList, Integer, Float, Boolean, StringList, Number, RootPack,Other
 	}
 }
