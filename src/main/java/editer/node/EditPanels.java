@@ -201,8 +201,12 @@ public class EditPanels extends Pane {
 		label.setPrefWidth(200);
 		label.setAlignment(Pos.CENTER);
 
-		for(AnimationType animation:AnimationType.values())
-		TabPane animation = new TabPane();
+		TabPane animationTab = new TabPane();
+		for(AnimationType animation:AnimationType.values()) {
+			Tab tab = new Tab(animation.toString());
+			animationTab.getTabs().add(tab);
+		}
+
 
 		boneEditer.getChildren().addAll(label);
 
