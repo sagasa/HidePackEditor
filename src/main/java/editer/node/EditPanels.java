@@ -40,6 +40,7 @@ import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
 import types.model.AnimationType;
+import types.model.Bone;
 import types.model.HideModel;
 import types.model.ModelSelector;
 
@@ -49,7 +50,7 @@ public class EditPanels extends Pane {
 	/** 編集パネルの対象 */
 	public enum EditType {
 	Item(ItemData.class), Gun(GunData.class), Magazine(MagazineData.class), PakcInfo(PackInfo.class),
-	Model(HideModel.class), ModelSelector(ModelSelector.class);
+	Model(HideModel.class), ModelSelector(ModelSelector.class), Bone(Bone.class);
 
 		/** 判別用の型 */
 		public Class<? extends DataBase> Clazz;
@@ -202,11 +203,11 @@ public class EditPanels extends Pane {
 		label.setAlignment(Pos.CENTER);
 
 		TabPane animationTab = new TabPane();
-		for(AnimationType animation:AnimationType.values()) {
+		for (AnimationType animation : AnimationType.values()) {
+
 			Tab tab = new Tab(animation.toString());
 			animationTab.getTabs().add(tab);
 		}
-
 
 		boneEditer.getChildren().addAll(label);
 

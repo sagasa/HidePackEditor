@@ -1,7 +1,6 @@
 package editer.node.model;
 
 import editer.node.EditNode;
-import editer.node.EditNode.EditNodeType;
 import editer.node.EditPanels.EditType;
 import helper.DataPath;
 import javafx.beans.property.Property;
@@ -20,7 +19,7 @@ public class AnimationListNode extends EditNode {
 	private ListView<AnimationKey> listView = new ListView<>();
 
 	public AnimationListNode(Property<IEditData> editValue, DataPath path) {
-		super(editValue, EditType.Model, path, EditNodeType.Other);
+		super(editValue, EditType.Bone, path, EditNodeType.Other);
 
 	}
 
