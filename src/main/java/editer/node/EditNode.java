@@ -204,14 +204,16 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 		propertyEdit.prefWidthProperty().bind(editBottonWidth);
 
 		editValue.addListener((v, ov, nv) -> {
-			if (nv.canEdit()) {
-				// 初期の表示を選択
-				propertyEdit.setVisible(true);
-				propertyEdit.setGraphic(hasProperty(nv) ? removeImage : addImage);
-				editBottonWidth.set(20);
-			} else {
-				propertyEdit.setVisible(false);
-				editBottonWidth.set(0);
+			if (nv != null) {
+				if (nv.canEdit()) {
+					// 初期の表示を選択
+					propertyEdit.setVisible(true);
+					propertyEdit.setGraphic(hasProperty(nv) ? removeImage : addImage);
+					editBottonWidth.set(20);
+				} else {
+					propertyEdit.setVisible(false);
+					editBottonWidth.set(0);
+				}
 			}
 		});
 
@@ -395,6 +397,6 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 	}
 
 	public enum EditNodeType {
-		String, StringFromList, Integer, Float, Boolean, StringList, Number, RootPack,Other
+		String, StringFromList, Integer, Float, Boolean, StringList, Number, RootPack, Other
 	}
 }

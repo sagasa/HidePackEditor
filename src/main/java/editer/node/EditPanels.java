@@ -40,6 +40,7 @@ import types.base.IEditData;
 import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
+import types.model.AnimationKey;
 import types.model.Bone;
 import types.model.HideModel;
 import types.model.ModelSelector;
@@ -50,7 +51,7 @@ public class EditPanels extends Pane {
 	/** 編集パネルの対象 */
 	public enum EditType {
 	Item(ItemData.class), Gun(GunData.class), Magazine(MagazineData.class), PakcInfo(PackInfo.class),
-	Model(HideModel.class), ModelSelector(ModelSelector.class), Bone(Bone.class);
+	Model(HideModel.class), ModelSelector(ModelSelector.class), Bone(Bone.class), AnimationKey(AnimationKey.class);
 
 		/** 判別用の型 */
 		public Class<? extends DataBase> Clazz;
@@ -244,7 +245,7 @@ public class EditPanels extends Pane {
 	}
 
 	/** Pos3f */
-	private Region makePos3Editer(ObjectProperty<IEditData> value, EditType type, DataPath path) {
+	public static Region makePos3Editer(ObjectProperty<IEditData> value, EditType type, DataPath path) {
 		VBox root = new VBox();
 		Label label = new Label(EditHelper.getLocalizedName(type.Clazz, path));
 		label.setPrefWidth(200);
@@ -259,7 +260,7 @@ public class EditPanels extends Pane {
 		return root;
 	}
 
-	private Region setSize(Region node, double x, double y) {
+	private static Region setSize(Region node, double x, double y) {
 		node.setPrefSize(x, y);
 		return node;
 	}

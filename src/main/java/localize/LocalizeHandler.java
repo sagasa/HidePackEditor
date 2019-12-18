@@ -21,6 +21,7 @@ import types.effect.Recoil;
 import types.effect.Sound;
 import types.items.GunData;
 import types.items.MagazineData;
+import types.model.AnimationKey;
 import types.model.HideModel;
 import types.model.HideModel.Vec3f;
 import types.model.ModelSelector;
@@ -53,6 +54,7 @@ public class LocalizeHandler {
 		makeLocalize(ModelSelector.class);
 		makeLocalize(Vec3f.class);
 		makeLocalize(HideModel.class);
+		makeLocalize(AnimationKey.class);
 
 		writeDefaultLang();
 	}

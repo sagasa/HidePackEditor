@@ -114,6 +114,7 @@ public class RootController implements Initializable {
 
 		HideModel hm = ModelIO.read();
 		hm.rootBone.animation.get(AnimationType.Reload).add(new  AnimationKey());
+		hm.rootBone.animation.get(AnimationType.Reload).add(new  AnimationKey());
 		HidePack.ModelInfoList.add(hm);
 
 
