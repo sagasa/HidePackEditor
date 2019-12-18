@@ -26,16 +26,17 @@ public class Bone extends DataBase {
 
 	transient HideModel rootModel;
 
+	/**Gson用コンストラクタ 何もしない*/
 	public Bone() {
-		for (AnimationType type : AnimationType.values()) {
-			animation.put(type, new ArrayList<>());
-			transforms.put(type, new ModelTransforms());
-		}
 
 	}
 
 	public Bone(Set<String> keySet) {
 		keySet.forEach(name -> this.models.add(new ModelSelector(name)));
+		for (AnimationType type : AnimationType.values()) {
+			animation.put(type, new ArrayList<>());
+			transforms.put(type, new ModelTransforms());
+		}
 	}
 
 	void init(HideModel model) {

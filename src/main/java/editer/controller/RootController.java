@@ -7,15 +7,12 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.imageio.ImageIO;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import editer.DataEntityInterface;
 import editer.HidePack;
 import editer.node.EditPanels;
-import editer.node.model.ModelView;
 import helper.ArrayEditer;
 import helper.DataPath;
 import helper.EditHelper;
@@ -42,7 +39,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -51,10 +47,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import resources.HideImage;
 import types.PackInfo;
 import types.items.GunData;
 import types.items.MagazineData;
+import types.model.AnimationKey;
+import types.model.AnimationType;
 import types.model.HideModel;
 
 public class RootController implements Initializable {
@@ -115,7 +112,9 @@ public class RootController implements Initializable {
 		bindEditer(modelInfoList, (item) -> editModelInfo(item));
 
 
-		HidePack.ModelInfoList.add(ModelIO.read());
+		HideModel hm = ModelIO.read();
+		hm.rootBone.animation.get(AnimationType.Reload).add(new  AnimationKey());
+		HidePack.ModelInfoList.add(hm);
 
 
 

@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import editer.HidePack;
 import editer.controller.RootController;
 import editer.node.EditNode.EditNodeType;
+import editer.node.model.AnimationListNode;
 import editer.node.model.ModelTreeView;
 import editer.node.model.ModelView;
 import helper.DataPath;
@@ -39,7 +40,6 @@ import types.base.IEditData;
 import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
-import types.model.AnimationType;
 import types.model.Bone;
 import types.model.HideModel;
 import types.model.ModelSelector;
@@ -179,6 +179,9 @@ public class EditPanels extends Pane {
 		modelView.prefWidthProperty().bind(widthProperty().subtract(rootPane.widthProperty()).add(-5));
 		modelView.prefHeightProperty().bind(heightProperty());
 
+		modelView.managedProperty().bind(editModes.get(type));
+		modelView.visibleProperty().bind(editModes.get(type));
+
 		ModelTreeView treeView = new ModelTreeView(editValue, modelView);
 		addEditPane(treeView, type);
 		// MSEditer
@@ -202,14 +205,11 @@ public class EditPanels extends Pane {
 		label.setPrefWidth(200);
 		label.setAlignment(Pos.CENTER);
 
-		TabPane animationTab = new TabPane();
-		for (AnimationType animation : AnimationType.values()) {
+		AnimationListNode animationEditer = new AnimationListNode(treeView.currentItem,new DataPath("animation"));
 
-			Tab tab = new Tab(animation.toString());
-			animationTab.getTabs().add(tab);
-		}
+		animationEditer.setPrefSize(160, 200);
 
-		boneEditer.getChildren().addAll(label);
+		boneEditer.getChildren().addAll(label,animationEditer);
 
 		boneEditer.setStyle("-fx-background-color: lightGray;");
 		boneEditer.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
