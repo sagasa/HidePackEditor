@@ -26,17 +26,19 @@ public class Bone extends DataBase {
 
 	transient HideModel rootModel;
 
-	/**Gson用コンストラクタ 何もしない*/
+	/** Gson用コンストラクタ 何もしない */
 	public Bone() {
-
+		for (AnimationType type : AnimationType.values()) {
+			if (!animation.containsKey(type))
+				animation.put(type, new ArrayList<>());
+			if (!transforms.containsKey(type))
+				transforms.put(type, new ModelTransforms());
+		}
 	}
 
 	public Bone(Set<String> keySet) {
+		this();
 		keySet.forEach(name -> this.models.add(new ModelSelector(name)));
-		for (AnimationType type : AnimationType.values()) {
-			animation.put(type, new ArrayList<>());
-			transforms.put(type, new ModelTransforms());
-		}
 	}
 
 	void init(HideModel model) {
@@ -45,14 +47,14 @@ public class Bone extends DataBase {
 	}
 
 	// エディタサイドでの描画用
-	transient public Map<AnimationType,ModelTransforms> transforms = new EnumMap<>(AnimationType.class);
+	transient public Map<AnimationType, ModelTransforms> transforms = new EnumMap<>(AnimationType.class);
 	transient public BooleanProperty visible = new SimpleBooleanProperty(false);
 	/** 付与されているトランスフォーム */
 	transient public List<Transform> moves = new ArrayList<>();
 
 	public void init(List<Transform> move, IRenderProperty property) {
 		this.Propertis = property;
-		transforms.values().forEach(tr->{
+		transforms.values().forEach(tr -> {
 			tr.addAll(move);
 		});
 		moves = move;
@@ -60,7 +62,8 @@ public class Bone extends DataBase {
 			bone.init(new ArrayList<>(move), property);
 	}
 
-	public void render(IRenderProperty property) {
+	/** アニメーションリストのトランスフォームを登録 */
+	public void applyTransforms(IRenderProperty property) {
 		Map<AnimationType, Float> renderProp = Propertis != null && Propertis.getRenderPropery() != null
 				? Propertis.getRenderPropery()
 				: property.getRenderPropery();
@@ -72,13 +75,14 @@ public class Bone extends DataBase {
 		}
 	}
 
-	/**JavaFXのトランスフォーム*/
-	public static class ModelTransforms{
+	/** JavaFXのトランスフォーム */
+	public static class ModelTransforms {
 		public Rotate rotateX = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
 		public Rotate rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
 		public Rotate rotateZ = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
 		public Translate translate = new Translate(0, 0, 0);
 		public Scale scale = new Scale(1, 1, 1);
+
 		public void addAll(List<Transform> move) {
 			move.add(translate);
 			move.add(rotateX);

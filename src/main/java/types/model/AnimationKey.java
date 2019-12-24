@@ -3,13 +3,15 @@ package types.model;
 import java.util.Collections;
 import java.util.List;
 
+import types.Info;
 import types.base.DataBase;
 import types.model.Bone.ModelTransforms;
 import types.model.HideModel.Vec3f;
 
 /** アニメーション用 */
 public class AnimationKey extends DataBase implements Comparable<AnimationKey> {
-	public float Key = 0;
+	@Info(Min=0f,Max=1f,Scale="0.05")
+	public float key = 0;
 
 	public Vec3f translate = new Vec3f();
 	public Vec3f scale = new Vec3f();
@@ -26,7 +28,7 @@ public class AnimationKey extends DataBase implements Comparable<AnimationKey> {
 		/** keyの値が高いほう */
 		AnimationKey keyEnd = null;
 		for (AnimationKey animationKey : list) {
-			if (value < animationKey.Key) {
+			if (value < animationKey.key) {
 				keyEnd = animationKey;
 			}
 			keyStart = animationKey;
@@ -34,7 +36,7 @@ public class AnimationKey extends DataBase implements Comparable<AnimationKey> {
 		if (keyEnd == null)
 			keyEnd = keyStart;
 		/** 0除算防止 */
-		float slide = keyEnd.Key == keyStart.Key ? 0 : (value - keyStart.Key) / (keyEnd.Key - keyStart.Key);
+		float slide = keyEnd.key == keyStart.key ? 0 : (value - keyStart.key) / (keyEnd.key - keyStart.key);
 		transforms.translate.setX(calcScale(keyStart.translate.X, keyEnd.translate.X, slide));
 		transforms.translate.setY(calcScale(keyStart.translate.Y, keyEnd.translate.Y, slide));
 		transforms.translate.setZ(calcScale(keyStart.translate.Z, keyEnd.translate.Z, slide));
@@ -54,7 +56,7 @@ public class AnimationKey extends DataBase implements Comparable<AnimationKey> {
 
 	@Override
 	public int compareTo(AnimationKey o) {
-		return Float.compare(this.Key, o.Key);
+		return Float.compare(this.key, o.key);
 	}
 
 }

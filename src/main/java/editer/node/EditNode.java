@@ -374,9 +374,9 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 	protected void unbind(IEditData data) {
 		editerProperty.unbindBidirectional((Property) EditHelper.getProperty(data, Path));
 	}
-
 	@Override
 	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
+		String path = Path.Path;
 		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getType())) {
 			// System.out.println("old match");
 			// 編集不能なら
@@ -393,6 +393,7 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 				bind(newValue);
 			} else
 				disable.set(true);
+
 		}
 	}
 

@@ -19,6 +19,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -208,7 +209,7 @@ public class EditPanels extends Pane {
 
 		AnimationListNode animationEditer = new AnimationListNode(treeView.currentItem,new DataPath("animation"));
 
-		animationEditer.setPrefSize(160, 200);
+		animationEditer.setPrefSize(160, 300);
 
 		boneEditer.getChildren().addAll(label,animationEditer);
 
@@ -247,21 +248,24 @@ public class EditPanels extends Pane {
 	/** Pos3f */
 	public static Region makePos3Editer(ObjectProperty<IEditData> value, EditType type, DataPath path) {
 		VBox root = new VBox();
+		root.setPrefWidth(200);
 		Label label = new Label(EditHelper.getLocalizedName(type.Clazz, path));
-		label.setPrefWidth(200);
+		label.prefWidthProperty().bind(root.widthProperty().subtract(4));
 		label.setAlignment(Pos.CENTER);
 		root.getChildren().add(label);
 		// 数値系
 		HBox hbox = new HBox();
-		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("X"), EditNodeType.Number), 65, 24));
-		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("Y"), EditNodeType.Number), 65, 24));
-		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("Z"), EditNodeType.Number), 65, 24));
+		ObservableValue<Number> width = root.widthProperty().subtract(6).divide(3);
+		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("X"), EditNodeType.Number), width, 24));
+		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("Y"), EditNodeType.Number), width, 24));
+		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("Z"), EditNodeType.Number), width, 24));
 		root.getChildren().add(hbox);
 		return root;
 	}
 
-	private static Region setSize(Region node, double x, double y) {
-		node.setPrefSize(x, y);
+	private static Region setSize(Region node, ObservableValue<? extends Number> x, double y) {
+		node.prefWidthProperty().bind(x);
+		node.setPrefHeight(y);
 		return node;
 	}
 
