@@ -1,8 +1,13 @@
 package editer.node.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.ArrayUtils;
 
 import editer.node.EditNode;
 import editer.node.EditPanels;
@@ -14,9 +19,15 @@ import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Region;
@@ -43,6 +54,11 @@ public class AnimationListNode extends EditNode {
 		for (AnimationType type : AnimationType.values()) {
 			ListView<AnimationKey> list = new ListView<>();
 			editMap.put(type, list);
+			MenuItem item = new MenuItem("Add");
+			item.setOnAction((a) -> {
+
+			});
+			list.setContextMenu(new ContextMenu(item));
 			list.setPrefWidth(180);
 			list.setCellFactory(getCellFactory());
 			Tab tab = new Tab(type.toString(), list);
@@ -74,8 +90,11 @@ public class AnimationListNode extends EditNode {
 
 		public KeyEditCell() {
 			itemProperty().addListener((v, ov, nv) -> {
-				if(nv!=null)
+				if (nv != null) {
 					prop.set(nv);
+
+					System.out.println("List node Change " + getIndex()+" "+nv.key);
+				}
 			});
 
 			Region translate = EditPanels.makePos3Editer(prop, EditType.AnimationKey, new DataPath("translate"));
@@ -92,8 +111,13 @@ public class AnimationListNode extends EditNode {
 
 			Region key = new EditNode(prop, EditType.AnimationKey, new DataPath("key"), EditNodeType.Float)
 					.setChangeListner((c) -> {
-						getListView().getItems().sort(null);
-						getListView().refresh();
+						List<AnimationKey> list = new ArrayList<>(getListView().getItems());
+						list.sort(null);
+						if (!getListView().getItems().equals(list)) {
+							getListView().getItems().setAll(list);
+							getListView().refresh();
+						}
+
 					});
 			root.getChildren().addAll(key, translate, rotate, scale);
 		}

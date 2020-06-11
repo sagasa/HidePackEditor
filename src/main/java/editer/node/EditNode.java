@@ -116,6 +116,12 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 	/** 変更通知リスナー */
 	protected Consumer<?>[] ChangeListener = new Consumer<?>[0];
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private ChangeListener<?> listener = (v, ov, nv) -> {
+		for (Consumer<?> run : ChangeListener)
+			((Consumer) run).accept(nv);
+	};
+
 	/** 有効化切り替え */
 	protected BooleanProperty disable = new SimpleBooleanProperty();
 
@@ -327,11 +333,6 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 			text.disableProperty().bind(disable);
 
 			this.getChildren().addAll(text, label);
-			// リスナ
-			editerProperty.addListener((v, ov, nv) -> {
-				for (Consumer<?> run : ChangeListener)
-					((Consumer) run).accept(nv);
-			});
 		} else if (Type == EditNodeType.Boolean) {
 			Label label = new Label(Name + ":");
 			label.setAlignment(Pos.CENTER_RIGHT);
@@ -348,11 +349,6 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 			// 有効化切り替え
 			label.disableProperty().bind(disable);
 			check.disableProperty().bind(disable);
-			// リスナ
-			editerProperty.addListener((v, ov, nv) -> {
-				for (Consumer<?> run : ChangeListener)
-					((Consumer) run).accept(nv);
-			});
 		} else if (Type == EditNodeType.StringList) {
 
 		}
@@ -365,7 +361,9 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void bind(IEditData data) {
+		editerProperty.removeListener((ChangeListener) listener);
 		editerProperty.bindBidirectional((Property) EditHelper.getProperty(data, Path));
+		editerProperty.addListener((ChangeListener) listener);
 		for (Consumer<?> run : ChangeListener)
 			((Consumer) run).accept(editerProperty.getValue());
 	}
@@ -374,9 +372,9 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 	protected void unbind(IEditData data) {
 		editerProperty.unbindBidirectional((Property) EditHelper.getProperty(data, Path));
 	}
+
 	@Override
 	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
-		String path = Path.Path;
 		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getType())) {
 			// System.out.println("old match");
 			// 編集不能なら
@@ -386,9 +384,8 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 				disable.set(false);
 		}
 		if (newValue != null && Clazz.isAssignableFrom(newValue.getType())) {
-			// System.out.println("new match " + Path + " " +
-			// EditHelper.getProperty(newValue,
-			// Path) + " " + editerProperty);
+			// System.out.println("new match " + Path + " "
+			// +EditHelper.getProperty(newValue, Path) + " " + editerProperty);
 			if (hasProperty(newValue)) {
 				bind(newValue);
 			} else

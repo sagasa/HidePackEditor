@@ -1,9 +1,27 @@
 package editer;
 
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.collada._2005._11.colladaschema.COLLADA;
+import org.collada._2005._11.colladaschema.Extra;
+import org.collada._2005._11.colladaschema.Geometry;
+import org.collada._2005._11.colladaschema.InstanceGeometry;
+import org.collada._2005._11.colladaschema.LibraryGeometries;
+import org.collada._2005._11.colladaschema.LibraryVisualScenes;
+import org.collada._2005._11.colladaschema.Node;
+import org.collada._2005._11.colladaschema.VisualScene;
 
 import editer.controller.RootController;
+import helper.ModelLoader;
 import io.PackIO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +35,10 @@ import localize.LocalizeHandler;
 public class Editer extends Application {
 	/** 開いているpath */
 	public static String packPath;
+
+	static class HideModelPart{
+
+	}
 
 	public static void main(String[] arg) {
 		LocalizeHandler.init();
@@ -38,7 +60,7 @@ public class Editer extends Application {
 //
 //		System.exit(0);
 
-		launch(arg);
+		// TODO launch(arg);
 
 		/*
 		 * GunData data = new GunData(); Class<Number> clazz = Number.class; Gson gson =
@@ -52,6 +74,11 @@ public class Editer extends Application {
 		 * c:item2.CHANGE_LIST) { c.apply(data); }
 		 * System.out.println(data.RECOIL_DEFAULT.MAX_YAW_BASE); System.exit(0); //
 		 */
+
+		new ModelLoader().run();
+
+		System.exit(0);
+
 	}
 
 	private static final Logger log = LogManager.getLogger();

@@ -1,0 +1,60 @@
+//
+// このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
+// <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
+// ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
+// 生成日: 2020.05.28 時間 12:29:30 PM JST 
+//
+
+
+package org.collada._2005._11.colladaschema.impl;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import org.collada._2005._11.colladaschema.GlesTexcombinerCommandAlphaType;
+import org.collada._2005._11.colladaschema.GlesTexcombinerCommandRGBType;
+import org.collada._2005._11.colladaschema.GlesTexcombinerCommandType;
+import org.collada._2005._11.colladaschema.GlesTextureConstantType;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "gles_texcombiner_command_type", propOrder = {
+    "constant",
+    "rgb",
+    "alpha"
+})
+public class GlesTexcombinerCommandTypeImpl implements GlesTexcombinerCommandType
+{
+
+    @XmlElement(type = GlesTextureConstantTypeImpl.class)
+    protected GlesTextureConstantTypeImpl constant;
+    @XmlElement(name = "RGB", type = GlesTexcombinerCommandRGBTypeImpl.class)
+    protected GlesTexcombinerCommandRGBTypeImpl rgb;
+    @XmlElement(type = GlesTexcombinerCommandAlphaTypeImpl.class)
+    protected GlesTexcombinerCommandAlphaTypeImpl alpha;
+
+    public GlesTextureConstantType getConstant() {
+        return constant;
+    }
+
+    public void setConstant(GlesTextureConstantType value) {
+        this.constant = ((GlesTextureConstantTypeImpl) value);
+    }
+
+    public GlesTexcombinerCommandRGBType getRGB() {
+        return rgb;
+    }
+
+    public void setRGB(GlesTexcombinerCommandRGBType value) {
+        this.rgb = ((GlesTexcombinerCommandRGBTypeImpl) value);
+    }
+
+    public GlesTexcombinerCommandAlphaType getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(GlesTexcombinerCommandAlphaType value) {
+        this.alpha = ((GlesTexcombinerCommandAlphaTypeImpl) value);
+    }
+
+}
