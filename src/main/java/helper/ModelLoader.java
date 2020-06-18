@@ -1,12 +1,11 @@
 package helper;
 
 import java.io.File;
-import java.math.BigInteger;
+import java.lang.reflect.Array;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -17,11 +16,11 @@ import org.collada._2005._11.colladaschema.COLLADA;
 import org.collada._2005._11.colladaschema.Geometry;
 import org.collada._2005._11.colladaschema.InputLocalOffset;
 import org.collada._2005._11.colladaschema.InstanceGeometry;
+import org.collada._2005._11.colladaschema.LibraryAnimations;
 import org.collada._2005._11.colladaschema.LibraryGeometries;
 import org.collada._2005._11.colladaschema.LibraryVisualScenes;
 import org.collada._2005._11.colladaschema.Mesh;
 import org.collada._2005._11.colladaschema.Node;
-import org.collada._2005._11.colladaschema.Param;
 import org.collada._2005._11.colladaschema.Source;
 import org.collada._2005._11.colladaschema.Triangles;
 import org.collada._2005._11.colladaschema.VisualScene;
@@ -46,7 +45,7 @@ public class ModelLoader {
 
 			// Collada直下Library_Visual_Sceneを取得
 			for (Object o : collada.getLibraryAnimationsAndLibraryAnimationClipsAndLibraryCameras()) {
-				// System.out.println(o.getClass());
+				 System.out.println(o.getClass());
 
 				// LibraryGeometriesノードであれば、処理を実行
 				if ((o instanceof LibraryGeometries)) {
@@ -84,6 +83,12 @@ public class ModelLoader {
 					}
 				}
 
+				if ((o instanceof LibraryAnimations)) {
+					// 型変換
+					LibraryAnimations libraryAnimations = (LibraryAnimations) o;
+					libraryAnimations.getAnimations();
+				}
+
 			}
 
 		} catch (JAXBException e) {
@@ -98,7 +103,9 @@ public class ModelLoader {
 			src.getTechniqueCommon().getAccessor();
 		}
 		// 頂点作成
-		readPosArray(sourceMap.get(mesh.getVertices().getInputs().get(0).getSource().replace("#", "")));
+
+		Pos[] pos = readDataArray(sourceMap.get(mesh.getVertices().getInputs().get(0).getSource().replace("#", "")),
+				Pos::new, Pos[]::new);
 
 		// トライアングルだけ処理作成
 		for (Object obj : mesh.getLinesAndLinestripsAndPolygons()) {
@@ -113,13 +120,13 @@ public class ModelLoader {
 
 						break;
 					case "NORMAL":
-
+						readDataArray(sourceMap.get(input.getSource().replace("#", "")), Pos::new, Pos[]::new);
 						break;
 					case "TEXCOORD":
-
+						readDataArray(sourceMap.get(input.getSource().replace("#", "")), Tex::new, Tex[]::new);
 						break;
 					case "COLOR":
-
+						readDataArray(sourceMap.get(input.getSource().replace("#", "")), Color::new, Color[]::new);
 						break;
 					default:
 						break;
@@ -137,7 +144,13 @@ public class ModelLoader {
 		}
 	}
 
-	class Pos {
+
+
+	interface VertexData {
+		public void setData(String key, float value);
+	}
+
+	class Pos implements VertexData {
 		float X = 0;
 		float Y = 0;
 		float Z = 0;
@@ -146,37 +159,102 @@ public class ModelLoader {
 		public String toString() {
 			return "[x=" + X + ",y=" + Y + ",z=" + Z + "]";
 		}
+
+		@Override
+		public void setData(String key, float value) {
+			switch (key) {
+
+			case "X":
+				X = value;
+				break;
+			case "Y":
+				Y = value;
+				break;
+			case "Z":
+				Z = value;
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
-	private Pos[] readPosArray(Source src) {
+	class Tex implements VertexData {
+		float U = 0;
+		float V = 0;
+
+		@Override
+		public String toString() {
+			return "[u=" + U + ",v=" + V + "]";
+		}
+
+		@Override
+		public void setData(String key, float value) {
+			switch (key) {
+
+			case "S":
+				U = value;
+				break;
+			case "T":
+				V = value;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	class Color implements VertexData {
+		float R = 0;
+		float G = 0;
+		float B = 0;
+		float A = 0;
+
+		@Override
+		public String toString() {
+			return "[r=" + R + ",g=" + G + ",B=" + B + ",A=" + A + "]";
+		}
+
+		@Override
+		public void setData(String key, float value) {
+			switch (key) {
+			case "R":
+				R = value;
+				break;
+			case "G":
+				G = value;
+				break;
+			case "B":
+				B = value;
+				break;
+			case "A":
+				A = value;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends VertexData> T[] readDataArray(Source src, Supplier<T> sup, Function<Integer, T[]> arraySup) {
 		Accessor accessor = src.getTechniqueCommon().getAccessor();
 
 		final int stride = accessor.getStride().intValue();
 		final int size = accessor.getCount().intValue();
 
-		Pos[] res = new Pos[size];
+		T[] res = (T[]) Array.newInstance(sup.get().getClass(), size);
 		// 頂点ループ
 		for (int i = 0; i < size; i++) {
-			Pos pos = new Pos();
-			res[i] = pos;
+			T data = sup.get();
+			res[i] = data;
 			// パラメータループ
 			for (int j = 0; j < accessor.getParams().size(); j++) {
 				float value = src.getFloatArray().getValues().get(i * stride + j).floatValue();
-				switch (accessor.getParams().get(j).getName()) {
-				case "X":
-					pos.X = value;
-					break;
-				case "Y":
-					pos.Y = value;
-					break;
-				case "Z":
-					pos.Z = value;
-					break;
-				default:
-					break;
-				}
+				data.setData(accessor.getParams().get(j).getName(), value);
+
 			}
-			System.out.println(pos);
+			System.out.println(data);
 		}
 		return res;
 	}
