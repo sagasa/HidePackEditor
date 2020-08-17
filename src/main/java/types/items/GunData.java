@@ -5,6 +5,7 @@ import org.apache.commons.lang.ArrayUtils;
 import types.base.Curve;
 import types.base.DataBase;
 import types.base.IHideData;
+import types.base.INamedData;
 import types.base.Info;
 import types.effect.Explosion;
 import types.effect.Recoil;
@@ -12,7 +13,7 @@ import types.effect.Sound;
 import types.gun.GunFireMode;
 import types.items.GunData.GunDataEnum;
 
-public class GunData extends DataBase<GunDataEnum> {
+public class GunData extends DataBase<GunDataEnum> implements INamedData {
 
 	public static final int GunInfo = 0;
 	public static final int BulletInfo = 1;
@@ -205,5 +206,16 @@ public class GunData extends DataBase<GunDataEnum> {
 		public Class<? extends DataBase<?>> getContainer() {
 			return GunData.class;
 		}
+	}
+
+	@Override
+	public String getDisplayName() {
+		return (String) getEntry(GunDataEnum.DisplayName).getValue();
+	}
+
+	@Override
+	public String getSystemName() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
 	}
 }

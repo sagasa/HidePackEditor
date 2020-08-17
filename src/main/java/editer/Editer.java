@@ -1,5 +1,7 @@
 package editer;
 
+import javax.activation.DataHandler;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
 import types.base.DataBase;
+import types.base.DataHolder;
 import types.base.IHideData;
 import types.base.Info;
 import types.base.Operator;
@@ -64,6 +67,8 @@ public class Editer extends Application {
 		 * c:item2.CHANGE_LIST) { c.apply(data); }
 		 * System.out.println(data.RECOIL_DEFAULT.MAX_YAW_BASE); System.exit(0); //
 		 */
+
+		DataHolder<GunData> v = new ;
 		GunData data = new GunData();
 		data.put(GunDataEnum.RPM, Operator.SET, 1200);
 		data.put(GunDataEnum.FireMode, Operator.ARRAY_ADD, new GunFireMode[] { GunFireMode.FULLAUTO });

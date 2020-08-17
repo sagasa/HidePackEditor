@@ -20,6 +20,25 @@ public class DataView<K extends Enum<K> & IHideData> {
 	private Map<K, Object> caschMap;
 	private List<DataBase<K>> values = new ArrayList<>();
 
+	private Object getWithoutCache(K key) {
+		Object obj = key.getDefault();
+		for (DataBase<K> data : values) {
+			DataEntry entry = data.getEntry(key);
+			if (entry != null)
+				obj = entry.apply(obj);
+		}
+		return obj;
+	}
+
+	/** キャッシュを利用して取得 */
+	public Object get(K key) {
+		if (caschMap.containsKey(key))
+			return key;
+		Object res = getWithoutCache(key);
+		caschMap.put(key, res);
+		return res;
+	}
+
 	protected void onChange(IHideData type) {
 		// キャッシュを削除
 		caschMap.remove(type);
@@ -34,27 +53,6 @@ public class DataView<K extends Enum<K> & IHideData> {
 			}
 			ref.get().onChange(type);
 		}
-	}
-
-	/** キャッシュを登録せず取得 */
-	protected Object getWithoutCache(K key) {
-		// キャッシュがあれば
-		if (caschMap.containsKey(key))
-			return caschMap.get(key);
-		DataEntry entry = dataMap.get(key);
-		if (entry != null && entry.operator == Operator.SET)
-			return dataMap.get(key).value;
-		Object root = parent == null ? key.getDefault() : parent.getWithoutCache(key);
-		return entry == null ? root : entry.operator.apply(root, entry.value);
-	}
-
-	/** キャッシュを利用して取得 */
-	public Object get(K key) {
-		if (caschMap.containsKey(key))
-			return key;
-		Object res = super.get(key);
-		caschMap.put(key, res);
-		return res;
 	}
 
 	protected DataBase<K> parent;

@@ -26,6 +26,8 @@ public class DataBase<K extends Enum<K> & IHideData> {
 	protected Class<K> enumType;
 	protected Map<K, DataEntry> dataMap;
 
+	protected String parent;
+
 	public DataBase(Class<K> type) {
 		enumType = type;
 		dataMap = new EnumMap<>(enumType);
