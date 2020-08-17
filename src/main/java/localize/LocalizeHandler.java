@@ -11,11 +11,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import helper.DataPath;
 import helper.EditHelper;
 import jdk.internal.util.xml.impl.ReaderUTF8;
 import types.PackInfo;
 import types.base.DataBase;
+import types.base.DataPath;
 import types.effect.Explosion;
 import types.effect.Recoil;
 import types.effect.Sound;

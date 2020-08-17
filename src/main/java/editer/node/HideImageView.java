@@ -2,7 +2,6 @@ package editer.node;
 
 import editer.HidePack;
 import editer.node.EditPanels.EditType;
-import helper.DataPath;
 import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
@@ -13,7 +12,8 @@ import javafx.collections.WeakListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.ImageView;
 import resources.HideImage;
-import types.base.IEditData;
+import types.IEditData;
+import types.base.DataPath;
 
 /** 自動更新されるImageView */
 public class HideImageView extends ImageView implements ChangeListener<IEditData> {

@@ -12,8 +12,7 @@ import org.controlsfx.control.textfield.TextFields;
 
 import editer.DataEntityInterface;
 import editer.node.EditPanels.EditType;
-import helper.ArrayEditer;
-import helper.DataPath;
+import helper.ArrayEditor;
 import helper.EditHelper;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
@@ -46,8 +45,9 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
+import types.IEditData;
 import types.base.DataBase;
-import types.base.IEditData;
+import types.base.DataPath;
 
 /** リスナを実装した編集用ノード */
 public class EditNode extends Pane implements ChangeListener<IEditData> {
@@ -248,7 +248,7 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 					TextFields.bindAutoCompletion(text, new Callback<ISuggestionRequest, Collection<String>>() {
 						@Override
 						public Collection<String> call(ISuggestionRequest key) {
-							return ArrayEditer.Search(motherList, key.getUserText()).stream()
+							return ArrayEditor.Search(motherList, key.getUserText()).stream()
 									.map(data -> data.getDisplayName()).sorted().collect(Collectors.toList());
 						}
 					});

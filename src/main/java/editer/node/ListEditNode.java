@@ -2,8 +2,7 @@ package editer.node;
 
 import editer.DataEntityInterface;
 import editer.node.EditPanels.EditType;
-import helper.ArrayEditer;
-import helper.DataPath;
+import helper.ArrayEditor;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
@@ -21,7 +20,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
-import types.base.IEditData;
+import types.IEditData;
+import types.base.DataPath;
 
 /** 母集団のリストから任意に選択するListView */
 public class ListEditNode extends EditNode {
@@ -99,7 +99,7 @@ public class ListEditNode extends EditNode {
 			return;
 		listview.getItems().addAll(getSetList());
 		motherList.stream().map(data -> data.getDisplayName())
-				.filter(str -> (!getSetList().contains(str) && ArrayEditer.Search(str, SearchKey)))
+				.filter(str -> (!getSetList().contains(str) && ArrayEditor.Search(str, SearchKey)))
 				.forEach(str -> listview.getItems().add(str));
 	}
 

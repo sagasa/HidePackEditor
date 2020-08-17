@@ -1,54 +1,78 @@
 package types.effect;
 
-import types.Info;
+import types.base.Curve;
 import types.base.DataBase;
+import types.base.IHideData;
+import types.base.Info;
+import types.base.Operator;
+import types.effect.Recoil.RecoilData;
 
-public class Recoil extends DataBase {
-	@Info(Cate = 0)
-	public boolean USE = true;
-	@Info(Scale = "0.1")
-	public float MAX_YAW_BASE = 0f;
-	@Info(Min = 0, Scale = "0.1")
-	public float MAX_YAW_SPREAD = 0f;
-	@Info(Min = 0, Scale = "0.1")
-	public float MAX_YAW_RETURN = 0f;
-	@Info(Scale = "0.1")
-	public float MIN_YAW_BASE = 0f;
-	@Info(Min = 0, Scale = "0.1")
-	public float MIN_YAW_SPREAD = 0f;
-	@Info(Min = 0, Scale = "0.1")
-	public float MIN_YAW_RETURN = 0f;
+public class Recoil extends DataBase<RecoilData> {
 
-	@Info(Min = 0)
-	public int YAW_RECOIL_TICK = 0;
-	@Info(Min = 0)
-	public int YAW_RETURN_TICK = 0;
+	public Recoil() {
+		super(RecoilData.class);
+	}
 
-	@Info(Scale = "0.1")
-	public float MAX_PITCH_BASE = 0f;
-	@Info(Min = 0, Scale = "0.1")
-	public float MAX_PITCH_SPREAD = 0f;
-	@Info(Min = 0, Scale = "0.1")
-	public float MAX_PITCH_RETURN = 0f;
-	@Info(Scale = "0.1")
-	public float MIN_PITCH_BASE = 0f;
-	@Info(Min = 0, Scale = "0.1")
-	public float MIN_PITCH_SPREAD = 0f;
-	@Info(Min = 0, Scale = "0.1")
-	public float MIN_PITCH_RETURN = 0f;
+	public enum RecoilData implements IHideData {
+		/** 使用可否 Boolean */
+		Use(true, new Info().Cate(0)),
+		/** 横反動の基礎値 +で右 Curve */
+		HorizontalBase(new Curve(), new Info().Scale("0,1")),
+		/** 横反動の拡散値 +で右 Curve */
+		HorizontalSpread(new Curve(), new Info().Scale("0,1").Min(0)),
+		/** 横反動の復帰率 射撃したタイミングで戻りの予約を入れる Curve */
+		HorizontalReturn(new Curve(), new Info().Scale("0,1").Min(0)),
+		/** 横反動適応時間 Curve */
+		HorizontalRecoilTick(new Curve(), new Info().Min(0)),
+		/** 横反動復帰時間 Curve */
+		HorizontalReturnTick(new Curve(), new Info().Min(0)),
 
-	@Info(Min = 0)
-	public int PITCH_RECOIL_TICK = 0;
-	@Info(Min = 0)
-	public int PITCH_RETURN_TICK = 0;
+		/** 縦反動の基礎値 +で上 Curve */
+		VerticalBase(new Curve(), new Info().Scale("0,1")),
+		/** 縦反動の拡散値 +で上 Curve */
+		VerticalSpread(new Curve(), new Info().Scale("0,1").Min(0)),
+		/** 縦反動の復帰率 射撃したタイミングで戻りの予約を入れる Curve */
+		VerticalReturn(new Curve(), new Info().Scale("0,1").Min(0)),
+		/** 縦反動適応時間 Curve */
+		VerticalRecoilTick(new Curve(), new Info().Min(0)),
+		/** 縦反動復帰時間 Curve */
+		VerticalReturnTick(new Curve(), new Info().Min(0)),
 
-	@Info(Min = 0)
-	public int POWER_TICK = 0;
-	@Info(Min = 0)
-	public int POWER_SHOOT = 0;
+		/** 射撃毎のパワーの増加値 最大1 Float */
+		PowerShoot(0.0, new Info().Min(0).Max(1).Scale("0.05")),
+		/** Tick毎のパワーの減少値 最大1 Float */
+		PowerTick(0.0, new Info().Min(0).Max(1).Scale("0.05")),;
+
+		private Object def;
+		private Info info;
+
+		private RecoilData(Object defValue) {
+			this(defValue, null);
+		}
+
+		private RecoilData(Object defValue, Info info) {
+			def = defValue;
+			this.info = info;
+		}
+
+		@Override
+		public Object getDefault() {
+			return def;
+		}
+
+		@Override
+		public Info getInfo() {
+			return info;
+		}
+
+		@Override
+		public Class<? extends DataBase<?>> getContainer() {
+			return Recoil.class;
+		}
+	}
 
 	public Recoil setUse(boolean b) {
-		USE = b;
+		put(RecoilData.Use, Operator.SET, b);
 		return this;
 	}
 }

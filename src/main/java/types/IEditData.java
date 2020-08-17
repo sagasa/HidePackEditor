@@ -1,9 +1,9 @@
-package types.base;
+package types;
 
 import java.io.Serializable;
 
-import helper.DataPath;
 import javafx.beans.property.Property;
+import types.base.DataPath;
 
 /***/
 public interface IEditData extends Cloneable {

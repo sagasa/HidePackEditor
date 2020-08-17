@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import helper.DataPath;
 import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import types.IEditData;
 import types.base.DataBase;
-import types.base.IEditData;
+import types.base.DataPath;
 
 public class ClipData implements IEditData {
 	public ClipData(Class<? extends DataBase> clazz) {

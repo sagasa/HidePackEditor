@@ -1,4 +1,4 @@
-package helper;
+package types.base;
 
 public final class DataPath {
 	private static final String SPLIT = "\\.";

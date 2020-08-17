@@ -77,5 +77,10 @@
 			<artifactId>log4j-core</artifactId>
 			<version>2.10.0</version>
 		</dependency>
+		<dependency>
+			<groupId>it.unimi.dsi</groupId>
+			<artifactId>fastutil</artifactId>
+			<version>7.1.0</version>
+		</dependency>
 	</dependencies>
 </project>

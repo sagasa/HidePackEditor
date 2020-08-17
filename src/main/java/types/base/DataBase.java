@@ -1,218 +1,218 @@
 package types.base;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang.ArrayUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import helper.DataPath;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleMapProperty;
-import javafx.collections.FXCollections;
-import types.wrapper.ObjectWrapper;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 /**
- * パックのデータのスーパークラス クローン可能 publicフィールドはすべてクローン可能なクラスにしてください
- * transient注釈が付いたフィールドはエディターでのみ使用 インスタンス生成後にinit(）を呼ぶこと
+ * 多目的なホルダークラス IHideData継承のenumを渡して初期化する
  */
-public abstract class DataBase implements IEditData {
+public class DataBase<K extends Enum<K> & IHideData> {
 
-	private static Gson gson = null;
+	protected Class<K> enumType;
+	protected Map<K, DataEntry> dataMap;
 
-	// Gsonオプション系
-	public static class Entry {
-		public Entry(Type type, Object value) {
-			Type = type;
-			Value = value;
-		}
-
-		public Type Type;
-		public Object Value;
+	public DataBase(Class<K> type) {
+		enumType = type;
+		dataMap = new EnumMap<>(enumType);
+		register(enumType);
 	}
 
-	/** オプションを登録 */
-	public static void initGson() {
-		List<Entry> jsonOptions = new ArrayList<>();
-		// オプション
+	/** 変更通知付き */
+	protected static class DataEntry {
+		private DataEntry(IHideData type, Operator operator, Object value, DataBase<?> data) {
+			this.operator = operator;
+			this.value = value;
+			this.data = data;
+			this.type = type;
+		}
 
-		GsonBuilder gb = new GsonBuilder().setPrettyPrinting();
-		jsonOptions.forEach(entry -> {
-			gb.registerTypeAdapter(entry.Type, entry.Value);
-		});
-		gson = gb.create();
+		protected Operator operator;
+		protected Object value;
+		private DataBase<?> data;
+		private IHideData type;
+
+		public Operator getOperator() {
+			return operator;
+		}
+
+		public Object getValue() {
+			return operator;
+		}
+
+		public DataEntry setOperator(Operator operator) {
+			if (this.operator.equals(operator))
+				return this;
+			this.operator = operator;
+			data.onChange(type);
+			return this;
+		}
+
+		public DataEntry setValue(Object value) {
+			if (this.value.equals(value))
+				return this;
+			this.value = value;
+			data.onChange(type);
+			return this;
+		}
+
+		public Object apply(Object root) {
+			return operator.apply(root, value);
+		}
+	}
+
+	public DataEntry getEntry(K key) {
+		return dataMap.get(key);
+	}
+
+	/** 変更時に通知が来る */
+	protected void onChange(K type) {
+	}
+
+	/** キャスト用 */
+	@SuppressWarnings("unchecked")
+	protected void onChange(IHideData type) {
+		onChange((K) type);
+	}
+
+	public void put(K key, Operator operator, Object value) {
+		if (!key.getDefault().getClass().isAssignableFrom(value.getClass()))
+			throw new IllegalArgumentException(
+					"type is different " + key.getDefault().getClass() + " , " + value.getClass());
+		if (!ArrayUtils.contains(Operator.getAllow(value.getClass()), operator))
+			throw new IllegalArgumentException("Operator " + operator + " not supported for " + value.getClass());
+		if (dataMap.containsKey(key)) {
+			getEntry(key).setOperator(operator).setValue(value);
+		} else
+			dataMap.put(key, new DataEntry(key, operator, value, this));
+	}
+
+	@SuppressWarnings("unchecked")
+	private void put(IHideData key, Operator operator, Object value) {
+		put((K) key, operator, value);
+	}
+
+	// ====== HideDataホルダー ======
+	private static Map<String, Class<? extends Enum<? extends IHideData>>> enumTypeMap = new HashMap<>();
+
+	private static void register(Class<? extends Enum<? extends IHideData>> clazz) {
+		if (!enumTypeMap.containsKey(getTypeName(clazz)))
+			enumTypeMap.put(getTypeName(clazz), clazz);
+	}
+
+	/** シンプルネームからClassに */
+	public static Class<? extends Enum<? extends IHideData>> getHideData(String name) {
+		return enumTypeMap.get(name);
+	}
+
+	/** Classからシンプルネームに */
+	public static String getTypeName(Class<? extends Enum<? extends IHideData>> clazz) {
+		return clazz.getSimpleName();
+	}
+
+	public static class JsonInterface implements JsonSerializer<DataBase<?>>, JsonDeserializer<DataBase<?>> {
+
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
+		public DataBase<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+				throws JsonParseException {
+			if (!json.isJsonObject())
+				throw new JsonParseException("is not JsonObject");
+			JsonObject obj = json.getAsJsonObject();
+			Class<? extends Enum<? extends IHideData>> clazz = getHideData(obj.get("Type").getAsString());
+			if (clazz == null)
+				throw new JsonParseException("bad typename");
+			Class<? extends DataBase> container = ((IHideData) clazz.getEnumConstants()[0]).getContainer();
+
+			DataBase<? extends IHideData> database = null;
+
+			if (container == DataBase.class) {
+				// DataBaseがコンテナなら
+				database = new DataBase(clazz);
+			} else {
+				// 違うならそいつのインスタンスを作成
+				try {
+					database = container.newInstance();
+				} catch (InstantiationException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+
+			JsonObject values = obj.getAsJsonObject("Values");
+			for (Entry<String, JsonElement> entry : values.entrySet()) {
+				IHideData data = (IHideData) Enum.valueOf((Class) clazz, entry.getKey());
+				Operator operator;
+				Object putValue;
+				// 省略されていたらSET
+				if (!entry.getValue().isJsonObject() || !entry.getValue().getAsJsonObject().has("Operator")) {
+					operator = Operator.SET;
+					putValue = context.deserialize(entry.getValue(), data.getDefault().getClass());
+
+				} else {
+					JsonObject value = entry.getValue().getAsJsonObject();
+					putValue = context.deserialize(value.get("Object"), data.getDefault().getClass());
+					operator = Operator.valueOf(value.getAsJsonPrimitive("Operator").getAsString());
+				}
+
+				database.put(data, operator, putValue);
+			}
+			return database;
+		}
+
+		@Override
+		public JsonElement serialize(DataBase<?> src, Type typeOfSrc, JsonSerializationContext context) {
+			JsonObject obj = new JsonObject();
+			obj.addProperty("Type", getTypeName(src.enumType));
+			JsonObject value = new JsonObject();
+			obj.add("Values", value);
+			for (Entry<?, DataEntry> entry : src.dataMap.entrySet()) {
+				// SETの時は省略
+				if (entry.getValue().operator == Operator.SET) {
+					value.add(entry.getKey().toString(), context.serialize(entry.getValue().value));
+				} else {
+					JsonObject dataEntry = new JsonObject();
+					value.add(entry.getKey().toString(), dataEntry);
+					dataEntry.addProperty("Operator", entry.getValue().operator.toString());
+					dataEntry.add("Object", context.serialize(entry.getValue().value));
+				}
+			}
+			return obj;
+		}
+
+	}
+
+	private static Gson gson = null;
+	/** オプションを登録 */
+	static {
+		gson = new GsonBuilder().setPrettyPrinting().registerTypeHierarchyAdapter(DataBase.class, new JsonInterface())
+				.create();
 	}
 
 	/** カスタムシリアライザ使用のGson */
 	public static final Gson getGson() {
-		if (gson == null)
-			initGson();
 		return gson;
 	}
 
-	@Override
-	public Property<?> getProperty(DataPath path) {
-		checkInit();
-		if (path.hasChild) {
-			try {
-				return ((IEditData) getClass().getField(path.fastName).get(this)).getProperty(path.nextPath);
-
-			} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException | SecurityException e) {
-				e.printStackTrace();
-			}
-		}
-		return propertyMap.get(path.fastName);
+	public String toJson() {
+		return gson.toJson(this);
 	}
 
-	@Override
-	public Class<? extends IEditData> getType() {
-		return this.getClass();
-	}
-
-	@Override
-	public boolean canEdit() {
-		return false;
-	}
-
-	@Override
-	public boolean addProperty(DataPath path) {
-		return false;
-	}
-
-	@Override
-	public boolean removeProperty(DataPath path) {
-		return false;
-	}
-
-	public String[] getPropertyNames() {
-		checkInit();
-		return propertyMap.keySet().toArray(new String[propertyMap.keySet().size()]);
-	}
-
-	/**
-	 * パスではなくフィールド名からプロパティを取得する
-	 *
-	 * @param <T>
-	 */
 	@SuppressWarnings("unchecked")
-	public <T> Property<T> getProperty(String name) {
-		checkInit();
-		return (Property<T>) propertyMap.get(name);
-	}
-
-	protected final static Logger log = LogManager.getLogger();
-
-	/** パックデータ エディタでのみ使用 Integer Float Boolean String のフィールドのプロパティ */
-	transient private Map<String, Property<?>> propertyMap;
-
-	transient private boolean doinit = false;
-
-	private void checkInit() {
-		if (!doinit) {
-			doinit = true;
-			init();
-		}
-	}
-
-	/** エディター側のみのプロパティ関連の初期化 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void init() {
-		try {
-			propertyMap = new HashMap<>();
-			for (Field field : this.getClass().getFields()) {
-				if (List.class.isAssignableFrom(field.getType())) {
-					propertyMap.put(field.getName(),
-							new SimpleListProperty<>(FXCollections.observableList((List) field.get(this))));
-				} else if (Map.class.isAssignableFrom(field.getType())) {
-					propertyMap.put(field.getName(),
-							new SimpleMapProperty<>(FXCollections.observableMap((Map) field.get(this))));
-				} else {
-					propertyMap.put(field.getName(), new ObjectWrapper(this, field.getName()));
-				}
-			}
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/** JsonObjectを作成 */
-	public String MakeJsonData() {
-		return getGson().toJson(this);
-	}
-
-	@Override
-	/** DataBaseとString[]を個別クローン */
-	public DataBase clone() {
-		try {
-			DataBase clone = (DataBase) super.clone();
-			for (Field f : super.getClass().getFields()) {
-				if (DataBase.class.isAssignableFrom(f.getType())) {
-					f.set(clone, ((DataBase) f.get(this)).clone());
-				} else if (String[].class.isAssignableFrom(f.getType())) {
-					f.set(clone, ((String[]) f.get(this)).clone());
-				}
-			}
-			return clone;
-		} catch (CloneNotSupportedException | IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	//編集では使用しない
-	/** .区切りのフィールド名のパスの型取得する */
-	protected final static Class<?> getType(DataBase data, String path) {
-		return getType(data.getClass(), path);
-	}
-
-	/** .区切りのフィールド名のパスの型取得する */
-	protected final static Class<?> getType(Class<?> type, String path) {
-		String[] split = path.split("\\.", 2);
-		try {
-			// フィールド取得
-			Field field = type.getField(split[0]);
-			if (split.length == 2) {
-				return getType(field.getType(), split[1]);
-			} else if (split.length == 1) {
-				return field.getType();
-			}
-		} catch (NoSuchFieldException e) {
-			log.error("cant find field : " + path + " from " + type.getSimpleName());
-		} catch (SecurityException | IllegalArgumentException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/**あんまり遅いんでキャッシュ*/
-	private static final Map<String, Type> fieldTypeMap = new HashMap<>();
-
-	/** .区切りのフィールド名のパスの型取得する */
-	protected final static Type getGenericType(Class<?> type, String path) {
-		String[] split = path.split("\\.", 2);
-		try {
-			// フィールド取得
-			Field field = type.getField(split[0]);
-			if (split.length == 2) {
-				return getGenericType(field.getType(), split[1]);
-			} else if (split.length == 1) {
-				if (!fieldTypeMap.containsKey(path))
-					fieldTypeMap.put(path, field.getGenericType());
-				return fieldTypeMap.get(path);
-			}
-		} catch (NoSuchFieldException e) {
-			log.error("cant find field : " + path + " from " + type.getSimpleName());
-		} catch (SecurityException | IllegalArgumentException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public static <T extends DataBase<?>> T fromJson(String json) {
+		return (T) gson.fromJson(json, DataBase.class);
 	}
 }

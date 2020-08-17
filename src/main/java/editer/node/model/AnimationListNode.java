@@ -12,7 +12,6 @@ import org.apache.commons.lang.ArrayUtils;
 import editer.node.EditNode;
 import editer.node.EditPanels;
 import editer.node.EditPanels.EditType;
-import helper.DataPath;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleMapProperty;
@@ -33,7 +32,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
-import types.base.IEditData;
+import types.IEditData;
+import types.base.DataPath;
 import types.model.AnimationKey;
 import types.model.AnimationType;
 

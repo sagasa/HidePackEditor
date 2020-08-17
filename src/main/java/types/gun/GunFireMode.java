@@ -1,4 +1,4 @@
-package types.base;
+package types.gun;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

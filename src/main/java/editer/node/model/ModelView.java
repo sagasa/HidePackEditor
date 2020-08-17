@@ -32,7 +32,7 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import resources.Model;
-import types.base.IEditData;
+import types.IEditData;
 import types.model.Bone;
 import types.model.HideModel;
 import types.model.ModelSelector;

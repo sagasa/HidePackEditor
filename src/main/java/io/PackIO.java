@@ -29,7 +29,7 @@ import com.google.gson.Gson;
 
 import editer.HidePack;
 import editer.controller.RootController;
-import helper.ArrayEditer;
+import helper.ArrayEditor;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import resources.HideImage;
@@ -244,7 +244,7 @@ public class PackIO {
 					byte[] data = new byte[0];
 					int size;
 					while (0 < (size = zipIn.read(buffer))) {
-						data = ArrayEditer.ByteArrayCombining(data, Arrays.copyOf(buffer, size));
+						data = ArrayEditor.ByteArrayCombining(data, Arrays.copyOf(buffer, size));
 						buffer = new byte[1024];
 
 					}

@@ -13,8 +13,7 @@ import org.apache.logging.log4j.Logger;
 import editer.DataEntityInterface;
 import editer.HidePack;
 import editer.node.EditPanels;
-import helper.ArrayEditer;
-import helper.DataPath;
+import helper.ArrayEditor;
 import helper.EditHelper;
 import io.ModelIO;
 import io.PackCash;
@@ -48,6 +47,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import types.PackInfo;
+import types.base.DataPath;
 import types.items.GunData;
 import types.items.MagazineData;
 import types.model.AnimationKey;
@@ -203,20 +203,20 @@ public class RootController implements Initializable {
 	public void write() {
 		// Pack
 		packList.setItems(
-				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.OpenPacks, packSearch.getText())));
+				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.OpenPacks, packSearch.getText())));
 		// Gun
-		gunList.setItems(FXCollections.observableArrayList(ArrayEditer.Search(HidePack.GunList, itemSearch.getText())));
+		gunList.setItems(FXCollections.observableArrayList(ArrayEditor.Search(HidePack.GunList, itemSearch.getText())));
 		// Magazine
 		magazineList.setItems(
-				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.MagazineList, itemSearch.getText())));
+				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.MagazineList, itemSearch.getText())));
 		// Icon
 		iconList.setItems(
-				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.IconList, itemSearch.getText())));
+				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.IconList, itemSearch.getText())));
 		// Sound
 		soundList.setItems(
-				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.SoundList, itemSearch.getText())));
+				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.SoundList, itemSearch.getText())));
 		modelInfoList.setItems(
-				FXCollections.observableArrayList(ArrayEditer.Search(HidePack.ModelInfoList, itemSearch.getText())));
+				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.ModelInfoList, itemSearch.getText())));
 	}
 
 	/** タブ切り替え時にアイテムエディタを描画 */

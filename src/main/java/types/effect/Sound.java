@@ -1,23 +1,62 @@
 package types.effect;
 
-import types.Info;
 import types.base.DataBase;
+import types.base.IHideData;
+import types.base.Info;
+import types.base.Operator;
+import types.effect.Sound.SoundData;
 
-public class Sound extends DataBase {
+public class Sound extends DataBase<SoundData> {
 
-	@Info(Cate = 0,isResourceName = true)
-	public String NAME = "sample";
-	@Info(Min=0)
-	public float RANGE = 50f;
-	@Info(Min=0)
-	public float VOL = 1f;
-	@Info(Min=0)
-	public float PITCH = 1f;
-	public boolean USE_DECAY = true;
-	public boolean USE_DELAY = true;
+	public Sound() {
+		super(SoundData.class);
+	}
 
 	public Sound(String name, float range) {
-		NAME = name;
-		RANGE = range;
+		this();
+		put(SoundData.Name, Operator.SET, name);
+		put(SoundData.Range, Operator.SET, range);
+	}
+
+	public enum SoundData implements IHideData {
+		/** 使用可否 String */
+		Name("sample", new Info().IsResourceName(true)),
+		/** 聞こえる半径 Float */
+		Range(50f, new Info().Min(0)),
+		/** 音量 Float */
+		Volume(1f, new Info().Min(0).Scale("0.1")),
+		/** ピッチ Float */
+		Pitch(1f, new Info().Min(0).Scale("0.1")),
+		/** 減衰の使用 Boolean */
+		UseDecay(true),
+		/** 遅延の使用 Boolean */
+		UseDelay(false),;
+
+		private Object def;
+		private Info info;
+
+		private SoundData(Object defValue) {
+			this(defValue, null);
+		}
+
+		private SoundData(Object defValue, Info info) {
+			def = defValue;
+			this.info = info;
+		}
+
+		@Override
+		public Object getDefault() {
+			return def;
+		}
+
+		@Override
+		public Info getInfo() {
+			return info;
+		}
+
+		@Override
+		public Class<? extends DataBase<?>> getContainer() {
+			return Sound.class;
+		}
 	}
 }

@@ -4,11 +4,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import editer.node.EditPanels;
-import helper.DataPath;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
-import types.base.IEditData;
+import types.IEditData;
+import types.base.DataPath;
 import types.items.GunData;
 import types.wrapper.ClipData;
 

@@ -1,10 +1,10 @@
 package editer.node;
 
 import editer.node.EditPanels.EditType;
-import helper.DataPath;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.ColorPicker;
-import types.base.IEditData;
+import types.IEditData;
+import types.base.DataPath;
 
 public class ColorEditNode extends EditNode {
 

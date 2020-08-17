@@ -5,8 +5,9 @@ import java.util.List;
 
 import javafx.beans.property.Property;
 import localize.LocalizeHandler;
+import types.IEditData;
 import types.Info;
-import types.base.IEditData;
+import types.base.DataPath;
 
 /** リフレクションを利用したTypes編集ヘルパー */
 public class EditHelper {
