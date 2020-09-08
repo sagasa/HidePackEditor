@@ -33,10 +33,11 @@ import helper.ArrayEditor;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import resources.HideImage;
-import resources.Model;
 import resources.Sound;
 import types.PackInfo;
+import types.base.NamedData;
 import types.items.GunData;
+import types.items.GunData.GunDataEnum;
 import types.items.MagazineData;
 
 public class PackIO {
@@ -141,16 +142,16 @@ public class PackIO {
 			if (!pack.isReference()) {
 				dataMap.put(pack, new ArrayList<>());
 				// パックデータ
-				dataMap.get(pack).add(new Entry("pack.json", new ByteArrayInputStream(pack.MakeJsonData().getBytes())));
+				dataMap.get(pack).add(new Entry("pack.json", new ByteArrayInputStream(pack.toJson().getBytes())));
 			}
 		}
 
 		// 銃のデータ
-		for (GunData d : HidePack.GunList) {
+		for (NamedData<GunDataEnum> d : HidePack.GunList.getValues()) {
 			// 参照ではなければ
 			if (!d.isReference()) {
 				dataMap.get(d.RootPack.get()).add(new Entry(PackPattern.GUN.toPath(d.getDisplayName()),
-						new ByteArrayInputStream(d.MakeJsonData().getBytes())));
+						new ByteArrayInputStream(d.toJson().getBytes())));
 			}
 		}
 		// 弾のデータ
@@ -158,7 +159,7 @@ public class PackIO {
 			// 参照ではなければ
 			if (!d.isReference()) {
 				dataMap.get(d.RootPack.get()).add(new Entry(PackPattern.MAGAZINE.toPath(d.getDisplayName()),
-						new ByteArrayInputStream(d.MakeJsonData().getBytes())));
+						new ByteArrayInputStream(d.toJson().getBytes())));
 			}
 		}
 

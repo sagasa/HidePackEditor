@@ -1,6 +1,6 @@
 package editer.node;
 
-import editer.DataEntityInterface;
+import editer.IDataEntity;
 import editer.node.EditPanels.EditType;
 import helper.ArrayEditor;
 import javafx.beans.property.ListProperty;
@@ -28,7 +28,7 @@ public class ListEditNode extends EditNode {
 
 	private ListView<String> listview;
 	private String SearchKey = null;
-	private ListChangeListener<DataEntityInterface> listener;
+	private ListChangeListener<IDataEntity> listener;
 
 	@SuppressWarnings("unchecked")
 	private ListProperty<String> getSetList() {
@@ -41,13 +41,13 @@ public class ListEditNode extends EditNode {
 	 *            母集団
 	 */
 	public ListEditNode(Property<IEditData> editValue, EditType edit, DataPath path,
-			ObservableList<? extends DataEntityInterface> fromList) {
+			ObservableList<? extends IDataEntity> fromList) {
 		super(editValue, edit, path, EditNodeType.StringList);
 		motherList = fromList;
 		editerProperty = new SimpleListProperty<>();
-		listener = new ListChangeListener<DataEntityInterface>() {
+		listener = new ListChangeListener<IDataEntity>() {
 			@Override
-			public void onChanged(Change<? extends DataEntityInterface> arg0) {
+			public void onChanged(Change<? extends IDataEntity> arg0) {
 				writeList();
 			}
 		};

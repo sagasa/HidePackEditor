@@ -3,16 +3,19 @@ package types.items;
 import types.base.DataBase;
 import types.base.IHideData;
 import types.base.Info;
+import types.base.NamedData;
 import types.effect.Explosion;
 import types.items.MagazineData.MagDataEnum;
 
-public class MagazineData extends DataBase<MagDataEnum> {
+public class MagazineData extends NamedData<MagDataEnum> implements ItemData<MagDataEnum> {
 
 	public MagazineData() {
 		super(MagDataEnum.class);
 	}
 
 	public enum MagDataEnum implements IHideData {
+		/** 親の登録名 String */
+		ParentName("", new Info().IsName(true)),
 		/** 表示名 String */
 		DisplayName("sample"),
 		/** 短縮名 String */
@@ -54,5 +57,25 @@ public class MagazineData extends DataBase<MagDataEnum> {
 		public Class<? extends DataBase<?>> getContainer() {
 			return Explosion.class;
 		}
+	}
+
+	@Override
+	public MagDataEnum displayName() {
+		return MagDataEnum.DisplayName;
+	}
+
+	@Override
+	public MagDataEnum systemName() {
+		return MagDataEnum.ShortName;
+	}
+
+	@Override
+	public MagDataEnum parentName() {
+		return MagDataEnum.ParentName;
+	}
+
+	@Override
+	public MagDataEnum iconName() {
+		return MagDataEnum.IconName;
 	}
 }

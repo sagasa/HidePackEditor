@@ -1,6 +1,8 @@
 package types.base;
 
 public class Info {
+	public static final Info Default = new Info();
+
 	/** エディタ側での編集範囲 */
 	public float Min = -Float.MAX_VALUE;
 

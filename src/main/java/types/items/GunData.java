@@ -5,15 +5,15 @@ import org.apache.commons.lang.ArrayUtils;
 import types.base.Curve;
 import types.base.DataBase;
 import types.base.IHideData;
-import types.base.INamedData;
 import types.base.Info;
+import types.base.NamedData;
 import types.effect.Explosion;
 import types.effect.Recoil;
 import types.effect.Sound;
 import types.gun.GunFireMode;
 import types.items.GunData.GunDataEnum;
 
-public class GunData extends DataBase<GunDataEnum> implements INamedData {
+public class GunData extends NamedData<GunDataEnum> implements ItemData<GunDataEnum> {
 
 	public static final int GunInfo = 0;
 	public static final int BulletInfo = 1;
@@ -30,6 +30,8 @@ public class GunData extends DataBase<GunDataEnum> implements INamedData {
 	}
 
 	public enum GunDataEnum implements IHideData {
+		/** 親の登録名 String */
+		ParentName("", new Info().IsName(true)),
 		/** 表示名 String */
 		DisplayName("sample"),
 		/** 短縮名 String */
@@ -209,13 +211,22 @@ public class GunData extends DataBase<GunDataEnum> implements INamedData {
 	}
 
 	@Override
-	public String getDisplayName() {
-		return (String) getEntry(GunDataEnum.DisplayName).getValue();
+	public GunDataEnum displayName() {
+		return GunDataEnum.DisplayName;
 	}
 
 	@Override
-	public String getSystemName() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+	public GunDataEnum systemName() {
+		return GunDataEnum.ShortName;
+	}
+
+	@Override
+	public GunDataEnum parentName() {
+		return GunDataEnum.ParentName;
+	}
+
+	@Override
+	public GunDataEnum iconName() {
+		return GunDataEnum.IconName;
 	}
 }

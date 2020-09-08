@@ -3,6 +3,7 @@ package editer.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -10,18 +11,15 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import editer.DataEntityInterface;
 import editer.HidePack;
+import editer.IDataEntity;
 import editer.node.EditPanels;
 import helper.ArrayEditor;
-import helper.EditHelper;
 import io.ModelIO;
 import io.PackCash;
 import io.PackIO;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,7 +36,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -47,7 +44,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import types.PackInfo;
-import types.base.DataPath;
+import types.base.Operator;
 import types.items.GunData;
 import types.items.MagazineData;
 import types.model.AnimationKey;
@@ -62,23 +59,23 @@ public class RootController implements Initializable {
 	public EditPanels editer;
 
 	public TextField packSearch;
-	public ListView<DataEntityInterface> packList;
+	public ListView<IDataEntity> packList;
 
 	public TextField itemSearch;
 	public TabPane itemTab;
-	public ListView<DataEntityInterface> gunList;
-	public ListView<DataEntityInterface> magazineList;
-	public ListView<DataEntityInterface> soundList;
-	public ListView<DataEntityInterface> iconList;
-	public ListView<DataEntityInterface> modelList;
-	public ListView<DataEntityInterface> modelInfoList;
+	public ListView<IDataEntity> gunList;
+	public ListView<IDataEntity> magazineList;
+	public ListView<IDataEntity> soundList;
+	public ListView<IDataEntity> iconList;
+	public ListView<IDataEntity> modelList;
+	public ListView<IDataEntity> modelInfoList;
 
 	/** クリップエディタ */
 	private ClipController clipController;
 	private Stage clipEditer;
 
 	/** writeのリスナー */
-	private ListChangeListener<DataEntityInterface> writeListener = change -> {
+	private ListChangeListener<IDataEntity> writeListener = change -> {
 		write();
 		while (change.next()) {
 			change.getRemoved().forEach(remove -> cancelEdit(remove));
@@ -90,8 +87,8 @@ public class RootController implements Initializable {
 		INSTANCE = this;
 		packList.setCellFactory(
 				ColordListCell.getCellFactory(HidePack.OpenPacks, data -> !HidePack.DefaultPack.equals(data)));
-		gunList.setCellFactory(ColordListCell.getCellFactory(HidePack.GunList));
-		magazineList.setCellFactory(ColordListCell.getCellFactory(HidePack.MagazineList));
+		gunList.setCellFactory(ColordListCell.getCellFactory(HidePack.GunList.getValues()));
+		magazineList.setCellFactory(ColordListCell.getCellFactory(HidePack.MagazineList.getValues()));
 		soundList.setCellFactory(ColordListCell.getCellFactory(HidePack.SoundList));
 		iconList.setCellFactory(ColordListCell.getCellFactory(HidePack.IconList));
 		// modelList.setCellFactory(ColordListCell.getCellFactory(HidePack.));TODO
@@ -99,8 +96,9 @@ public class RootController implements Initializable {
 		itemSearch.textProperty().addListener(change -> write());
 		packSearch.textProperty().addListener(change -> write());
 		// リスト通知用フック
-		HidePack.GunList.addListener(new WeakListChangeListener<>(writeListener));
-		HidePack.MagazineList.addListener(new WeakListChangeListener<>(writeListener));
+		// HidePack.GunList.addListener(new WeakListChangeListener<>(writeListener));
+		// HidePack.MagazineList.addListener(new
+		// WeakListChangeListener<>(writeListener));
 		HidePack.IconList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.ScopeList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.SoundList.addListener(new WeakListChangeListener<>(writeListener));
@@ -111,28 +109,22 @@ public class RootController implements Initializable {
 		bindEditer(magazineList, (item) -> editMagazine(item));
 		bindEditer(modelInfoList, (item) -> editModelInfo(item));
 
-
 		HideModel hm = ModelIO.read();
-		hm.rootBone.animation.get(AnimationType.Reload).add(new  AnimationKey());
-		hm.rootBone.animation.get(AnimationType.Reload).add(new  AnimationKey());
+		hm.rootBone.animation.get(AnimationType.Reload).add(new AnimationKey());
+		hm.rootBone.animation.get(AnimationType.Reload).add(new AnimationKey());
 		HidePack.ModelInfoList.add(hm);
-
-
 
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
 		// TODO
 		/*
-		Pane modelV = new Pane();
-		Stage modelView = new Stage(StageStyle.UTILITY);
-		ModelView mv = new ModelView(modelV);
-		modelView = new Stage(StageStyle.UTILITY);
-		modelView.setScene(new Scene(modelV));
-		modelView.initOwner(STAGE);
-		modelView.initModality(Modality.NONE);
-		// clipEditer.setResizable(false);
-		modelView.setTitle("ModelView");
-		modelView.show();// */
+		 * Pane modelV = new Pane(); Stage modelView = new Stage(StageStyle.UTILITY);
+		 * ModelView mv = new ModelView(modelV); modelView = new
+		 * Stage(StageStyle.UTILITY); modelView.setScene(new Scene(modelV));
+		 * modelView.initOwner(STAGE); modelView.initModality(Modality.NONE); //
+		 * clipEditer.setResizable(false); modelView.setTitle("ModelView");
+		 * modelView.show();//
+		 */
 
 		write();
 
@@ -160,7 +152,7 @@ public class RootController implements Initializable {
 	}
 
 	/** 選択されたら実行 */
-	private static void bindEditer(ListView<DataEntityInterface> list, Consumer<DataEntityInterface> run) {
+	private static void bindEditer(ListView<IDataEntity> list, Consumer<IDataEntity> run) {
 		// フォーカスが切れたら選択解除
 		list.focusedProperty().addListener((v, ov, nv) -> {
 			if (!nv)
@@ -173,8 +165,8 @@ public class RootController implements Initializable {
 	}
 
 	/** パックから要素が削除されたとき編集中なら編集を中止する */
-	private void cancelEdit(DataEntityInterface obj) {
-		if (editer.getEditValue() == obj) {
+	private void cancelEdit(IDataEntity obj) {
+		if (!editer.getEditValue().isEmpty()) {
 			editer.setEditValue(null);
 		}
 	}
@@ -205,10 +197,11 @@ public class RootController implements Initializable {
 		packList.setItems(
 				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.OpenPacks, packSearch.getText())));
 		// Gun
-		gunList.setItems(FXCollections.observableArrayList(ArrayEditor.Search(HidePack.GunList, itemSearch.getText())));
+		gunList.setItems(FXCollections
+				.observableArrayList(ArrayEditor.Search(HidePack.GunList.getValues(), itemSearch.getText())));
 		// Magazine
-		magazineList.setItems(
-				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.MagazineList, itemSearch.getText())));
+		magazineList.setItems(FXCollections
+				.observableArrayList(ArrayEditor.Search(HidePack.MagazineList.getValues(), itemSearch.getText())));
 		// Icon
 		iconList.setItems(
 				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.IconList, itemSearch.getText())));
@@ -301,34 +294,34 @@ public class RootController implements Initializable {
 	// ========編集========
 
 	public void editClear() {
-		editer.setEditValue(null);
+		// editer.setEditValue(null);
 	}
 
-	public void editPack(DataEntityInterface item) {
+	public void editPack(IDataEntity item) {
 		if (item != null) {
 			log.debug(HidePack.getPack(item.getDisplayName()).toString());
-			editer.setEditValue(HidePack.getPack(item.getDisplayName()));
+			// editer.setEditValue(HidePack.getPack(item.getDisplayName()));
 		}
 	}
 
-	public void editGun(DataEntityInterface item) {
+	public void editGun(IDataEntity item) {
 		if (item != null) {
 			log.debug(HidePack.getGunData(item.getDisplayName()).toString() + HidePack.GunList);
-			editer.setEditValue(HidePack.getGunData(item.getDisplayName()));
+			// editer.setEditValue(HidePack.getGunData(item.getDisplayName()));
 		}
 	}
 
-	public void editMagazine(DataEntityInterface item) {
+	public void editMagazine(IDataEntity item) {
 		if (item != null) {
 			log.debug(HidePack.getMagazineData(item.getDisplayName()).toString());
-			editer.setEditValue(HidePack.getMagazineData(item.getDisplayName()));
+			// editer.setEditValue(HidePack.getMagazineData(item.getDisplayName()));
 		}
 	}
 
-	public void editModelInfo(DataEntityInterface item) {
+	public void editModelInfo(IDataEntity item) {
 		if (item != null) {
 			log.debug(HidePack.getModelInfo(item.getDisplayName()).toString());
-			editer.setEditValue(HidePack.getModelInfo(item.getDisplayName()));
+			// editer.setEditValue(HidePack.getModelInfo(item.getDisplayName()));
 		}
 	}
 
@@ -359,33 +352,33 @@ public class RootController implements Initializable {
 	public void addGun() {
 		// clipEditer.show();//TODO
 		log.debug("addGun");
-		GunData newGun = new GunData();
 		if (HidePack.getGunData("New Gun No." + gunNamePointer) == null) {
 			gunNamePointer++;
 		}
 		while (HidePack.getGunData("New Gun No." + gunNamePointer) != null) {
 			gunNamePointer++;
 		}
-		newGun.ITEM_SHORTNAME = "gun_" + gunNamePointer;
-		newGun.ITEM_DISPLAYNAME = "New Gun No." + gunNamePointer;
-		newGun.RootPack.set(HidePack.DefaultPack);
-		HidePack.GunList.add(newGun);
+		GunData newGun = new GunData();
+		newGun.put(newGun.systemName(), Operator.SET, "gun_" + gunNamePointer);
+		newGun.put(newGun.displayName(), Operator.SET, "New Gun No." + gunNamePointer);
+		newGun.getRootPack().set(HidePack.DefaultPack);
+		HidePack.GunList.put(newGun);
 		write();
 	}
 
 	public void addMagazine() {
 		log.debug("addBullet");
-		MagazineData magazine = new MagazineData();
 		if (HidePack.getGunData("New Magazine No." + bulletNamePointer) == null) {
 			bulletNamePointer++;
 		}
 		while (HidePack.getGunData("New Magazine No." + bulletNamePointer) != null) {
 			bulletNamePointer++;
 		}
-		magazine.ITEM_SHORTNAME = "magazine_" + bulletNamePointer;
-		magazine.ITEM_DISPLAYNAME = "New Magazine No." + bulletNamePointer;
-		magazine.RootPack.set(HidePack.DefaultPack);
-		HidePack.MagazineList.add(magazine);
+		MagazineData magazine = new MagazineData();
+		magazine.put(magazine.systemName(), Operator.SET, "magazine_" + bulletNamePointer);
+		magazine.put(magazine.displayName(), Operator.SET, "New Gun No." + bulletNamePointer);
+		magazine.getRootPack().set(HidePack.DefaultPack);
+		HidePack.MagazineList.put(magazine);
 		write();
 	}
 
@@ -399,10 +392,10 @@ public class RootController implements Initializable {
 
 	// ===========リストセル============
 	/** カラーアイコン付きのリストシェル */
-	public static class ColordListCell extends ListCell<DataEntityInterface> {
+	public static class ColordListCell extends ListCell<IDataEntity> {
 
-		public static Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>> getCellFactory(
-				ObservableList<? extends DataEntityInterface> fromList) {
+		public static Callback<ListView<IDataEntity>, ListCell<IDataEntity>> getCellFactory(
+				Collection<? extends IDataEntity> fromList) {
 			return getCellFactory(fromList, null);
 		}
 
@@ -412,27 +405,20 @@ public class RootController implements Initializable {
 		 * @param fromList  削除元になるリスト Null許容
 		 * @param candelete 削除ボタンの表示判定 Null許容
 		 */
-		public static Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>> getCellFactory(
-				ObservableList<? extends DataEntityInterface> fromList,
-				Function<DataEntityInterface, Boolean> candelete) {
-			return new Callback<ListView<DataEntityInterface>, ListCell<DataEntityInterface>>() {
-				@Override
-				public ListCell<DataEntityInterface> call(ListView<DataEntityInterface> arg0) {
-					return new ColordListCell(fromList, candelete);
-				}
-			};
+		public static Callback<ListView<IDataEntity>, ListCell<IDataEntity>> getCellFactory(
+				Collection<? extends IDataEntity> fromList, Function<IDataEntity, Boolean> candelete) {
+			return arg0 -> new ColordListCell(fromList, candelete);
 		}
 
 		/** 削除ボタンを出すかどうかの判定 */
-		private Function<DataEntityInterface, Boolean> canDelete = null;
+		private Function<IDataEntity, Boolean> canDelete = null;
 		private Label delete = new Label();
 		private Rectangle color = new Rectangle(20, 20);
 		private Label text = new Label();
 		private AnchorPane root = new AnchorPane();
 		private boolean isBind = false;
 
-		public ColordListCell(ObservableList<? extends DataEntityInterface> fromList,
-				Function<DataEntityInterface, Boolean> candelete) {
+		public ColordListCell(Collection<? extends IDataEntity> fromList, Function<IDataEntity, Boolean> candelete) {
 
 			root.getChildren().addAll(color, delete, text);
 			// 削除元がない場合は無視
@@ -448,7 +434,7 @@ public class RootController implements Initializable {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		protected void updateItem(DataEntityInterface data, boolean empty) {
+		protected void updateItem(IDataEntity data, boolean empty) {
 			super.updateItem(data, empty);
 			// 初期化
 			if (!isBind) {
@@ -467,8 +453,7 @@ public class RootController implements Initializable {
 				delete.setVisible(canDelete == null || canDelete.apply(data));
 				text.setText(data.getDisplayName());
 				if (data.getRootPack() != null) {
-					color.fillProperty().bind((ObservableValue<? extends Paint>) EditHelper
-							.getProperty(data.getRootPack().get(), new DataPath("PackColor")));
+					color.fillProperty().bind((data.getRootPack().get().PackColor));
 				}
 				setStyle("-fx-border-color: orange; -fx-border-width: 0 4 0 4; -fx-padding: 3 3 1 3");
 				setGraphic(root);

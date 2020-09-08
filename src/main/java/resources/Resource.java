@@ -1,12 +1,12 @@
 package resources;
 
-import editer.DataEntityInterface;
+import editer.IDataEntity;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import types.PackInfo;
 
 /**名前付きリソースのスーパークラス*/
-public abstract class Resource implements DataEntityInterface {
+public abstract class Resource implements IDataEntity {
 	public Resource(String name, PackInfo pack) {
 		DisplayName = name;
 		RootPack = new SimpleObjectProperty<>(pack);

@@ -1,14 +1,17 @@
 package editer;
 
-import javax.activation.DataHandler;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import editer.controller.RootController;
-import helper.ArrayEditor;
+import helper.ModelLoader;
 import javafx.application.Application;
+import javafx.beans.value.ObservableObjectValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
@@ -17,10 +20,14 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
 import types.base.DataBase;
+import types.base.DataBase.ValueEntry;
 import types.base.DataHolder;
+import types.base.DataPath;
 import types.base.IHideData;
 import types.base.Info;
 import types.base.Operator;
+import types.effect.Recoil;
+import types.effect.Recoil.RecoilData;
 import types.gun.GunFireMode;
 import types.items.GunData;
 import types.items.GunData.GunDataEnum;
@@ -34,9 +41,9 @@ public class Editer extends Application {
 	}
 
 	public static void main(String[] arg) {
-		// LocalizeHandler.init();
-		// LocalizeHandler.loadLang();
-		// LocalizeHandler.setLang("ja");
+		LocalizeHandler.init();
+		LocalizeHandler.loadLang();
+		LocalizeHandler.setLang("ja");
 
 		// PackIO.makePack();
 
@@ -53,7 +60,7 @@ public class Editer extends Application {
 //
 //		System.exit(0);
 
-		// TODO launch(arg);
+		launch(arg);
 
 		/*
 		 * GunData data = new GunData(); Class<Number> clazz = Number.class; Gson gson =
@@ -68,16 +75,38 @@ public class Editer extends Application {
 		 * System.out.println(data.RECOIL_DEFAULT.MAX_YAW_BASE); System.exit(0); //
 		 */
 
-		DataHolder<GunData> v = new ;
+		Recoil recoil = new Recoil();
+		recoil.put(RecoilData.PowerShoot, Operator.SET, 0.5f);
+
+		Recoil recoil2 = new Recoil();
+		recoil2.put(RecoilData.PowerShoot, Operator.ADD, 0.5f);
+
+		DataHolder<GunDataEnum> holder = new DataHolder<>();
 		GunData data = new GunData();
+		ObservableObjectValue<ValueEntry> prop = data.getProperty(DataPath.of(GunDataEnum.Recoil));
+		prop.addListener((ov, nv, v) -> {
+			System.out.println(v.getValue());
+		});
+
+		System.out.println(prop);
 		data.put(GunDataEnum.RPM, Operator.SET, 1200);
+		data.getEntry(GunDataEnum.RPM).setValue(1100);
 		data.put(GunDataEnum.FireMode, Operator.ARRAY_ADD, new GunFireMode[] { GunFireMode.FULLAUTO });
+		data.put(GunDataEnum.ShortName, Operator.SET, "test");
+		data.put(GunDataEnum.Recoil, Operator.SET, recoil);
 
 		GunData data2 = new GunData();
 		data2.put(GunDataEnum.RPM, Operator.ADD, 3);
-		data2.setPearnt(data);
+		data2.put(GunDataEnum.ParentName, Operator.SET, "test");
+		data2.put(GunDataEnum.Recoil, Operator.SET, recoil2);
 
-		System.out.println(data.get(GunDataEnum.RPM) + " " + ArrayUtils.toString(data2.get(GunDataEnum.FireMode)));
+		holder.put(data);
+		holder.put(data2);
+		holder.reload();
+
+		System.out.println(
+				data2.get(GunDataEnum.RPM, null) + " " + ArrayUtils.toString(data2.get(GunDataEnum.FireMode, null))
+						+ " " + ((Recoil) data2.get(GunDataEnum.Recoil, null)).get(RecoilData.PowerShoot, null));
 
 		String json = data.toJson();
 		System.out.println(json);
@@ -90,13 +119,13 @@ public class Editer extends Application {
 		System.out.println(test.toJson());
 		test = DataBase.fromJson(test.toJson());
 
-		Integer[] array = new Integer[] { 0, 1, 2, 3 };
-		Integer[] remove = new Integer[] { 2, 3, 4 };
-		System.out.println(ArrayUtils.toString(ArrayEditor.addToArray(array, remove)));
-		System.out.println(ArrayUtils.toString(ArrayEditor.removeFromArray(array, remove)));
-		// new ModelLoader().run();
+		Map<String, Integer> map = new HashMap<>();
+		Collection<Integer> col = map.values();
+		map.put("A", 2);
+		System.out.println(col);
+		new ModelLoader().run();
 
-		System.exit(0);
+		// System.exit(0);
 
 	}
 

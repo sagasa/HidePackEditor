@@ -3,12 +3,13 @@ package helper;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import editer.DataEntityInterface;
+import editer.IDataEntity;
 
 /** プリミティブ配列の結合など */
 public class ArrayEditor {
@@ -16,13 +17,13 @@ public class ArrayEditor {
 	// ===========検索============
 	private static final String space = " ";// TODO
 
-	/** 検索一致判定処理 スペースで区切ってそれぞれ判定、1つでも含んでいたらtrue */
-	public static List<DataEntityInterface> Search(List<? extends DataEntityInterface> value, String key) {
+	/** 検索 結果のリストを返す */
+	public static List<IDataEntity> Search(Collection<? extends IDataEntity> value, String key) {
 		return value.stream().filter(data -> Search(data.getDisplayName(), key)).sorted().collect(Collectors.toList());
 	}
 
 	/**
-	 * 検索一致判定処理 スペースで区切ってそれぞれ判定、1つでも含んでいたらtrue
+	 * 検索一致判定処理 スペースで区切ってそれぞれ判定、すべて含んでいたらtrue
 	 */
 	public static boolean Search(String value, String keys) {
 		if (keys == null)
@@ -152,7 +153,7 @@ public class ArrayEditor {
 
 	/** 配列の要素をインデックス指定で交換 */
 	static public String[] ChangeArrayIndex(String[] array, int index1, int index2) {
-		ArrayList<String> Array = new ArrayList<String>(Arrays.asList(array));
+		ArrayList<String> Array = new ArrayList<>(Arrays.asList(array));
 		String str1 = Array.get(index1);
 		String str2 = Array.get(index2);
 		Array.set(index1, str2);

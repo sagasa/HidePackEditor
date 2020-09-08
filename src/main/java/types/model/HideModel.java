@@ -1,24 +1,16 @@
 package types.model;
 
-import editer.DataEntityInterface;
-import editer.HidePack;
+import editer.IDataEntity;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import resources.Model;
 import types.base.DataBase;
 
 /** Modelはパックから名前で参照する */
-public class HideModel extends DataBase implements DataEntityInterface {
+public class HideModel extends DataBase implements IDataEntity {
 
-	public static class Vec3f extends DataBase {
+	public static class Vec3f {
 		public float X = 0, Y = 0, Z = 0;
-	}
-
-	@Override
-	public void init() {
-		super.init();
-		// 名称が変わったら参照も変える
-		getProperty("modelName").addListener((v, ov, nv) -> modelProperty.set(HidePack.getModel((String) nv)));
 	}
 
 	public ObjectProperty<Model> getModel() {
@@ -36,7 +28,6 @@ public class HideModel extends DataBase implements DataEntityInterface {
 	public Bone rootBone;
 
 	public Vec3f offsetFirstPerson = new Vec3f();
-
 
 	public float scaleX;// TODO
 

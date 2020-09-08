@@ -3,7 +3,7 @@ package types.gun;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import editer.DataEntityInterface;
+import editer.IDataEntity;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,8 +45,8 @@ public enum GunFireMode {
 	}
 
 	/**エディタ用*/
-	public static ObservableList<DataEntityInterface> getList() {
-		return FXCollections.observableList(Arrays.asList(values()).stream().map(fire -> new DataEntityInterface() {
+	public static ObservableList<IDataEntity> getList() {
+		return FXCollections.observableList(Arrays.asList(values()).stream().map(fire -> new IDataEntity() {
 			@Override
 			public String getDisplayName() {
 				return fire.toString();

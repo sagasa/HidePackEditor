@@ -4,7 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import types.PackInfo;
 
 /** 名前とUIDのゲッター */
-public interface DataEntityInterface extends Comparable<DataEntityInterface> {
+public interface IDataEntity extends Comparable<IDataEntity> {
 	abstract public String getDisplayName();
 
 	public default ObjectProperty<PackInfo> getRootPack(){
@@ -12,7 +12,7 @@ public interface DataEntityInterface extends Comparable<DataEntityInterface> {
 	}
 
 	@Override
-	default int compareTo(DataEntityInterface o) {
+	default int compareTo(IDataEntity o) {
 		return this.getDisplayName().compareTo(o.getDisplayName());
 	}
 }

@@ -12,10 +12,11 @@ import resources.HideImage;
 import resources.Model;
 import resources.Sound;
 import types.PackInfo;
-import types.items.GunData;
-import types.items.MagazineData;
+import types.base.DataHolder;
+import types.base.NamedData;
+import types.items.GunData.GunDataEnum;
+import types.items.MagazineData.MagDataEnum;
 import types.model.HideModel;
-import types.projectile.BulletData;
 
 /** パック本体 */
 public class HidePack {
@@ -24,11 +25,9 @@ public class HidePack {
 	public static final Image NullImage = new Image("/icon/notSet.png");
 
 	/** 銃のList GunData */
-	public static ObservableList<GunData> GunList;
+	public static DataHolder<GunDataEnum> GunList = new DataHolder<>();
 	/** 弾のList MagazineData */
-	public static ObservableList<MagazineData> MagazineList;
-	/** 弾のList BulletData */
-	public static ObservableList<BulletData> BulletList;
+	public static DataHolder<MagDataEnum> MagazineList = new DataHolder<>();
 	/** IconのList Image */
 	public static ObservableList<HideImage> IconList;
 	/** ScopeのList Image */
@@ -58,9 +57,8 @@ public class HidePack {
 
 	/** パック初期化 */
 	public static void clear() {
-		GunList = FXCollections.observableArrayList();
-		MagazineList = FXCollections.observableArrayList();
-		BulletList = FXCollections.observableArrayList();
+		GunList.clear();
+		MagazineList.clear();
 		IconList = FXCollections.observableArrayList();
 		ScopeList = FXCollections.observableArrayList();
 		SoundList = FXCollections.observableArrayList();
@@ -72,15 +70,15 @@ public class HidePack {
 		DefaultPack.PACK_NAME = "default";
 		DefaultPack.PACK_ROOTNAME = "default";
 		DefaultPack.PACK_VER = "";
-		DefaultPack.PackColor = Color.GRAY;
+		DefaultPack.PackColor.set(Color.GRAY);
 		OpenPacks.add(DefaultPack);
 	}
 
 	/** PackCashインポート */
 	public static void addPack(PackCash pack) {
 		// 放り込む
-		GunList.addAll(pack.GunList);
-		MagazineList.addAll(pack.MagazineList);
+		GunList.putAll(pack.GunList);
+		MagazineList.putAll(pack.MagazineList);
 		IconList.addAll(pack.IconList);
 		ScopeList.addAll(pack.ScopeList);
 		SoundList.addAll(pack.SoundList);
@@ -98,7 +96,7 @@ public class HidePack {
 	}
 
 	/** リストから一致する名前を取得 複数ある場合も1つしか戻らない */
-	public static <T extends DataEntityInterface> T getDataByName(List<T> list, String displayName) {
+	public static <T extends IDataEntity> T getDataByName(List<T> list, String displayName) {
 		for (T data : list) {
 			if (data.getDisplayName().equals(displayName)) {
 				return data;
@@ -108,13 +106,13 @@ public class HidePack {
 	}
 
 	/** 銃取得 */
-	public static GunData getGunData(String displayName) {
-		return getDataByName(GunList, displayName);
+	public static NamedData<GunDataEnum> getGunData(String displayName) {
+		return GunList.get(displayName);
 	}
 
 	/** 弾取得 */
-	public static MagazineData getMagazineData(String displayName) {
-		return getDataByName(MagazineList, displayName);
+	public static NamedData<MagDataEnum> getMagazineData(String displayName) {
+		return MagazineList.get(displayName);
 	}
 
 	/** パック取得 */

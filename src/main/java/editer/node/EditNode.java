@@ -1,16 +1,14 @@
 package editer.node;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
 
-import editer.DataEntityInterface;
+import editer.IDataEntity;
 import editer.node.EditPanels.EditType;
 import helper.ArrayEditor;
 import helper.EditHelper;
@@ -41,31 +39,32 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
-import types.IEditData;
 import types.base.DataBase;
 import types.base.DataPath;
+import types.base.IHideData;
 
 /** リスナを実装した編集用ノード */
-public class EditNode extends Pane implements ChangeListener<IEditData> {
+public class EditNode<K extends Enum<K> & IHideData> extends Pane implements ChangeListener<DataBase<?>> {
 
 	/** 変更対象 */
-	protected final Class<? extends DataBase> Clazz;
+	protected final Class<K> Clazz;
 	protected final DataPath Path;
 	protected final EditNodeType Type;
 
 	/** 型にあったプロパティ */
 	protected Property<?> editerProperty;
 
+	protected ObservableValue<?> currentValue;
+
 	protected String Name;
 
 	protected float MaxValue = Float.MAX_VALUE;
 
 	/** 数値編集フィールドの最大値 */
-	public EditNode setMax(float max) {
+	public EditNode<K> setMax(float max) {
 		MaxValue = max;
 		return this;
 	}
@@ -73,7 +72,7 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 	protected float MinValue = -Float.MAX_VALUE;
 
 	/** 数値編集フィールドの最小値 */
-	public EditNode setMin(float min) {
+	public EditNode<K> setMin(float min) {
 		MinValue = min;
 		return this;
 	}
@@ -81,7 +80,7 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 	protected String Scale = "1";
 
 	/** 数値編集フィールドの変更幅 */
-	public EditNode setScale(float scale) {
+	public EditNode<K> setScale(float scale) {
 		Scale = String.valueOf(scale);
 		return this;
 	}
@@ -94,21 +93,21 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 	protected DoubleBinding labelWidth;
 
 	/** テキストフィールドの幅 テキストフィールドを使用しない場合は無効 */
-	public EditNode setTextFieldWidth(double width) {
+	public EditNode<K> setTextFieldWidth(double width) {
 		textFieldWidth.set(width);
 		return this;
 	}
 
-	protected ObservableList<? extends DataEntityInterface> motherList;
+	protected ObservableList<? extends IDataEntity> motherList;
 
 	/** autodillとlistEditで利用 */
-	public EditNode setFromList(ObservableList<? extends DataEntityInterface> list) {
+	public EditNode<K> setFromList(ObservableList<? extends IDataEntity> list) {
 		motherList = list;
 		return this;
 	}
 
 	/** 変更されたタイミングで呼ばれる */
-	public EditNode setChangeListner(Consumer<?>... listener) {
+	public EditNode<K> setChangeListner(Consumer<?>... listener) {
 		ChangeListener = listener;
 		return this;
 	}
@@ -159,9 +158,10 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 	 *
 	 * @param editValue リスナー追加先
 	 */
-	public EditNode(Property<IEditData> editValue, EditType edit, DataPath path, EditNodeType type) {
+	@SuppressWarnings("unchecked")
+	public EditNode(Property<? extends DataBase<?>> editValue, EditType edit, DataPath path, EditNodeType type) {
 		Path = path;
-		Clazz = edit.Clazz;
+		Clazz = (Class<K>) edit.Clazz;
 		Name = EditHelper.getLocalizedName(Clazz, Path);
 
 		editValue.addListener(this);
@@ -190,19 +190,18 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 		Label propertyEdit = new Label();
 		propertyEdit.setPrefSize(24, 24);
 		propertyEdit.setOnMouseClicked(e -> {
-			if (editValue.getValue().canEdit()) {
-				if (hasProperty(editValue.getValue())) {
-					unbind(editValue.getValue());
-					editValue.getValue().removeProperty(Path);
-					propertyEdit.setGraphic(addImage);
-					disable.set(true);
-				} else {
-					editValue.getValue().addProperty(Path);
-					bind(editValue.getValue());
-					propertyEdit.setGraphic(removeImage);
-					disable.set(false);
-				}
+			if (hasProperty(editValue.getValue())) {
+				unbind(editValue.getValue());
+				// editValue.getValue().removeProperty(Path);
+				propertyEdit.setGraphic(addImage);
+				disable.set(true);
+			} else {
+				// editValue.getValue().put(key, Operator.SET, );
+				bind(editValue.getValue());
+				propertyEdit.setGraphic(removeImage);
+				disable.set(false);
 			}
+
 		});
 		propertyEdit.setAlignment(Pos.CENTER);
 		propertyEdit.setGraphic(addImage);
@@ -211,15 +210,11 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 
 		editValue.addListener((v, ov, nv) -> {
 			if (nv != null) {
-				if (nv.canEdit()) {
-					// 初期の表示を選択
-					propertyEdit.setVisible(true);
-					propertyEdit.setGraphic(hasProperty(nv) ? removeImage : addImage);
-					editBottonWidth.set(20);
-				} else {
-					propertyEdit.setVisible(false);
-					editBottonWidth.set(0);
-				}
+				// 初期の表示を選択
+				propertyEdit.setVisible(true);
+				propertyEdit.setGraphic(hasProperty(nv) ? removeImage : addImage);
+				editBottonWidth.set(20);
+
 			}
 		});
 
@@ -245,13 +240,8 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 				editerProperty = text.textProperty();
 				if (Type == EditNodeType.StringFromList) {
 					// test
-					TextFields.bindAutoCompletion(text, new Callback<ISuggestionRequest, Collection<String>>() {
-						@Override
-						public Collection<String> call(ISuggestionRequest key) {
-							return ArrayEditor.Search(motherList, key.getUserText()).stream()
-									.map(data -> data.getDisplayName()).sorted().collect(Collectors.toList());
-						}
-					});
+					TextFields.bindAutoCompletion(text, key -> ArrayEditor.Search(motherList, key.getUserText())
+							.stream().map(data -> data.getDisplayName()).sorted().collect(Collectors.toList()));
 				}
 			} else if (Type == EditNodeType.Float || Type == EditNodeType.Integer) {
 				textFieldWidth.set(50);
@@ -355,12 +345,12 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 	}
 
 	/** プロパティが設定されているかの判断 */
-	protected boolean hasProperty(IEditData data) {
+	protected boolean hasProperty(DataBase<?> data) {
 		return EditHelper.getProperty(data, Path) != null && EditHelper.getProperty(data, Path).getValue() != null;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void bind(IEditData data) {
+	protected void bind(DataBase<?> data) {
 		editerProperty.removeListener((ChangeListener) listener);
 		editerProperty.bindBidirectional((Property) EditHelper.getProperty(data, Path));
 		editerProperty.addListener((ChangeListener) listener);
@@ -369,13 +359,13 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void unbind(IEditData data) {
-		editerProperty.unbindBidirectional((Property) EditHelper.getProperty(data, Path));
+	protected void unbind(DataBase<?> dataBase) {
+		editerProperty.unbindBidirectional((Property) EditHelper.getProperty(dataBase, Path));
 	}
 
 	@Override
-	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
-		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getType())) {
+	public void changed(ObservableValue<? extends DataBase<?>> observable, DataBase<?> oldValue, DataBase<?> newValue) {
+		if (oldValue != null && Clazz.isAssignableFrom(oldValue.enumType)) {
 			// System.out.println("old match");
 			// 編集不能なら
 			if (hasProperty(oldValue))
@@ -383,7 +373,7 @@ public class EditNode extends Pane implements ChangeListener<IEditData> {
 			else
 				disable.set(false);
 		}
-		if (newValue != null && Clazz.isAssignableFrom(newValue.getType())) {
+		if (newValue != null && Clazz.isAssignableFrom(newValue.enumType)) {
 			// System.out.println("new match " + Path + " "
 			// +EditHelper.getProperty(newValue, Path) + " " + editerProperty);
 			if (hasProperty(newValue)) {

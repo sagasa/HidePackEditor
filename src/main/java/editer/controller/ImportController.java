@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-import editer.DataEntityInterface;
 import editer.HidePack;
+import editer.IDataEntity;
 import io.PackCash;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -18,7 +18,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.util.Callback;
 import types.PackInfo;
 
 public class ImportController implements Initializable {
@@ -37,19 +36,14 @@ public class ImportController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		gunList.setCellFactory(new Callback<ListView<ImportEntry>, ListCell<ImportEntry>>() {
-			@Override
-			public ListCell<ImportEntry> call(ListView<ImportEntry> arg0) {
-				return new ImportListCell();
-			}
-		});
+		gunList.setCellFactory(arg0 -> new ImportListCell());
 	}
 
 	public void setPack(PackCash pack) {
 		Pack = pack.Pack;
 		pack.GunList.forEach(data -> {
 			gunList.getItems().add(new ImportEntry(data, (packinfo) -> {
-				HidePack.GunList.add(data);
+				HidePack.GunList.put(data);
 				System.out.println(data);
 			}));
 		});
@@ -112,9 +106,9 @@ public class ImportController implements Initializable {
 	private static class ImportEntry {
 		Consumer<PackInfo> doImport;
 		boolean isImport;
-		DataEntityInterface Data;
+		IDataEntity Data;
 
-		public ImportEntry(DataEntityInterface name, Consumer<PackInfo> action) {
+		public ImportEntry(IDataEntity name, Consumer<PackInfo> action) {
 			doImport = action;
 			Data = name;
 		}

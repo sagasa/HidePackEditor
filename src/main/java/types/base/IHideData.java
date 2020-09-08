@@ -8,4 +8,6 @@ public interface IHideData {
 
 	@SuppressWarnings("rawtypes")
 	Class<? extends DataBase> getContainer();
+
+	// Class<? extends Enum<?>> getEnum();
 }

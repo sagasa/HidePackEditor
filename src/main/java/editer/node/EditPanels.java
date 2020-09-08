@@ -1,22 +1,14 @@
 package editer.node;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumMap;
-import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import editer.HidePack;
 import editer.controller.RootController;
 import editer.node.EditNode.EditNodeType;
-import editer.node.model.AnimationListNode;
-import editer.node.model.ModelTreeView;
-import editer.node.model.ModelView;
 import helper.EditHelper;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -28,62 +20,60 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import resources.HideImage;
-import types.IEditData;
-import types.PackInfo;
 import types.base.DataBase;
 import types.base.DataPath;
-import types.gun.GunFireMode;
-import types.items.GunData;
-import types.items.ItemData;
-import types.items.MagazineData;
-import types.model.AnimationKey;
-import types.model.Bone;
-import types.model.HideModel;
-import types.model.ModelSelector;
+import types.base.IHideData;
+import types.base.NamedData;
+import types.effect.Sound.SoundData;
+import types.items.GunData.GunDataEnum;
+import types.items.MagazineData.MagDataEnum;
 
 /** 編集パネルのルート */
 public class EditPanels extends Pane {
 
 	/** 編集パネルの対象 */
 	public enum EditType {
-	Item(ItemData.class), Gun(GunData.class), Magazine(MagazineData.class), PakcInfo(PackInfo.class),
-	Model(HideModel.class), ModelSelector(ModelSelector.class), Bone(Bone.class), AnimationKey(AnimationKey.class);
+	Gun(GunDataEnum.class), Magazine(MagDataEnum.class, (editor, data) -> editor.addEditValue(data));
 
 		/** 判別用の型 */
-		public Class<? extends DataBase> Clazz;
+		public Class<? extends IHideData> Clazz;
+		public BiConsumer<EditPanels, DataBase<?>> AddFunc;
 
-		private EditType(Class<? extends DataBase> clazz) {
-			Clazz = clazz;
+		private <T extends Enum<T> & IHideData> EditType(Class<T> clazz) {
+			this(clazz, null);
 		}
 
-		public boolean isType(IEditData data) {
-			return Clazz.isAssignableFrom(data.getType());
+		private <T extends Enum<T> & IHideData> EditType(Class<T> clazz, BiConsumer<EditPanels, DataBase<?>> addFunc) {
+			Clazz = clazz;
+			AddFunc = addFunc != null ? addFunc : (editor, data) -> editor.addEditValue(data);
+		}
+
+		public boolean isType(DataBase<?> data) {
+			return Clazz.isAssignableFrom(data.enumType);
 		}
 
 		/** 型からエディタを選択 */
-		public static Collection<EditType> getType(IEditData data) {
-			List<EditType> set = new ArrayList<>();
+		public static EditType getType(DataBase<?> data) {
 			if (data != null)
 				for (EditType type : values()) {
-					if (type.Clazz.isAssignableFrom(data.getType()))
-						set.add(type);
+					if (type.Clazz == data.enumType)
+						return type;
 				}
-			return set;
+			return null;
 		}
 	}
 
 	private FlowPane rootPane;
 
 	/** 編集対象 */
-	private ObjectProperty<IEditData> editValue = new SimpleObjectProperty<>();
+	private ObjectProperty<DataBase<?>> editValue = new SimpleObjectProperty<>();
 
 	/** 各編集パネルの表示状態管理用プロパティ */
-	private EnumMap<EditType, BooleanProperty> editModes = new EnumMap<>(EditType.class);
+	private EnumMap<EditType, ObjectProperty<? extends NamedData<?>>> editModes = new EnumMap<>(EditType.class);
 
 	public EditPanels() {
 		rootPane = new FlowPane();
@@ -95,45 +85,50 @@ public class EditPanels extends Pane {
 		this.getChildren().add(rootPane);
 
 		for (EditType type : EditType.values()) {
-			editModes.put(type, new SimpleBooleanProperty(false));
+			editModes.put(type, new SimpleObjectProperty<>());
 		}
 
 		editValue.addListener((v, ov, nv) -> {
 			// Modeの切り替え
 			if (ov != null)
-				EditType.getType(ov).forEach(type -> editModes.get(type).set(false));
-			if (nv != null)
-				EditType.getType(nv).forEach(type -> editModes.get(type).set(true));
+
+				if (nv != null)
+					EditType.getType(ov).AddFunc.accept(this, ov);
 		});
 		// ItemName
-		addEditPane(makeItemInfoNode(EditType.Item), EditType.Item);
+		// addEditPane(makeItemInfoNode(EditType.Item), EditType.Item);
 		writeGunEditer();
 		writeMagazineEditer();
-		writePackEditer();
-		writeModelEditer();
+		// writePackEditer();
+		// writeModelEditer();
 	}
 
 	/** エディタの内容設定 */
-	public void setEditValue(IEditData data) {
+	private void addEditValue(DataBase<?> data) {
+		editModes.get(EditType.getType(data));
+	}
+
+	/** エディタの内容設定 */
+	public void setEditValue(DataBase<?> data) {
 		editValue.set(data);
 	}
 
-	public IEditData getEditValue() {
+	public DataBase<?> getEditValue() {
 		return editValue.get();
 	}
 
 	private void addEditPane(Node node, EditType type) {
 		node.setStyle("-fx-background-color: lightGray;");
-		node.managedProperty().bind(editModes.get(type));
-		node.visibleProperty().bind(editModes.get(type));
+		node.managedProperty().bind(editModes.get(type).isNotNull());
+		node.visibleProperty().bind(editModes.get(type).isNotNull());
 		rootPane.getChildren().add(node);
 	}
 
-	private void writePackEditer() {
-		final EditType type = EditType.PakcInfo;
-		addEditPane(makeCateEditPanel(type, -1), type);
-		addEditPane(new VBox(new ColorEditNode(editValue, type, new DataPath("PackColor"), null)), type);
-	}
+	/*
+	 * private void writePackEditer() { final EditType type = EditType.PakcInfo;
+	 * addEditPane(makeCateEditPanel(type, -1), type); addEditPane(new VBox(new
+	 * ColorEditNode(editValue, type, new DataPath("PackColor"), null)), type); } //
+	 */
 
 	/** GunEditer */
 	private void writeGunEditer() {
@@ -144,18 +139,27 @@ public class EditPanels extends Pane {
 		// Cate1
 		addEditPane(makeCateEditPanel(type, 1), type);
 		// useBullet
-		addEditPane(new ListEditNode(editValue, type, new DataPath("MAGAZINE_USE"), HidePack.MagazineList), type);
+		// addEditPane(new ListEditNode(editValue, type, new DataPath("MAGAZINE_USE"),
+		// HidePack.MagazineList), type);
 		// fireMode
-		addEditPane(new ListEditNode(editValue, type, new DataPath("FIREMODE"), GunFireMode.getList()), type);
+		// addEditPane(new ListEditNode(editValue, type, new DataPath("FIREMODE"),
+		// GunFireMode.getList()), type);
 
 		// scope
-		Pane scope = makeImageNode(type, new DataPath("SCOPE_NAME"), HidePack.ScopeList);
+		Pane scope = makeImageNode(type, DataPath.of(GunDataEnum.ScopeName), HidePack.ScopeList);
 		scope.getChildren().add(makeCateEditPanel(EditType.Gun, 2));
 		addEditPane(scope, type);
 		// shootSound
-		addEditPane(makeSoundEditer(type, new DataPath("SOUND_SHOOT")), type);
+		addEditPane(makeSoundEditer(type, DataPath.of(GunDataEnum.SoundShoot)), type);
 		// reloadSound
-		addEditPane(makeSoundEditer(type, new DataPath("SOUND_RELOAD")), type);
+		addEditPane(makeSoundEditer(type, DataPath.of(GunDataEnum.SoundReload)), type);
+
+		// sound
+		addEditPane(makeSoundEditer(type, DataPath.of(GunDataEnum.SoundHitEntity)), type);
+		// sound
+		addEditPane(makeSoundEditer(type, DataPath.of(GunDataEnum.SoundHit)), type);
+		// sound
+		addEditPane(makeSoundEditer(type, DataPath.of(GunDataEnum.SoundPassing)), type);
 		// recoil
 		addEditPane(makeRecoilEditer(type), type);
 		// */
@@ -172,55 +176,55 @@ public class EditPanels extends Pane {
 	}
 
 	/** HideModel */
-	private void writeModelEditer() {
-		final EditType type = EditType.Model;
-		addEditPane(makePos3Editer(type, new DataPath("offsetFirstPerson")), type);
-		// 右側にモデル確認ビューを置く
-		ModelView modelView = new ModelView(editValue);
-		modelView.translateXProperty().bind(rootPane.widthProperty().add(5));
-		modelView.prefWidthProperty().bind(widthProperty().subtract(rootPane.widthProperty()).add(-5));
-		modelView.prefHeightProperty().bind(heightProperty());
-
-		modelView.managedProperty().bind(editModes.get(type));
-		modelView.visibleProperty().bind(editModes.get(type));
-
-		ModelTreeView treeView = new ModelTreeView(editValue, modelView);
-		addEditPane(treeView, type);
-		// MSEditer
-		VBox msEditer = new VBox();
-		Label label = new Label("ModelSelecter");
-		label.setPrefWidth(200);
-		label.setAlignment(Pos.CENTER);
-
-		EditNode defaultModel = new EditNode(treeView.currentItem, EditType.ModelSelector, new DataPath("defaultModel"),
-				EditNodeType.StringFromList);
-
-		msEditer.getChildren().addAll(label, defaultModel);
-
-		msEditer.setStyle("-fx-background-color: lightGray;");
-		msEditer.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone.not()));
-		msEditer.visibleProperty().bind(editModes.get(type).and(treeView.currentItemIsBone.not()));
-
-		// BoneEditer
-		VBox boneEditer = new VBox();
-		label = new Label("Bone");
-		label.setPrefWidth(200);
-		label.setAlignment(Pos.CENTER);
-
-		AnimationListNode animationEditer = new AnimationListNode(treeView.currentItem,new DataPath("animation"));
-
-		animationEditer.setPrefSize(160, 300);
-
-		boneEditer.getChildren().addAll(label,animationEditer);
-
-		boneEditer.setStyle("-fx-background-color: lightGray;");
-		boneEditer.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
-		boneEditer.visibleProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
-
-		rootPane.getChildren().addAll(msEditer, boneEditer);
-
-		this.getChildren().addAll(modelView);
-	}
+//	private void writeModelEditer() {
+//		final EditType type = EditType.Model;
+//		addEditPane(makePos3Editer(type, new DataPath("offsetFirstPerson")), type);
+//		// 右側にモデル確認ビューを置く
+//		ModelView modelView = new ModelView(editValue);
+//		modelView.translateXProperty().bind(rootPane.widthProperty().add(5));
+//		modelView.prefWidthProperty().bind(widthProperty().subtract(rootPane.widthProperty()).add(-5));
+//		modelView.prefHeightProperty().bind(heightProperty());
+//
+//		modelView.managedProperty().bind(editModes.get(type));
+//		modelView.visibleProperty().bind(editModes.get(type));
+//
+//		ModelTreeView treeView = new ModelTreeView(editValue, modelView);
+//		addEditPane(treeView, type);
+//		// MSEditer
+//		VBox msEditer = new VBox();
+//		Label label = new Label("ModelSelecter");
+//		label.setPrefWidth(200);
+//		label.setAlignment(Pos.CENTER);
+//
+//		EditNode defaultModel = new EditNode(treeView.currentItem, EditType.ModelSelector, new DataPath("defaultModel"),
+//				EditNodeType.StringFromList);
+//
+//		msEditer.getChildren().addAll(label, defaultModel);
+//
+//		msEditer.setStyle("-fx-background-color: lightGray;");
+//		msEditer.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone.not()));
+//		msEditer.visibleProperty().bind(editModes.get(type).and(treeView.currentItemIsBone.not()));
+//
+//		// BoneEditer
+//		VBox boneEditer = new VBox();
+//		label = new Label("Bone");
+//		label.setPrefWidth(200);
+//		label.setAlignment(Pos.CENTER);
+//
+//		AnimationListNode animationEditer = new AnimationListNode(treeView.currentItem, new DataPath("animation"));
+//
+//		animationEditer.setPrefSize(160, 300);
+//
+//		boneEditer.getChildren().addAll(label, animationEditer);
+//
+//		boneEditer.setStyle("-fx-background-color: lightGray;");
+//		boneEditer.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
+//		boneEditer.visibleProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
+//
+//		rootPane.getChildren().addAll(msEditer, boneEditer);
+//
+//		this.getChildren().addAll(modelView);
+//	}
 
 	private void addBulletEditer(Pane editer) {
 		final EditType type = EditType.Magazine;
@@ -233,35 +237,30 @@ public class EditPanels extends Pane {
 		addEditPane(makeCateEditPanel(type, 2, top), type);
 		// Cate3
 		addEditPane(makeCateEditPanel(type, 3, top), type);
-		// sound
-		addEditPane(makeSoundEditer(type, top.append("SOUND_HIT_ENTITY")), type);
-		// sound
-		addEditPane(makeSoundEditer(type, top.append("SOUND_HIT_GROUND")), type);
-		// sound
-		addEditPane(makeSoundEditer(type, top.append("SOUND_PASSING")), type);
+
 	}
 
-	private Region makePos3Editer(EditType type, DataPath path) {
-		return makePos3Editer(editValue, type, path);
-	}
-
-	/** Pos3f */
-	public static Region makePos3Editer(ObjectProperty<IEditData> value, EditType type, DataPath path) {
-		VBox root = new VBox();
-		root.setPrefWidth(200);
-		Label label = new Label(EditHelper.getLocalizedName(type.Clazz, path));
-		label.prefWidthProperty().bind(root.widthProperty().subtract(4));
-		label.setAlignment(Pos.CENTER);
-		root.getChildren().add(label);
-		// 数値系
-		HBox hbox = new HBox();
-		ObservableValue<Number> width = root.widthProperty().subtract(6).divide(3);
-		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("X"), EditNodeType.Number), width, 24));
-		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("Y"), EditNodeType.Number), width, 24));
-		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("Z"), EditNodeType.Number), width, 24));
-		root.getChildren().add(hbox);
-		return root;
-	}
+//	private Region makePos3Editer(EditType type, DataPath path) {
+//		return makePos3Editer(editValue, type, path);
+//	}
+//
+//	/** Pos3f */
+//	public static Region makePos3Editer(ObjectProperty<DataBase<?>> value, EditType type, DataPath path) {
+//		VBox root = new VBox();
+//		root.setPrefWidth(200);
+//		Label label = new Label(EditHelper.getLocalizedName(type.Clazz, path));
+//		label.prefWidthProperty().bind(root.widthProperty().subtract(4));
+//		label.setAlignment(Pos.CENTER);
+//		root.getChildren().add(label);
+//		// 数値系
+//		HBox hbox = new HBox();
+//		ObservableValue<Number> width = root.widthProperty().subtract(6).divide(3);
+//		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("X"), EditNodeType.Number), width, 24));
+//		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("Y"), EditNodeType.Number), width, 24));
+//		hbox.getChildren().add(setSize(new EditNode(value, type, path.append("Z"), EditNodeType.Number), width, 24));
+//		root.getChildren().add(hbox);
+//		return root;
+//	}
 
 	private static Region setSize(Region node, ObservableValue<? extends Number> x, double y) {
 		node.prefWidthProperty().bind(x);
@@ -273,13 +272,13 @@ public class EditPanels extends Pane {
 	private Region makeRecoilEditer(EditType type) {
 		TabPane root = new TabPane();
 		root.setMaxWidth(200);
-		Tab Default = new Tab("Default", makeRecoilEditer(type, new DataPath("RECOIL_DEFAULT")));
+		Tab Default = new Tab("Default", makeRecoilEditer(type, DataPath.of(GunDataEnum.Recoil)));
 		Default.setClosable(false);
-		Tab ADS = new Tab("ADS", makeRecoilEditer(type, new DataPath("RECOIL_ADS")));
+		Tab ADS = new Tab("ADS", makeRecoilEditer(type, DataPath.of(GunDataEnum.RecoilADS)));
 		ADS.setClosable(false);
-		Tab Sneak = new Tab("Sneak", makeRecoilEditer(type, new DataPath("RECOIL_SNEAK")));
+		Tab Sneak = new Tab("Sneak", makeRecoilEditer(type, DataPath.of(GunDataEnum.RecoilSneak)));
 		Sneak.setClosable(false);
-		Tab SneakADS = new Tab("Sneak+ADS", makeRecoilEditer(type, new DataPath("RECOIL_SNEAK_ADS")));
+		Tab SneakADS = new Tab("Sneak+ADS", makeRecoilEditer(type, DataPath.of(GunDataEnum.RecoilSneakADS)));
 		SneakADS.setClosable(false);
 		root.getTabs().addAll(Default, Sneak, ADS, SneakADS);
 		return root;
@@ -293,7 +292,7 @@ public class EditPanels extends Pane {
 		label.setAlignment(Pos.CENTER);
 		root.getChildren().add(label);
 		// 数値系
-		root.getChildren().add(new EditNode(editValue, type, path.append("NAME"), EditNodeType.StringFromList)
+		root.getChildren().add(new EditNode(editValue, type, path.append(SoundData.Name), EditNodeType.StringFromList)
 				.setFromList(HidePack.SoundList));
 		root.getChildren().add(makeCateEditPanel(type, -1, path));
 		return root;
@@ -310,12 +309,8 @@ public class EditPanels extends Pane {
 		 * boolean.class).setValue(!value); EditHelper.getProperty(recoil, "USE",
 		 * boolean.class).setValue(value); //
 		 */
-		// 使用可否
-		EditNode use = new EditNode(editValue, type, path.append("USE"), EditNodeType.Boolean)
-				.setChangeListner((Consumer<Boolean>) (v) -> {
-					pane.setDisable(!v);
-				});
-		root.getChildren().addAll(use, pane);
+
+		root.getChildren().addAll(pane);
 		return root;
 	}
 
@@ -366,11 +361,11 @@ public class EditPanels extends Pane {
 	/** カテゴリが付いた値を編集するノード */
 	private Pane makeCateEditPanel(EditType type, int cate, DataPath path) {
 		VBox root = new VBox();
-		Class<? extends DataBase> clazz = type.Clazz;
+		Class<? extends IHideData> clazz = type.Clazz;
 		// pathがあるなら指定されたクラスで実行
-		for (Field field : (path == null ? clazz.getFields() : EditHelper.getType(type.Clazz, path).getFields())) {
+		for (IHideData data : EditHelper.getEnums(type.Clazz, path)) {
 			// pathが無いなら作る
-			DataPath fieldPath = path == null ? new DataPath(field.getName()) : path.append(field.getName());
+			DataPath fieldPath = path == null ? DataPath.of(data) : path.append(data);
 			int c = EditHelper.getCate(clazz, fieldPath);
 			if (c == cate) {
 				if (EditHelper.isString(clazz, fieldPath)) {

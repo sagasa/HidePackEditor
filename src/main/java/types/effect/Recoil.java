@@ -39,9 +39,9 @@ public class Recoil extends DataBase<RecoilData> {
 		VerticalReturnTick(new Curve(), new Info().Min(0)),
 
 		/** 射撃毎のパワーの増加値 最大1 Float */
-		PowerShoot(0.0, new Info().Min(0).Max(1).Scale("0.05")),
+		PowerShoot(0.0f, new Info().Min(0).Max(1).Scale("0.05")),
 		/** Tick毎のパワーの減少値 最大1 Float */
-		PowerTick(0.0, new Info().Min(0).Max(1).Scale("0.05")),;
+		PowerTick(0.0f, new Info().Min(0).Max(1).Scale("0.05")),;
 
 		private Object def;
 		private Info info;

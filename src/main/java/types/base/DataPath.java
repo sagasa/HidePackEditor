@@ -1,22 +1,24 @@
 package types.base;
 
+import org.apache.commons.lang.StringUtils;
+
 public final class DataPath {
 	private static final String SPLIT = "\\.";
 
-	/**空path*/
+	/** 空path */
 	public static final DataPath BLANK_PATH = new DataPath("");
 
 	public final String Path;
-	//ファイナルだし初期化時に全部答えだしとく
-	/**深度があるか*/
+	// ファイナルだし初期化時に全部答えだしとく
+	/** 深度があるか */
 	public final boolean hasChild;
-	/**1つ目のフィールド名*/
+	/** 1つ目のフィールド名 */
 	public final String fastName;
-	/**孫階層のパス なければNull*/
+	/** 孫階層のパス なければNull */
 	public final DataPath nextPath;
 
-	/**通常用コンストラクタ*/
-	public DataPath(String path) {
+	/** 通常用コンストラクタ */
+	private DataPath(String path) {
 		Path = path;
 		String[] split = path.split(SPLIT, 2);
 		if (split.length == 2) {
@@ -30,11 +32,11 @@ public final class DataPath {
 		}
 	}
 
-	/**末尾にフィールド名を追加する 長さが０ならこの何もしない*/
-	public DataPath append(String name) {
-		if (name.length() == 0)
+	/** 末尾にフィールド名を追加する 長さが０ならこの何もしない */
+	public DataPath append(IHideData name) {
+		if (name == null)
 			return this;
-		return new DataPath(this.Path + "." + name);
+		return new DataPath(this.Path + "." + name.toString());
 	}
 
 	@Override
@@ -54,5 +56,9 @@ public final class DataPath {
 	@Override
 	public int hashCode() {
 		return Path.hashCode();
+	}
+
+	public static DataPath of(IHideData... datas) {
+		return new DataPath(StringUtils.join(datas, "."));
 	}
 }
