@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -14,13 +13,13 @@ import java.util.ResourceBundle;
 import helper.EditHelper;
 import jdk.internal.util.xml.impl.ReaderUTF8;
 import types.base.DataBase;
+import types.base.DataBase.DataEntry;
 import types.base.DataPath;
-import types.base.IHideData;
-import types.effect.Explosion.ExplosionData;
-import types.effect.Recoil.RecoilData;
-import types.effect.Sound.SoundData;
-import types.items.GunData.GunDataEnum;
-import types.items.MagazineData.MagDataEnum;
+import types.effect.Explosion;
+import types.effect.Recoil;
+import types.effect.Sound;
+import types.items.GunData;
+import types.items.MagazineData;
 
 /** langの読み込みと表示用 + 説明書きも対応 */
 public class LocalizeHandler {
@@ -38,13 +37,14 @@ public class LocalizeHandler {
 		for (Lang lang : Lang.values()) {
 			addName(lang.toString().toLowerCase());
 		}
+		new GunData();
 		// DataBaseクラスのローカライズファイルを作成
-		makeLocalize(GunDataEnum.class);
-		makeLocalize(RecoilData.class);
-		makeLocalize(SoundData.class);
-		makeLocalize(ExplosionData.class);
+		makeLocalize(GunData.class);
+		makeLocalize(Recoil.class);
+		makeLocalize(Sound.class);
+		makeLocalize(Explosion.class);
 		// makeLocalize(PackInfo.class);
-		makeLocalize(MagDataEnum.class);
+		makeLocalize(MagazineData.class);
 		// makeLocalize(ModelSelector.class);
 		// makeLocalize(Vec3f.class);
 		// makeLocalize(HideModel.class);
@@ -53,10 +53,10 @@ public class LocalizeHandler {
 		writeDefaultLang();
 	}
 
-	private static <K extends Enum<K> & IHideData> void makeLocalize(Class<K> clazz) {
-
-		for (Field field : clazz.getFields()) {
-			LocalizeHandler.addName(EditHelper.getUnlocalizedName(clazz, new DataPath(field.getName())));
+	private static void makeLocalize(Class<? extends DataBase> clazz) {
+		clazz.getFields();
+		for (DataEntry<?> field : DataBase.getEntries(clazz).values()) {
+			LocalizeHandler.addName(EditHelper.getUnlocalizedName(clazz, DataPath.of(field)));
 		}
 	}
 
@@ -140,8 +140,8 @@ public class LocalizeHandler {
 		return null;
 	}
 
-	static public String getLocalizedName(DataBase<?> data, DataPath path) {
-		return getLocalizedName(EditHelper.getUnlocalizedName(data.enumType, path));
+	static public String getLocalizedName(DataBase data, DataPath path) {
+		return getLocalizedName(EditHelper.getUnlocalizedName(data.getClass(), path));
 	}
 
 	/** メニュー用ローカライズデータ取得 */

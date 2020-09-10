@@ -11,7 +11,7 @@ import java.util.Set;
 
 import types.base.DataBase.DataEntry;
 
-public class DataMap extends AbstractMap<DataEntry<?>, Object> {
+public class DataMap<V> extends AbstractMap<DataEntry<?>, V> {
 	private final DataEntry<?>[] keys;
 	private final Object[] values;
 	private final Class<?> type;
@@ -25,32 +25,35 @@ public class DataMap extends AbstractMap<DataEntry<?>, Object> {
 		type = data.getClass();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object put(DataEntry<?> key, Object value) {
+	public V put(DataEntry<?> key, V value) {
 		if (Objects.isNull(key) || Objects.isNull(value))
 			throw new NullPointerException();
 		checkKey(key);
-		maxIndex = Math.max(maxIndex, key.Index);
-		Object old = values[key.Index];
-		keys[key.Index] = key;
-		values[key.Index] = value;
+		maxIndex = Math.max(maxIndex, key.getIndex());
+		V old = (V) values[key.getIndex()];
+		keys[key.getIndex()] = key;
+		values[key.getIndex()] = value;
 		if (old == null)
 			size++;
 		return old;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object get(Object key) {
-		return key == null ? null : values[checkKey(key).Index];
+	public V get(Object key) {
+		return key == null ? null : (V) values[checkKey(key).getIndex()];
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object remove(Object arg) {
+	public V remove(Object arg) {
 		DataEntry<?> key = checkKey(arg);
-		maxIndex = Math.max(maxIndex, key.Index);
-		Object old = values[key.Index];
-		keys[key.Index] = null;
-		values[key.Index] = null;
+		maxIndex = Arrays.stream(keys).map((k) -> k.getIndex()).max(null).get();
+		V old = (V) values[key.getIndex()];
+		keys[key.getIndex()] = null;
+		values[key.getIndex()] = null;
 		size--;
 		return old;
 	}
@@ -66,7 +69,7 @@ public class DataMap extends AbstractMap<DataEntry<?>, Object> {
 	public boolean containsKey(Object arg) {
 		if (arg == null || !(arg instanceof DataEntry))
 			return false;
-		return values[checkKey(arg).Index] != null;
+		return values[checkKey(arg).getIndex()] != null;
 	}
 
 	@Override
@@ -81,51 +84,56 @@ public class DataMap extends AbstractMap<DataEntry<?>, Object> {
 		if (!(obj instanceof DataEntry))
 			throw new IllegalArgumentException("arg is not DataEntry");
 		DataEntry<?> entry = (DataEntry<?>) obj;
-		if (entry.Type != type)
-			throw new IllegalArgumentException("arg type is different " + entry.Type + " " + type);
+		if (!entry.getType().isAssignableFrom(type))
+			throw new IllegalArgumentException("arg type is different " + entry.getType() + " " + type);
 		return entry;
 	}
 
-	private Set<Entry<DataEntry<?>, Object>> entrySet;
+	private Set<Entry<DataEntry<?>, V>> entrySet;
 
 	@Override
-	public Set<Entry<DataEntry<?>, Object>> entrySet() {
+	public Set<Entry<DataEntry<?>, V>> entrySet() {
 		if (entrySet == null)
 			entrySet = new EntrySet();
 		return entrySet;
 	}
 
-	private class EntrySet extends AbstractSet<Entry<DataEntry<?>, Object>> {
+	private class EntrySet extends AbstractSet<Entry<DataEntry<?>, V>> {
 
 		@Override
-		public Iterator<Entry<DataEntry<?>, Object>> iterator() {
-			return new Iterator<Map.Entry<DataEntry<?>, Object>>() {
-				int prevIndex = 0;
+		public Iterator<Entry<DataEntry<?>, V>> iterator() {
+			return new Iterator<Map.Entry<DataEntry<?>, V>>() {
+				int prevIndex = -1;
 
 				@Override
-				public Entry<DataEntry<?>, Object> next() {
-					for (int j = prevIndex; j < size; j++) {
-						if (values[j] != null) {
-							prevIndex = j;
-							final int i = j;
-							return new Entry<DataBase.DataEntry<?>, Object>() {
-								@Override
-								public Object setValue(Object value) {
-									Object old = values[i];
-									values[i] = value;
-									return old;
-								}
+				public Entry<DataEntry<?>, V> next() {
+					for (int c = 0; c < size; c++) {
+						for (int p = prevIndex + 1; p < values.length; p++) {
+							if (values[p] != null) {
+								prevIndex = p;
+								final int index = p;
+								return new Entry<DataBase.DataEntry<?>, V>() {
+									@SuppressWarnings("unchecked")
+									@Override
+									public V setValue(V value) {
+										V old = (V) values[index];
+										values[index] = value;
+										return old;
+									}
 
-								@Override
-								public Object getValue() {
-									return values[i];
-								}
+									@SuppressWarnings("unchecked")
+									@Override
+									public V getValue() {
+										return (V) values[index];
+									}
 
-								@Override
-								public DataEntry<?> getKey() {
-									return keys[i];
-								}
-							};
+									@Override
+									public DataEntry<?> getKey() {
+										return keys[index];
+									}
+								};
+							}
+
 						}
 
 					}

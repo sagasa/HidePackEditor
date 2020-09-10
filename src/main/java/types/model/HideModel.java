@@ -1,13 +1,12 @@
 package types.model;
 
-import editer.IDataEntity;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import resources.Model;
-import types.base.DataBase;
+import types.base.NamedData;
 
 /** Modelはパックから名前で参照する */
-public class HideModel extends DataBase implements IDataEntity {
+public class HideModel extends NamedData {
 
 	public static class Vec3f {
 		public float X = 0, Y = 0, Z = 0;
@@ -37,11 +36,19 @@ public class HideModel extends DataBase implements IDataEntity {
 
 	public HideModel(Model m) {
 		modelProperty.set(m);
-		rootBone = new Bone(m.modelParts.keySet());
+		// rootBone = new Bone(m.modelParts.keySet());
 	}
 
 	@Override
-	public String getDisplayName() {
-		return name;
+	public DataEntry<String> displayName() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
 	}
+
+	@Override
+	public DataEntry<String> systemName() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
+
 }

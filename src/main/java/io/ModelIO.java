@@ -91,9 +91,9 @@ public class ModelIO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		model.modelParts = polygons;
-		model.texArray = uvArray;
-		model.vertArray = vertexArray;
+//		model.modelParts = polygons;
+//		model.texArray = uvArray;
+//		model.vertArray = vertexArray;
 		return model;
 	}
 

@@ -17,8 +17,12 @@ public class ArrayEditor {
 	// ===========検索============
 	private static final String space = " ";// TODO
 
-	/** 検索 結果のリストを返す */
-	public static List<IDataEntity> Search(Collection<? extends IDataEntity> value, String key) {
+	/**
+	 * 検索 結果のリストを返す
+	 *
+	 * @param <T>
+	 */
+	public static <T extends IDataEntity> List<T> Search(Collection<T> value, String key) {
 		return value.stream().filter(data -> Search(data.getDisplayName(), key)).sorted().collect(Collectors.toList());
 	}
 

@@ -2,6 +2,8 @@ package types.base;
 
 import org.apache.commons.lang.StringUtils;
 
+import types.base.DataBase.DataEntry;
+
 public final class DataPath {
 	private static final String SPLIT = "\\.";
 
@@ -33,7 +35,7 @@ public final class DataPath {
 	}
 
 	/** 末尾にフィールド名を追加する 長さが０ならこの何もしない */
-	public DataPath append(IHideData name) {
+	public DataPath append(DataEntry<?> name) {
 		if (name == null)
 			return this;
 		return new DataPath(this.Path + "." + name.toString());
@@ -58,7 +60,7 @@ public final class DataPath {
 		return Path.hashCode();
 	}
 
-	public static DataPath of(IHideData... datas) {
+	public static DataPath of(DataEntry<?>... datas) {
 		return new DataPath(StringUtils.join(datas, "."));
 	}
 }

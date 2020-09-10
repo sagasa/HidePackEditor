@@ -44,13 +44,12 @@ import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import types.base.DataBase;
 import types.base.DataPath;
-import types.base.IHideData;
 
 /** リスナを実装した編集用ノード */
-public class EditNode<K extends Enum<K> & IHideData> extends Pane implements ChangeListener<DataBase<?>> {
+public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
 
 	/** 変更対象 */
-	protected final Class<K> Clazz;
+	protected final Class<? extends DataBase> Clazz;
 	protected final DataPath Path;
 	protected final EditNodeType Type;
 
@@ -64,7 +63,7 @@ public class EditNode<K extends Enum<K> & IHideData> extends Pane implements Cha
 	protected float MaxValue = Float.MAX_VALUE;
 
 	/** 数値編集フィールドの最大値 */
-	public EditNode<K> setMax(float max) {
+	public EditNode<T> setMax(float max) {
 		MaxValue = max;
 		return this;
 	}
@@ -72,7 +71,7 @@ public class EditNode<K extends Enum<K> & IHideData> extends Pane implements Cha
 	protected float MinValue = -Float.MAX_VALUE;
 
 	/** 数値編集フィールドの最小値 */
-	public EditNode<K> setMin(float min) {
+	public EditNode<T> setMin(float min) {
 		MinValue = min;
 		return this;
 	}
@@ -80,7 +79,7 @@ public class EditNode<K extends Enum<K> & IHideData> extends Pane implements Cha
 	protected String Scale = "1";
 
 	/** 数値編集フィールドの変更幅 */
-	public EditNode<K> setScale(float scale) {
+	public EditNode<T> setScale(float scale) {
 		Scale = String.valueOf(scale);
 		return this;
 	}
@@ -93,7 +92,7 @@ public class EditNode<K extends Enum<K> & IHideData> extends Pane implements Cha
 	protected DoubleBinding labelWidth;
 
 	/** テキストフィールドの幅 テキストフィールドを使用しない場合は無効 */
-	public EditNode<K> setTextFieldWidth(double width) {
+	public EditNode<T> setTextFieldWidth(double width) {
 		textFieldWidth.set(width);
 		return this;
 	}
@@ -101,13 +100,13 @@ public class EditNode<K extends Enum<K> & IHideData> extends Pane implements Cha
 	protected ObservableList<? extends IDataEntity> motherList;
 
 	/** autodillとlistEditで利用 */
-	public EditNode<K> setFromList(ObservableList<? extends IDataEntity> list) {
+	public EditNode<T> setFromList(ObservableList<? extends IDataEntity> list) {
 		motherList = list;
 		return this;
 	}
 
 	/** 変更されたタイミングで呼ばれる */
-	public EditNode<K> setChangeListner(Consumer<?>... listener) {
+	public EditNode<T> setChangeListner(Consumer<?>... listener) {
 		ChangeListener = listener;
 		return this;
 	}
@@ -158,10 +157,9 @@ public class EditNode<K extends Enum<K> & IHideData> extends Pane implements Cha
 	 *
 	 * @param editValue リスナー追加先
 	 */
-	@SuppressWarnings("unchecked")
-	public EditNode(Property<? extends DataBase<?>> editValue, EditType edit, DataPath path, EditNodeType type) {
+	public EditNode(Property<? extends DataBase> editValue, EditType edit, DataPath path, EditNodeType type) {
 		Path = path;
-		Clazz = (Class<K>) edit.Clazz;
+		Clazz = edit.Clazz;
 		Name = EditHelper.getLocalizedName(Clazz, Path);
 
 		editValue.addListener(this);
@@ -345,12 +343,12 @@ public class EditNode<K extends Enum<K> & IHideData> extends Pane implements Cha
 	}
 
 	/** プロパティが設定されているかの判断 */
-	protected boolean hasProperty(DataBase<?> data) {
+	protected boolean hasProperty(DataBase data) {
 		return EditHelper.getProperty(data, Path) != null && EditHelper.getProperty(data, Path).getValue() != null;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void bind(DataBase<?> data) {
+	protected void bind(DataBase data) {
 		editerProperty.removeListener((ChangeListener) listener);
 		editerProperty.bindBidirectional((Property) EditHelper.getProperty(data, Path));
 		editerProperty.addListener((ChangeListener) listener);
@@ -359,13 +357,13 @@ public class EditNode<K extends Enum<K> & IHideData> extends Pane implements Cha
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void unbind(DataBase<?> dataBase) {
+	protected void unbind(DataBase dataBase) {
 		editerProperty.unbindBidirectional((Property) EditHelper.getProperty(dataBase, Path));
 	}
 
 	@Override
-	public void changed(ObservableValue<? extends DataBase<?>> observable, DataBase<?> oldValue, DataBase<?> newValue) {
-		if (oldValue != null && Clazz.isAssignableFrom(oldValue.enumType)) {
+	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
+		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getClass())) {
 			// System.out.println("old match");
 			// 編集不能なら
 			if (hasProperty(oldValue))
@@ -373,7 +371,7 @@ public class EditNode<K extends Enum<K> & IHideData> extends Pane implements Cha
 			else
 				disable.set(false);
 		}
-		if (newValue != null && Clazz.isAssignableFrom(newValue.enumType)) {
+		if (newValue != null && Clazz.isAssignableFrom(newValue.getClass())) {
 			// System.out.println("new match " + Path + " "
 			// +EditHelper.getProperty(newValue, Path) + " " + editerProperty);
 			if (hasProperty(newValue)) {

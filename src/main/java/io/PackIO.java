@@ -37,7 +37,6 @@ import resources.Sound;
 import types.PackInfo;
 import types.base.NamedData;
 import types.items.GunData;
-import types.items.GunData.GunDataEnum;
 import types.items.MagazineData;
 
 public class PackIO {
@@ -147,7 +146,7 @@ public class PackIO {
 		}
 
 		// 銃のデータ
-		for (NamedData<GunDataEnum> d : HidePack.GunList.getValues()) {
+		for (NamedData d : HidePack.GunList) {
 			// 参照ではなければ
 			if (!d.isReference()) {
 				dataMap.get(d.RootPack.get()).add(new Entry(PackPattern.GUN.toPath(d.getDisplayName()),

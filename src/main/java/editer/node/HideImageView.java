@@ -5,6 +5,7 @@ import editer.node.EditPanels.EditType;
 import helper.EditHelper;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableObjectValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -16,12 +17,12 @@ import types.base.DataBase;
 import types.base.DataPath;
 
 /** 自動更新されるImageView */
-public class HideImageView extends ImageView implements ChangeListener<DataBase<?>> {
+public class HideImageView extends ImageView implements ChangeListener<DataBase> {
 	private ObservableList<HideImage> List;
 	private final DataPath Path;
 	private EditType Type;
 
-	private DataBase<?> now;
+	private DataBase now;
 
 	private ListChangeListener<HideImage> listListener = change -> reflesh(null);
 	private ChangeListener<String> nameListener = (value, oldValue, newValue) -> reflesh(newValue);
@@ -46,9 +47,9 @@ public class HideImageView extends ImageView implements ChangeListener<DataBase<
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void changed(ObservableValue<? extends DataBase<?>> observable, DataBase<?> oldValue, DataBase<?> newValue) {
+	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
 		if (oldValue != null && Type.isType(oldValue)) {
-			((Property<String>) EditHelper.getProperty(oldValue, Path)).removeListener(nameListener);
+			((ObservableObjectValue<String>) EditHelper.getProperty(oldValue, Path)).removeListener(nameListener);
 		}
 		if (newValue != null && Type.isType(newValue)) {
 			((Property<String>) EditHelper.getProperty(newValue, Path)).addListener(nameListener);

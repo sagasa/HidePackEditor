@@ -1,6 +1,7 @@
 package types.base;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.checkerframework.checker.units.qual.K;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,58 +24,162 @@ import com.google.gson.JsonSerializer;
 
 import javafx.beans.property.ReadOnlyObjectPropertyBase;
 import javafx.beans.value.ObservableObjectValue;
-import types.effect.Explosion;
 
 /**
- * 多目的なホルダークラス IHideData継承のenumを渡して初期化する
+ * 多目的なホルダークラス
  */
 public abstract class DataBase {
 
 	public static class DataEntry<T> {
 		public final T Default;
 		public final Info Info;
-		public final int Index;
-		public final Class<? extends DataBase> Type;
+		private int index = -1;
+		private Class<? extends DataBase> type;
+		private String name;
 
-		private DataEntry(T def, Info info, Class<? extends DataBase> type, int index) {
+		private DataEntry(T def, Info info) {
 			Default = def;
 			Info = info;
-			Index = index;
-			Type = type;
+		}
+
+		public int getIndex() {
+			return index;
+		}
+
+		public Class<? extends DataBase> getType() {
+			return type;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		/** getNameと同一 */
+		@Override
+		public String toString() {
+			return getName();
 		}
 	}
 
-	public static final DataEntry<Explosion> A = register(new Explosion(), new Info().Cate(1));
-
-	private static int index = 0;
-
-	public int size() {
-		return index;
+	/** 編集禁止 */
+	public Map<String, DataEntry<?>> getEntries() {
+		initEntry();
+		return nameEntryMap.get(getTypeName(getClass()));
 	}
 
-	/** staticに自分のクラスを取得したい */
-	abstract protected static Class<? extends DataBase> getType();
+	/** 編集禁止 */
+	public static Map<String, DataEntry<?>> getEntries(Class<? extends DataBase> clazz) {
+		initEntry(clazz);
+		return nameEntryMap.get(getTypeName(clazz));
+	}
 
-	protected static <T> DataEntry<T> register(T defaultValue, Info info) {
-		DataEntry<T> entry = new DataEntry<>(defaultValue, info, getType(), index);
-		index++;
+	private int size = -1;
+
+	public int size() {
+		initEntry();
+		if (size == -1)
+			size = nameEntryMap.get(getTypeName(getClass())).size();
+		return size;
+	}
+
+	/** DataEntryを作成 */
+
+	protected static <T> DataEntry<T> of(T defaultValue) {
+		return of(defaultValue, null);
+	}
+
+	/** DataEntryを作成 */
+	protected static <T> DataEntry<T> of(T defaultValue, Info info) {
+		DataEntry<T> entry = new DataEntry<>(defaultValue, info);
 		return entry;
 	}
 
-	public final Class<K> enumType;
-	protected Map<K, ValueEntry> dataMap;
+	/** staticにDataEntryを名前から検索するための登録 */
+	private static void initEntry(Class<? extends DataBase> clazz) {
+		if (!nameTypeMap.containsKey(getTypeName(clazz))) {
+			if (!nameEntryMap.containsKey(getTypeName(clazz)))
+				nameEntryMap.put(getTypeName(clazz), new HashMap<>());
+			registerEntry(clazz, 0, nameEntryMap.get(getTypeName(clazz)));
+			nameTypeMap.put(getTypeName(clazz), clazz);
+		}
+	}
 
-	protected DataBase<K> parent;
+	/** 親クラスから順に登録する */
+	@SuppressWarnings("unchecked")
+	private static int registerEntry(Class<? extends DataBase> clazz, int index, Map<String, DataEntry<?>> map) {
+		// 親がDataBase以外なら親から登録
+		if (clazz.getSuperclass() != DataBase.class)
+			index = registerEntry((Class<? extends DataBase>) clazz.getSuperclass(), index, map);
+
+		try {
+			for (Field field : clazz.getDeclaredFields()) {
+				if (DataEntry.class.isAssignableFrom(field.getType())) {
+					DataEntry<?> entry = (DataEntry<?>) field.get(null);
+					if (entry != null) {
+						// Indexがずれたら
+						if (entry.index != -1 && entry.index != index)
+							throw new RuntimeException("indexがずれた 再設計 " + entry.index + " " + index);
+						;
+						entry.index = index;
+						index++;
+						entry.type = (Class<? extends DataBase>) field.getDeclaringClass();
+						entry.name = field.getName();
+					}
+					map.put(field.getName(), entry);
+				}
+			}
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return index;
+	}
+
+	private boolean isInit = false;
+
+	private void initEntry() {
+		if (dataMap == null && !isInit) {
+			initEntry(getClass());
+			init();
+		}
+	}
+
+	// ====== HideDataホルダー ======
+	private static Map<String, Map<String, DataEntry<?>>> nameEntryMap = new HashMap<>();
+	private static Map<String, Class<? extends DataBase>> nameTypeMap = new HashMap<>();
+
+	/** Classからシンプルネームに */
+	public static String getTypeName(Class<?> clazz) {
+		return clazz.getSimpleName();
+	}
+
+	protected DataBase parent;
+
+	/** nullなら未初期化 */
+	protected DataMap<ValueEntry<?>> dataMap;
+
+	public DataBase() {
+		// 初期化が終わっていなければ実行しない
+		if (nameTypeMap.containsKey(getTypeName(getClass())))
+			init();
+	}
+
+	/** 初回のインスタンス作成時のみ2回実行 */
+	private void init() {
+		isInit = true;
+		dataMap = new DataMap<>(this);
+		propertyMap = new DataMap<>(this);
+	}
 
 	/** 内包するDataBaseオブジェクトに親子関係を反映する */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({})
 	protected void initParent() {
-		for (K key : enumType.getEnumConstants()) {
-			if (dataMap.containsKey(key) && key.getDefault() instanceof DataBase) {
+		initEntry();
+		for (DataEntry<?> key : getEntries().values()) {
+			if (dataMap.containsKey(key) && key.Default instanceof DataBase) {
 				System.out.println(dataMap.get(key).getValue() + " " + dataMap.get(key).getOperator());
-				DataBase<?> _child = (DataBase<?>) dataMap.get(key).getValue();
+				DataBase _child = (DataBase) dataMap.get(key).getValue();
 				Object _parent = parent == null ? null : parent.get(key, null);
-				if (_parent == key.getDefault())
+				if (_parent == key.Default)
 					_child.parent = null;
 				else
 					_child.parent = (DataBase) _parent;
@@ -84,9 +188,13 @@ public abstract class DataBase {
 		}
 	}
 
-	/** 変更通知付き */
-	public static class ValueEntry {
-		private ValueEntry(IHideData type, Operator operator, Object value, DataBase<?> data) {
+	/**
+	 * 変更通知付き
+	 *
+	 * @param <T>
+	 */
+	public static class ValueEntry<T> {
+		private ValueEntry(DataEntry<T> type, Operator operator, T value, DataBase data) {
 			this.operator = operator;
 			this.value = value;
 			this.data = data;
@@ -94,9 +202,9 @@ public abstract class DataBase {
 		}
 
 		protected Operator operator;
-		protected Object value;
-		private DataBase<?> data;
-		private IHideData type;
+		protected T value;
+		private DataBase data;
+		private DataEntry<T> type;
 
 		public Operator getOperator() {
 			return operator;
@@ -106,7 +214,7 @@ public abstract class DataBase {
 			return value;
 		}
 
-		public ValueEntry setOperator(Operator operator) {
+		public ValueEntry<T> setOperator(Operator operator) {
 			if (this.operator.equals(operator))
 				return this;
 			this.operator = operator;
@@ -114,7 +222,7 @@ public abstract class DataBase {
 			return this;
 		}
 
-		public ValueEntry setValue(Object value) {
+		public ValueEntry<T> setValue(T value) {
 			if (this.value.equals(value))
 				return this;
 			this.value = value;
@@ -122,7 +230,7 @@ public abstract class DataBase {
 			return this;
 		}
 
-		public Object apply(Object root) {
+		public T apply(T root) {
 			return operator.apply(root, value);
 		}
 	}
@@ -130,29 +238,32 @@ public abstract class DataBase {
 	/**
 	 * 元値とキーから結果を返す
 	 */
-	@SuppressWarnings("unchecked")
-	public <V> V get(K key, V base) {
-		ValueEntry entry = getEntry(key);
+	public <T> T get(DataEntry<T> key, T base) {
+		ValueEntry<T> entry = getEntry(key);
 		// Baseが無ければ初期値を
 		if (parent != null)
 			base = parent.get(key, base);
 		else
 			// 最上位なら
-			base = (V) key.getDefault();
+			base = key.Default;
 		if (entry != null)
-			return (V) entry.apply(base);
+			return entry.apply(base);
 		else
 			return base;
 	}
 
-	/** チェンジリスナ付きのエントリを取得 */
-	public ValueEntry getEntry(K key) {
-		return dataMap.get(key);
+	/**
+	 * チェンジリスナ付きのエントリを取得
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> ValueEntry<T> getEntry(DataEntry<T> key) {
+		initEntry();
+		return (ValueEntry<T>) dataMap.get(key);
 	}
 
-	protected void addView(DataView<K> view) {
+	protected void addView(DataView view) {
 		// 重複削除
-		Iterator<WeakReference<DataView<K>>> itr = views.iterator();
+		Iterator<WeakReference<DataView>> itr = views.iterator();
 		while (itr.hasNext())
 			if (view.equals(itr.next().get())) {
 				itr.remove();
@@ -161,14 +272,13 @@ public abstract class DataBase {
 		views.add(new WeakReference<>(view));
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
-	protected void onChange(IHideData type) {
+	protected void onChange(DataEntry<?> type) {
 		if (propertyMap.containsKey(type))
 			propertyMap.get(type).onChange();
 		// ビューに通知
-		Iterator<WeakReference<DataView<K>>> itr = views.iterator();
+		Iterator<WeakReference<DataView>> itr = views.iterator();
 		while (itr.hasNext()) {
-			WeakReference<DataView<K>> ref = itr.next();
+			WeakReference<DataView> ref = itr.next();
 			// 消えてたら削除
 			if (ref.get() == null) {
 				itr.remove();
@@ -178,8 +288,8 @@ public abstract class DataBase {
 		}
 	}
 
-	protected void removeView(DataView<K> view) {
-		Iterator<WeakReference<DataView<K>>> itr = views.iterator();
+	protected void removeView(DataView view) {
+		Iterator<WeakReference<DataView>> itr = views.iterator();
 		while (itr.hasNext())
 			if (view.equals(itr.next().get())) {
 				itr.remove();
@@ -187,86 +297,56 @@ public abstract class DataBase {
 			}
 	}
 
-	protected List<WeakReference<DataView<K>>> views = new ArrayList<>();
+	protected List<WeakReference<DataView>> views = new ArrayList<>();
 
-	public void put(K key, Operator operator, Object value) {
-		if (!key.getDefault().getClass().isAssignableFrom(value.getClass()))
-			throw new IllegalArgumentException(
-					"type is different " + key.getDefault().getClass() + " , " + value.getClass());
+	public <T> void put(DataEntry<T> key, Operator operator, T value) {
+		initEntry();
 		if (!ArrayUtils.contains(Operator.getAllow(value.getClass()), operator))
 			throw new IllegalArgumentException("Operator " + operator + " not supported for " + value.getClass());
 		if (dataMap.containsKey(key)) {
 			getEntry(key).setOperator(operator).setValue(value);
 		} else {
-			dataMap.put(key, new ValueEntry(key, operator, value, this));
+			dataMap.put(key, new ValueEntry<>(key, operator, value, this));
 			onChange(key);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void put(IHideData key, Operator operator, Object value) {
-		put((K) key, operator, value);
-	}
-
-	// ====== HideDataホルダー ======
-	private static Map<String, Class<? extends Enum<? extends IHideData>>> enumTypeMap = new HashMap<>();
-
-	private static void register(Class<? extends Enum<? extends IHideData>> clazz) {
-		if (!enumTypeMap.containsKey(getTypeName(clazz)))
-			enumTypeMap.put(getTypeName(clazz), clazz);
-	}
-
-	/** シンプルネームからClassに */
-	public static Class<? extends Enum<? extends IHideData>> getHideData(String name) {
-		return enumTypeMap.get(name);
-	}
-
-	/** Classからシンプルネームに */
-	public static String getTypeName(Class<? extends Enum<? extends IHideData>> clazz) {
-		return clazz.getSimpleName();
-	}
-
-	public static class JsonInterface implements JsonSerializer<DataBase<?>>, JsonDeserializer<DataBase<?>> {
+	public static class JsonInterface implements JsonSerializer<DataBase>, JsonDeserializer<DataBase> {
 
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
-		public DataBase<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+		public DataBase deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException {
 			if (!json.isJsonObject())
 				throw new JsonParseException("is not JsonObject");
 			JsonObject obj = json.getAsJsonObject();
-			Class<? extends Enum<? extends IHideData>> clazz = getHideData(obj.get("Type").getAsString());
-			if (clazz == null)
+			Map<String, DataEntry<?>> map = nameEntryMap.get(obj.get("Type").getAsString());
+			if (map == null)
 				throw new JsonParseException("bad typename");
-			Class<? extends DataBase> container = ((IHideData) clazz.getEnumConstants()[0]).getContainer();
+			Class<? extends DataBase> container = nameTypeMap.get(obj.get("Type").getAsString());
 
-			DataBase<? extends IHideData> database = null;
+			DataBase database = null;
 
-			if (container == DataBase.class) {
-				// DataBaseがコンテナなら
-				database = new DataBase(clazz);
-			} else {
-				// 違うならそいつのインスタンスを作成
-				try {
-					database = container.newInstance();
-				} catch (InstantiationException | IllegalAccessException e) {
-					e.printStackTrace();
-				}
+			// 違うならそいつのインスタンスを作成
+			try {
+				database = container.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
 			}
 
 			JsonObject values = obj.getAsJsonObject("Values");
 			for (Entry<String, JsonElement> entry : values.entrySet()) {
-				IHideData data = (IHideData) Enum.valueOf((Class) clazz, entry.getKey());
+				DataEntry data = map.get(entry.getKey());
 				Operator operator;
 				Object putValue;
 				// 省略されていたらSET
 				if (!entry.getValue().isJsonObject() || !entry.getValue().getAsJsonObject().has("Operator")) {
 					operator = Operator.SET;
-					putValue = context.deserialize(entry.getValue(), data.getDefault().getClass());
+					putValue = context.deserialize(entry.getValue(), data.Default.getClass());
 
 				} else {
 					JsonObject value = entry.getValue().getAsJsonObject();
-					putValue = context.deserialize(value.get("Object"), data.getDefault().getClass());
+					putValue = context.deserialize(value.get("Object"), data.Default.getClass());
 					operator = Operator.valueOf(value.getAsJsonPrimitive("Operator").getAsString());
 				}
 
@@ -276,12 +356,14 @@ public abstract class DataBase {
 		}
 
 		@Override
-		public JsonElement serialize(DataBase<?> src, Type typeOfSrc, JsonSerializationContext context) {
+		public JsonElement serialize(DataBase src, Type typeOfSrc, JsonSerializationContext context) {
+
 			JsonObject obj = new JsonObject();
-			obj.addProperty("Type", getTypeName(src.enumType));
+			obj.addProperty("Type", getTypeName(src.getClass()));
 			JsonObject value = new JsonObject();
 			obj.add("Values", value);
-			for (Entry<?, ValueEntry> entry : src.dataMap.entrySet()) {
+			src.dataMap.entrySet();
+			for (Entry<?, ValueEntry<?>> entry : src.dataMap.entrySet()) {
 				// SETの時は省略
 				if (entry.getValue().operator == Operator.SET) {
 					value.add(entry.getKey().toString(), context.serialize(entry.getValue().value));
@@ -314,17 +396,17 @@ public abstract class DataBase {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends DataBase<?>> T fromJson(String json) {
+	public static <T extends DataBase> T fromJson(String json) {
 		return (T) gson.fromJson(json, DataBase.class);
 	}
 
 	// エディタ側
-	private Map<K, Data2Prop> propertyMap;
+	private Map<DataEntry<?>, Data2Prop> propertyMap;
 
-	public ObservableObjectValue<ValueEntry> getProperty(DataPath path) {
-		K key = Enum.valueOf(enumType, path.fastName);
+	public ObservableObjectValue<ValueEntry<?>> getProperty(DataPath path) {
+		DataEntry<?> key = getEntries().get(path.fastName);
 		if (path.hasChild) {
-			getEntry(key);
+			return ((DataBase) getEntry(key).getValue()).getProperty(path.nextPath);
 		}
 
 		if (!propertyMap.containsKey(key))
@@ -332,15 +414,15 @@ public abstract class DataBase {
 		return propertyMap.get(key);
 	}
 
-	private class Data2Prop extends ReadOnlyObjectPropertyBase<ValueEntry> {
+	private class Data2Prop extends ReadOnlyObjectPropertyBase<ValueEntry<?>> {
 
-		private K key;
+		private DataEntry<?> key;
 
 		private void onChange() {
 			fireValueChangedEvent();
 		}
 
-		public Data2Prop(K key) {
+		public Data2Prop(DataEntry<?> key) {
 			this.key = key;
 		}
 
@@ -355,7 +437,7 @@ public abstract class DataBase {
 		}
 
 		@Override
-		public ValueEntry get() {
+		public ValueEntry<?> get() {
 			return DataBase.this.dataMap.get(key);
 		}
 	}

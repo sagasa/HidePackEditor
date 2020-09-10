@@ -1,13 +1,14 @@
 package types;
 
 import editer.HidePack;
-import editer.IDataEntity;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
+import types.base.NamedData;
 
-public class PackInfo implements IDataEntity {
+/** 親子関係は利用しない */
+public class PackInfo extends NamedData {
 
 	transient private ObjectProperty<PackInfo> thisProperty = new ReadOnlyObjectWrapper<>(this);
 	/** 参照か */
@@ -17,11 +18,11 @@ public class PackInfo implements IDataEntity {
 			Color.rgb(HidePack.random.nextInt(256), HidePack.random.nextInt(256), HidePack.random.nextInt(256)));
 
 	/** パックの登録名 ファイル名ではない */
-	public String PACK_NAME = "sample";
+	public static final DataEntry<String> PackName = of("sample");
 	/** パックのバージョン */
-	public String PACK_VER = "0";
+	public static final DataEntry<String> PackVar = of("0");
 	/** 登録時の名称 */
-	public String PACK_ROOTNAME = "default";
+	public static final DataEntry<String> PackDomain = of("default");
 
 	/** 参照データか確認 */
 	public boolean isReference() {
@@ -34,7 +35,12 @@ public class PackInfo implements IDataEntity {
 	}
 
 	@Override
-	public String getDisplayName() {
-		return PACK_NAME;
+	public DataEntry<String> displayName() {
+		return PackName;
+	}
+
+	@Override
+	public DataEntry<String> systemName() {
+		return PackDomain;
 	}
 }

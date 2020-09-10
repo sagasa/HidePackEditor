@@ -15,7 +15,6 @@ import editer.HidePack;
 import editer.IDataEntity;
 import editer.node.EditPanels;
 import helper.ArrayEditor;
-import io.ModelIO;
 import io.PackCash;
 import io.PackIO;
 import javafx.collections.FXCollections;
@@ -44,11 +43,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import types.PackInfo;
+import types.base.NamedData;
 import types.base.Operator;
 import types.items.GunData;
 import types.items.MagazineData;
-import types.model.AnimationKey;
-import types.model.AnimationType;
 import types.model.HideModel;
 
 public class RootController implements Initializable {
@@ -59,16 +57,16 @@ public class RootController implements Initializable {
 	public EditPanels editer;
 
 	public TextField packSearch;
-	public ListView<IDataEntity> packList;
+	public ListView<PackInfo> packList;
 
 	public TextField itemSearch;
 	public TabPane itemTab;
-	public ListView<IDataEntity> gunList;
-	public ListView<IDataEntity> magazineList;
+	public ListView<GunData> gunList;
+	public ListView<MagazineData> magazineList;
 	public ListView<IDataEntity> soundList;
 	public ListView<IDataEntity> iconList;
 	public ListView<IDataEntity> modelList;
-	public ListView<IDataEntity> modelInfoList;
+	public ListView<HideModel> modelInfoList;
 
 	/** クリップエディタ */
 	private ClipController clipController;
@@ -87,8 +85,8 @@ public class RootController implements Initializable {
 		INSTANCE = this;
 		packList.setCellFactory(
 				ColordListCell.getCellFactory(HidePack.OpenPacks, data -> !HidePack.DefaultPack.equals(data)));
-		gunList.setCellFactory(ColordListCell.getCellFactory(HidePack.GunList.getValues()));
-		magazineList.setCellFactory(ColordListCell.getCellFactory(HidePack.MagazineList.getValues()));
+		gunList.setCellFactory(ColordListCell.getCellFactory(HidePack.GunList));
+		magazineList.setCellFactory(ColordListCell.getCellFactory(HidePack.MagazineList));
 		soundList.setCellFactory(ColordListCell.getCellFactory(HidePack.SoundList));
 		iconList.setCellFactory(ColordListCell.getCellFactory(HidePack.IconList));
 		// modelList.setCellFactory(ColordListCell.getCellFactory(HidePack.));TODO
@@ -96,23 +94,22 @@ public class RootController implements Initializable {
 		itemSearch.textProperty().addListener(change -> write());
 		packSearch.textProperty().addListener(change -> write());
 		// リスト通知用フック
-		// HidePack.GunList.addListener(new WeakListChangeListener<>(writeListener));
-		// HidePack.MagazineList.addListener(new
-		// WeakListChangeListener<>(writeListener));
+		HidePack.GunList.addListener(new WeakListChangeListener<>(writeListener));
+		HidePack.MagazineList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.IconList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.ScopeList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.SoundList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.OpenPacks.addListener(new WeakListChangeListener<>(writeListener));
 
-		bindEditer(packList, (item) -> editPack(item));
-		bindEditer(gunList, (item) -> editGun(item));
-		bindEditer(magazineList, (item) -> editMagazine(item));
-		bindEditer(modelInfoList, (item) -> editModelInfo(item));
+		bindEditer(packList, (item) -> editData(item));
+		bindEditer(gunList, (item) -> editData(item));
+		bindEditer(magazineList, (item) -> editData(item));
+		bindEditer(modelInfoList, (item) -> editData(item));
 
-		HideModel hm = ModelIO.read();
-		hm.rootBone.animation.get(AnimationType.Reload).add(new AnimationKey());
-		hm.rootBone.animation.get(AnimationType.Reload).add(new AnimationKey());
-		HidePack.ModelInfoList.add(hm);
+//	//	HideModel hm = ModelIO.read();
+//		hm.rootBone.animation.get(AnimationType.Reload).add(new AnimationKey());
+//		hm.rootBone.animation.get(AnimationType.Reload).add(new AnimationKey());
+//		HidePack.ModelInfoList.add(hm);
 
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
@@ -152,7 +149,7 @@ public class RootController implements Initializable {
 	}
 
 	/** 選択されたら実行 */
-	private static void bindEditer(ListView<IDataEntity> list, Consumer<IDataEntity> run) {
+	private static <T> void bindEditer(ListView<T> list, Consumer<T> run) {
 		// フォーカスが切れたら選択解除
 		list.focusedProperty().addListener((v, ov, nv) -> {
 			if (!nv)
@@ -166,7 +163,7 @@ public class RootController implements Initializable {
 
 	/** パックから要素が削除されたとき編集中なら編集を中止する */
 	private void cancelEdit(IDataEntity obj) {
-		if (!editer.getEditValue().isEmpty()) {
+		if (editer.getEditValue() != null) {
 			editer.setEditValue(null);
 		}
 	}
@@ -197,11 +194,10 @@ public class RootController implements Initializable {
 		packList.setItems(
 				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.OpenPacks, packSearch.getText())));
 		// Gun
-		gunList.setItems(FXCollections
-				.observableArrayList(ArrayEditor.Search(HidePack.GunList.getValues(), itemSearch.getText())));
+		gunList.setItems(FXCollections.observableArrayList(ArrayEditor.Search(HidePack.GunList, itemSearch.getText())));
 		// Magazine
-		magazineList.setItems(FXCollections
-				.observableArrayList(ArrayEditor.Search(HidePack.MagazineList.getValues(), itemSearch.getText())));
+		magazineList.setItems(
+				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.MagazineList, itemSearch.getText())));
 		// Icon
 		iconList.setItems(
 				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.IconList, itemSearch.getText())));
@@ -294,7 +290,14 @@ public class RootController implements Initializable {
 	// ========編集========
 
 	public void editClear() {
-		// editer.setEditValue(null);
+		editer.setEditValue(null);
+	}
+
+	public void editData(NamedData item) {
+		if (item != null) {
+			log.debug("edit " + item.getDisplayName());
+			editer.setEditValue(item);
+		}
 	}
 
 	public void editPack(IDataEntity item) {
@@ -306,14 +309,14 @@ public class RootController implements Initializable {
 
 	public void editGun(IDataEntity item) {
 		if (item != null) {
-			log.debug(HidePack.getGunData(item.getDisplayName()).toString() + HidePack.GunList);
-			// editer.setEditValue(HidePack.getGunData(item.getDisplayName()));
+			log.debug(HidePack.getGunData(item.getDisplayName()).toString() + HidePack.GunList + " " + item.getClass());
+			editer.setEditValue(HidePack.getGunData(item.getDisplayName()));
 		}
 	}
 
 	public void editMagazine(IDataEntity item) {
 		if (item != null) {
-			log.debug(HidePack.getMagazineData(item.getDisplayName()).toString());
+			log.debug(HidePack.getGunData(item.getDisplayName()).toString());
 			// editer.setEditValue(HidePack.getMagazineData(item.getDisplayName()));
 		}
 	}
@@ -344,7 +347,7 @@ public class RootController implements Initializable {
 		while (HidePack.getPack("New Pack No." + packNamePointer) != null) {
 			packNamePointer++;
 		}
-		pack.PACK_NAME = "New Pack No." + packNamePointer;
+		pack.put(pack.displayName(), Operator.SET, "New Pack No." + packNamePointer);
 		HidePack.OpenPacks.add(pack);
 		write();
 	}
@@ -362,7 +365,7 @@ public class RootController implements Initializable {
 		newGun.put(newGun.systemName(), Operator.SET, "gun_" + gunNamePointer);
 		newGun.put(newGun.displayName(), Operator.SET, "New Gun No." + gunNamePointer);
 		newGun.getRootPack().set(HidePack.DefaultPack);
-		HidePack.GunList.put(newGun);
+		HidePack.GunList.add(newGun);
 		write();
 	}
 
@@ -378,7 +381,7 @@ public class RootController implements Initializable {
 		magazine.put(magazine.systemName(), Operator.SET, "magazine_" + bulletNamePointer);
 		magazine.put(magazine.displayName(), Operator.SET, "New Gun No." + bulletNamePointer);
 		magazine.getRootPack().set(HidePack.DefaultPack);
-		HidePack.MagazineList.put(magazine);
+		HidePack.MagazineList.add(magazine);
 		write();
 	}
 
@@ -392,9 +395,9 @@ public class RootController implements Initializable {
 
 	// ===========リストセル============
 	/** カラーアイコン付きのリストシェル */
-	public static class ColordListCell extends ListCell<IDataEntity> {
+	public static class ColordListCell<T extends IDataEntity> extends ListCell<T> {
 
-		public static Callback<ListView<IDataEntity>, ListCell<IDataEntity>> getCellFactory(
+		public static <T extends IDataEntity> Callback<ListView<T>, ListCell<T>> getCellFactory(
 				Collection<? extends IDataEntity> fromList) {
 			return getCellFactory(fromList, null);
 		}
@@ -405,9 +408,9 @@ public class RootController implements Initializable {
 		 * @param fromList  削除元になるリスト Null許容
 		 * @param candelete 削除ボタンの表示判定 Null許容
 		 */
-		public static Callback<ListView<IDataEntity>, ListCell<IDataEntity>> getCellFactory(
+		public static <T extends IDataEntity> Callback<ListView<T>, ListCell<T>> getCellFactory(
 				Collection<? extends IDataEntity> fromList, Function<IDataEntity, Boolean> candelete) {
-			return arg0 -> new ColordListCell(fromList, candelete);
+			return arg0 -> new ColordListCell<>(fromList, candelete);
 		}
 
 		/** 削除ボタンを出すかどうかの判定 */
@@ -432,9 +435,8 @@ public class RootController implements Initializable {
 			delete.setStyle("-fx-background-image : url('/icon/delete.png');");
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
-		protected void updateItem(IDataEntity data, boolean empty) {
+		protected void updateItem(T data, boolean empty) {
 			super.updateItem(data, empty);
 			// 初期化
 			if (!isBind) {

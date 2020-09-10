@@ -1,8 +1,7 @@
 package editer;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -21,16 +20,12 @@ import javafx.stage.Stage;
 import localize.LocalizeHandler;
 import types.base.DataBase;
 import types.base.DataBase.ValueEntry;
-import types.base.DataHolder;
 import types.base.DataPath;
-import types.base.IHideData;
-import types.base.Info;
+import types.base.NamedData;
 import types.base.Operator;
 import types.effect.Recoil;
-import types.effect.Recoil.RecoilData;
 import types.gun.GunFireMode;
 import types.items.GunData;
-import types.items.GunData.GunDataEnum;
 
 public class Editer extends Application {
 	/** 開いているpath */
@@ -76,94 +71,49 @@ public class Editer extends Application {
 		 */
 
 		Recoil recoil = new Recoil();
-		recoil.put(RecoilData.PowerShoot, Operator.SET, 0.5f);
+		recoil.put(Recoil.PowerShoot, Operator.SET, 0.5f);
 
 		Recoil recoil2 = new Recoil();
-		recoil2.put(RecoilData.PowerShoot, Operator.ADD, 0.5f);
+		recoil2.put(Recoil.PowerShoot, Operator.ADD, 0.5f);
 
-		DataHolder<GunDataEnum> holder = new DataHolder<>();
+		List<GunData> holder = new ArrayList<>();
 		GunData data = new GunData();
-		ObservableObjectValue<ValueEntry> prop = data.getProperty(DataPath.of(GunDataEnum.Recoil));
+		ObservableObjectValue<ValueEntry<?>> prop = data.getProperty(DataPath.of(GunData.Recoil));
 		prop.addListener((ov, nv, v) -> {
 			System.out.println(v.getValue());
 		});
 
 		System.out.println(prop);
-		data.put(GunDataEnum.RPM, Operator.SET, 1200);
-		data.getEntry(GunDataEnum.RPM).setValue(1100);
-		data.put(GunDataEnum.FireMode, Operator.ARRAY_ADD, new GunFireMode[] { GunFireMode.FULLAUTO });
-		data.put(GunDataEnum.ShortName, Operator.SET, "test");
-		data.put(GunDataEnum.Recoil, Operator.SET, recoil);
+		data.put(GunData.RPM, Operator.SET, 1200);
+		data.getEntry(GunData.RPM).setValue(1100);
+		data.put(GunData.FireMode, Operator.ARRAY_ADD, new GunFireMode[] { GunFireMode.FULLAUTO });
+		data.put(GunData.ShortName, Operator.SET, "test");
+		data.put(GunData.Recoil, Operator.SET, recoil);
 
 		GunData data2 = new GunData();
-		data2.put(GunDataEnum.RPM, Operator.ADD, 3);
-		data2.put(GunDataEnum.ParentName, Operator.SET, "test");
-		data2.put(GunDataEnum.Recoil, Operator.SET, recoil2);
+		data2.put(GunData.RPM, Operator.ADD, 3);
+		data2.put(GunData.ParentName, Operator.SET, "test");
+		data2.put(GunData.Recoil, Operator.SET, recoil2);
 
-		holder.put(data);
-		holder.put(data2);
-		holder.reload();
+		holder.add(data);
+		holder.add(data2);
+		NamedData.resolvParent(holder);
 
-		System.out.println(
-				data2.get(GunDataEnum.RPM, null) + " " + ArrayUtils.toString(data2.get(GunDataEnum.FireMode, null))
-						+ " " + ((Recoil) data2.get(GunDataEnum.Recoil, null)).get(RecoilData.PowerShoot, null));
+		System.out.println(data2.get(GunData.RPM, null) + " " + ArrayUtils.toString(data2.get(GunData.FireMode, null))
+				+ " " + data2.get(GunData.Recoil, null).get(Recoil.PowerShoot, null));
+		System.out.println(data.get(GunData.ShortName, null));
 
 		String json = data.toJson();
 		System.out.println(json);
-		DataBase<GunDataEnum> from = DataBase.fromJson(json);
+		DataBase from = DataBase.fromJson(json);
 		System.out.println(DataBase.getGson().toJson(from));
 
 		System.out.println(from.getClass());
 
-		DataBase<DATA> test = new DataBase<>(DATA.class);
-		System.out.println(test.toJson());
-		test = DataBase.fromJson(test.toJson());
-
-		Map<String, Integer> map = new HashMap<>();
-		Collection<Integer> col = map.values();
-		map.put("A", 2);
-		System.out.println(col);
 		new ModelLoader().run();
 
-		// System.exit(0);
+		System.exit(0);
 
-	}
-
-	public enum DATA implements IHideData {
-		/** 使用可否 Boolean */
-		Use(true, new Info().Cate(0)),
-
-		/** 射撃毎のパワーの増加値 最大1 Float */
-		PowerShoot(0.0, new Info().Min(0).Max(1).Scale("0.05")),
-		/** Tick毎のパワーの減少値 最大1 Float */
-		PowerTick(0.0, new Info().Min(0).Max(1).Scale("0.05")),;
-
-		private Object def;
-		private Info info;
-
-		private DATA(Object defValue) {
-			this(defValue, null);
-		}
-
-		private DATA(Object defValue, Info info) {
-			def = defValue;
-			this.info = info;
-		}
-
-		@Override
-		public Object getDefault() {
-			return def;
-		}
-
-		@Override
-		public Info getInfo() {
-			return info;
-		}
-
-		@Override
-		public Class<? extends DataBase> getContainer() {
-			return DataBase.class;
-		}
 	}
 
 	private static final Logger log = LogManager.getLogger();
