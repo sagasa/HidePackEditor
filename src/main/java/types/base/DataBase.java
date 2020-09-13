@@ -22,6 +22,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import helper.EditHelper;
 import javafx.beans.property.ReadOnlyObjectPropertyBase;
 import javafx.beans.value.ObservableObjectValue;
 
@@ -152,6 +153,9 @@ public abstract class DataBase {
 		return clazz.getSimpleName();
 	}
 
+	/** 包含してる親 */
+	private ValueEntry<?> root;
+
 	protected DataBase parent;
 
 	/** nullなら未初期化 */
@@ -166,17 +170,14 @@ public abstract class DataBase {
 	/** 初回のインスタンス作成時のみ2回実行 */
 	private void init() {
 		isInit = true;
-		dataMap = new DataMap<>(this);
-		propertyMap = new DataMap<>(this);
+		dataMap = new DataMap<>(getClass());
 	}
 
 	/** 内包するDataBaseオブジェクトに親子関係を反映する */
-	@SuppressWarnings({})
 	protected void initParent() {
 		initEntry();
 		for (DataEntry<?> key : getEntries().values()) {
 			if (dataMap.containsKey(key) && key.Default instanceof DataBase) {
-				System.out.println(dataMap.get(key).getValue() + " " + dataMap.get(key).getOperator());
 				DataBase _child = (DataBase) dataMap.get(key).getValue();
 				Object _parent = parent == null ? null : parent.get(key, null);
 				if (_parent == key.Default)
@@ -189,16 +190,18 @@ public abstract class DataBase {
 	}
 
 	/**
-	 * 変更通知付き
-	 *
-	 * @param <T>
+	 * 変更通知付き値のエントリ 削除以外ではエントリのインスタンスを変えることはない
 	 */
 	public static class ValueEntry<T> {
 		private ValueEntry(DataEntry<T> type, Operator operator, T value, DataBase data) {
-			this.operator = operator;
 			this.value = value;
+			this.operator = operator;
 			this.data = data;
 			this.type = type;
+			// rootを設定
+			if (value instanceof DataBase) {
+				((DataBase) value).root = this;
+			}
 		}
 
 		protected Operator operator;
@@ -218,15 +221,24 @@ public abstract class DataBase {
 			if (this.operator.equals(operator))
 				return this;
 			this.operator = operator;
-			data.onChange(type);
+			data.onChange(DataPath.of(type));
 			return this;
 		}
 
+		/** Nullは許容しない */
 		public ValueEntry<T> setValue(T value) {
-			if (this.value.equals(value))
+			if (value.equals(this.value))
 				return this;
+			// 古いの削除
+			if (value != null && value instanceof DataBase) {
+				((DataBase) value).root = null;
+			}
 			this.value = value;
-			data.onChange(type);
+			// rootを設定
+			if (value instanceof DataBase) {
+				((DataBase) value).root = this;
+			}
+			data.onChange(DataPath.of(type));
 			return this;
 		}
 
@@ -272,9 +284,7 @@ public abstract class DataBase {
 		views.add(new WeakReference<>(view));
 	}
 
-	protected void onChange(DataEntry<?> type) {
-		if (propertyMap.containsKey(type))
-			propertyMap.get(type).onChange();
+	protected void onChange(DataPath path) {
 		// ビューに通知
 		Iterator<WeakReference<DataView>> itr = views.iterator();
 		while (itr.hasNext()) {
@@ -284,8 +294,11 @@ public abstract class DataBase {
 				itr.remove();
 				continue;
 			}
-			ref.get().onChange(type);
+			ref.get().onChange(path);
 		}
+		// rootに通知
+		if (root != null)
+			root.data.onChange(path.appendFirst(root.type));
 	}
 
 	protected void removeView(DataView view) {
@@ -306,9 +319,21 @@ public abstract class DataBase {
 		if (dataMap.containsKey(key)) {
 			getEntry(key).setOperator(operator).setValue(value);
 		} else {
-			dataMap.put(key, new ValueEntry<>(key, operator, value, this));
-			onChange(key);
+			ValueEntry<T> entry = new ValueEntry<>(key, operator, value, this);
+			dataMap.put(key, entry);
+			onChange(DataPath.of(key));
+			onEntryChange(DataPath.of(key));
 		}
+	}
+
+	public void remove(DataEntry<?> key) {
+		initEntry();
+		if (dataMap.containsKey(key)) {
+			dataMap.remove(key);
+			onChange(DataPath.of(key));
+			onEntryChange(DataPath.of(key));
+		}
+
 	}
 
 	public static class JsonInterface implements JsonSerializer<DataBase>, JsonDeserializer<DataBase> {
@@ -401,29 +426,35 @@ public abstract class DataBase {
 	}
 
 	// エディタ側
-	private Map<DataEntry<?>, Data2Prop> propertyMap;
+	private Map<DataPath, Entry2Prop> entryPropMap = new HashMap<>();
 
-	public ObservableObjectValue<ValueEntry<?>> getProperty(DataPath path) {
-		DataEntry<?> key = getEntries().get(path.fastName);
-		if (path.hasChild) {
-			return ((DataBase) getEntry(key).getValue()).getProperty(path.nextPath);
-		}
-
-		if (!propertyMap.containsKey(key))
-			propertyMap.put(key, new Data2Prop(key));
-		return propertyMap.get(key);
+	public ObservableObjectValue<ValueEntry<?>> getEntryProp(DataPath path) {
+		if (!entryPropMap.containsKey(path))
+			entryPropMap.put(path, new Entry2Prop(path));
+		System.out.println(path + " ");
+		return entryPropMap.get(path);
 	}
 
-	private class Data2Prop extends ReadOnlyObjectPropertyBase<ValueEntry<?>> {
+	protected void onEntryChange(DataPath path) {
+		if (entryPropMap.containsKey(path))
+			entryPropMap.get(path).onChange();
 
-		private DataEntry<?> key;
+		// rootに通知
+		if (root != null)
+			root.data.onEntryChange(path.appendFirst(root.type));
+	}
+
+	/** エントリを保持するプロパティ */
+	private class Entry2Prop extends ReadOnlyObjectPropertyBase<ValueEntry<?>> {
+
+		protected DataPath path;
 
 		private void onChange() {
 			fireValueChangedEvent();
 		}
 
-		public Data2Prop(DataEntry<?> key) {
-			this.key = key;
+		public Entry2Prop(DataPath path) {
+			this.path = path;
 		}
 
 		@Override
@@ -433,12 +464,12 @@ public abstract class DataBase {
 
 		@Override
 		public String getName() {
-			return "";
+			return "Entry2Prop";
 		}
 
 		@Override
 		public ValueEntry<?> get() {
-			return DataBase.this.dataMap.get(key);
+			return EditHelper.getValueEntry(DataBase.this, path);
 		}
 	}
 }

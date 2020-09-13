@@ -8,7 +8,7 @@ import types.base.DataBase.DataEntry;
 
 public class DataView {
 
-	public DataView(DataBase type) {
+	public DataView(Class<? extends DataBase> type) {
 		caschMap = new DataMap<>(type);
 	}
 
@@ -35,7 +35,8 @@ public class DataView {
 		return res;
 	}
 
-	public void onChange(DataEntry<?> type) {
-		caschMap.remove(type);
+	public void onChange(DataPath path) {
+
+		caschMap.remove(path);
 	}
 }

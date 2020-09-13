@@ -43,7 +43,7 @@ public class ImportController implements Initializable {
 		Pack = pack.Pack;
 		pack.GunList.forEach(data -> {
 			gunList.getItems().add(new ImportEntry(data, (packinfo) -> {
-				HidePack.GunList.put(data);
+				HidePack.GunList.add(data);
 				System.out.println(data);
 			}));
 		});

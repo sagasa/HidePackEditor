@@ -19,10 +19,11 @@ public class DataMap<V> extends AbstractMap<DataEntry<?>, V> {
 	private int size = 0;
 	private int maxIndex = 0;
 
-	public DataMap(DataBase data) {
-		keys = new DataEntry[data.size()];
-		values = new Object[data.size()];
-		type = data.getClass();
+	public DataMap(Class<? extends DataBase> data) {
+		int size = DataBase.getEntries(data).size();
+		keys = new DataEntry[size];
+		values = new Object[size];
+		type = data;
 	}
 
 	@SuppressWarnings("unchecked")

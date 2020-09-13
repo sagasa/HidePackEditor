@@ -3,12 +3,9 @@ package types.effect;
 import types.base.Curve;
 import types.base.DataBase;
 import types.base.Info;
-import types.base.Operator;
 
 public class Recoil extends DataBase {
 
-	/** 使用可否 Boolean */
-	public static final DataEntry<Boolean> Use = of(true, new Info().Cate(0));
 	/** 横反動の基礎値 +で右 Curve */
 	public static final DataEntry<Curve> HorizontalBase = of(new Curve(), new Info().Scale("0,1"));
 	/** 横反動の拡散値 +で右 Curve */
@@ -35,10 +32,5 @@ public class Recoil extends DataBase {
 	public static final DataEntry<Float> PowerShoot = of(0.0f, new Info().Min(0).Max(1).Scale("0.05"));
 	/** Tick毎のパワーの減少値 最大1 Float */
 	public static final DataEntry<Float> PowerTick = of(0.0f, new Info().Min(0).Max(1).Scale("0.05"));;
-
-	public Recoil setUse(boolean b) {
-		put(Use, Operator.SET, b);
-		return this;
-	}
 
 }

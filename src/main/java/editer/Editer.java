@@ -55,7 +55,7 @@ public class Editer extends Application {
 //
 //		System.exit(0);
 
-		launch(arg);
+		// launch(arg);
 
 		/*
 		 * GunData data = new GunData(); Class<Number> clazz = Number.class; Gson gson =
@@ -71,16 +71,13 @@ public class Editer extends Application {
 		 */
 
 		Recoil recoil = new Recoil();
-		recoil.put(Recoil.PowerShoot, Operator.SET, 0.5f);
-
 		Recoil recoil2 = new Recoil();
-		recoil2.put(Recoil.PowerShoot, Operator.ADD, 0.5f);
 
 		List<GunData> holder = new ArrayList<>();
 		GunData data = new GunData();
-		ObservableObjectValue<ValueEntry<?>> prop = data.getProperty(DataPath.of(GunData.Recoil));
-		prop.addListener((ov, nv, v) -> {
-			System.out.println(v.getValue());
+		ObservableObjectValue<ValueEntry<?>> prop = data.getEntryProp(DataPath.of(GunData.Recoil, Recoil.PowerShoot));
+		prop.addListener((v, ov, nv) -> {
+			System.out.println("Change " + ov + nv);
 		});
 
 		System.out.println(prop);
@@ -98,6 +95,10 @@ public class Editer extends Application {
 		holder.add(data);
 		holder.add(data2);
 		NamedData.resolvParent(holder);
+
+		System.out.println("set recoil value");
+		recoil.put(Recoil.PowerShoot, Operator.SET, 0.5f);
+		recoil2.put(Recoil.PowerShoot, Operator.ADD, 0.5f);
 
 		System.out.println(data2.get(GunData.RPM, null) + " " + ArrayUtils.toString(data2.get(GunData.FireMode, null))
 				+ " " + data2.get(GunData.Recoil, null).get(Recoil.PowerShoot, null));

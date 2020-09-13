@@ -93,11 +93,11 @@ public class GunData extends ItemData {
 	/** デフォルトリコイル : Recoil */
 	public static final DataEntry<types.effect.Recoil> Recoil = of(new Recoil());
 	/** ADSリコイル : デフォルトに加算 : Recoil */
-	public static final DataEntry<types.effect.Recoil> RecoilADS = of(new Recoil().setUse(false));
+	public static final DataEntry<types.effect.Recoil> RecoilADS = of(new Recoil());
 	/** スニークリコイル : デフォルトに加算 : GunRecoil型 */
-	public static final DataEntry<types.effect.Recoil> RecoilSneak = of(new Recoil().setUse(false));
+	public static final DataEntry<types.effect.Recoil> RecoilSneak = of(new Recoil());
 	/** スニークADSリコイル : デフォルトに加算 : GunRecoil型 */
-	public static final DataEntry<types.effect.Recoil> RecoilSneakADS = of(new Recoil().setUse(false));
+	public static final DataEntry<types.effect.Recoil> RecoilSneakADS = of(new Recoil());
 
 	/** 発射音 : Sound型 **/
 	public static final DataEntry<Sound> SoundShoot = of(new Sound("sample", 60));

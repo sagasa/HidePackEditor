@@ -366,7 +366,7 @@ public class EditPanels extends Pane {
 		VBox root = new VBox();
 		Class<? extends DataBase> clazz = type.Clazz;
 		// pathがあるなら指定されたクラスで実行
-		for (DataEntry<?> data : EditHelper.getEnums(type.Clazz, path)) {
+		for (DataEntry<?> data : EditHelper.getDataEntries(type.Clazz, path)) {
 			// pathが無いなら作る
 			DataPath fieldPath = path == null ? DataPath.of(data) : path.append(data);
 			int c = EditHelper.getCate(clazz, fieldPath);

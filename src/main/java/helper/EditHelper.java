@@ -18,18 +18,26 @@ public class EditHelper {
 	 * 型取得
 	 */
 	public static Class<?> getType(Class<? extends DataBase> clazz, DataPath path) {
-		return getEnum(clazz, path).Default.getClass();
+		return getDataEntry(clazz, path).Default.getClass();
 	}
 
-	public static Collection<DataEntry<?>> getEnums(Class<? extends DataBase> clazz, DataPath path) {
+	public static Collection<DataEntry<?>> getDataEntries(Class<? extends DataBase> clazz, DataPath path) {
 		return path == null ? DataBase.getEntries(clazz).values()
-				: DataBase.getEntries(((DataBase) getEnum(clazz, path).Default).getClass()).values();
+				: DataBase.getEntries(((DataBase) getDataEntry(clazz, path).Default).getClass()).values();
 	}
 
-	private static DataEntry<?> getEnum(Class<? extends DataBase> clazz, DataPath path) {
+	private static DataEntry<?> getDataEntry(Class<? extends DataBase> clazz, DataPath path) {
 		DataEntry<?> current = DataBase.getEntries(clazz).get(path.fastName);
 		if (path.hasChild) {
-			return getEnum(((DataBase) current.Default).getClass(), path.nextPath);
+			return getDataEntry(((DataBase) current.Default).getClass(), path.nextPath);
+		}
+		return current;
+	}
+
+	public static ValueEntry<?> getValueEntry(DataBase data, DataPath path) {
+		ValueEntry<?> current = data.getEntry(data.getEntries().get(path.fastName));
+		if (current != null && path.hasChild) {
+			return getValueEntry((DataBase) current.getValue(), path.nextPath);
 		}
 		return current;
 	}
@@ -87,13 +95,12 @@ public class EditHelper {
 	}
 
 	private static Info getInfo(Class<? extends DataBase> clazz, DataPath path) {
-		System.out.println("getInfo " + path);
-		return getEnum(clazz, path).Info;
+		return getDataEntry(clazz, path).Info;
 	}
 
 	/** プロパティを取得 */
 	public static ObservableObjectValue<ValueEntry<?>> getProperty(DataBase data, DataPath path) {
-		return data.getProperty(path);
+		return data.getEntryProp(path);
 	}
 
 	/** プロパティとフィールドの型チェック */
@@ -149,7 +156,8 @@ public class EditHelper {
 	/** UnlocalizedNameのフォーマット */
 	public static String getUnlocalizedName(Class<? extends DataBase> clazz, DataPath field) {
 		try {
-			return (clazz.getSimpleName() + "." + getEnum(clazz, field).getName().replaceAll("_", ".")).toLowerCase();
+			return (clazz.getSimpleName() + "." + getDataEntry(clazz, field).getName().replaceAll("_", "."))
+					.toLowerCase();
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}

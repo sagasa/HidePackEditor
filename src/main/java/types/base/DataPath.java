@@ -41,6 +41,13 @@ public final class DataPath {
 		return new DataPath(this.Path + "." + name.toString());
 	}
 
+	/** 先頭にフィールド名を追加する 長さが０ならこの何もしない */
+	public DataPath appendFirst(DataEntry<?> name) {
+		if (name == null)
+			return this;
+		return new DataPath(name.toString() + "." + this.Path);
+	}
+
 	@Override
 	public String toString() {
 		return Path;
