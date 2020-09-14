@@ -26,7 +26,7 @@ public class EditHelper {
 				: DataBase.getEntries(((DataBase) getDataEntry(clazz, path).Default).getClass()).values();
 	}
 
-	private static DataEntry<?> getDataEntry(Class<? extends DataBase> clazz, DataPath path) {
+	public static DataEntry<?> getDataEntry(Class<? extends DataBase> clazz, DataPath path) {
 		DataEntry<?> current = DataBase.getEntries(clazz).get(path.fastName);
 		if (path.hasChild) {
 			return getDataEntry(((DataBase) current.Default).getClass(), path.nextPath);
@@ -40,6 +40,17 @@ public class EditHelper {
 			return getValueEntry((DataBase) current.getValue(), path.nextPath);
 		}
 		return current;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getValue(DataBase data, DataPath path, T base) {
+		ValueEntry<?> current = data.getEntry(data.getEntries().get(path.fastName));
+		if (current == null)
+			return null;
+		if (path.hasChild) {
+			return getValue((DataBase) current.getValue(), path.nextPath, base);
+		}
+		return data.get((DataEntry<T>) current.Type, base);
 	}
 
 	/** pathから最大値を取得 */

@@ -197,7 +197,7 @@ public abstract class DataBase {
 			this.value = value;
 			this.operator = operator;
 			this.data = data;
-			this.type = type;
+			this.Type = type;
 			// rootを設定
 			if (value instanceof DataBase) {
 				((DataBase) value).root = this;
@@ -207,7 +207,7 @@ public abstract class DataBase {
 		protected Operator operator;
 		protected T value;
 		private DataBase data;
-		private DataEntry<T> type;
+		public final DataEntry<T> Type;
 
 		public Operator getOperator() {
 			return operator;
@@ -221,7 +221,7 @@ public abstract class DataBase {
 			if (this.operator.equals(operator))
 				return this;
 			this.operator = operator;
-			data.onChange(DataPath.of(type));
+			data.onChange(DataPath.of(Type));
 			return this;
 		}
 
@@ -238,7 +238,7 @@ public abstract class DataBase {
 			if (value instanceof DataBase) {
 				((DataBase) value).root = this;
 			}
-			data.onChange(DataPath.of(type));
+			data.onChange(DataPath.of(Type));
 			return this;
 		}
 
@@ -298,7 +298,7 @@ public abstract class DataBase {
 		}
 		// rootに通知
 		if (root != null)
-			root.data.onChange(path.appendFirst(root.type));
+			root.data.onChange(path.appendFirst(root.Type));
 	}
 
 	protected void removeView(DataView view) {
@@ -441,7 +441,7 @@ public abstract class DataBase {
 
 		// rootに通知
 		if (root != null)
-			root.data.onEntryChange(path.appendFirst(root.type));
+			root.data.onEntryChange(path.appendFirst(root.Type));
 	}
 
 	/** エントリを保持するプロパティ */
