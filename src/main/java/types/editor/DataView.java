@@ -1,26 +1,46 @@
-package types.base;
+package types.editor;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import helper.EditHelper;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectPropertyBase;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableObjectValue;
+import types.base.DataBase;
+import types.base.DataPath;
 
+/** エディタ用 */
 public class DataView<V extends DataBase> {
 
-	Class<? extends DataBase> clazz;
-	private V[] values;
+	Class<V> clazz;
+	private ObjectProperty<V>[] values;
 
 	@SuppressWarnings("unchecked")
 	public DataView(Class<V> clazz, int size) {
-		values = (V[]) new Object[size];
+		values = new ObjectProperty[size];
 		this.clazz = clazz;
 	}
 
-	/**
-	 * キャッシュを利用して取得
-	 */
+	ChangeListener<V> listener = (v, ov, nv) -> {
+		if (ov != null)
+			ov.removeView(this);
+		if (nv != null)
+			nv.addView(this);
+	};
+
+	/** リスナを更新して値を書き換え */
+	public void setValue(int index, ObservableObjectValue<V> value) {
+		if (values[index] == null)
+			values[index] = new SimpleObjectProperty<>();
+		if (value != null)
+			values[index].bind(value);
+		else
+			values[index].unbind();
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T> ObservableObjectValue<T> get(DataPath key) {
 		if (!entryPropMap.containsKey(key))
@@ -38,8 +58,6 @@ public class DataView<V extends DataBase> {
 
 	/**
 	 * エントリを保持するプロパティ
-	 *
-	 * @param <t>
 	 */
 	private class Data2Prop<T> extends ReadOnlyObjectPropertyBase<T> {
 
@@ -67,9 +85,9 @@ public class DataView<V extends DataBase> {
 		@Override
 		public T get() {
 			T def = (T) EditHelper.getDataEntry(clazz, path).Default;
-			for (V data : values) {
-				if (data == null)
-					def = EditHelper.getValue(data, path, def);
+			for (ObservableObjectValue<V> data : values) {
+				if (data != null && data.get() != null)
+					def = EditHelper.getValue(data.get(), path, def);
 			}
 			return def;
 		}

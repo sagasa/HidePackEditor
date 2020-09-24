@@ -24,7 +24,9 @@ import com.google.gson.JsonSerializer;
 
 import helper.EditHelper;
 import javafx.beans.property.ReadOnlyObjectPropertyBase;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableObjectValue;
+import types.editor.DataView;
 
 /**
  * 多目的なホルダークラス
@@ -198,6 +200,8 @@ public abstract class DataBase {
 			this.operator = operator;
 			this.data = data;
 			this.Type = type;
+			ValueProp.init();
+			OperatorProp.init();
 			// rootを設定
 			if (value instanceof DataBase) {
 				((DataBase) value).root = this;
@@ -213,7 +217,7 @@ public abstract class DataBase {
 			return operator;
 		}
 
-		public Object getValue() {
+		public T getValue() {
 			return value;
 		}
 
@@ -245,6 +249,47 @@ public abstract class DataBase {
 		public T apply(T root) {
 			return operator.apply(root, value);
 		}
+
+		// == editor ==
+		public final Value2Prop ValueProp = new Value2Prop();
+
+		public class Value2Prop extends SimpleObjectProperty<T> {
+			private void init() {
+				super.set(ValueEntry.this.getValue());
+			}
+
+			@Override
+			public void set(T arg) {
+				super.set(arg);
+				ValueEntry.this.setValue(arg);
+			}
+
+			@Override
+			public T get() {
+				super.get();
+				return ValueEntry.this.getValue();
+			}
+		}
+
+		public final Operator2Prop OperatorProp = new Operator2Prop();
+
+		public class Operator2Prop extends SimpleObjectProperty<Operator> {
+			private void init() {
+				super.set(ValueEntry.this.getOperator());
+			}
+
+			@Override
+			public void set(Operator arg) {
+				super.set(arg);
+				ValueEntry.this.setOperator(arg);
+			}
+
+			@Override
+			public Operator get() {
+				super.get();
+				return ValueEntry.this.getOperator();
+			}
+		}
 	}
 
 	/**
@@ -273,9 +318,9 @@ public abstract class DataBase {
 		return (ValueEntry<T>) dataMap.get(key);
 	}
 
-	protected void addView(DataView view) {
+	public void addView(DataView<?> view) {
 		// 重複削除
-		Iterator<WeakReference<DataView>> itr = views.iterator();
+		Iterator<WeakReference<DataView<?>>> itr = views.iterator();
 		while (itr.hasNext())
 			if (view.equals(itr.next().get())) {
 				itr.remove();
@@ -286,9 +331,9 @@ public abstract class DataBase {
 
 	protected void onChange(DataPath path) {
 		// ビューに通知
-		Iterator<WeakReference<DataView>> itr = views.iterator();
+		Iterator<WeakReference<DataView<?>>> itr = views.iterator();
 		while (itr.hasNext()) {
-			WeakReference<DataView> ref = itr.next();
+			WeakReference<DataView<?>> ref = itr.next();
 			// 消えてたら削除
 			if (ref.get() == null) {
 				itr.remove();
@@ -301,8 +346,8 @@ public abstract class DataBase {
 			root.data.onChange(path.appendFirst(root.Type));
 	}
 
-	protected void removeView(DataView view) {
-		Iterator<WeakReference<DataView>> itr = views.iterator();
+	public void removeView(DataView<?> view) {
+		Iterator<WeakReference<DataView<?>>> itr = views.iterator();
 		while (itr.hasNext())
 			if (view.equals(itr.next().get())) {
 				itr.remove();
@@ -310,7 +355,7 @@ public abstract class DataBase {
 			}
 	}
 
-	protected List<WeakReference<DataView>> views = new ArrayList<>();
+	protected List<WeakReference<DataView<?>>> views = new ArrayList<>();
 
 	public <T> void put(DataEntry<T> key, Operator operator, T value) {
 		initEntry();
@@ -431,7 +476,7 @@ public abstract class DataBase {
 	public ObservableObjectValue<ValueEntry<?>> getEntryProp(DataPath path) {
 		if (!entryPropMap.containsKey(path))
 			entryPropMap.put(path, new Entry2Prop(path));
-		System.out.println(path + " ");
+		// System.out.println(path + " ");
 		return entryPropMap.get(path);
 	}
 

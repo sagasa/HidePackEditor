@@ -55,7 +55,7 @@ public class Editer extends Application {
 //
 //		System.exit(0);
 
-		// launch(arg);
+		launch(arg);
 
 		/*
 		 * GunData data = new GunData(); Class<Number> clazz = Number.class; Gson gson =

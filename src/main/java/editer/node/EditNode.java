@@ -15,6 +15,7 @@ import helper.EditHelper;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -25,6 +26,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -43,45 +45,34 @@ import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import types.base.DataBase;
+import types.base.DataBase.ValueEntry;
 import types.base.DataPath;
 
 /** リスナを実装した編集用ノード */
-public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
+public class EditNode extends Pane implements ChangeListener<DataBase> {
 
 	/** 変更対象 */
 	protected final Class<? extends DataBase> Clazz;
 	protected final DataPath Path;
-	protected final EditNodeType Type;
 
 	/** 型にあったプロパティ */
 	protected Property<?> editerProperty;
 
 	protected ObservableValue<?> currentValue;
 
+	/** 表示名 */
 	protected String Name;
 
-	protected float MaxValue = Float.MAX_VALUE;
-
-	/** 数値編集フィールドの最大値 */
-	public EditNode<T> setMax(float max) {
-		MaxValue = max;
-		return this;
+	protected Float getMax() {
+		return EditHelper.getMax(Clazz, Path);
 	}
 
-	protected float MinValue = -Float.MAX_VALUE;
-
-	/** 数値編集フィールドの最小値 */
-	public EditNode<T> setMin(float min) {
-		MinValue = min;
-		return this;
+	protected Float getMin() {
+		return EditHelper.getMin(Clazz, Path);
 	}
 
-	protected String Scale = "1";
-
-	/** 数値編集フィールドの変更幅 */
-	public EditNode<T> setScale(float scale) {
-		Scale = String.valueOf(scale);
-		return this;
+	public String getScale() {
+		return EditHelper.getScale(Clazz, Path);
 	}
 
 	/** 値編集フィールドの幅 */
@@ -91,22 +82,11 @@ public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
 	/** ラベルの幅 */
 	protected DoubleBinding labelWidth;
 
-	/** テキストフィールドの幅 テキストフィールドを使用しない場合は無効 */
-	public EditNode<T> setTextFieldWidth(double width) {
-		textFieldWidth.set(width);
-		return this;
-	}
-
+	/** listEditで利用 */
 	protected ObservableList<? extends IDataEntity> motherList;
 
-	/** autodillとlistEditで利用 */
-	public EditNode<T> setFromList(ObservableList<? extends IDataEntity> list) {
-		motherList = list;
-		return this;
-	}
-
 	/** 変更されたタイミングで呼ばれる */
-	public EditNode<T> setChangeListner(Consumer<?>... listener) {
+	public EditNode setChangeListner(Consumer<?>... listener) {
 		ChangeListener = listener;
 		return this;
 	}
@@ -133,7 +113,7 @@ public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
 		@Override
 		public void accept(Boolean plus, Boolean shift) {
 			BigDecimal oldValue = new BigDecimal(editerProperty.getValue().toString());
-			BigDecimal change = new BigDecimal(Scale);
+			BigDecimal change = new BigDecimal(getScale());
 			if (shift) {
 				change = change.multiply(new BigDecimal("10"));
 			}
@@ -142,41 +122,62 @@ public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
 			}
 			BigDecimal newValue = change.add(oldValue);
 			// 最大、最小チェック
-			newValue = newValue.max(new BigDecimal(MinValue));
-			newValue = newValue.min(new BigDecimal(MaxValue));
+			newValue = newValue.max(new BigDecimal(getMin()));
+			newValue = newValue.min(new BigDecimal(getMax()));
 			Property<Number> property = (Property<Number>) editerProperty;
-			if (Type == EditNodeType.Float)
+			if (Type == NodeType.Float)
 				property.setValue(newValue.floatValue());
 			else
 				property.setValue(newValue.intValue());
 		}
 	};
 
+	public static EditNode editNumber(Property<? extends DataBase> editValue, EditType edit, DataPath path) {
+		EditNode res = new EditNode(editValue, edit, path);
+		if (EditHelper.isFloat(res.Clazz, res.Path))
+			res.Type = NodeType.Float;
+		else if (EditHelper.isInteger(res.Clazz, res.Path))
+			res.Type = NodeType.Integer;
+		else
+			throw (new ClassCastException("EditNode can use float or int"));
+		res.build();
+		return res;
+	}
+
+	public static EditNode editString(Property<? extends DataBase> editValue, EditType edit, DataPath path) {
+		return editString(editValue, edit, path, null);
+	}
+
+	public static EditNode editString(Property<? extends DataBase> editValue, EditType edit, DataPath path,
+			ObservableList<? extends IDataEntity> list) {
+		EditNode res = new EditNode(editValue, edit, path);
+		if (list != null) {
+			res.motherList = list;
+			res.Type = NodeType.StringFromList;
+		} else
+			res.Type = NodeType.String;
+		res.build();
+		return res;
+	}
+
+	public static Node editBoolean(Property<? extends DataBase> editValue, EditType edit, DataPath path) {
+		EditNode res = new EditNode(editValue, edit, path);
+		res.Type = NodeType.Boolean;
+		res.build();
+		return res;
+	}
+
 	/**
 	 * 末端編集ノード
 	 *
 	 * @param editValue リスナー追加先
 	 */
-	public EditNode(Property<? extends DataBase> editValue, EditType edit, DataPath path, EditNodeType type) {
+	protected EditNode(Property<? extends DataBase> editValue, EditType edit, DataPath path) {
 		Path = path;
 		Clazz = edit.Clazz;
 		Name = EditHelper.getLocalizedName(Clazz, Path);
 
 		editValue.addListener(this);
-
-		if (type == EditNodeType.Number) {
-			if (EditHelper.isFloat(Clazz, Path))
-				Type = EditNodeType.Float;
-			else if (EditHelper.isInteger(Clazz, Path))
-				Type = EditNodeType.Integer;
-			else
-				throw (new ClassCastException("EditNode can use float or int"));
-		} else
-			Type = type;
-
-		MaxValue = EditHelper.getMax(Clazz, Path);
-		MinValue = EditHelper.getMin(Clazz, Path);
-		Scale = EditHelper.getScale(Clazz, Path);
 
 		// サイズのプロパティの定義
 		this.setPrefSize(200, 24);
@@ -189,13 +190,13 @@ public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
 		propertyEdit.setPrefSize(24, 24);
 		propertyEdit.setOnMouseClicked(e -> {
 			if (hasProperty(editValue.getValue())) {
-				unbind(editValue.getValue());
+				// unbind(editValue.getValue());
 				// editValue.getValue().removeProperty(Path);
 				propertyEdit.setGraphic(addImage);
 				disable.set(true);
 			} else {
 				// editValue.getValue().put(key, Operator.SET, );
-				bind(editValue.getValue());
+				// bind(editValue.getValue());
 				propertyEdit.setGraphic(removeImage);
 				disable.set(false);
 			}
@@ -215,15 +216,16 @@ public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
 
 			}
 		});
-
-		build();
 		getChildren().add(propertyEdit);
 	}
 
+	/** このエントリで編集する型 */
+	private NodeType Type;
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void build() {
-		if (Type == EditNodeType.Float || Type == EditNodeType.Integer || Type == EditNodeType.String
-				|| Type == EditNodeType.StringFromList) {
+		if (Type == NodeType.Float || Type == NodeType.Integer || Type == NodeType.String
+				|| Type == NodeType.StringFromList) {
 			// テキストセット
 			TextField text = new TextField();
 			text.setAlignment(Pos.CENTER);
@@ -234,20 +236,20 @@ public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
 				if (e.getCode() == KeyCode.ENTER)
 					this.requestFocus();
 			});
-			if (Type == EditNodeType.String || Type == EditNodeType.StringFromList) {
+			if (Type == NodeType.String || Type == NodeType.StringFromList) {
 				editerProperty = text.textProperty();
-				if (Type == EditNodeType.StringFromList) {
+				if (Type == NodeType.StringFromList) {
 					// test
 					TextFields.bindAutoCompletion(text, key -> ArrayEditor.Search(motherList, key.getUserText())
 							.stream().map(data -> data.getDisplayName()).sorted().collect(Collectors.toList()));
 				}
-			} else if (Type == EditNodeType.Float || Type == EditNodeType.Integer) {
+			} else if (Type == NodeType.Float || Type == NodeType.Integer) {
 				textFieldWidth.set(50);
 				// 入力を数値のみに
 				TextFormatter<Number> formatter;
 				// FloatかIntegerか判別
 				StringConverter<?> converter;
-				if (Type == EditNodeType.Float) {
+				if (Type == NodeType.Float) {
 					editerProperty = new SimpleFloatProperty();
 					// Floatなら
 					formatter = new TextFormatter<>(change -> {
@@ -272,8 +274,8 @@ public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
 								res = (Integer) editerProperty.getValue();
 							}
 							// 範囲チェック
-							res = Math.min(res, Math.round(MaxValue));
-							res = Math.max(res, Math.round(MinValue));
+							res = Math.min(res, Math.round(getMax()));
+							res = Math.max(res, Math.round(getMin()));
 							String.valueOf(res);
 							return res;
 						}
@@ -321,7 +323,7 @@ public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
 			text.disableProperty().bind(disable);
 
 			this.getChildren().addAll(text, label);
-		} else if (Type == EditNodeType.Boolean) {
+		} else if (Type == NodeType.Boolean) {
 			Label label = new Label(Name + ":");
 			label.setAlignment(Pos.CENTER_RIGHT);
 			CheckBox check = new CheckBox();
@@ -337,9 +339,8 @@ public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
 			// 有効化切り替え
 			label.disableProperty().bind(disable);
 			check.disableProperty().bind(disable);
-		} else if (Type == EditNodeType.StringList) {
-
 		}
+		editerProperty.addListener((ChangeListener) listener);
 	}
 
 	/** プロパティが設定されているかの判断 */
@@ -348,41 +349,45 @@ public class EditNode<T> extends Pane implements ChangeListener<DataBase> {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void bind(DataBase data) {
-		editerProperty.removeListener((ChangeListener) listener);
-		editerProperty.bindBidirectional((Property) EditHelper.getProperty(data, Path));
-		editerProperty.addListener((ChangeListener) listener);
-		for (Consumer<?> run : ChangeListener)
-			((Consumer) run).accept(editerProperty.getValue());
+	protected void bind(ValueEntry<?> data) {
+		editerProperty.bindBidirectional((ObjectProperty) data.ValueProp);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void unbind(DataBase dataBase) {
-		editerProperty.unbindBidirectional((Property) EditHelper.getProperty(dataBase, Path));
+	protected void unbind(ValueEntry<?> data) {
+		editerProperty.unbindBidirectional((Property) data.ValueProp);
 	}
+
+	private ChangeListener<ValueEntry<?>> entryListener = (v, ov, nv) -> {
+		if (ov != null) {
+			unbind(ov);
+		}
+		if (nv != null) {
+			bind(nv);
+		}
+	};
 
 	@Override
 	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
 		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getClass())) {
 			// System.out.println("old match");
-			// 編集不能なら
-			if (hasProperty(oldValue))
-				unbind(oldValue);
-			else
-				disable.set(false);
+			EditHelper.getProperty(oldValue, Path).removeListener(entryListener);
 		}
 		if (newValue != null && Clazz.isAssignableFrom(newValue.getClass())) {
 			// System.out.println("new match " + Path + " "
 			// +EditHelper.getProperty(newValue, Path) + " " + editerProperty);
-			if (hasProperty(newValue)) {
-				bind(newValue);
-			} else
-				disable.set(true);
+			EditHelper.getProperty(newValue, Path).addListener(entryListener);
+			disable.set(!hasProperty(newValue));
 
 		}
+	}
+
+	private enum NodeType {
+		String, StringFromList, Integer, Float, Boolean
 	}
 
 	public enum EditNodeType {
 		String, StringFromList, Integer, Float, Boolean, StringList, Number, RootPack, Other
 	}
+
 }

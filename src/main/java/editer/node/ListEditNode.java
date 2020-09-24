@@ -4,7 +4,6 @@ import editer.IDataEntity;
 import editer.node.EditPanels.EditType;
 import helper.ArrayEditor;
 import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ObservableValue;
@@ -19,8 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Callback;
-import types.IEditData;
+import types.base.DataBase;
 import types.base.DataPath;
 
 /** 母集団のリストから任意に選択するListView */
@@ -35,22 +33,16 @@ public class ListEditNode extends EditNode {
 		return (ListProperty<String>) editerProperty;
 	}
 
-	//TODO 要素の最大、最小数の指定を
+	// TODO 要素の最大、最小数の指定を
 	/**
-	 * @param fromList
-	 *            母集団
+	 * @param fromList 母集団
 	 */
-	public ListEditNode(Property<IEditData> editValue, EditType edit, DataPath path,
+	public ListEditNode(Property<DataBase> editValue, EditType edit, DataPath path,
 			ObservableList<? extends IDataEntity> fromList) {
-		super(editValue, edit, path, EditNodeType.StringList);
+		super(editValue, edit, path);
 		motherList = fromList;
 		editerProperty = new SimpleListProperty<>();
-		listener = new ListChangeListener<IDataEntity>() {
-			@Override
-			public void onChanged(Change<? extends IDataEntity> arg0) {
-				writeList();
-			}
-		};
+		listener = arg0 -> writeList();
 		motherList.addListener(new WeakListChangeListener<>(listener));
 
 		listview = new ListView<>();
@@ -69,12 +61,7 @@ public class ListEditNode extends EditNode {
 		listview.setLayoutY(24);
 		listview.prefWidthProperty().bind(this.widthProperty().subtract(10));
 		listview.prefHeightProperty().bind(this.heightProperty().subtract(56));
-		listview.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-			@Override
-			public ListCell<String> call(ListView<String> arg0) {
-				return new EditListCell();
-			}
-		});
+		listview.setCellFactory(arg0 -> new EditListCell());
 		text.prefWidthProperty().bind(this.widthProperty().subtract(10));
 		text.setPrefHeight(24);
 		text.setLayoutX(5);
@@ -86,7 +73,7 @@ public class ListEditNode extends EditNode {
 		writeList();
 	}
 
-	/**フィルターをセット*/
+	/** フィルターをセット */
 	public void setSearch(String key) {
 		SearchKey = key;
 		writeList();
@@ -103,15 +90,15 @@ public class ListEditNode extends EditNode {
 				.forEach(str -> listview.getItems().add(str));
 	}
 
-	//リストの更新だけ
+	// リストの更新だけ
 	@Override
-	protected void bind(IEditData data) {
+	protected void bind(DataBase data) {
 		writeList();
 		super.bind(data);
 	}
 
 	@Override
-	public void changed(ObservableValue<? extends IEditData> observable, IEditData oldValue, IEditData newValue) {
+	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
 		super.changed(observable, oldValue, newValue);
 		writeList();
 	}

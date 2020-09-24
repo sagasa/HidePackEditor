@@ -110,8 +110,8 @@ public class EditHelper {
 	}
 
 	/** プロパティを取得 */
-	public static ObservableObjectValue<ValueEntry<?>> getProperty(DataBase data, DataPath path) {
-		return data.getEntryProp(path);
+	public static <T> ObservableObjectValue<ValueEntry<T>> getProperty(DataBase data, DataPath path) {
+		return (ObservableObjectValue) data.getEntryProp(path);
 	}
 
 	/** プロパティとフィールドの型チェック */
