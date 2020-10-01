@@ -51,11 +51,20 @@ public class DataMap<V> extends AbstractMap<DataEntry<?>, V> {
 	@Override
 	public V remove(Object arg) {
 		DataEntry<?> key = checkKey(arg);
-		maxIndex = Arrays.stream(keys).map((k) -> k.getIndex()).max(null).get();
+		if (key == null)
+			return null;
 		V old = (V) values[key.getIndex()];
-		keys[key.getIndex()] = null;
-		values[key.getIndex()] = null;
-		size--;
+		if (old != null) {
+			size--;
+			keys[key.getIndex()] = null;
+			values[key.getIndex()] = null;
+			System.out.println(size + " ");
+			;
+			maxIndex = size <= 0 ? 0
+					: Arrays.stream(keys).filter(k -> k != null).max((v0, v1) -> v0.getIndex() - v1.getIndex()).get()
+							.getIndex();
+
+		}
 		return old;
 	}
 
@@ -138,12 +147,12 @@ public class DataMap<V> extends AbstractMap<DataEntry<?>, V> {
 						}
 
 					}
-					throw new NoSuchElementException();
+					throw new NoSuchElementException(prevIndex + " " + DataMap.this.size + " " + DataMap.this.type);
 				}
 
 				@Override
 				public boolean hasNext() {
-					return prevIndex < maxIndex;
+					return size != 0 && prevIndex < maxIndex;
 				}
 			};
 		}

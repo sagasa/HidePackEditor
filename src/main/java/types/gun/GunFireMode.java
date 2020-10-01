@@ -3,11 +3,8 @@ package types.gun;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import editer.IDataEntity;
-import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import types.PackInfo;
 
 public enum GunFireMode {
 	SEMIAUTO, FULLAUTO, MINIGUN, BURST;
@@ -44,18 +41,8 @@ public enum GunFireMode {
 		return getFireMode(this);
 	}
 
-	/**エディタ用*/
-	public static ObservableList<IDataEntity> getList() {
-		return FXCollections.observableList(Arrays.asList(values()).stream().map(fire -> new IDataEntity() {
-			@Override
-			public String getDisplayName() {
-				return fire.toString();
-			}
-
-			@Override
-			public ObjectProperty<PackInfo> getRootPack() {
-				return null;
-			}
-		}).collect(Collectors.toList()));
+	/** エディタ用 */
+	public static ObservableList<GunFireMode> getList() {
+		return FXCollections.observableList(Arrays.asList(values()).stream().collect(Collectors.toList()));
 	}
 }

@@ -2,12 +2,12 @@ package types.items;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import types.base.Curve;
 import types.base.Info;
 import types.effect.Explosion;
 import types.effect.Recoil;
 import types.effect.Sound;
 import types.gun.GunFireMode;
+import types.value.Curve;
 
 public class GunData extends ItemData {
 

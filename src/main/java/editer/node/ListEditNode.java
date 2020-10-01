@@ -1,12 +1,17 @@
 package editer.node;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+import org.apache.commons.lang.ArrayUtils;
+
 import editer.IDataEntity;
 import editer.node.EditPanels.EditType;
 import helper.ArrayEditor;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.Property;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
@@ -19,32 +24,52 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import types.base.DataBase;
+import types.base.DataBase.ValueEntry;
 import types.base.DataPath;
 
 /** 母集団のリストから任意に選択するListView */
-public class ListEditNode extends EditNode {
+public class ListEditNode<T> extends EditNode {
 
-	private ListView<String> listview;
+	private ListView<T> listview;
 	private String SearchKey = null;
 	private ListChangeListener<IDataEntity> listener;
 
 	@SuppressWarnings("unchecked")
-	private ListProperty<String> getSetList() {
-		return (ListProperty<String>) editerProperty;
+	private T[] getArray() {
+		return (T[]) editerProperty.getValue();
 	}
 
+	@SuppressWarnings("unchecked")
+	private void setArray(T[] value) {
+		((Property<T[]>) editerProperty).setValue(value);
+		;
+	}
+
+	private Supplier<Stream<T>> fromStream;
+
 	// TODO 要素の最大、最小数の指定を
+
 	/**
 	 * @param fromList 母集団
 	 */
-	public ListEditNode(Property<DataBase> editValue, EditType edit, DataPath path,
-			ObservableList<? extends IDataEntity> fromList) {
-		super(editValue, edit, path);
-		motherList = fromList;
-		editerProperty = new SimpleListProperty<>();
-		listener = arg0 -> writeList();
-		motherList.addListener(new WeakListChangeListener<>(listener));
+	@SuppressWarnings({ "unchecked" })
+	public <F> ListEditNode(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path,
+			ObservableList<F> fromList) {
+		this(editValue, edit, path, fromList, from -> (T) from);
+	}
 
+	/**
+	 * @param fromList 母集団
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <F> ListEditNode(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path,
+			ObservableList<F> fromList, Function<F, T> func) {
+		super(editValue, edit, path);
+		editerProperty = new SimpleObjectProperty<>();
+		listener = arg0 -> writeList();
+		fromList.addListener(new WeakListChangeListener<>((ListChangeListener) listener));
+		// 元リストに対する処理
+		fromStream = () -> fromList.stream().map(from -> func.apply(from));
 		listview = new ListView<>();
 
 		this.setPrefHeight(200);
@@ -82,29 +107,29 @@ public class ListEditNode extends EditNode {
 	/** リストを読み取って値をセット */
 	private void writeList() {
 		listview.getItems().clear();
-		if (getSetList() == null)
+		if (getArray() == null)
 			return;
-		listview.getItems().addAll(getSetList());
-		motherList.stream().map(data -> data.getDisplayName())
-				.filter(str -> (!getSetList().contains(str) && ArrayEditor.Search(str, SearchKey)))
+		listview.getItems().addAll(getArray());
+		fromStream.get()
+				.filter(str -> (!ArrayUtils.contains(getArray(), str) && ArrayEditor.Search(str.toString(), SearchKey)))
 				.forEach(str -> listview.getItems().add(str));
 	}
 
 	// リストの更新だけ
 	@Override
-	protected void bind(DataBase data) {
-		writeList();
+	protected void bind(ValueEntry<?> data) {
 		super.bind(data);
+		writeList();
 	}
 
 	@Override
-	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
-		super.changed(observable, oldValue, newValue);
+	protected void unbind(ValueEntry<?> data) {
+		super.unbind(data);
 		writeList();
 	}
 
 	/** 上下ボタンと削除ボタン付きのリストシェル */
-	public class EditListCell extends ListCell<String> {
+	public class EditListCell extends ListCell<T> {
 
 		private ImageView up = new ImageView("/icon/up.png");
 		private ImageView down = new ImageView("/icon/down.png");
@@ -124,24 +149,22 @@ public class ListEditNode extends EditNode {
 				rep(getIndex(), getIndex() + 1);
 			});
 			setlabel.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-				if (getSetList().contains(getItem())) {
-					getSetList().remove(getItem());
+				if (ArrayUtils.contains(getArray(), getItem())) {
+					setArray(ArrayEditor.removeFromArray(getArray(), getItem()));
 				} else {
-					getSetList().add(getItem());
+					setArray(ArrayEditor.addToArray(getArray(), getItem()));
 				}
 				writeList();
 			});
 		}
 
 		private void rep(int index0, int index1) {
-			ObservableList<String> list = getListView().getItems();
-			String cash = list.get(index0);
-			list.set(index0, list.get(index1));
-			list.set(index1, cash);
+			setArray(ArrayEditor.makeSwapArray(getArray(), index0, index1));
+			writeList();
 		}
 
 		@Override
-		protected void updateItem(String data, boolean empty) {
+		protected void updateItem(T data, boolean empty) {
 			super.updateItem(data, empty);
 			// 初期化
 			if (!isBind) {
@@ -163,15 +186,15 @@ public class ListEditNode extends EditNode {
 			}
 			if (!empty) {
 
-				text.setText(data);
+				text.setText(data.toString());
 
 				// 選択済みなら
-				if (getSetList().contains(data)) {
+				if (ArrayUtils.contains(getArray(), data)) {
 					setlabel.setStyle("-fx-background-image : url('/icon/remove.png');");
 					// 1番上以外なら
 					up.setVisible(0 < getIndex());
 					// 1番下以外なら
-					down.setVisible(getSetList().size() - 1 > getIndex());
+					down.setVisible(getArray().length - 1 > getIndex());
 				} else {
 					up.setVisible(false);
 					down.setVisible(false);

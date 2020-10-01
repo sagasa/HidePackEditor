@@ -1,7 +1,6 @@
 package helper;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -71,7 +70,7 @@ public class ArrayEditor {
 	 * @param <T>
 	 */
 	@SuppressWarnings("unchecked")
-	static public <T> T[] RemoveFromArray(T[] array, T data) {
+	static public <T> T[] removeFromArray(T[] array, T data) {
 		int index = ArrayUtils.indexOf(array, data);
 		if (index == -1)
 			return array;
@@ -79,12 +78,12 @@ public class ArrayEditor {
 	}
 
 	/**
-	 * 配列に要素を追加
+	 * 配列に要素を追加 重複を許可しない
 	 *
 	 * @param <T>
 	 */
 	@SuppressWarnings("unchecked")
-	static public <T> T[] AddToArray(T[] array, T data) {
+	static public <T> T[] addToArray(T[] array, T data) {
 		if (ArrayUtils.contains(array, data))
 			return array;
 		else
@@ -97,7 +96,7 @@ public class ArrayEditor {
 	 * @param <T>
 	 */
 	@SuppressWarnings("unchecked")
-	static public <T> T[] removeFromArray(T[] array, T[] data) {
+	static public <T> T[] makeSubArray(T[] array, T[] data) {
 		if (data.length == 0) {
 			return array;
 		}
@@ -134,7 +133,7 @@ public class ArrayEditor {
 	 * @param <T>
 	 */
 	@SuppressWarnings("unchecked")
-	static public <T> T[] addToArray(T[] array, T[] data) {
+	static public <T> T[] makeSumArray(T[] array, T[] data) {
 		if (data.length == 0) {
 			return array;
 		}
@@ -155,13 +154,14 @@ public class ArrayEditor {
 		return (T[]) res;
 	}
 
-	/** 配列の要素をインデックス指定で交換 */
-	static public String[] ChangeArrayIndex(String[] array, int index1, int index2) {
-		ArrayList<String> Array = new ArrayList<>(Arrays.asList(array));
-		String str1 = Array.get(index1);
-		String str2 = Array.get(index2);
-		Array.set(index1, str2);
-		Array.set(index2, str1);
-		return Array.toArray(new String[Array.size()]);
+	/**
+	 * 配列の要素をインデックス指定で交換
+	 */
+	static public <T> T[] makeSwapArray(T[] array, int index1, int index2) {
+		T[] res = array.clone();
+		T cash = res[index1];
+		res[index1] = res[index2];
+		res[index2] = cash;
+		return res;
 	}
 }

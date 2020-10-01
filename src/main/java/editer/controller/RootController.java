@@ -44,10 +44,10 @@ import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import types.PackInfo;
 import types.base.NamedData;
-import types.base.Operator;
 import types.items.GunData;
 import types.items.MagazineData;
 import types.model.HideModel;
+import types.value.Operator;
 
 public class RootController implements Initializable {
 	private static final Logger log = LogManager.getLogger();
@@ -163,9 +163,7 @@ public class RootController implements Initializable {
 
 	/** パックから要素が削除されたとき編集中なら編集を中止する */
 	private void cancelEdit(IDataEntity obj) {
-		if (editer.getEditValue() != null) {
-			editer.setEditValue(null);
-		}
+		editer.setEditValue(null);
 	}
 
 	/** リストをリフレッシュ */
@@ -250,7 +248,6 @@ public class RootController implements Initializable {
 			// パックが1つなら
 			if (HidePack.isNewPack) {
 				HidePack.isNewPack = false;
-				pack.setPack(false);
 				HidePack.addPack(pack);
 				write();
 			} else {
@@ -379,8 +376,10 @@ public class RootController implements Initializable {
 		}
 		MagazineData magazine = new MagazineData();
 		magazine.put(magazine.systemName(), Operator.SET, "magazine_" + bulletNamePointer);
-		magazine.put(magazine.displayName(), Operator.SET, "New Gun No." + bulletNamePointer);
+		magazine.put(magazine.displayName(), Operator.SET, "New Magazine No." + bulletNamePointer);
 		magazine.getRootPack().set(HidePack.DefaultPack);
+		//GunDataは初期設定
+		magazine.put(MagazineData.Data);
 		HidePack.MagazineList.add(magazine);
 		write();
 	}

@@ -1,8 +1,8 @@
 package types.effect;
 
-import types.base.Curve;
 import types.base.DataBase;
 import types.base.Info;
+import types.value.Curve;
 
 public class Explosion extends DataBase {
 

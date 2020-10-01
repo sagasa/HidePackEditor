@@ -1,5 +1,6 @@
 package editer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +23,10 @@ import types.base.DataBase;
 import types.base.DataBase.ValueEntry;
 import types.base.DataPath;
 import types.base.NamedData;
-import types.base.Operator;
 import types.effect.Recoil;
 import types.gun.GunFireMode;
 import types.items.GunData;
+import types.value.Operator;
 
 public class Editer extends Application {
 	/** 開いているpath */
@@ -35,7 +36,7 @@ public class Editer extends Application {
 
 	}
 
-	public static void main(String[] arg) {
+	public static void main(String[] arg) throws IOException {
 		LocalizeHandler.init();
 		LocalizeHandler.loadLang();
 		LocalizeHandler.setLang("ja");
@@ -69,6 +70,9 @@ public class Editer extends Application {
 		 * c:item2.CHANGE_LIST) { c.apply(data); }
 		 * System.out.println(data.RECOIL_DEFAULT.MAX_YAW_BASE); System.exit(0); //
 		 */
+
+		Object[] objArray;
+		objArray = new GunData[1];
 
 		Recoil recoil = new Recoil();
 		Recoil recoil2 = new Recoil();

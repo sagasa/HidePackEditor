@@ -27,6 +27,8 @@ import javafx.beans.property.ReadOnlyObjectPropertyBase;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableObjectValue;
 import types.editor.DataView;
+import types.value.Curve;
+import types.value.Operator;
 
 /**
  * 多目的なホルダークラス
@@ -357,6 +359,23 @@ public abstract class DataBase {
 
 	protected List<WeakReference<DataView<?>>> views = new ArrayList<>();
 
+	/**適切なインスタンスを渡して初期化*/
+	@SuppressWarnings("unchecked")
+	public <T> void put(DataEntry<T> key) {
+		initEntry();
+		T value = key.Default;
+		if(key.Default instanceof DataBase) {
+			try {
+				value = (T) key.Default.getClass().newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}else if(key.Default instanceof Curve) {
+			value = (T) ((Curve)key.Default).clone();
+		}
+		put(key, Operator.SET, value);
+	}
+
 	public <T> void put(DataEntry<T> key, Operator operator, T value) {
 		initEntry();
 		if (!ArrayUtils.contains(Operator.getAllow(value.getClass()), operator))
@@ -378,7 +397,10 @@ public abstract class DataBase {
 			onChange(DataPath.of(key));
 			onEntryChange(DataPath.of(key));
 		}
+	}
 
+	public boolean isEmpty() {
+		return dataMap.size()==0;
 	}
 
 	public static class JsonInterface implements JsonSerializer<DataBase>, JsonDeserializer<DataBase> {

@@ -12,10 +12,10 @@ import resources.HideImage;
 import resources.Model;
 import resources.Sound;
 import types.PackInfo;
-import types.base.Operator;
 import types.items.GunData;
 import types.items.MagazineData;
 import types.model.HideModel;
+import types.value.Operator;
 
 /** パック本体 */
 public class HidePack {

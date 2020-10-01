@@ -22,6 +22,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableObjectValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -83,7 +84,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	protected DoubleBinding labelWidth;
 
 	/** listEditで利用 */
-	protected ObservableList<? extends IDataEntity> motherList;
+	private ObservableList<? extends IDataEntity> motherList;
 
 	/** 変更されたタイミングで呼ばれる */
 	public EditNode setChangeListner(Consumer<?>... listener) {
@@ -132,7 +133,8 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		}
 	};
 
-	public static EditNode editNumber(Property<? extends DataBase> editValue, EditType edit, DataPath path) {
+	public static EditNode editNumber(ObservableObjectValue<? extends DataBase> editValue, EditType edit,
+			DataPath path) {
 		EditNode res = new EditNode(editValue, edit, path);
 		if (EditHelper.isFloat(res.Clazz, res.Path))
 			res.Type = NodeType.Float;
@@ -144,13 +146,13 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		return res;
 	}
 
-	public static EditNode editString(Property<? extends DataBase> editValue, EditType edit, DataPath path) {
-		return editString(editValue, edit, path, null);
+	public static EditNode editString(ObservableObjectValue<? extends DataBase> value, EditType edit, DataPath path) {
+		return editString(value, edit, path, null);
 	}
 
-	public static EditNode editString(Property<? extends DataBase> editValue, EditType edit, DataPath path,
+	public static EditNode editString(ObservableObjectValue<? extends DataBase> value, EditType edit, DataPath path,
 			ObservableList<? extends IDataEntity> list) {
-		EditNode res = new EditNode(editValue, edit, path);
+		EditNode res = new EditNode(value, edit, path);
 		if (list != null) {
 			res.motherList = list;
 			res.Type = NodeType.StringFromList;
@@ -160,7 +162,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		return res;
 	}
 
-	public static Node editBoolean(Property<? extends DataBase> editValue, EditType edit, DataPath path) {
+	public static Node editBoolean(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path) {
 		EditNode res = new EditNode(editValue, edit, path);
 		res.Type = NodeType.Boolean;
 		res.build();
@@ -170,17 +172,17 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	/**
 	 * 末端編集ノード
 	 *
-	 * @param editValue リスナー追加先
+	 * @param value リスナー追加先
 	 */
-	protected EditNode(Property<? extends DataBase> editValue, EditType edit, DataPath path) {
+	protected EditNode(ObservableObjectValue<? extends DataBase> value, EditType edit, DataPath path) {
 		Path = path;
 		Clazz = edit.Clazz;
 		Name = EditHelper.getLocalizedName(Clazz, Path);
 
-		editValue.addListener(this);
+		value.addListener(this);
 
 		// サイズのプロパティの定義
-		this.setPrefSize(200, 24);
+		this.setPrefSize(250, 24);
 		labelWidth = widthProperty().subtract(textFieldWidth).subtract(editBottonWidth);
 
 		// プロパティ編集
@@ -189,25 +191,23 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		Label propertyEdit = new Label();
 		propertyEdit.setPrefSize(24, 24);
 		propertyEdit.setOnMouseClicked(e -> {
-			if (hasProperty(editValue.getValue())) {
-				// unbind(editValue.getValue());
+			if (hasProperty(value.getValue())) {
 				// editValue.getValue().removeProperty(Path);
+				EditHelper.removeValueEntry(value.get(), Path);
 				propertyEdit.setGraphic(addImage);
-				disable.set(true);
 			} else {
 				// editValue.getValue().put(key, Operator.SET, );
-				// bind(editValue.getValue());
+				EditHelper.putValueEntry(value.get(), Path);
 				propertyEdit.setGraphic(removeImage);
-				disable.set(false);
 			}
 
 		});
 		propertyEdit.setAlignment(Pos.CENTER);
 		propertyEdit.setGraphic(addImage);
-		propertyEdit.translateXProperty().bind(labelWidth.add(textFieldWidth));
+		//propertyEdit.translateXProperty().bind(labelWidth.add(textFieldWidth));
 		propertyEdit.prefWidthProperty().bind(editBottonWidth);
 
-		editValue.addListener((v, ov, nv) -> {
+		value.addListener((v, ov, nv) -> {
 			if (nv != null) {
 				// 初期の表示を選択
 				propertyEdit.setVisible(true);
@@ -341,6 +341,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 			check.disableProperty().bind(disable);
 		}
 		editerProperty.addListener((ChangeListener) listener);
+		setDefault();
 	}
 
 	/** プロパティが設定されているかの判断 */
@@ -356,6 +357,12 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void unbind(ValueEntry<?> data) {
 		editerProperty.unbindBidirectional((Property) data.ValueProp);
+		setDefault();
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected void setDefault() {
+		((Property)editerProperty).setValue(EditHelper.getDataEntry(Clazz, Path).Default);
 	}
 
 	private ChangeListener<ValueEntry<?>> entryListener = (v, ov, nv) -> {
@@ -365,20 +372,23 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		if (nv != null) {
 			bind(nv);
 		}
+		disable.set(nv == null);
 	};
 
 	@Override
 	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
 		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getClass())) {
-			// System.out.println("old match");
-			EditHelper.getProperty(oldValue, Path).removeListener(entryListener);
+			ObservableObjectValue<ValueEntry<Object>> prop =EditHelper.getProperty(oldValue, Path);
+			prop.removeListener(entryListener);
+			if (prop.get() != null)
+				unbind(prop.get());
 		}
 		if (newValue != null && Clazz.isAssignableFrom(newValue.getClass())) {
-			// System.out.println("new match " + Path + " "
-			// +EditHelper.getProperty(newValue, Path) + " " + editerProperty);
-			EditHelper.getProperty(newValue, Path).addListener(entryListener);
+			ObservableObjectValue<ValueEntry<Object>> prop =EditHelper.getProperty(newValue, Path);
+			prop.addListener(entryListener);
+			if (prop.get() != null)
+				bind(prop.get());
 			disable.set(!hasProperty(newValue));
-
 		}
 	}
 

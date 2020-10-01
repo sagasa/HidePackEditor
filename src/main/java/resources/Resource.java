@@ -12,10 +12,11 @@ public abstract class Resource implements IDataEntity {
 		RootPack = new SimpleObjectProperty<>(pack);
 	}
 
-	public ObjectProperty<PackInfo> RootPack;;
+	public ObjectProperty<PackInfo> RootPack;
 	public String DisplayName;
 
 	/**参照データか確認*/
+	@Override
 	public boolean isReference() {
 		return RootPack.get().isReference;
 	}

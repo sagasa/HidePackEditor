@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,6 +133,16 @@ public class PackIO {
 		}
 	}
 
+	private static void addEntry(Map<PackInfo, List<Entry>> dataMap,Collection<? extends NamedData> data,PackPattern pattern) {
+		for (NamedData d : data) {
+			// 参照ではなければ
+			if (!d.isReference()) {
+				dataMap.get(d.getRootPack().get()).add(new Entry(pattern.toPath(d.getDisplayName()),
+						new ByteArrayInputStream(d.toJson().getBytes())));
+			}
+		}
+	}
+
 	/** パッキングして出力する */
 	public static void export() {
 		// データをまとめる
@@ -146,21 +157,9 @@ public class PackIO {
 		}
 
 		// 銃のデータ
-		for (NamedData d : HidePack.GunList) {
-			// 参照ではなければ
-			if (!d.isReference()) {
-				dataMap.get(d.RootPack.get()).add(new Entry(PackPattern.GUN.toPath(d.getDisplayName()),
-						new ByteArrayInputStream(d.toJson().getBytes())));
-			}
-		}
+		addEntry(dataMap,HidePack.GunList,PackPattern.GUN);
 		// 弾のデータ
-		for (MagazineData d : HidePack.MagazineList) {
-			// 参照ではなければ
-			if (!d.isReference()) {
-				dataMap.get(d.RootPack.get()).add(new Entry(PackPattern.MAGAZINE.toPath(d.getDisplayName()),
-						new ByteArrayInputStream(d.toJson().getBytes())));
-			}
-		}
+		addEntry(dataMap,HidePack.MagazineList,PackPattern.MAGAZINE);
 
 		// リソース
 		try {
@@ -198,7 +197,7 @@ public class PackIO {
 		for (PackInfo pack : dataMap.keySet()) {
 			if (dataMap.get(pack).size() <= 1) {
 				dataMap.remove(pack);
-				log.debug(pack.PACK_NAME + " dont have any contents");
+				log.debug(pack.getDisplayName() + " dont have any contents");
 			}
 		}
 
@@ -208,7 +207,7 @@ public class PackIO {
 			// 全パック出力
 			for (PackInfo pack : dataMap.keySet()) {
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(// TODO 出力先指定
-						new File(path, pack.PACK_NAME) + ".zip"), Charset.forName("Shift_JIS"));
+						new File(path, pack.getDisplayName()) + ".zip"), Charset.forName("Shift_JIS"));
 				for (Entry data : dataMap.get(pack)) {
 					ZipEntry entry = new ZipEntry(data.Name);
 					zos.putNextEntry(entry);
@@ -258,6 +257,7 @@ public class PackIO {
 		} catch (Exception e) {
 
 		}
+		pack.setPack();
 		return pack;
 	}
 
@@ -286,7 +286,6 @@ public class PackIO {
 		}
 		// packInfo認識
 		else if (PackPattern.PACKINFO.mache(name)) {
-			pack.Pack = new PackInfo();
 			pack.Pack = gson.fromJson(new String(data, UTF8), PackInfo.class);
 			// System.out.println("pack");
 		}

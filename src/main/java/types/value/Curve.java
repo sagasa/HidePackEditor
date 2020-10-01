@@ -1,8 +1,8 @@
-package types.base;
+package types.value;
 
 /** キーと任意の数値の配列 Larpして取得 */
-public class Curve {
-	CurveKey[] Keys = new CurveKey[0];;
+public class Curve implements Cloneable{
+	CurveKey[] Keys = new CurveKey[0];
 
 	transient Operator operator;
 	transient Curve pearnt;
@@ -43,7 +43,23 @@ public class Curve {
 		return res;
 	}
 
-	public static class CurveKey {
+	@Override
+	public Curve clone() {
+		Curve curve;
+		try {
+			curve = (Curve) super.clone();
+			curve.Keys = new CurveKey[Keys.length];
+			for (int i = 0; i < Keys.length; i++) {
+				curve.Keys[i] = Keys[i].clone();
+			}
+			return curve;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static class CurveKey implements Cloneable{
 		public float Key;
 		public float Value;
 
@@ -53,6 +69,16 @@ public class Curve {
 		public CurveKey(float key, float value) {
 			Key = key;
 			Value = value;
+		}
+
+		@Override
+		protected CurveKey clone() {
+			try {
+				return (CurveKey) super.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 	}
 }

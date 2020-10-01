@@ -2,7 +2,7 @@ package types.effect;
 
 import types.base.DataBase;
 import types.base.Info;
-import types.base.Operator;
+import types.value.Operator;
 
 public class Sound extends DataBase {
 

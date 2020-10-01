@@ -19,6 +19,7 @@ import types.effect.Explosion;
 import types.effect.Recoil;
 import types.effect.Sound;
 import types.items.GunData;
+import types.items.ItemData;
 import types.items.MagazineData;
 
 /** langの読み込みと表示用 + 説明書きも対応 */
@@ -43,7 +44,7 @@ public class LocalizeHandler {
 		makeLocalize(Recoil.class);
 		makeLocalize(Sound.class);
 		makeLocalize(Explosion.class);
-		// makeLocalize(PackInfo.class);
+		makeLocalize(ItemData.class);
 		makeLocalize(MagazineData.class);
 		// makeLocalize(ModelSelector.class);
 		// makeLocalize(Vec3f.class);

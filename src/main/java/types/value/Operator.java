@@ -1,4 +1,4 @@
-package types.base;
+package types.value;
 
 import java.util.function.BiFunction;
 
@@ -32,8 +32,8 @@ public enum Operator {
 		}
 		throw new IllegalArgumentException(
 				"Operator not supported for this type " + target.getClass() + " " + value.getClass());
-	}), ARRAY_ADD((target, value) -> ArrayEditor.addToArray((Object[]) target, (Object[]) value)),
-	ARRAY_REMOVE((target, value) -> ArrayEditor.removeFromArray((Object[]) target, (Object[]) value));
+	}), ARRAY_ADD((target, value) -> ArrayEditor.makeSumArray((Object[]) target, (Object[]) value)),
+	ARRAY_REMOVE((target, value) -> ArrayEditor.makeSubArray((Object[]) target, (Object[]) value));
 
 	private static Operator[] NUMBER = new Operator[] { SET, ADD, MULTIPLE };
 	private static Operator[] ARRAY = new Operator[] { SET, ARRAY_ADD, ARRAY_REMOVE };

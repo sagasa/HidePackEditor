@@ -85,7 +85,7 @@ public class EditPanels extends Pane {
 	private FlowPane rootPane;
 
 	/** 各編集パネルの表示状態管理用プロパティ */
-	private EnumMap<EditType, ObjectProperty<? super DataBase>> editModes = new EnumMap<>(EditType.class);
+	private EnumMap<EditType, ObjectProperty<? extends DataBase>> editModes = new EnumMap<>(EditType.class);
 
 	public EditPanels() {
 		rootPane = new FlowPane();
@@ -108,10 +108,12 @@ public class EditPanels extends Pane {
 		// writeModelEditer();
 	}
 
-	/** エディタの内容 */
-	private void addEditValue(EditType type, DataBase data) {
+	/** エディタの内容
+	 * @param <T>*/
+	@SuppressWarnings("unchecked")
+	private <T> void addEditValue(EditType type, T data) {
 		System.out.println("edit ");
-		editModes.get(type).set(data);
+		((ObjectProperty<T>)editModes.get(type)).set(data);
 	}
 
 	/** エディタの内容設定 */
@@ -137,16 +139,16 @@ public class EditPanels extends Pane {
 		final EditType type = EditType.Gun;
 		DataView<GunData> view = new DataView<>(GunData.class, 1);
 		view.setValue(0, (ObservableObjectValue) editModes.get(type));
-		ObjectProperty<?> value = editModes.get(type);
+		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
 		// *
 		// Cate0
 		addEditPane(makeCateEditPanel(type, 0), type);
 		// Cate1
 		addEditPane(makeCateEditPanel(type, 1), type);
 		// useBullet
-		addEditPane(new ListEditNode(editValue, type, DataPath.of(GunData.UseMagazine), HidePack.MagazineList), type);
+		addEditPane(new ListEditNode<>(editValue, type, DataPath.of(GunData.UseMagazine), HidePack.MagazineList,(data->data.getSystemName())), type);
 		// fireMode
-		addEditPane(new ListEditNode(editValue, type, DataPath.of(GunData.FireMode), GunFireMode.getList()), type);
+		addEditPane(new ListEditNode<>(editValue, type, DataPath.of(GunData.FireMode), GunFireMode.getList()), type);
 
 		// scope
 		Pane scope = makeImageNode(type, DataPath.of(GunData.ScopeName), HidePack.ScopeList, view);
@@ -180,10 +182,12 @@ public class EditPanels extends Pane {
 	}
 
 	/** ItemData用名称+アイコン編集ノード */
+	@SuppressWarnings("unchecked")
 	private void writeItemInfoEditor() {
 		final EditType type = EditType.Item;
 		DataView<GunData> view = new DataView<>(GunData.class, 1);
-		view.setValue(0, (ObservableObjectValue) editModes.get(type));
+		view.setValue(0, (ObservableObjectValue<GunData>) editModes.get(type));
+		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
 		VBox root = new VBox();
 		// 短縮名
 		Node shortname = EditNode.editString(editValue, type, DataPath.of(ItemData.ShortName));
@@ -316,6 +320,8 @@ public class EditPanels extends Pane {
 	/** Soundの詳細 */
 	private Region makeSoundEditer(EditType type, DataPath path) {
 		VBox root = new VBox();
+
+		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
 		Label label = new Label(EditHelper.getLocalizedName(type.Clazz, path));
 		label.setPrefWidth(200);
 		label.setAlignment(Pos.CENTER);
@@ -345,6 +351,7 @@ public class EditPanels extends Pane {
 	/** StringでListからImageを選択し表示するパネル設定パネル */
 	private Pane makeImageNode(EditType type, DataPath dataPath, ObservableList<HideImage> list, DataView<?> view) {
 		VBox root = new VBox();
+		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
 		HideImageView iconview = new HideImageView(view, dataPath, list);
 		iconview.setFitWidth(64);
 		iconview.setFitHeight(64);
@@ -362,6 +369,7 @@ public class EditPanels extends Pane {
 
 	/** カテゴリが付いた値を編集するノード */
 	private Pane makeCateEditPanel(EditType type, int cate, DataPath path) {
+		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
 		VBox root = new VBox();
 		Class<? extends DataBase> clazz = type.Clazz;
 		// pathがあるなら指定されたクラスで実行

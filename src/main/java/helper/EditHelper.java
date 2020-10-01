@@ -42,11 +42,33 @@ public class EditHelper {
 		return current;
 	}
 
+	public static void putValueEntry(DataBase data, DataPath path) {
+		DataEntry<?> entry = data.getEntries().get(path.fastName);
+		ValueEntry<?> current = data.getEntry(entry);
+		if (current == null)
+			data.put(entry);
+		if (path.hasChild)
+			putValueEntry((DataBase) current.getValue(), path.nextPath);
+	}
+
+	public static void removeValueEntry(DataBase data, DataPath path) {
+		DataEntry<?> entry = data.getEntries().get(path.fastName);
+		ValueEntry<?> current = data.getEntry(entry);
+
+		if (path.hasChild) {
+			removeValueEntry((DataBase) current.getValue(), path.nextPath);
+
+		} else if (current != null)
+			// 底なら消す
+			data.remove(entry);
+
+	}
+
 	@SuppressWarnings("unchecked")
 	public static <T> T getValue(DataBase data, DataPath path, T base) {
 		ValueEntry<?> current = data.getEntry(data.getEntries().get(path.fastName));
 		if (current == null)
-			return null;
+			return base;
 		if (path.hasChild) {
 			return getValue((DataBase) current.getValue(), path.nextPath, base);
 		}
@@ -165,13 +187,11 @@ public class EditHelper {
 	}
 
 	/** UnlocalizedNameのフォーマット */
-	public static String getUnlocalizedName(Class<? extends DataBase> clazz, DataPath field) {
-		try {
-			return (clazz.getSimpleName() + "." + getDataEntry(clazz, field).getName().replaceAll("_", "."))
-					.toLowerCase();
-		} catch (SecurityException e) {
-			e.printStackTrace();
+	public static String getUnlocalizedName(Class<? extends DataBase> clazz, DataPath path) {
+		DataEntry<?> current = DataBase.getEntries(clazz).get(path.fastName);
+		if (path.hasChild) {
+			return getUnlocalizedName(((DataBase) current.Default).getClass(), path.nextPath);
 		}
-		return null;
+		return (clazz.getSimpleName() + "." + getDataEntry(clazz, path).getName().replaceAll("_", ".")).toLowerCase();
 	}
 }
