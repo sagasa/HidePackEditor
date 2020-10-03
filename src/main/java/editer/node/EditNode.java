@@ -78,8 +78,6 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 
 	/** 値編集フィールドの幅 */
 	protected DoubleProperty textFieldWidth = new SimpleDoubleProperty(100);
-	/** プロパティの追加ボタンの有無 */
-	protected DoubleProperty editBottonWidth = new SimpleDoubleProperty(0);
 	/** ラベルの幅 */
 	protected DoubleBinding labelWidth;
 
@@ -183,7 +181,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 
 		// サイズのプロパティの定義
 		this.setPrefSize(250, 24);
-		labelWidth = widthProperty().subtract(textFieldWidth).subtract(editBottonWidth);
+		labelWidth = widthProperty().subtract(textFieldWidth).subtract(20);
 
 		// プロパティ編集
 		ImageView addImage = new ImageView("/icon/add.png");
@@ -205,14 +203,13 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		propertyEdit.setAlignment(Pos.CENTER);
 		propertyEdit.setGraphic(addImage);
 		//propertyEdit.translateXProperty().bind(labelWidth.add(textFieldWidth));
-		propertyEdit.prefWidthProperty().bind(editBottonWidth);
+		propertyEdit.prefWidthProperty().set(20);
 
 		value.addListener((v, ov, nv) -> {
 			if (nv != null) {
 				// 初期の表示を選択
 				propertyEdit.setVisible(true);
 				propertyEdit.setGraphic(hasProperty(nv) ? removeImage : addImage);
-				editBottonWidth.set(20);
 
 			}
 		});
