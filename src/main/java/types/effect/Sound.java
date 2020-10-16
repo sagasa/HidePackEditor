@@ -6,13 +6,16 @@ import types.value.Operator;
 
 public class Sound extends DataBase {
 
+	public Sound() {
+	}
+
 	public Sound(String name, float range) {
 		put(Name, Operator.SET, name);
 		put(Range, Operator.SET, range);
 	}
 
 	/** 使用可否 String */
-	public static final DataEntry<String> Name = of("sample", new Info().IsResourceName(true));
+	public static final DataEntry<String> Name = of("sample", new Info().IsResourceName(true).Cate(0));
 	/** 聞こえる半径 Float */
 	public static final DataEntry<Float> Range = of(50f, new Info().Min(0));
 	/** 音量 Float */

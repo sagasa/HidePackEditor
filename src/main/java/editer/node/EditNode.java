@@ -21,14 +21,17 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.DepthTest;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -40,14 +43,17 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
+import localize.LocalizeHandler;
 import types.base.DataBase;
 import types.base.DataBase.ValueEntry;
 import types.base.DataPath;
+import types.value.Operator;
 
 /** リスナを実装した編集用ノード */
 public class EditNode extends Pane implements ChangeListener<DataBase> {
@@ -58,11 +64,13 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 
 	/** 型にあったプロパティ */
 	protected Property<?> editerProperty;
+	protected Property<Operator> operatorProperty = new SimpleObjectProperty<>();
 
 	protected ObservableValue<?> currentValue;
 
 	/** 表示名 */
 	protected String Name;
+	protected String Lore;
 
 	protected Float getMax() {
 		return EditHelper.getMax(Clazz, Path);
@@ -101,6 +109,8 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 
 	/** 有効化切り替え */
 	protected BooleanProperty disable = new SimpleBooleanProperty();
+
+	Label propertyEdit;
 
 	/** 数値以外のパターン */
 	private static final Pattern FloatPattern = Pattern.compile("[^0-9\\.-]+");
@@ -168,6 +178,28 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	}
 
 	/**
+	 * 左詰めで配置 右側のtranslateXにバインド
+	 */
+	private void leftJustified(Region left, int gap, Region right) {
+		right.translateXProperty().bind(left.widthProperty().add(left.translateXProperty()).add(gap));
+	}
+
+	/** 右詰めで配置 左側のtranslateXにバインド */
+	private void rightJustified(Region left, int gap, Region right) {
+		left.translateXProperty().bind(right.translateXProperty().subtract(left.widthProperty()).subtract(gap));
+	}
+
+	/** 右端に配置 右側のtranslateXにバインド */
+	private void right(Region parent, int gap, Region right) {
+		right.translateXProperty().bind(parent.widthProperty().subtract(right.widthProperty()).subtract(gap));
+	}
+
+	/** 中央に配置 長さを決定 */
+	private void center(Region center, int gap, Region right) {
+		center.prefWidthProperty().bind(right.translateXProperty().subtract(center.translateXProperty()).subtract(gap));
+	}
+
+	/**
 	 * 末端編集ノード
 	 *
 	 * @param value リスナー追加先
@@ -175,8 +207,10 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	protected EditNode(ObservableObjectValue<? extends DataBase> value, EditType edit, DataPath path) {
 		Path = path;
 		Clazz = edit.Clazz;
-		Name = EditHelper.getLocalizedName(Clazz, Path);
+		Name = LocalizeHandler.getLocalizedName(Clazz, Path);
+		Lore = LocalizeHandler.getLocalizedLore(Clazz, Path);
 
+		setDepthTest(DepthTest.ENABLE);
 		value.addListener(this);
 
 		// サイズのプロパティの定義
@@ -186,7 +220,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		// プロパティ編集
 		ImageView addImage = new ImageView("/icon/add.png");
 		ImageView removeImage = new ImageView("/icon/remove.png");
-		Label propertyEdit = new Label();
+		propertyEdit = new Label();
 		propertyEdit.setPrefSize(24, 24);
 		propertyEdit.setOnMouseClicked(e -> {
 			if (hasProperty(value.getValue())) {
@@ -202,7 +236,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		});
 		propertyEdit.setAlignment(Pos.CENTER);
 		propertyEdit.setGraphic(addImage);
-		//propertyEdit.translateXProperty().bind(labelWidth.add(textFieldWidth));
+		// propertyEdit.translateXProperty().bind(labelWidth.add(textFieldWidth));
 		propertyEdit.prefWidthProperty().set(20);
 
 		value.addListener((v, ov, nv) -> {
@@ -218,6 +252,11 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 
 	/** このエントリで編集する型 */
 	private NodeType Type;
+	private static final Background WhiteBack = new Background(
+			new BackgroundFill(Color.WHITE, new CornerRadii(2), new Insets(2)));
+
+	private static final Background GrayBack = new Background(
+			new BackgroundFill(Color.GRAY, new CornerRadii(2), Insets.EMPTY));
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void build() {
@@ -226,8 +265,6 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 			// テキストセット
 			TextField text = new TextField();
 			text.setAlignment(Pos.CENTER);
-
-			Label label = new Label(Name + ":");
 			// エンターを押したらフォーカスを外す
 			text.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
 				if (e.getCode() == KeyCode.ENTER)
@@ -305,21 +342,52 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 						e -> Scroll.accept(e.getDeltaY() + e.getDeltaX() > 0, e.isShiftDown()));
 			}
 			// サイズプロパティの関連
-			text.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(2), new Insets(2))));
+			text.setBackground(WhiteBack);
 			text.setFont(Font.font(10));
-			text.translateXProperty().bind(labelWidth);
+
 			text.prefWidthProperty().bind(textFieldWidth);
 			text.prefHeightProperty().bind(this.heightProperty());
 
-			label.prefWidthProperty().bind(labelWidth.add(2));
+			Label label = new Label(Name + ":");
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.setAlignment(Pos.CENTER_RIGHT);
 
-			// 有効化切り替え
-			label.disableProperty().bind(disable);
-			text.disableProperty().bind(disable);
+			ChoiceBox<Operator> operator = new ChoiceBox<>();
+			operator.getItems().addAll(Operator.getAllow(EditHelper.getDataEntry(Clazz, Path).Default.getClass()));
+			operator.getSelectionModel().selectedItemProperty()
+					.addListener((v, ov, nv) -> operatorProperty.setValue(nv));
+			operatorProperty.addListener((v, ov, nv) -> operator.getSelectionModel().select(nv));
 
-			this.getChildren().addAll(text, label);
+			operator.getSelectionModel().select(0);
+			operator.prefHeightProperty().bind(this.heightProperty());
+			operator.setPrefWidth(65);
+			operator.setBackground(WhiteBack);
+			operator.setStyle("-fx-font: 7pt 'Courier New'");
+
+			leftJustified(propertyEdit, 0, label);
+			center(label, 2, text);
+			rightJustified(text, 0, operator);
+			right(this, 0, operator);
+
+			// 有効化切り替え
+			operator.disableProperty().bind(disable);
+			text.disableProperty().bind(disable);
+			label.disableProperty().bind(disable);
+
+			// loreHolder.setClip(lore);
+
+			this.getChildren().addAll(text, label, operator);
+			if (Lore != null) {
+				Label lore = new Label(Lore);
+				lore.setTranslateZ(10);
+				lore.visibleProperty().bind(label.hoverProperty());
+				lore.setMouseTransparent(true);
+				lore.translateXProperty().bind(label.translateXProperty().add(40));
+				lore.translateYProperty().bind(heightProperty().multiply(-1).add(10));
+				lore.setTextFill(Color.BLACK);
+				lore.setBackground(GrayBack);
+				getChildren().add(lore);
+			}
 		} else if (Type == NodeType.Boolean) {
 			Label label = new Label(Name + ":");
 			label.setAlignment(Pos.CENTER_RIGHT);
@@ -328,9 +396,11 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 			textFieldWidth.bind(heightProperty());
 			check.prefWidthProperty().bind(this.heightProperty());
 			check.prefHeightProperty().bind(this.heightProperty());
-			check.translateXProperty().bind(labelWidth.add(2));
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.prefWidthProperty().bind(labelWidth);
+			leftJustified(propertyEdit, 0, label);
+			center(label, 2, check);
+			right(this, 0, check);
 			this.getChildren().addAll(label, check);
 
 			// 有効化切り替え
@@ -349,17 +419,20 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void bind(ValueEntry<?> data) {
 		editerProperty.bindBidirectional((ObjectProperty) data.ValueProp);
+		operatorProperty.bindBidirectional(data.OperatorProp);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void unbind(ValueEntry<?> data) {
 		editerProperty.unbindBidirectional((Property) data.ValueProp);
+		operatorProperty.unbindBidirectional(data.OperatorProp);
 		setDefault();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void setDefault() {
-		((Property)editerProperty).setValue(EditHelper.getDataEntry(Clazz, Path).Default);
+		((Property) editerProperty).setValue(EditHelper.getDataEntry(Clazz, Path).Default);
+		operatorProperty.setValue(Operator.SET);
 	}
 
 	private ChangeListener<ValueEntry<?>> entryListener = (v, ov, nv) -> {
@@ -375,13 +448,13 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	@Override
 	public void changed(ObservableValue<? extends DataBase> observable, DataBase oldValue, DataBase newValue) {
 		if (oldValue != null && Clazz.isAssignableFrom(oldValue.getClass())) {
-			ObservableObjectValue<ValueEntry<Object>> prop =EditHelper.getProperty(oldValue, Path);
+			ObservableObjectValue<ValueEntry<Object>> prop = EditHelper.getProperty(oldValue, Path);
 			prop.removeListener(entryListener);
 			if (prop.get() != null)
 				unbind(prop.get());
 		}
 		if (newValue != null && Clazz.isAssignableFrom(newValue.getClass())) {
-			ObservableObjectValue<ValueEntry<Object>> prop =EditHelper.getProperty(newValue, Path);
+			ObservableObjectValue<ValueEntry<Object>> prop = EditHelper.getProperty(newValue, Path);
 			prop.addListener(entryListener);
 			if (prop.get() != null)
 				bind(prop.get());
@@ -392,9 +465,4 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	private enum NodeType {
 		String, StringFromList, Integer, Float, Boolean
 	}
-
-	public enum EditNodeType {
-		String, StringFromList, Integer, Float, Boolean, StringList, Number, RootPack, Other
-	}
-
 }

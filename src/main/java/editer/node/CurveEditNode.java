@@ -1,20 +1,12 @@
 package editer.node;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-
 import org.apache.commons.lang.ArrayUtils;
 
-import editer.IDataEntity;
 import editer.node.EditPanels.EditType;
 import helper.ArrayEditor;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableObjectValue;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.collections.WeakListChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -26,50 +18,34 @@ import javafx.scene.layout.AnchorPane;
 import types.base.DataBase;
 import types.base.DataBase.ValueEntry;
 import types.base.DataPath;
+import types.value.Curve;
+import types.value.Curve.CurveKey;
 
-/** 母集団のリストから任意に選択するListView */
-public class ListEditNode<T> extends EditNode {
+/** Curve編集 */
+public class CurveEditNode extends EditNode {
 
-	private ListView<T> listview;
+	private ListView<CurveKey> listview;
 	private String SearchKey = null;
-	private ListChangeListener<IDataEntity> listener;
 
 	@SuppressWarnings("unchecked")
-	private T[] getArray() {
-		return (T[]) editerProperty.getValue();
+	private CurveKey[] getArray() {
+		return ((Curve) editerProperty.getValue()).Keys;
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setArray(T[] value) {
-		((Property<T[]>) editerProperty).setValue(value);
+	private void setArray(CurveKey[] value) {
+		((Property<CurveKey[]>) editerProperty).setValue(value);
 		;
-	}
-
-	private Supplier<Stream<T>> fromStream;
-
-	// TODO 要素の最大、最小数の指定を
-
-	/**
-	 * @param fromList 母集団
-	 */
-	@SuppressWarnings({ "unchecked" })
-	public <F> ListEditNode(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path,
-			ObservableList<F> fromList) {
-		this(editValue, edit, path, fromList, from -> (T) from);
 	}
 
 	/**
 	 * @param fromList 母集団
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <F> ListEditNode(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path,
-			ObservableList<F> fromList, Function<F, T> func) {
+	public <F> CurveEditNode(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path) {
 		super(editValue, edit, path);
 		editerProperty = new SimpleObjectProperty<>();
-		listener = arg0 -> writeList();
-		fromList.addListener(new WeakListChangeListener<>((ListChangeListener) listener));
-		// 元リストに対する処理
-		fromStream = () -> fromList.stream().map(from -> func.apply(from));
+
 		listview = new ListView<>();
 
 		this.setPrefHeight(200);
@@ -110,9 +86,6 @@ public class ListEditNode<T> extends EditNode {
 		if (getArray() == null)
 			return;
 		listview.getItems().addAll(getArray());
-		fromStream.get()
-				.filter(str -> (!ArrayUtils.contains(getArray(), str) && ArrayEditor.Search(str.toString(), SearchKey)))
-				.forEach(str -> listview.getItems().add(str));
 	}
 
 	// リストの更新だけ
@@ -129,7 +102,7 @@ public class ListEditNode<T> extends EditNode {
 	}
 
 	/** 上下ボタンと削除ボタン付きのリストシェル */
-	public class EditListCell extends ListCell<T> {
+	private class EditListCell extends ListCell<CurveKey> {
 
 		private ImageView up = new ImageView("/icon/up.png");
 		private ImageView down = new ImageView("/icon/down.png");
@@ -164,7 +137,7 @@ public class ListEditNode<T> extends EditNode {
 		}
 
 		@Override
-		protected void updateItem(T data, boolean empty) {
+		protected void updateItem(CurveKey data, boolean empty) {
 			super.updateItem(data, empty);
 			// 初期化
 			if (!isBind) {

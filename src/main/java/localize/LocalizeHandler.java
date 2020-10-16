@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -11,10 +13,10 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import helper.EditHelper;
-import jdk.internal.util.xml.impl.ReaderUTF8;
 import types.base.DataBase;
 import types.base.DataBase.DataEntry;
 import types.base.DataPath;
+import types.base.NamedData;
 import types.effect.Explosion;
 import types.effect.Recoil;
 import types.effect.Sound;
@@ -46,6 +48,7 @@ public class LocalizeHandler {
 		makeLocalize(Explosion.class);
 		makeLocalize(ItemData.class);
 		makeLocalize(MagazineData.class);
+		makeLocalize(NamedData.class);
 		// makeLocalize(ModelSelector.class);
 		// makeLocalize(Vec3f.class);
 		// makeLocalize(HideModel.class);
@@ -55,9 +58,18 @@ public class LocalizeHandler {
 	}
 
 	private static void makeLocalize(Class<? extends DataBase> clazz) {
-		clazz.getFields();
-		for (DataEntry<?> field : DataBase.getEntries(clazz).values()) {
-			LocalizeHandler.addName(EditHelper.getUnlocalizedName(clazz, DataPath.of(field)));
+		DataBase.getEntries(clazz);
+		try {
+			for (Field field : clazz.getDeclaredFields()) {
+				if (DataEntry.class.isAssignableFrom(field.getType())) {
+					DataEntry<?> entry = (DataEntry<?>) field.get(null);
+					if (entry != null)
+						LocalizeHandler.addName(EditHelper.getUnlocalizedName(clazz, DataPath.of(entry)));
+				}
+			}
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
 		}
 	}
 
@@ -93,7 +105,7 @@ public class LocalizeHandler {
 			for (File file : langDir.listFiles()) {
 				if (file.getName().endsWith(".properties")) {
 					String lang = file.getName().replace(".properties", "");
-					ReaderUTF8 reader = new ReaderUTF8(new FileInputStream(file));
+					InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
 					LangMap.put(lang, new HideLocalizeResource(reader, defaultRB));
 					reader.close();
 				}
@@ -132,22 +144,41 @@ public class LocalizeHandler {
 		return false;
 	}
 
-	static public String getLocalizedName(String unlocalizedName) {
+	private static String getLocalized(String unlocalizedName) {
 		ResourceBundle lang = LangMap.get(nowLang);
 		if (lang != null && lang.containsKey(unlocalizedName))
 			return lang.getString(unlocalizedName);
-		if (defaultRB.containsKey(unlocalizedName))
+		else if (defaultRB.containsKey(unlocalizedName))
 			return defaultRB.getString(unlocalizedName);
 		return null;
 	}
 
-	static public String getLocalizedName(DataBase data, DataPath path) {
-		return getLocalizedName(EditHelper.getUnlocalizedName(data.getClass(), path));
+	private static String toName(String unlocalizedName) {
+		System.out.println(unlocalizedName);
+		return getLocalized(unlocalizedName).split(":", 2)[0];
+	}
+
+	private static String toLore(String unlocalizedName) {
+		String[] split = getLocalized(unlocalizedName).split(":", 2);
+		return split.length == 2 ? split[1] : null;
+	}
+
+	static public String getLocalizedName(Class<? extends DataBase> clazz, DataPath path) {
+		return toName(EditHelper.getUnlocalizedName(clazz, path));
 	}
 
 	/** メニュー用ローカライズデータ取得 */
 	public static String getLocalizedName(Lang lang) {
-		return getLocalizedName(lang.toString().toLowerCase());
+		return toName(lang.toString().toLowerCase());
+	}
+
+	static public String getLocalizedLore(Class<? extends DataBase> clazz, DataPath path) {
+		return toLore(EditHelper.getUnlocalizedName(clazz, path));
+	}
+
+	/** メニュー用ローカライズデータ取得 */
+	public static String getLocalizedLore(Lang lang) {
+		return toLore(lang.toString().toLowerCase());
 	}
 
 	/** メニュー用Lang */

@@ -1,8 +1,10 @@
 package types.value;
 
+import org.apache.commons.lang.ArrayUtils;
+
 /** キーと任意の数値の配列 Larpして取得 */
-public class Curve implements Cloneable{
-	CurveKey[] Keys = new CurveKey[0];
+public class Curve implements Cloneable {
+	public CurveKey[] Keys = new CurveKey[0];
 
 	transient Operator operator;
 	transient Curve pearnt;
@@ -59,7 +61,16 @@ public class Curve implements Cloneable{
 		}
 	}
 
-	public static class CurveKey implements Cloneable{
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Curve) {
+			Curve other = (Curve) obj;
+			return operator == other.operator && ArrayUtils.isEquals(Keys, other.Keys);
+		}
+		return false;
+	}
+
+	public static class CurveKey implements Cloneable {
 		public float Key;
 		public float Value;
 

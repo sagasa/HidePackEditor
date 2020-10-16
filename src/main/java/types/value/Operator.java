@@ -55,7 +55,8 @@ public enum Operator {
 		if (clazz.isArray())
 			return ARRAY;
 		else if (Integer.class.isAssignableFrom(clazz) || int.class.isAssignableFrom(clazz)
-				|| Float.class.isAssignableFrom(clazz) || float.class.isAssignableFrom(clazz)) {
+				|| Float.class.isAssignableFrom(clazz) || float.class.isAssignableFrom(clazz)
+				|| Curve.class.isAssignableFrom(clazz)) {
 			return NUMBER;
 		}
 		return OTHER;

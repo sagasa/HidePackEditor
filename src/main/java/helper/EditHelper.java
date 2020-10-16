@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 import javafx.beans.value.ObservableObjectValue;
-import localize.LocalizeHandler;
 import types.base.DataBase;
 import types.base.DataBase.DataEntry;
 import types.base.DataBase.ValueEntry;
@@ -47,8 +46,12 @@ public class EditHelper {
 		ValueEntry<?> current = data.getEntry(entry);
 		if (current == null)
 			data.put(entry);
-		if (path.hasChild)
+		if (path.hasChild) {
+			// この階層が無いなら
+			if (current == null)
+				current = data.put(entry);
 			putValueEntry((DataBase) current.getValue(), path.nextPath);
+		}
 	}
 
 	public static void removeValueEntry(DataBase data, DataPath path) {
@@ -179,11 +182,6 @@ public class EditHelper {
 		if (getType(clazz, type).isAssignableFrom(int.class) || getType(clazz, type).isAssignableFrom(Integer.class))
 			return true;
 		return false;
-	}
-
-	/** ローカライズした名前を取得 */
-	public static String getLocalizedName(Class<? extends DataBase> clazz, DataPath field) {
-		return LocalizeHandler.getLocalizedName(getUnlocalizedName(clazz, field));
 	}
 
 	/** UnlocalizedNameのフォーマット */

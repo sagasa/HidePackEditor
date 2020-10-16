@@ -6,6 +6,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -103,7 +104,7 @@ public abstract class DataBase {
 	private static void initEntry(Class<? extends DataBase> clazz) {
 		if (!nameTypeMap.containsKey(getTypeName(clazz))) {
 			if (!nameEntryMap.containsKey(getTypeName(clazz)))
-				nameEntryMap.put(getTypeName(clazz), new HashMap<>());
+				nameEntryMap.put(getTypeName(clazz), new LinkedHashMap<>());
 			registerEntry(clazz, 0, nameEntryMap.get(getTypeName(clazz)));
 			nameTypeMap.put(getTypeName(clazz), clazz);
 		}
@@ -359,34 +360,39 @@ public abstract class DataBase {
 
 	protected List<WeakReference<DataView<?>>> views = new ArrayList<>();
 
-	/**適切なインスタンスを渡して初期化*/
+	/**
+	 * 適切なインスタンスを渡して初期化
+	 * 
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
-	public <T> void put(DataEntry<T> key) {
+	public <T> ValueEntry<T> put(DataEntry<T> key) {
 		initEntry();
 		T value = key.Default;
-		if(key.Default instanceof DataBase) {
+		if (key.Default instanceof DataBase) {
 			try {
 				value = (T) key.Default.getClass().newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
-		}else if(key.Default instanceof Curve) {
-			value = (T) ((Curve)key.Default).clone();
+		} else if (key.Default instanceof Curve) {
+			value = (T) ((Curve) key.Default).clone();
 		}
-		put(key, Operator.SET, value);
+		return put(key, Operator.SET, value);
 	}
 
-	public <T> void put(DataEntry<T> key, Operator operator, T value) {
+	public <T> ValueEntry<T> put(DataEntry<T> key, Operator operator, T value) {
 		initEntry();
 		if (!ArrayUtils.contains(Operator.getAllow(value.getClass()), operator))
 			throw new IllegalArgumentException("Operator " + operator + " not supported for " + value.getClass());
 		if (dataMap.containsKey(key)) {
-			getEntry(key).setOperator(operator).setValue(value);
+			return getEntry(key).setOperator(operator).setValue(value);
 		} else {
 			ValueEntry<T> entry = new ValueEntry<>(key, operator, value, this);
 			dataMap.put(key, entry);
 			onChange(DataPath.of(key));
 			onEntryChange(DataPath.of(key));
+			return entry;
 		}
 	}
 
@@ -400,7 +406,7 @@ public abstract class DataBase {
 	}
 
 	public boolean isEmpty() {
-		return dataMap.size()==0;
+		return dataMap.size() == 0;
 	}
 
 	public static class JsonInterface implements JsonSerializer<DataBase>, JsonDeserializer<DataBase> {
