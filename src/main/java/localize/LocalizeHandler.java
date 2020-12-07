@@ -40,7 +40,8 @@ public class LocalizeHandler {
 		for (Lang lang : Lang.values()) {
 			addName(lang.toString().toLowerCase());
 		}
-		new GunData();
+		System.out.println(new GunData().get(GunData.ADSTick, null));
+
 		// DataBaseクラスのローカライズファイルを作成
 		makeLocalize(GunData.class);
 		makeLocalize(Recoil.class);

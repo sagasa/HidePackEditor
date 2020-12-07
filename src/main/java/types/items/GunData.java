@@ -19,6 +19,14 @@ public class GunData extends ItemData {
 	public static final int ItemInfo = 2;
 	public static final int ScopeInfo = 3;
 
+	static class Test {
+		public Test() {
+			System.out.println("INIT TEST OBJ");
+		}
+	}
+
+	public static final Test test = new Test();
+
 	public static final GunData DEFAULT = new GunData();
 
 	/** 所持しているときのHP増加量 Float */

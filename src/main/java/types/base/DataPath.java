@@ -68,6 +68,11 @@ public final class DataPath {
 	}
 
 	public static DataPath of(DataEntry<?>... datas) {
+		for (DataEntry<?> dataEntry : datas) {
+			if (dataEntry.toString() == null) {
+				System.out.println("ERRRRRRRRRR");
+			}
+		}
 		return new DataPath(StringUtils.join(datas, "."));
 	}
 }

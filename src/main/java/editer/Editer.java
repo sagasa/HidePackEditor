@@ -56,6 +56,8 @@ public class Editer extends Application {
 //
 //		System.exit(0);
 
+		System.out.println(DataBase.getSample(GunData.class));
+
 		launch(arg);
 
 		/*
@@ -70,9 +72,6 @@ public class Editer extends Application {
 		 * c:item2.CHANGE_LIST) { c.apply(data); }
 		 * System.out.println(data.RECOIL_DEFAULT.MAX_YAW_BASE); System.exit(0); //
 		 */
-
-		Object[] objArray;
-		objArray = new GunData[1];
 
 		Recoil recoil = new Recoil();
 		Recoil recoil2 = new Recoil();

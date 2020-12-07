@@ -2,6 +2,7 @@ package types.base;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.enums.EnumUtils;
+import org.apache.logging.log4j.util.Strings;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -101,27 +104,43 @@ public abstract class DataBase {
 	}
 
 	/** staticにDataEntryを名前から検索するための登録 */
-	private static void initEntry(Class<? extends DataBase> clazz) {
+	private static boolean initEntry(Class<? extends DataBase> clazz) {
 		if (!nameTypeMap.containsKey(getTypeName(clazz))) {
-			if (!nameEntryMap.containsKey(getTypeName(clazz)))
+			System.out.println("Start init");
+			if (nameEntryMap.containsKey(getTypeName(clazz)))
+				// 既にあれば初期化
+				nameEntryMap.get(getTypeName(clazz)).clear();
+			else
+				// 無ければ作成
 				nameEntryMap.put(getTypeName(clazz), new LinkedHashMap<>());
-			registerEntry(clazz, 0, nameEntryMap.get(getTypeName(clazz)));
+			// エラー以外なら追加
+			if (registerEntry(clazz, 0, nameEntryMap.get(getTypeName(clazz))) == -1)
+				return false;
 			nameTypeMap.put(getTypeName(clazz), clazz);
 		}
+		return true;
 	}
 
-	/** 親クラスから順に登録する */
+	/** public static final */
+	private static final int Modifiers = Modifier.PUBLIC | Modifier.STATIC | Modifier.FINAL;
+
+	/** 親クラスから順に登録する -1なら登録エラー */
 	@SuppressWarnings("unchecked")
 	private static int registerEntry(Class<? extends DataBase> clazz, int index, Map<String, DataEntry<?>> map) {
 		// 親がDataBase以外なら親から登録
-		if (clazz.getSuperclass() != DataBase.class)
+		if (clazz.getSuperclass() != DataBase.class) {
 			index = registerEntry((Class<? extends DataBase>) clazz.getSuperclass(), index, map);
-
+			if (index == -1)
+				return -1;
+		}
 		try {
 			for (Field field : clazz.getDeclaredFields()) {
 				if (DataEntry.class.isAssignableFrom(field.getType())) {
-					DataEntry<?> entry = (DataEntry<?>) field.get(null);
-					if (entry != null) {
+					if (field.getModifiers() == Modifiers) {
+						DataEntry<?> entry = (DataEntry<?>) field.get(null);
+						if (entry == null) {
+							return -1;
+						}
 						// Indexがずれたら
 						if (entry.index != -1 && entry.index != index)
 							throw new RuntimeException("indexがずれた 再設計 " + entry.index + " " + index);
@@ -130,8 +149,10 @@ public abstract class DataBase {
 						index++;
 						entry.type = (Class<? extends DataBase>) field.getDeclaringClass();
 						entry.name = field.getName();
+
+						map.put(field.getName(), entry);
 					}
-					map.put(field.getName(), entry);
+
 				}
 			}
 		} catch (IllegalArgumentException | IllegalAccessException e) {
@@ -167,12 +188,18 @@ public abstract class DataBase {
 	protected DataMap<ValueEntry<?>> dataMap;
 
 	public DataBase() {
+		initEntry(getClass());
 		// 初期化が終わっていなければ実行しない
 		if (nameTypeMap.containsKey(getTypeName(getClass())))
 			init();
+		else {
+			Map<String, DataEntry<?>> map = new LinkedHashMap<>();
+			registerEntry(getClass(), 0, map);
+			System.out.println("err " + getTypeName(getClass()) + " " + map);
+		}
 	}
 
-	/** 初回のインスタンス作成時のみ2回実行 */
+	/** 初回のインスタンス作成時のみ実行 */
 	private void init() {
 		isInit = true;
 		dataMap = new DataMap<>(getClass());
@@ -362,7 +389,7 @@ public abstract class DataBase {
 
 	/**
 	 * 適切なインスタンスを渡して初期化
-	 * 
+	 *
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -496,6 +523,54 @@ public abstract class DataBase {
 	@SuppressWarnings("unchecked")
 	public static <T extends DataBase> T fromJson(String json) {
 		return (T) gson.fromJson(json, DataBase.class);
+	}
+
+	public static String getSample(Class<? extends DataBase> clazz) {
+		try {
+			DataBase data = clazz.newInstance();
+			for (DataEntry<?> entry : data.getEntries().values()) {
+				data.put(entry);
+			}
+			StringBuilder sb = new StringBuilder(data.toJson());
+			getUsage(sb, clazz);
+			return sb.toString();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	private static String getUsage(StringBuilder sb, Class<? extends DataBase> clazz) {
+		sb.append("\n");
+		for (Entry<String, DataEntry<?>> entry : getEntries(clazz).entrySet()) {
+			DataEntry<?> e = entry.getValue();
+			if (e.Default.getClass().isEnum()) {
+				sb.append("//");
+				sb.append(entry.getKey());
+				sb.append(" : ");
+				sb.append(Strings.join(EnumUtils.getEnumList((Class) e.Default.getClass()), ','));
+				sb.append("\n");
+			}
+			if (e.Info != null && (e.Info.Max != Float.MAX_VALUE || e.Info.Min != -Float.MAX_VALUE)) {
+				sb.append("//");
+				sb.append(entry.getKey());
+				sb.append(" : ");
+				boolean flag = false;
+				if (e.Info.Max != Float.MAX_VALUE) {
+					sb.append("Max=");
+					sb.append(e.Info.Max);
+					flag = true;
+				}
+				if (e.Info.Min != -Float.MAX_VALUE) {
+					if (flag)
+						sb.append(",");
+					sb.append("Min=");
+					sb.append(e.Info.Min);
+				}
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
 	}
 
 	// エディタ側
