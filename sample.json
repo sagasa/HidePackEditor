@@ -1,0 +1,1171 @@
+{
+  "Type": "GunData",
+  "Values": {
+    "ParentName": "",
+    "DisplayName": "sample",
+    "ShortName": "sample",
+    "IconName": "sample",
+    "ModelName": "",
+    "ItemMaxHealth": 0.0,
+    "ItemMoveSpeed": 0.0,
+    "ItemKnockbackResistance": 0.0,
+    "ItemAttackDamage": 0.0,
+    "BulletSpeed": 5.0,
+    "PrepareTick": 0,
+    "ADSTick": 0,
+    "FOVZoom": 1.0,
+    "UseScope": false,
+    "ModelScope": false,
+    "ScopeName": "",
+    "ScopeSize": 0.7,
+    "ScopeCenterX": 0.5,
+    "ScopeCenterY": 0.5,
+    "ScopeZoom": 2.0,
+    "ReloadTick": 20,
+    "ReloadAll": false,
+    "UnloadInReload": true,
+    "UseUnload": true,
+    "RPM": 600,
+    "BurstRPM": 800,
+    "BurstCount": 3,
+    "LoadSize": 1,
+    "Accuracy": 0.0,
+    "AccuracyADS": 0.0,
+    "AccuracySneak": 0.0,
+    "AccuracySneakADS": 0.0,
+    "UseSecondary": false,
+    "UseDualwield": false,
+    "FireMode": [
+      "SEMIAUTO"
+    ],
+    "UseMagazine": [
+      null
+    ],
+    "Recoil": {
+      "Type": "Recoil",
+      "Values": {
+        "HorizontalBase": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalSpread": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalReturn": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalRecoilTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalReturnTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalBase": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalSpread": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalReturn": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalRecoilTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalReturnTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "PowerShoot": 0.0,
+        "PowerTick": 0.0
+      }
+    },
+    "RecoilADS": {
+      "Type": "Recoil",
+      "Values": {
+        "HorizontalBase": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalSpread": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalReturn": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalRecoilTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalReturnTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalBase": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalSpread": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalReturn": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalRecoilTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalReturnTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "PowerShoot": 0.0,
+        "PowerTick": 0.0
+      }
+    },
+    "RecoilSneak": {
+      "Type": "Recoil",
+      "Values": {
+        "HorizontalBase": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalSpread": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalReturn": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalRecoilTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalReturnTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalBase": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalSpread": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalReturn": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalRecoilTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalReturnTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "PowerShoot": 0.0,
+        "PowerTick": 0.0
+      }
+    },
+    "RecoilSneakADS": {
+      "Type": "Recoil",
+      "Values": {
+        "HorizontalBase": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalSpread": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalReturn": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalRecoilTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "HorizontalReturnTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalBase": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalSpread": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalReturn": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalRecoilTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "VerticalReturnTick": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "PowerShoot": 0.0,
+        "PowerTick": 0.0
+      }
+    },
+    "SoundShoot": {
+      "Type": "Sound",
+      "Values": {
+        "Name": "sample",
+        "Range": 50.0,
+        "Volume": 1.0,
+        "Pitch": 1.0,
+        "UseDecay": true,
+        "UseDelay": false
+      }
+    },
+    "SoundReload": {
+      "Type": "Sound",
+      "Values": {
+        "Name": "sample",
+        "Range": 50.0,
+        "Volume": 1.0,
+        "Pitch": 1.0,
+        "UseDecay": true,
+        "UseDelay": false
+      }
+    },
+    "Range": 500.0,
+    "BulletPower": 1.0,
+    "ShootCount": 1,
+    "ArmorPenetration": 1.0,
+    "HeadMultiplier": 2.0,
+    "DamagePlayer": {
+      "Keys": [
+        {
+          "Key": 0.0,
+          "Value": 0.0
+        },
+        {
+          "Key": 1.0,
+          "Value": 10.0
+        }
+      ]
+    },
+    "DamageLiving": {
+      "Keys": [
+        {
+          "Key": 0.0,
+          "Value": 0.0
+        },
+        {
+          "Key": 1.0,
+          "Value": 10.0
+        }
+      ]
+    },
+    "DamageTank": {
+      "Keys": [
+        {
+          "Key": 0.0,
+          "Value": 0.0
+        },
+        {
+          "Key": 1.0,
+          "Value": 10.0
+        }
+      ]
+    },
+    "DamageAir": {
+      "Keys": [
+        {
+          "Key": 0.0,
+          "Value": 0.0
+        },
+        {
+          "Key": 1.0,
+          "Value": 10.0
+        }
+      ]
+    },
+    "KnockBackPlayer": {
+      "Keys": [
+        {
+          "Key": 0.0,
+          "Value": 0.0
+        },
+        {
+          "Key": 1.0,
+          "Value": 10.0
+        }
+      ]
+    },
+    "KnockBackLiving": {
+      "Keys": [
+        {
+          "Key": 0.0,
+          "Value": 0.0
+        },
+        {
+          "Key": 1.0,
+          "Value": 10.0
+        }
+      ]
+    },
+    "KnockBackTank": {
+      "Keys": [
+        {
+          "Key": 0.0,
+          "Value": 0.0
+        },
+        {
+          "Key": 1.0,
+          "Value": 10.0
+        }
+      ]
+    },
+    "KnockBackAir": {
+      "Keys": [
+        {
+          "Key": 0.0,
+          "Value": 0.0
+        },
+        {
+          "Key": 1.0,
+          "Value": 10.0
+        }
+      ]
+    },
+    "UseExplosion": false,
+    "FuzeSensitivity": 10.0,
+    "ProximitySafeRange": 0.0,
+    "ProximityRange": 0.0,
+    "Explosion": {
+      "Type": "Explosion",
+      "Values": {
+        "Sound": {
+          "Type": "Sound",
+          "Values": {
+            "Name": "sample",
+            "Range": 50.0,
+            "Volume": 1.0,
+            "Pitch": 1.0,
+            "UseDecay": true,
+            "UseDelay": false
+          }
+        },
+        "Range": 0.0,
+        "DamagePlayer": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageLiving": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageTank": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageAir": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackPlayer": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackLiving": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackTank": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackAir": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        }
+      }
+    },
+    "ExplosionHitGround": {
+      "Type": "Explosion",
+      "Values": {
+        "Sound": {
+          "Type": "Sound",
+          "Values": {
+            "Name": "sample",
+            "Range": 50.0,
+            "Volume": 1.0,
+            "Pitch": 1.0,
+            "UseDecay": true,
+            "UseDelay": false
+          }
+        },
+        "Range": 0.0,
+        "DamagePlayer": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageLiving": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageTank": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageAir": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackPlayer": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackLiving": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackTank": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackAir": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        }
+      }
+    },
+    "ExplosionHitEntity": {
+      "Type": "Explosion",
+      "Values": {
+        "Sound": {
+          "Type": "Sound",
+          "Values": {
+            "Name": "sample",
+            "Range": 50.0,
+            "Volume": 1.0,
+            "Pitch": 1.0,
+            "UseDecay": true,
+            "UseDelay": false
+          }
+        },
+        "Range": 0.0,
+        "DamagePlayer": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageLiving": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageTank": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageAir": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackPlayer": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackLiving": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackTank": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackAir": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        }
+      }
+    },
+    "ExplosionTimeout": {
+      "Type": "Explosion",
+      "Values": {
+        "Sound": {
+          "Type": "Sound",
+          "Values": {
+            "Name": "sample",
+            "Range": 50.0,
+            "Volume": 1.0,
+            "Pitch": 1.0,
+            "UseDecay": true,
+            "UseDelay": false
+          }
+        },
+        "Range": 0.0,
+        "DamagePlayer": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageLiving": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageTank": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "DamageAir": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackPlayer": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackLiving": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackTank": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        },
+        "KnockBackAir": {
+          "Keys": [
+            {
+              "Key": 0.0,
+              "Value": 0.0
+            },
+            {
+              "Key": 1.0,
+              "Value": 10.0
+            }
+          ]
+        }
+      }
+    },
+    "SoundHit": {
+      "Type": "Sound",
+      "Values": {
+        "Name": "sample",
+        "Range": 50.0,
+        "Volume": 1.0,
+        "Pitch": 1.0,
+        "UseDecay": true,
+        "UseDelay": false
+      }
+    },
+    "SoundHitEntity": {
+      "Type": "Sound",
+      "Values": {
+        "Name": "sample",
+        "Range": 50.0,
+        "Volume": 1.0,
+        "Pitch": 1.0,
+        "UseDecay": true,
+        "UseDelay": false
+      }
+    },
+    "SoundPassing": {
+      "Type": "Sound",
+      "Values": {
+        "Name": "sample",
+        "Range": 50.0,
+        "Volume": 1.0,
+        "Pitch": 1.0,
+        "UseDecay": true,
+        "UseDelay": false
+      }
+    },
+    "ThroughBlock": [
+      null
+    ],
+    "ThroughEntity": [
+      null
+    ]
+  }
+}

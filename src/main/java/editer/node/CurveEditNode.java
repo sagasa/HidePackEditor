@@ -15,17 +15,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import types.base.DataBase;
-import types.base.DataBase.ValueEntry;
 import types.base.DataPath;
 import types.value.Curve;
 import types.value.Curve.CurveKey;
 
 /** Curve編集 */
-public class CurveEditNode extends EditNode {
+public class CurveEditNode extends Pane {
 
 	private ListView<CurveKey> listview;
 	private String SearchKey = null;
+
+	private SimpleObjectProperty editerProperty;
 
 	@SuppressWarnings("unchecked")
 	private CurveKey[] getArray() {
@@ -43,7 +45,6 @@ public class CurveEditNode extends EditNode {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <F> CurveEditNode(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path) {
-		super(editValue, edit, path);
 		editerProperty = new SimpleObjectProperty<>();
 
 		listview = new ListView<>();
@@ -67,11 +68,12 @@ public class CurveEditNode extends EditNode {
 		text.setPrefHeight(24);
 		text.setLayoutX(5);
 		text.translateYProperty().bind(heightProperty().subtract(29));
-		label.disableProperty().bind(disable);
-		listview.disableProperty().bind(disable);
-		text.disableProperty().bind(disable);
 		this.getChildren().addAll(label, listview, text);
 		writeList();
+	}
+
+	public CurveEditNode() {
+
 	}
 
 	/** フィルターをセット */
@@ -86,19 +88,6 @@ public class CurveEditNode extends EditNode {
 		if (getArray() == null)
 			return;
 		listview.getItems().addAll(getArray());
-	}
-
-	// リストの更新だけ
-	@Override
-	protected void bind(ValueEntry<?> data) {
-		super.bind(data);
-		writeList();
-	}
-
-	@Override
-	protected void unbind(ValueEntry<?> data) {
-		super.unbind(data);
-		writeList();
 	}
 
 	/** 上下ボタンと削除ボタン付きのリストシェル */

@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import editer.HidePack;
 import editer.IDataEntity;
+import editer.node.CurveEditNode;
 import editer.node.EditPanels;
 import helper.ArrayEditor;
 import io.PackCash;
@@ -35,6 +36,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -55,10 +57,11 @@ public class RootController implements Initializable {
 	public static Stage STAGE;
 
 	public EditPanels editer;
+	public Pane curveeditor;
 
 	public TextField packSearch;
-	public ListView<PackInfo> packList;
 
+	public ListView<PackInfo> packList;
 	public TextField itemSearch;
 	public TabPane itemTab;
 	public ListView<GunData> gunList;
@@ -122,6 +125,8 @@ public class RootController implements Initializable {
 		 * clipEditer.setResizable(false); modelView.setTitle("ModelView");
 		 * modelView.show();//
 		 */
+
+		curveeditor.getChildren().add(new CurveEditNode());
 
 		write();
 
@@ -378,7 +383,7 @@ public class RootController implements Initializable {
 		magazine.put(magazine.systemName(), Operator.SET, "magazine_" + bulletNamePointer);
 		magazine.put(magazine.displayName(), Operator.SET, "New Magazine No." + bulletNamePointer);
 		magazine.getRootPack().set(HidePack.DefaultPack);
-		//GunDataは初期設定
+		// GunDataは初期設定
 		magazine.put(MagazineData.Data);
 		HidePack.MagazineList.add(magazine);
 		write();

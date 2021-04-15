@@ -56,7 +56,7 @@ public class Editer extends Application {
 //
 //		System.exit(0);
 
-		System.out.println(DataBase.getSample(GunData.class));
+		System.out.println(DataBase.getSample(GunData.class, true));
 
 		launch(arg);
 

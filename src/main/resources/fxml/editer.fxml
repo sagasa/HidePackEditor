@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import editer.node.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import editer.node.EditPanels?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
@@ -19,7 +25,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="editer.controller.RootController">
+<BorderPane id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="editer.controller.RootController">
 	<top>
 		<MenuBar BorderPane.alignment="CENTER">
 			<menus>
@@ -166,25 +172,30 @@
 						<EditPanels fx:id="editer" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" />
 					</items>
 				</SplitPane>
-				<TabPane maxWidth="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-					<tabs>
-						<Tab text="Icon">
-							<content>
-								<ListView fx:id="iconList" prefHeight="200.0" prefWidth="200.0" />
-							</content>
-						</Tab>
-						<Tab text="Sound">
-							<content>
-								<ListView fx:id="soundList" prefHeight="200.0" prefWidth="200.0" />
-							</content>
-						</Tab>
-						<Tab text="Model">
-                     <content>
-                        <ListView fx:id="modelList" prefHeight="200.0" prefWidth="200.0" />
-                     </content>
-						</Tab>
-					</tabs>
-				</TabPane>
+            <SplitPane dividerPositions="0.5" maxWidth="200.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+               <items>
+                  <Pane fx:id="curveeditor" maxHeight="200.0" prefHeight="200.0" prefWidth="200.0" />
+      				<TabPane maxWidth="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+      					<tabs>
+      						<Tab text="Icon">
+      							<content>
+      								<ListView fx:id="iconList" prefHeight="200.0" prefWidth="200.0" />
+      							</content>
+      						</Tab>
+      						<Tab text="Sound">
+      							<content>
+      								<ListView fx:id="soundList" prefHeight="200.0" prefWidth="200.0" />
+      							</content>
+      						</Tab>
+      						<Tab text="Model">
+                           <content>
+                              <ListView fx:id="modelList" prefHeight="200.0" prefWidth="200.0" />
+                           </content>
+      						</Tab>
+      					</tabs>
+      				</TabPane>
+               </items>
+            </SplitPane>
 			</items>
 		</SplitPane>
 	</center>
