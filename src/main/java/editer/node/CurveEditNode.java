@@ -2,12 +2,12 @@ package editer.node;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import editer.node.EditPanels.EditType;
 import helper.ArrayEditor;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -16,7 +16,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import types.base.DataBase;
+import types.base.DataBase.ValueEntry;
 import types.base.DataPath;
 import types.value.Curve;
 import types.value.Curve.CurveKey;
@@ -27,31 +29,66 @@ public class CurveEditNode extends Pane {
 	private ListView<CurveKey> listview;
 	private String SearchKey = null;
 
-	private SimpleObjectProperty editerProperty;
+	private SimpleObjectProperty<ValueEntry<Curve>> editerProperty = new SimpleObjectProperty<>();
 
-	@SuppressWarnings("unchecked")
 	private CurveKey[] getArray() {
-		return ((Curve) editerProperty.getValue()).Keys;
+		if (editerProperty == null)
+			return null;
+		ValueEntry<Curve> curve = editerProperty.getValue();
+		return curve == null ? null : curve.getValue().Keys;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void setArray(CurveKey[] value) {
-		((Property<CurveKey[]>) editerProperty).setValue(value);
-		;
+		Curve curve = editerProperty.getValue().getValue().clone();
+		curve.Keys = value;
+		editerProperty.getValue().ValueProp.set(curve);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void setEdit(DataBase data, DataPath path) {
+		if (data == null) {
+			editerProperty.unbind();
+			editerProperty.setValue(null);
+		} else
+			editerProperty.bind((ObservableObjectValue) data.getEntryProp(path));
 	}
 
 	/**
 	 * @param fromList 母集団
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <F> CurveEditNode(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path) {
-		editerProperty = new SimpleObjectProperty<>();
+	public CurveEditNode() {
+		Canvas canvas = new Canvas(200, 200);
+		GraphicsContext g = canvas.getGraphicsContext2D();
+
+		editerProperty.addListener((v, ov, nv) -> {
+			if (nv != null) {
+
+				g.setStroke(Color.RED);
+				CurveKey[] keys = nv.getValue().Keys;
+				float minX = keys[0].Key;
+				float maxX = keys[keys.length - 1].Key;
+				float minY = Float.MAX_VALUE, maxY = -Float.MAX_VALUE;
+				for (CurveKey key : keys) {
+					minY = Math.min(minY, key.Value);
+					maxY = Math.max(maxY, key.Value);
+				}
+				double[] resX = new double[keys.length];
+				double[] resY = new double[keys.length];
+				for (int i = 0; i < keys.length; i++) {
+					CurveKey key = keys[i];
+					resX[i] = (key.Key - minX) / maxX - minX;
+				}
+				g.strokePolyline(new double[] { 50, 100, 350 }, new double[] { 150, 200, 150 }, 3);
+			}
+
+		});
 
 		listview = new ListView<>();
 
 		this.setPrefHeight(200);
+		this.setPrefWidth(200);
 
-		Label label = new Label(Name);
+		Label label = new Label("TestName");
 		label.setAlignment(Pos.CENTER);
 		TextField text = new TextField();
 		text.textProperty().addListener((value, oldvalue, newvalue) -> setSearch(newvalue));
@@ -68,12 +105,8 @@ public class CurveEditNode extends Pane {
 		text.setPrefHeight(24);
 		text.setLayoutX(5);
 		text.translateYProperty().bind(heightProperty().subtract(29));
-		this.getChildren().addAll(label, listview, text);
+		this.getChildren().addAll(label, listview, text, canvas);
 		writeList();
-	}
-
-	public CurveEditNode() {
-
 	}
 
 	/** フィルターをセット */
