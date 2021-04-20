@@ -30,6 +30,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.DepthTest;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -141,6 +142,36 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		}
 	};
 
+	/** 編集ボタンだけ */
+	public static EditNode editCurve(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path,
+			CurveEditPane curveEditPane) {
+		EditNode res = new EditNode(editValue, edit, path);
+		res.Type = NodeType.Curve;
+
+		Label label = new Label(res.Name + ":");
+		label.setAlignment(Pos.CENTER_RIGHT);
+		Button button = new Button("Edit");
+		res.editerProperty = new SimpleObjectProperty<>();
+		res.textFieldWidth.bind(res.heightProperty());
+		button.prefHeightProperty().bind(res.heightProperty());
+		label.prefHeightProperty().bind(res.heightProperty());
+		label.prefWidthProperty().bind(res.labelWidth);
+		button.setOnAction((e)->{
+			curveEditPane.setEdit(editValue.get(), path);
+		});
+		leftJustified(res.propertyEdit, 0, label);
+		center(label, 2, button);
+		right(res, 0, button);
+		res.getChildren().addAll(label, button);
+
+		// 有効化切り替え
+		label.disableProperty().bind(res.disable);
+		button.disableProperty().bind(res.disable);
+
+		res.build();
+		return res;
+	}
+
 	public static EditNode editNumber(ObservableObjectValue<? extends DataBase> editValue, EditType edit,
 			DataPath path) {
 		EditNode res = new EditNode(editValue, edit, path);
@@ -180,22 +211,22 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	/**
 	 * 左詰めで配置 右側のtranslateXにバインド
 	 */
-	private void leftJustified(Region left, int gap, Region right) {
+	private static void leftJustified(Region left, int gap, Region right) {
 		right.translateXProperty().bind(left.widthProperty().add(left.translateXProperty()).add(gap));
 	}
 
 	/** 右詰めで配置 左側のtranslateXにバインド */
-	private void rightJustified(Region left, int gap, Region right) {
+	private static void rightJustified(Region left, int gap, Region right) {
 		left.translateXProperty().bind(right.translateXProperty().subtract(left.widthProperty()).subtract(gap));
 	}
 
 	/** 右端に配置 右側のtranslateXにバインド */
-	private void right(Region parent, int gap, Region right) {
+	private static void right(Region parent, int gap, Region right) {
 		right.translateXProperty().bind(parent.widthProperty().subtract(right.widthProperty()).subtract(gap));
 	}
 
 	/** 中央に配置 長さを決定 */
-	private void center(Region center, int gap, Region right) {
+	private static void center(Region center, int gap, Region right) {
 		center.prefWidthProperty().bind(right.translateXProperty().subtract(center.translateXProperty()).subtract(gap));
 	}
 
@@ -393,7 +424,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 			label.setAlignment(Pos.CENTER_RIGHT);
 			CheckBox check = new CheckBox();
 			editerProperty = check.selectedProperty();
-			textFieldWidth.bind(heightProperty());
+			textFieldWidth.bind(check.widthProperty());
 			check.prefWidthProperty().bind(this.heightProperty());
 			check.prefHeightProperty().bind(this.heightProperty());
 			label.prefHeightProperty().bind(this.heightProperty());
@@ -463,6 +494,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	}
 
 	private enum NodeType {
-		String, StringFromList, Integer, Float, Boolean
+		String, StringFromList, Integer, Float, Boolean, Curve
 	}
+
 }

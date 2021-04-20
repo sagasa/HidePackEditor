@@ -83,6 +83,11 @@ public class Curve implements Cloneable {
 		}
 
 		@Override
+		public String toString() {
+			return String.format("key=%s,Value=%s", Key,Value);
+		}
+
+		@Override
 		protected CurveKey clone() {
 			try {
 				return (CurveKey) super.clone();

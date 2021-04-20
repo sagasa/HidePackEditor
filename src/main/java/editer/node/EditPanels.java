@@ -42,10 +42,13 @@ import types.items.MagazineData;
 /** 編集パネルのルート */
 public class EditPanels extends Pane {
 
+	/** 表示位置は別 */
+	public final CurveEditPane curveEditPane = new CurveEditPane();
+
 	/** 編集パネルの対象 */
 	public enum EditType {
-	NamedData(NamedData.class), Item(ItemData.class), Gun(GunData.class),
-	Magazine(MagazineData.class, (cons, data) -> cons.accept(Gun, data.get(MagazineData.Data, null)));
+		NamedData(NamedData.class), Item(ItemData.class), Gun(GunData.class),
+		Magazine(MagazineData.class, (cons, data) -> cons.accept(Gun, data.get(MagazineData.Data, null)));
 
 		/** 判別用の型 */
 		public final Class<? extends DataBase> Clazz;
@@ -299,6 +302,8 @@ public class EditPanels extends Pane {
 					root.getChildren().add(EditNode.editBoolean(editValue, type, fieldPath));
 				} else if (EditHelper.isNumber(clazz, fieldPath)) {
 					root.getChildren().add(EditNode.editNumber(editValue, type, fieldPath));
+				} else if (EditHelper.isCurve(clazz, fieldPath)) {
+					root.getChildren().add(EditNode.editCurve(editValue, type, fieldPath,curveEditPane));
 				}
 			}
 		}

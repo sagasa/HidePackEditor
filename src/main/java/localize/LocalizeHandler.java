@@ -155,7 +155,7 @@ public class LocalizeHandler {
 	}
 
 	private static String toName(String unlocalizedName) {
-		System.out.println(unlocalizedName);
+		//System.out.println(unlocalizedName);
 		return getLocalized(unlocalizedName).split(":", 2)[0];
 	}
 

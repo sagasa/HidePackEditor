@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 import editer.HidePack;
 import editer.IDataEntity;
-import editer.node.CurveEditNode;
 import editer.node.EditPanels;
 import helper.ArrayEditor;
 import io.PackCash;
@@ -126,7 +125,7 @@ public class RootController implements Initializable {
 		 * modelView.show();//
 		 */
 
-		curveeditor.getChildren().add(new CurveEditNode());
+		curveeditor.getChildren().add(editer.curveEditPane);
 
 		write();
 

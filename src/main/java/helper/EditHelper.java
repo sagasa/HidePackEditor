@@ -9,6 +9,7 @@ import types.base.DataBase.DataEntry;
 import types.base.DataBase.ValueEntry;
 import types.base.DataPath;
 import types.base.Info;
+import types.value.Curve;
 
 /** リフレクションを利用したTypes編集ヘルパー */
 public class EditHelper {
@@ -167,6 +168,11 @@ public class EditHelper {
 	/** プロパティとフィールドの型チェック */
 	public static boolean isNumber(Class<? extends DataBase> clazz, DataPath type) {
 		return isFloat(clazz, type) || isInteger(clazz, type);
+	}
+
+	/** プロパティとフィールドの型チェック */
+	public static boolean isCurve(Class<? extends DataBase> clazz, DataPath type) {
+		return getType(clazz, type).isAssignableFrom(Curve.class);
 	}
 
 	/** プロパティとフィールドの型チェック */
