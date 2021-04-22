@@ -1,6 +1,7 @@
 package editer.node;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -13,9 +14,13 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import javafx.util.StringConverter;
+import javafx.util.converter.FloatStringConverter;
 import types.base.DataBase;
 import types.base.DataBase.ValueEntry;
 import types.base.DataPath;
@@ -235,12 +240,37 @@ public class CurveEditPane extends Pane {
 					setArray(array);
 				}
 				updateState(getCurve());
-				isDrag=false;
+				isDrag = false;
 			}
 		});
 
 		this.setPrefHeight(200);
 		this.setPrefWidth(200);
+
+		TextField text = new TextField();
+		// 入力を数値のみに
+		// FloatかIntegerか判別
+
+		// Floatなら
+		TextFormatter<Number> formatter = new TextFormatter<>(change -> {
+
+			String str = change.getText();
+			System.out.println(str.indexOf(".") + " " + str.lastIndexOf(".") + " " + str);
+			// 小数点
+			if (str.indexOf(".") != str.lastIndexOf(".")) {
+				str = str.substring(0, str.lastIndexOf("."));
+			}
+
+			String newStr = FloatPattern.matcher(str).replaceAll("");
+			int diffcount = change.getText().length() - newStr.length();
+			change.setAnchor(change.getAnchor() - diffcount);
+			change.setCaretPosition(change.getCaretPosition() - diffcount);
+			change.setText(newStr);
+			return change;
+		});
+		StringConverter<?> converter = new FloatStringConverter();
+
+		text.setTextFormatter(formatter);
 
 		Label label = new Label("TestName");
 		label.setAlignment(Pos.CENTER);
@@ -248,8 +278,10 @@ public class CurveEditPane extends Pane {
 		label.setLayoutY(2);
 		label.setPrefHeight(20);
 		// label.prefWidthProperty().bind(this.widthProperty().subtract(editBottonWidth.multiply(2)));
-		this.getChildren().addAll(label, canvas);
+		this.getChildren().addAll(label, canvas, text);
 	}
+
+	private static final Pattern FloatPattern = Pattern.compile("[^0-9\\.-]+");
 
 	private static boolean isContact(double d0, double d1) {
 		return Math.abs(d0 - d1) < 4;

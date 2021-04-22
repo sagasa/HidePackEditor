@@ -156,17 +156,32 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		button.prefHeightProperty().bind(res.heightProperty());
 		label.prefHeightProperty().bind(res.heightProperty());
 		label.prefWidthProperty().bind(res.labelWidth);
-		button.setOnAction((e)->{
+		button.setOnAction((e) -> {
 			curveEditPane.setEdit(editValue.get(), path);
 		});
+
+		ChoiceBox<Operator> operator = new ChoiceBox<>();
+		operator.getItems().addAll(Operator.getAllow(EditHelper.getDataEntry(res.Clazz, res.Path).Default.getClass()));
+		operator.getSelectionModel().selectedItemProperty()
+				.addListener((v, ov, nv) -> res.operatorProperty.setValue(nv));
+		res.operatorProperty.addListener((v, ov, nv) -> operator.getSelectionModel().select(nv));
+
+		operator.getSelectionModel().select(0);
+		operator.prefHeightProperty().bind(res.heightProperty());
+		operator.setPrefWidth(65);
+		operator.setBackground(WhiteBack);
+		operator.setStyle("-fx-font: 7pt 'Courier New'");
+
 		leftJustified(res.propertyEdit, 0, label);
 		center(label, 2, button);
-		right(res, 0, button);
-		res.getChildren().addAll(label, button);
+		rightJustified(button, 0, operator);
+		right(res, 0, operator);
+		res.getChildren().addAll(label, button, operator);
 
 		// 有効化切り替え
 		label.disableProperty().bind(res.disable);
 		button.disableProperty().bind(res.disable);
+		operator.disableProperty().bind(res.disable);
 
 		res.build();
 		return res;
