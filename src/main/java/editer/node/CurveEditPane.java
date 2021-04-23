@@ -8,6 +8,7 @@ import org.apache.commons.lang.ArrayUtils;
 import helper.ArrayEditor;
 import helper.EditHelper;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -18,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
@@ -107,7 +109,7 @@ public class CurveEditPane extends Pane {
 
 	GraphicsContext g;
 
-	private int selectIndex = -1;
+	private SimpleIntegerProperty selectIndex = new SimpleIntegerProperty(-1);
 	private double[] posX = ArrayUtils.EMPTY_DOUBLE_ARRAY;
 	private double[] posY = ArrayUtils.EMPTY_DOUBLE_ARRAY;
 
@@ -156,10 +158,16 @@ public class CurveEditPane extends Pane {
 		g.strokePolyline(posX, posY, posX.length);
 		// 点描画
 		for (int i = 0; i < posX.length; i++) {
-			if (selectIndex == i) {
+			if (selectIndex.get() == i) {
 				g.setFill(Color.BLUE);
-				g.setTextAlign(TextAlignment.LEFT);
-				g.setTextBaseline(VPos.TOP);
+				if (posX[i] < Width / 2)
+					g.setTextAlign(TextAlignment.LEFT);
+				else
+					g.setTextAlign(TextAlignment.RIGHT);
+				if (posY[i] < Top + Height / 2)
+					g.setTextBaseline(VPos.TOP);
+				else
+					g.setTextBaseline(VPos.BOTTOM);
 				g.fillText(String.format("(%.2f,%.2f)", keys[i].Key, keys[i].Value), posX[i], posY[i]);
 				g.setFill(Color.LIGHTBLUE);
 			} else
@@ -175,6 +183,12 @@ public class CurveEditPane extends Pane {
 		g.setTextAlign(TextAlignment.RIGHT);
 		g.setTextBaseline(VPos.BOTTOM);
 		g.fillText(String.format("(%.2f,%.2f)", maxX, maxY), Width, Top);
+		// 入力
+		if (selectIndex.get() != -1) {
+			keyField.setText(converter.toString(keys[selectIndex.get()].Key));
+			valueField.setText(converter.toString(keys[selectIndex.get()].Value));
+		}
+
 	}
 
 	private Curve getCurve() {
@@ -185,6 +199,11 @@ public class CurveEditPane extends Pane {
 
 	/** 移動されたらTrue */
 	private boolean isDrag = false;
+	TextField keyField;
+	TextField valueField;
+
+	StringConverter<Float> converter = new FloatStringConverter();
+	Label label;
 
 	public CurveEditPane() {
 		Canvas canvas = new Canvas(Width, 200);
@@ -193,50 +212,50 @@ public class CurveEditPane extends Pane {
 		editerProperty.addListener((v, ov, nv) -> {
 			if (nv != null) {
 				updateState(nv);
-
+				System.out.println("Change ditect");
 			}
 		});
 
 		canvas.setOnMousePressed(e -> {
-			selectIndex = getIndex(e.getX(), e.getY());
-			if (selectIndex == -1 && isOnLine(e.getX(), e.getY())) {
+			selectIndex.set(getIndex(e.getX(), e.getY()));
+			if (selectIndex.get() == -1 && isOnLine(e.getX(), e.getY())) {
 				CurveKey[] array = getArray();
 				if (array != null) {
 					array = ArrayEditor.addToArray(array, new CurveKey(getValueX(e.getX()), getValueY(e.getY())));
 					Arrays.sort(array, (a, b) -> Float.compare(a.Key, b.Key));
 					setArray(array);
-					selectIndex = getIndex(e.getX(), e.getY());
+					selectIndex.set(getIndex(e.getX(), e.getY()));
 				}
 			}
 			draw(getCurve());
 			System.out.println(selectIndex);
 		});
 		canvas.setOnMouseDragged(e -> {
-			if (selectIndex != -1) {
+			final int index = selectIndex.get();
+			if (index != -1) {
 				// 下限
-				double x = Math.max(e.getX(), selectIndex == 0 ? e.getX() : posX[selectIndex - 1]);
+				double x = Math.max(e.getX(), index == 0 ? e.getX() : posX[index - 1]);
 				// 上限
-				x = Math.min(x, selectIndex == posX.length - 1 ? x : posX[selectIndex + 1]);
-				System.out.println(e.getX() + " " + e.getY() + " " + isOnLine(x, e.getY()));
-				getArray()[selectIndex] = new CurveKey(getValueX(x), getValueY(e.getY()));
+				x = Math.min(x, index == posX.length - 1 ? x : posX[index + 1]);
+				getArray()[index] = new CurveKey(getValueX(x), getValueY(e.getY()));
 				isDrag = true;
 				draw(getCurve());
 			}
 		});
 		canvas.setOnMouseReleased(e -> {
 			if (isDrag) {
+				final int index = selectIndex.get();
 				// 近すぎたら消す
 				// 上側
-				if (selectIndex != posX.length - 1 && isContact(posX[selectIndex], posX[selectIndex + 1])
-						&& isContact(posY[selectIndex], posY[selectIndex + 1])) {
+				if (index != posX.length - 1 && isContact(posX[index], posX[index + 1])
+						&& isContact(posY[index], posY[index + 1])) {
 					CurveKey[] array = getArray();
-					array = (CurveKey[]) ArrayUtils.remove(array, selectIndex);
+					array = (CurveKey[]) ArrayUtils.remove(array, index);
 					setArray(array);
 				}
-				if (selectIndex != 0 && isContact(posX[selectIndex], posX[selectIndex - 1])
-						&& isContact(posY[selectIndex], posY[selectIndex - 1])) {
+				if (index != 0 && isContact(posX[index], posX[index - 1]) && isContact(posY[index], posY[index - 1])) {
 					CurveKey[] array = getArray();
-					array = (CurveKey[]) ArrayUtils.remove(array, selectIndex);
+					array = (CurveKey[]) ArrayUtils.remove(array, index);
 					setArray(array);
 				}
 				updateState(getCurve());
@@ -247,38 +266,95 @@ public class CurveEditPane extends Pane {
 		this.setPrefHeight(200);
 		this.setPrefWidth(200);
 
-		TextField text = new TextField();
 		// 入力を数値のみに
 		// FloatかIntegerか判別
 
-		// Floatなら
-		TextFormatter<Number> formatter = new TextFormatter<>(change -> {
+		keyField = initTextField();
+		valueField = initTextField();
+		keyField.translateXProperty().bind(widthProperty().divide(2).subtract(keyField.widthProperty()));
+		valueField.translateXProperty().bind(widthProperty().subtract(valueField.widthProperty()));
 
-			String str = change.getText();
-			System.out.println(str.indexOf(".") + " " + str.lastIndexOf(".") + " " + str);
-			// 小数点
-			if (str.indexOf(".") != str.lastIndexOf(".")) {
-				str = str.substring(0, str.lastIndexOf("."));
+		keyField.textProperty().addListener((v, ov, nv) -> {
+			final int index = selectIndex.get();
+			if (index != -1 && !nv.equals(ov)) {
+				CurveKey[] array = getArray();
+				float x = Math.max(converter.fromString(nv), index == 0 ? -Float.MAX_VALUE : array[index - 1].Key);
+				x = Math.min(x, index == posX.length - 1 ? Float.MAX_VALUE : array[index + 1].Key);
+				array[index] = new CurveKey(x, array[index].Value);
+				updateState(getCurve());
 			}
-
-			String newStr = FloatPattern.matcher(str).replaceAll("");
-			int diffcount = change.getText().length() - newStr.length();
-			change.setAnchor(change.getAnchor() - diffcount);
-			change.setCaretPosition(change.getCaretPosition() - diffcount);
-			change.setText(newStr);
-			return change;
 		});
-		StringConverter<?> converter = new FloatStringConverter();
+		valueField.textProperty().addListener((v, ov, nv) -> {
+			final int index = selectIndex.get();
+			if (index != -1 && !nv.equals(ov)) {
+				CurveKey[] array = getArray();
+				array[index] = new CurveKey(array[index].Key, converter.fromString(nv));
+				updateState(getCurve());
+			}
+		});
 
-		text.setTextFormatter(formatter);
-
-		Label label = new Label("TestName");
+		label = new Label("NotSet");
 		label.setAlignment(Pos.CENTER);
 		label.translateXProperty().set(20);
 		label.setLayoutY(2);
 		label.setPrefHeight(20);
 		// label.prefWidthProperty().bind(this.widthProperty().subtract(editBottonWidth.multiply(2)));
-		this.getChildren().addAll(label, canvas, text);
+		this.getChildren().addAll(label, canvas, keyField, valueField);
+	}
+
+	private TextField initTextField() {
+		TextField text = new TextField();
+		text.setTextFormatter(getTextFormatter());
+		text.translateYProperty().bind(heightProperty().subtract(text.heightProperty()));
+		text.setPrefWidth(50);
+		text.setAlignment(Pos.CENTER);
+		text.setFont(Font.font(10));
+		text.disableProperty().bind(selectIndex.isEqualTo(-1));
+		return text;
+	}
+
+	private static TextFormatter<Number> getTextFormatter() {
+		return new TextFormatter<>(change -> {
+			String str = FloatPattern.matcher(change.getText()).replaceAll("");
+			String newstr = change.getControlNewText();
+			String oldstr = newstr.replaceFirst(Pattern.quote(str), "");
+			// 小数点
+			str = charLimit(str, ".", 1 - charCount(oldstr, "."));
+			// -記号
+			if (oldstr.contains("-") || newstr.contains("-") && !newstr.startsWith("-")) {
+				str = str.replaceAll("-", "");
+			}
+			int diffcount = change.getText().length() - str.length();
+			System.out.println(diffcount);
+			// change.setAnchor(change.getAnchor() - diffcount);
+			// change.setCaretPosition(change.getCaretPosition() - diffcount);
+			change.setText(str);
+			return change;
+		});
+	}
+
+	private static int charCount(String str, String key) {
+		int i = 0;
+		int count = 0;
+		while ((i = str.indexOf(key, i)) != -1) {
+			count++;
+			i++;
+		}
+		return count;
+	}
+
+	private static String charLimit(String str, String key, int count) {
+		StringBuilder sb = new StringBuilder();
+		String regex = Pattern.quote(key);
+		String[] array = str.split(regex);
+		for (String s : array) {
+			sb.append(s);
+			if (0 < count && 1 < array.length) {
+				sb.append(key);
+				count--;
+			}
+		}
+		return sb.toString();
 	}
 
 	private static final Pattern FloatPattern = Pattern.compile("[^0-9\\.-]+");

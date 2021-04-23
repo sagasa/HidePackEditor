@@ -32,7 +32,7 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import resources.Model;
-import types.IEditData;
+import types.base.NamedData;
 import types.model.Bone;
 import types.model.HideModel;
 import types.model.ModelSelector;
@@ -42,7 +42,7 @@ public class ModelView extends Pane {
 	private Group rootGroup = new Group();
 
 	/**編集中のオブジェクト*/
-	ObjectProperty<IEditData> editValue;
+	ObjectProperty<NamedData> editValue;
 
 	// ビュー設定
 	private BooleanProperty showLine = new SimpleBooleanProperty(true);
@@ -59,7 +59,7 @@ public class ModelView extends Pane {
 		return (HideModel) editValue.get();
 	}
 
-	public ModelView(ObjectProperty<IEditData> editvalue) {
+	public ModelView(ObjectProperty<NamedData> editvalue) {
 		this.editValue = editvalue;
 		PerspectiveCamera camera = new PerspectiveCamera(false);
 		camera.setFieldOfView(70.0);
@@ -164,12 +164,14 @@ public class ModelView extends Pane {
 	private boolean addPartView(String partName, StringProperty nowselect, List<Transform> moves,
 			BooleanProperty listselect) {
 		Model model = getModel().getModel().get();
-		if (!model.modelParts.containsKey(partName))
-			return false;
+
+
+//		if (!model.modelParts.containsKey(partName))
+//			return false;
 		TriangleMesh mesh = new TriangleMesh();
-		mesh.getPoints().addAll(model.vertArray);
-		mesh.getTexCoords().addAll(model.texArray);
-		mesh.getFaces().addAll(model.modelParts.get(partName));
+//		mesh.getPoints().addAll(model.vertArray);
+//		mesh.getTexCoords().addAll(model.texArray);
+//		mesh.getFaces().addAll(model.modelParts.get(partName));
 
 		Image texture = SwingFXUtils.toFXImage(HidePack.getTexture(getModel().textureName).Image, null);
 

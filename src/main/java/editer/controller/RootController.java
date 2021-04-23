@@ -11,6 +11,7 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import editer.Editer;
 import editer.HidePack;
 import editer.IDataEntity;
 import editer.node.EditPanels;
@@ -244,10 +245,14 @@ public class RootController implements Initializable {
 	// ========メニュー操作========
 	public void openPack() {
 		FileChooser fxtest = new FileChooser();
-		fxtest.setInitialDirectory(new File("./"));
+		File dir = new File(Editer.config.openDir);
+		if (!dir.exists()||!dir.isDirectory())
+			dir = new File("./");
+		fxtest.setInitialDirectory(dir);
 		fxtest.getExtensionFilters().add(new ExtensionFilter("zip", "*.zip"));
 		File file = fxtest.showOpenDialog(STAGE);
 		if (file != null) {
+			Editer.config.openDir = file.getParent();
 			PackCash pack = PackIO.readPack(file);
 			// パックが1つなら
 			if (HidePack.isNewPack) {

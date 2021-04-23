@@ -15,14 +15,14 @@ public class PackChecker {
 	public static List<NameD> checkNames() {
 		Map<String, List<String>> map = new HashMap<>();
 		HidePack.GunList.forEach(data -> {
-			if (!map.containsKey(data.ITEM_SHORTNAME))
-				map.put(data.ITEM_SHORTNAME, new ArrayList<>());
-			map.get(data.ITEM_SHORTNAME).add("Gun " + data.ITEM_SHORTNAME);
+			if (!map.containsKey(data.getSystemName()))
+				map.put(data.getSystemName(), new ArrayList<>());
+			map.get(data.getSystemName()).add("Gun " + data.getSystemName());
 		});
 		HidePack.MagazineList.forEach(data -> {
-			if (!map.containsKey(data.ITEM_SHORTNAME))
-				map.put(data.ITEM_SHORTNAME, new ArrayList<>());
-			map.get(data.ITEM_SHORTNAME).add("Gun " + data.ITEM_SHORTNAME);
+			if (!map.containsKey(data.getSystemName()))
+				map.put(data.getSystemName(), new ArrayList<>());
+			map.get(data.getSystemName()).add("Gun " + data.getSystemName());
 		});
 		return null;
 	}

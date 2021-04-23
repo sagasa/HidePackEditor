@@ -3,14 +3,13 @@ package types.model;
 import java.util.Collections;
 import java.util.List;
 
-import types.Info;
 import types.base.DataBase;
 import types.model.Bone.ModelTransforms;
 import types.model.HideModel.Vec3f;
 
 /** アニメーション用 */
 public class AnimationKey extends DataBase implements Comparable<AnimationKey> {
-	@Info(Min=0f,Max=1f,Scale="0.05")
+
 	public float key = 0;
 
 	public Vec3f translate = new Vec3f();

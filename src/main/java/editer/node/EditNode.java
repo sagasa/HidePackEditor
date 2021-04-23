@@ -260,7 +260,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		value.addListener(this);
 
 		// サイズのプロパティの定義
-		this.setPrefSize(250, 24);
+		this.setPrefSize(300, 24);
 		labelWidth = widthProperty().subtract(textFieldWidth).subtract(20);
 
 		// プロパティ編集
@@ -294,6 +294,14 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 			}
 		});
 		getChildren().add(propertyEdit);
+
+		ImageView clipDelete = new ImageView("/icon/clipPut.png");
+
+		Label label = new Label();
+		label.setPrefSize(20, 24);
+		label.setAlignment(Pos.CENTER);
+		label.setGraphic(clipDelete);
+		getChildren().add(label);
 	}
 
 	/** このエントリで編集する型 */

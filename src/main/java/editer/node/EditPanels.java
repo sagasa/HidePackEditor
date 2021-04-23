@@ -125,6 +125,8 @@ public class EditPanels extends Pane {
 
 	/** エディタの内容設定 */
 	public void setEditValue(DataBase data) {
+		for (ObjectProperty<? extends DataBase> prop : editModes.values())
+			prop.set(null);
 		EditType.addValue(data, this::addEditValue);
 	}
 
@@ -166,7 +168,7 @@ public class EditPanels extends Pane {
 
 		// sound
 		TabPane sound = new TabPane();
-		sound.setMaxWidth(250);
+		sound.setMaxWidth(300);
 		sound.getTabs().addAll(makeTab("Shoot", makeSoundEditer(type, DataPath.of(GunData.SoundShoot))),
 				makeTab("Reload", makeSoundEditer(type, DataPath.of(GunData.SoundReload))),
 				makeTab("HitEntity", makeSoundEditer(type, DataPath.of(GunData.SoundHitEntity))),
@@ -176,7 +178,7 @@ public class EditPanels extends Pane {
 
 		// recoil
 		TabPane recoil = new TabPane();
-		recoil.setMaxWidth(250);
+		recoil.setMaxWidth(300);
 		recoil.getTabs().addAll(makeTab("Default", makeRecoilEditer(type, DataPath.of(GunData.Recoil))),
 				makeTab("ADS", makeRecoilEditer(type, DataPath.of(GunData.RecoilADS))),
 				makeTab("Sneak", makeRecoilEditer(type, DataPath.of(GunData.RecoilSneak))),
@@ -303,7 +305,7 @@ public class EditPanels extends Pane {
 				} else if (EditHelper.isNumber(clazz, fieldPath)) {
 					root.getChildren().add(EditNode.editNumber(editValue, type, fieldPath));
 				} else if (EditHelper.isCurve(clazz, fieldPath)) {
-					root.getChildren().add(EditNode.editCurve(editValue, type, fieldPath,curveEditPane));
+					root.getChildren().add(EditNode.editCurve(editValue, type, fieldPath, curveEditPane));
 				}
 			}
 		}

@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import editer.controller.RootController;
 import helper.ModelLoader;
+import io.EditorConfig;
 import javafx.application.Application;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.fxml.FXMLLoader;
@@ -29,8 +30,8 @@ import types.items.GunData;
 import types.value.Operator;
 
 public class Editer extends Application {
-	/** 開いているpath */
-	public static String packPath;
+
+	public static EditorConfig config;
 
 	static class HideModelPart {
 
@@ -41,6 +42,7 @@ public class Editer extends Application {
 		LocalizeHandler.loadLang();
 		LocalizeHandler.setLang("ja");
 
+		config = EditorConfig.load();
 		// PackIO.makePack();
 
 //		new ValueChange();
@@ -116,12 +118,13 @@ public class Editer extends Application {
 
 		new ModelLoader().run();
 
-		System.exit(0);
+		EditorConfig.save(config);
 
+		System.exit(0);
 	}
 
 	private static final Logger log = LogManager.getLogger();
-	private static final Point2D STAGE_SIZE = new Point2D(1280, 720);
+	private static final Point2D STAGE_SIZE = new Point2D(1400, 800);
 
 	@Override
 	public void start(Stage stage) throws Exception {

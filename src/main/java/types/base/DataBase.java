@@ -636,6 +636,8 @@ public abstract class DataBase {
 	}
 
 	// エディタ側
+
+
 	private Map<DataPath, Entry2Prop> entryPropMap = new HashMap<>();
 
 	public ObservableObjectValue<ValueEntry<?>> getEntryProp(DataPath path) {

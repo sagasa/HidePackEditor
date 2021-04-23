@@ -36,6 +36,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import resources.HideImage;
 import resources.Sound;
 import types.PackInfo;
+import types.base.DataBase;
 import types.base.NamedData;
 import types.items.GunData;
 import types.items.MagazineData;
@@ -274,19 +275,19 @@ public class PackIO {
 		// data.length)), JsonObject.class);
 		// Gun認識
 		if (PackPattern.GUN.mache(name)) {
-			GunData newGun = gson.fromJson(new String(data, UTF8), GunData.class);
+			GunData newGun = DataBase.fromJson(new String(data, UTF8));
 			pack.GunList.add(newGun);
 			// System.out.println("gun");
 		}
 		// bullet認識
 		else if (PackPattern.MAGAZINE.mache(name)) {
-			MagazineData newBullet = gson.fromJson(new String(data, UTF8), MagazineData.class);
+			MagazineData newBullet = DataBase.fromJson(new String(data, UTF8));
 			pack.MagazineList.add(newBullet);
 			// System.out.println("bullet");
 		}
 		// packInfo認識
 		else if (PackPattern.PACKINFO.mache(name)) {
-			pack.Pack = gson.fromJson(new String(data, UTF8), PackInfo.class);
+			pack.Pack = DataBase.fromJson(new String(data, UTF8));
 			// System.out.println("pack");
 		}
 
