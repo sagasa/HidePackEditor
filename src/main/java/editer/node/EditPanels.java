@@ -19,6 +19,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -26,6 +28,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import localize.LocalizeHandler;
 import resources.HideImage;
 import types.base.DataBase;
@@ -185,8 +188,26 @@ public class EditPanels extends Pane {
 				makeTab("Sneak+ADS", makeRecoilEditer(type, DataPath.of(GunData.RecoilSneakADS))));
 		addEditPane(recoil, type);
 
+		Canvas recoilview = new Canvas(RecoilViewSize, RecoilViewSize);
+		GraphicsContext g = recoilview.getGraphicsContext2D();
+		g.setFill(Color.GRAY);
+		g.fillRect(0, 0, RecoilViewSize, RecoilViewSize);
+		;
+		g.strokeRect(0, 0, RecoilViewSize, RecoilViewSize);
+		g.strokeLine(RecoilViewSize / 2, RecoilViewSize, RecoilViewSize / 2, 0);
+		g.strokeLine(RecoilViewSize, RecoilViewSize / 2, 0, RecoilViewSize / 2);
+
+		for (int i = 0; i < 40; i++) {
+			g.setStroke(Color.hsb(i * 3, 1, 1));
+			g.strokeOval(100, i * 5, 10, 10);
+
+		}
+
+		addEditPane(recoilview, type);
 		// */
 	}
+
+	private static final double RecoilViewSize = 300;
 
 	/** MagazineData */
 	private void writeMagazineEditor() {

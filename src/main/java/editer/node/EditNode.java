@@ -301,7 +301,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		label.setPrefSize(20, 24);
 		label.setAlignment(Pos.CENTER);
 		label.setGraphic(clipDelete);
-		getChildren().add(label);
+		// getChildren().add(label);
 	}
 
 	/** このエントリで編集する型 */
