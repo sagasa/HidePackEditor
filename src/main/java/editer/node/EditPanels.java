@@ -24,6 +24,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -121,7 +122,7 @@ public class EditPanels extends Pane {
 	 * @param <T>
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> void addEditValue(EditType type, T data) {
+	private <T> void startEdit(EditType type, T data) {
 		System.out.println("edit ");
 		((ObjectProperty<T>) editModes.get(type)).set(data);
 	}
@@ -130,7 +131,7 @@ public class EditPanels extends Pane {
 	public void setEditValue(DataBase data) {
 		for (ObjectProperty<? extends DataBase> prop : editModes.values())
 			prop.set(null);
-		EditType.addValue(data, this::addEditValue);
+		EditType.addValue(data, this::startEdit);
 	}
 
 	private void addEditPane(Node node, EditType type) {
@@ -138,6 +139,28 @@ public class EditPanels extends Pane {
 		node.managedProperty().bind(editModes.get(type).isNotNull());
 		node.visibleProperty().bind(editModes.get(type).isNotNull());
 		rootPane.getChildren().add(node);
+	}
+
+	static Region makeClipUI(EditType type, DataPath path) {
+		ImageView clipDelete = new ImageView("/icon/clipDelete.png");
+		ImageView clipAdd = new ImageView("/icon/clipAdd.png");
+		ImageView clipRemove = new ImageView("/icon/clipRemove.png");
+		ImageView clipPaste = new ImageView("/icon/clipPut.png");
+
+		Label addremove = new Label();
+		addremove.setPrefSize(16, 24);
+		addremove.setAlignment(Pos.CENTER);
+		addremove.setGraphic(clipAdd);
+		Label clear = new Label();
+		clear.setPrefSize(16, 24);
+		clear.setAlignment(Pos.CENTER);
+		clear.setGraphic(clipDelete);
+		clear.setTranslateX(16);
+
+		Pane res = new Pane();
+		res.getChildren().addAll(addremove,clear);
+		res.setPrefSize(32, 24);
+		return res;
 	}
 
 	/*

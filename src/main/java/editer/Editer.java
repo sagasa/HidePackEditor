@@ -8,6 +8,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import editer.clip.ClipManager;
 import editer.controller.RootController;
 import helper.ModelLoader;
 import io.EditorConfig;
@@ -44,7 +45,19 @@ public class Editer extends Application {
 
 		config = EditorConfig.load();
 		// PackIO.makePack();
+		GunData gundata = new GunData();
+		Recoil r = new Recoil();
+		r.put(Recoil.HorizontalBase);
+		r.put(Recoil.HorizontalReturn);
+		gundata.put(GunData.RecoilADS, Operator.SET, r);
+		ClipManager cm = new ClipManager();
+		cm.add(gundata, DataPath.of(GunData.RecoilADS));
+	//	cm.add(gundata, DataPath.of(GunData.RecoilADS, Recoil.HorizontalReturn));
+		GunData to = new GunData();
+		cm.paste(to, DataPath.of(GunData.Recoil));
 
+		System.out.println(gundata.toJson());
+		System.out.println(to.toJson());
 //		new ValueChange();
 //
 //		Gson gson = DataBase.getGson();
@@ -58,7 +71,7 @@ public class Editer extends Application {
 //
 //		System.exit(0);
 
-		System.out.println(DataBase.getSample(GunData.class, false));
+		// System.out.println(DataBase.getSample(GunData.class, false));
 
 		launch(arg);
 

@@ -22,12 +22,13 @@ public class EditHelper {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static Class<? extends DataBase> getMinDataClass(Class<? extends DataBase> clazz, DataPath path) {
+	public static DataPath getMinDataClass(Class<? extends DataBase> clazz, DataPath path) {
+
 		Class<? extends Object> next = DataBase.getEntries(clazz).get(path.fastName).Default.getClass();
 		if (DataBase.class.isAssignableFrom(next)) {
 			return getMinDataClass(((Class) next), path.nextPath);
 		}
-		return clazz;
+		return path;
 	}
 
 	public static Collection<DataEntry<?>> getDataEntries(Class<? extends DataBase> clazz, DataPath path) {

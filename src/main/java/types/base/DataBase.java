@@ -93,7 +93,6 @@ public abstract class DataBase {
 	}
 
 	/** DataEntryを作成 */
-
 	protected static <T> DataEntry<T> of(T defaultValue) {
 		return of(defaultValue, null);
 	}

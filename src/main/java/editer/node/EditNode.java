@@ -112,6 +112,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	protected BooleanProperty disable = new SimpleBooleanProperty();
 
 	Label propertyEdit;
+	Region clipEdit;
 
 	/** 数値以外のパターン */
 	private static final Pattern FloatPattern = Pattern.compile("[^0-9\\.-]+");
@@ -172,7 +173,8 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		operator.setBackground(WhiteBack);
 		operator.setStyle("-fx-font: 7pt 'Courier New'");
 
-		leftJustified(res.propertyEdit, 0, label);
+		leftJustified(res.propertyEdit, 0, res.clipEdit);
+		leftJustified(res.clipEdit, 0, label);
 		center(label, 2, button);
 		rightJustified(button, 0, operator);
 		right(res, 0, operator);
@@ -293,15 +295,8 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 
 			}
 		});
-		getChildren().add(propertyEdit);
-
-		ImageView clipDelete = new ImageView("/icon/clipPut.png");
-
-		Label label = new Label();
-		label.setPrefSize(20, 24);
-		label.setAlignment(Pos.CENTER);
-		label.setGraphic(clipDelete);
-		// getChildren().add(label);
+		clipEdit = EditPanels.makeClipUI(edit, Path);
+		getChildren().addAll(propertyEdit,clipEdit);
 	}
 
 	/** このエントリで編集する型 */
@@ -418,7 +413,8 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 			operator.setBackground(WhiteBack);
 			operator.setStyle("-fx-font: 7pt 'Courier New'");
 
-			leftJustified(propertyEdit, 0, label);
+			leftJustified(propertyEdit, 0, clipEdit);
+			leftJustified(clipEdit, 0, label);
 			center(label, 2, text);
 			rightJustified(text, 0, operator);
 			right(this, 0, operator);
@@ -452,7 +448,8 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 			check.prefHeightProperty().bind(this.heightProperty());
 			label.prefHeightProperty().bind(this.heightProperty());
 			label.prefWidthProperty().bind(labelWidth);
-			leftJustified(propertyEdit, 0, label);
+			leftJustified(propertyEdit, 0, clipEdit);
+			leftJustified(clipEdit, 0, label);
 			center(label, 2, check);
 			right(this, 0, check);
 			this.getChildren().addAll(label, check);
