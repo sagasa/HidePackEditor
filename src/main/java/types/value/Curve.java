@@ -24,7 +24,7 @@ public class Curve implements Cloneable {
 	}
 
 	public float get(float key) {
-		if (Keys.length == 1)
+		if (Keys.length == 0)
 			return 0;
 		if (Keys.length == 1)
 			return Keys[0].Value;
@@ -72,6 +72,12 @@ public class Curve implements Cloneable {
 			return operator == other.operator && ArrayUtils.isEquals(Keys, other.Keys);
 		}
 		return false;
+	}
+
+	@Override
+	public String toString() {
+
+		return ArrayUtils.toString(Keys);
 	}
 
 	public static class CurveKey implements Cloneable {

@@ -6,10 +6,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import types.base.DataPath;
 import types.editor.DataView;
 import types.effect.Recoil;
 import types.gun.ProjectileData;
 import types.items.GunData;
+import types.value.Curve;
 
 public class RecoilGraphNode extends Pane {
 
@@ -48,10 +50,23 @@ public class RecoilGraphNode extends Pane {
 
 			a.setValue(0, data.getEntry(GunData.RecoilADS).ValueProp);
 
-			float shootPower = getTickParShoot(projectileData.get(ProjectileData.RPM, null));
+			final float pps = (float) a.get(DataPath.of(Recoil.PowerShoot)).get();
+			final float ppt = (float) a.get(DataPath.of(Recoil.PowerTick)).get();
+			final float tps = getTickParShoot(projectileData.get(ProjectileData.RPM, null));
+
+			System.out.println(String.format("pps[%.2f],ppt[%.2f],tps[%.2f]", pps, ppt, tps));
+			float totalpps = pps - tps * ppt;
+			float power = 0;
+			float x = 0, y = 0, sx = 4, sy = 4;
 			for (int i = 0; i < 40; i++) {
+				System.out.println(((Curve) a.get(DataPath.of(Recoil.HorizontalBase)).get()).get(power));
+				x += ((Curve) a.get(DataPath.of(Recoil.HorizontalBase)).get()).get(power);
+				System.out.println(x + " " + y);
 				g.setStroke(Color.hsb(i * 3, 1, 1));
-				g.strokeOval(100, i * 5, 10, 10);
+				g.strokeRect(x - sx / 2 + RecoilViewSize / 2, y - sy / 2 + RecoilViewSize / 2, sx, sy);
+
+				power += totalpps;
+				power = Math.max(power, 0);
 			}
 		}
 
