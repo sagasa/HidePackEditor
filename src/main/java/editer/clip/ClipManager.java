@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.logging.log4j.core.util.ReflectionUtil;
 
 import helper.EditHelper;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import types.base.DataBase;
 import types.base.DataBase.DataEntry;
 import types.base.DataBase.ValueEntry;
@@ -14,9 +16,9 @@ import types.base.DataPath;
 public class ClipManager {
 
 	DataBase clipData;
-	Class<?> scope;
+	public final ObjectProperty<Class<?>> scope = new SimpleObjectProperty<>();
 	DataPath scopePath;
-	List<DataPath> pathList = new ArrayList<DataPath>();
+	List<DataPath> pathList = new ArrayList<>();
 
 	public ClipManager() {
 
@@ -91,14 +93,14 @@ public class ClipManager {
 	private void updateScope() {
 		// 空ならnull
 		if (clipData == null || pathList.size() == 0) {
-			scope = null;
+			scope.set(null);
 			scopePath = null;
 			return;
 		}
 		// １つなら自明でスコープ
 		if (pathList.size() == 1) {
 			scopePath = pathList.get(0);
-			scope = EditHelper.getType(clipData.getClass(), scopePath);
+			scope.set(EditHelper.getType(clipData.getClass(), scopePath));
 			return;
 		}
 		DataPath first = null;
@@ -112,7 +114,7 @@ public class ClipManager {
 			}
 		}
 		scopePath = first.limit(depth);
-		scope = EditHelper.getType(clipData.getClass(), scopePath);
+		scope.set(EditHelper.getType(clipData.getClass(), scopePath));
 	}
 
 	private static int and(DataPath a, DataPath b) {

@@ -14,18 +14,23 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
+import localize.LocalizeHandler;
+import localize.LocalizeHandler.Lang;
 import types.base.DataBase;
 import types.base.DataBase.ValueEntry;
 import types.base.DataPath;
+import types.base.Info;
 import types.value.Curve;
 import types.value.Curve.CurveKey;
 
@@ -46,8 +51,9 @@ public class CurveEditPane extends Pane {
 	}
 
 	private ObjectProperty<Curve> currentProp;
+	private Info editInfo;
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public void setEdit(DataBase data, DataPath path) {
 		ValueEntry<?> entry = data == null ? null : EditHelper.getValueEntry(data, path);
 		if (currentProp != null) {
@@ -56,8 +62,12 @@ public class CurveEditPane extends Pane {
 			editerProperty.setValue(null);
 		}
 		if (entry != null) {
+			label.setText(LocalizeHandler.getLocalizedName(data.getClass(), path));
 			currentProp = (ObjectProperty<Curve>) entry.ValueProp;
+			editInfo = EditHelper.getDataEntry(data.getClass(), path).Info;
 			editerProperty.bindBidirectional(currentProp);
+		} else {
+			label.setText(LocalizeHandler.getLocalizedLore(Lang.NotSet));
 		}
 	}
 
@@ -126,6 +136,20 @@ public class CurveEditPane extends Pane {
 			minY = Math.min(minY, key.Value);
 			maxY = Math.max(maxY, key.Value);
 		}
+		if (maxX - minX < 0.5f) {
+			minX -= 0.25;
+			maxX += 0.25;
+		}
+		if (maxY - minY < 0.5f) {
+			minY -= 0.25;
+			maxY += 0.25;
+		}
+
+		minX -= (maxX - minX) / 10f;
+		maxX += (maxX - minX) / 10f;
+		minY -= (maxY - minY) / 10f;
+		maxY += (maxY - minY) / 10f;
+
 		posX = new double[keys.length];
 		posY = new double[keys.length];
 
@@ -142,6 +166,16 @@ public class CurveEditPane extends Pane {
 		return (float) -(((y - Top) / Height - 1) * (maxY - minY) + minY) + minY * 2;
 	}
 
+	/** 表示座標から値へ */
+	private float getMoveX(double x) {
+		return (float) (x * (maxX - minX) / Width);
+	}
+
+	/** 表示座標から値へ */
+	private float getMoveY(double y) {
+		return (float) -(y * (maxY - minY) / (Height));
+	}
+
 	private void draw(Curve curve) {
 		g.clearRect(0, 0, Width, 200);
 		// 枠描画
@@ -155,7 +189,12 @@ public class CurveEditPane extends Pane {
 			posY[i] = (1 - (key.Value - minY) / (maxY - minY)) * Height + Top;
 		}
 		g.setStroke(Color.RED);
-		g.strokePolyline(posX, posY, posX.length);
+		if (keys.length == 1) {
+			g.strokeLine(0, Top + Height / 2, Width, Top + Height / 2);
+		} else {
+			g.strokePolyline(posX, posY, posX.length);
+		}
+
 		// 点描画
 		for (int i = 0; i < posX.length; i++) {
 			if (selectIndex.get() == i) {
@@ -185,8 +224,8 @@ public class CurveEditPane extends Pane {
 		g.fillText(String.format("(%.2f,%.2f)", maxX, maxY), Width, Top);
 		// 入力
 		if (selectIndex.get() != -1) {
-			keyField.setText(converter.toString(keys[selectIndex.get()].Key));
-			valueField.setText(converter.toString(keys[selectIndex.get()].Value));
+			keyField.setText(String.format("%.3f", keys[selectIndex.get()].Key));
+			valueField.setText(String.format("%.3f", keys[selectIndex.get()].Value));
 		}
 
 	}
@@ -204,6 +243,10 @@ public class CurveEditPane extends Pane {
 
 	StringConverter<Float> converter = new FloatStringConverter();
 	Label label;
+	Button add;
+	Button remove;
+
+	double lastX, lastY;
 
 	public CurveEditPane() {
 		Canvas canvas = new Canvas(Width, 200);
@@ -227,18 +270,30 @@ public class CurveEditPane extends Pane {
 					selectIndex.set(getIndex(e.getX(), e.getY()));
 				}
 			}
+			lastX = e.getX();
+			lastY = e.getY();
 			draw(getCurve());
 			System.out.println(selectIndex);
 		});
 		canvas.setOnMouseDragged(e -> {
 			final int index = selectIndex.get();
 			if (index != -1) {
-				// 下限
-				double x = Math.max(e.getX(), index == 0 ? e.getX() : posX[index - 1]);
-				// 上限
-				x = Math.min(x, index == posX.length - 1 ? x : posX[index + 1]);
-				getArray()[index] = new CurveKey(getValueX(x), getValueY(e.getY()));
+				double x = e.getX();
+				double y = e.getY();
+
+				CurveKey[] array = getArray();
+				CurveKey old = array[index];
+				float resX = Math.min(Math.max(old.Key + getMoveX(x - lastX), editInfo.KeyMin), editInfo.KeyMax);
+				float resY = Math.min(Math.max(old.Value + getMoveY(y - lastY), editInfo.Min), editInfo.Max);
+
+				if (0 < index && resX < array[index - 1].Key)
+					resX = array[index - 1].Key;
+				if (index < array.length - 1 && array[index + 1].Key < resX)
+					resX = array[index + 1].Key;
+				array[index] = new CurveKey(resX, resY);
 				isDrag = true;
+				lastX = x;
+				lastY = y;
 				draw(getCurve());
 			}
 		});
@@ -269,10 +324,30 @@ public class CurveEditPane extends Pane {
 		// 入力を数値のみに
 		// FloatかIntegerか判別
 
+		Label labelX = initLabel("X=");
+		Label labelY = initLabel("Y=");
 		keyField = initTextField();
 		valueField = initTextField();
-		keyField.translateXProperty().bind(widthProperty().divide(2).subtract(keyField.widthProperty()));
-		valueField.translateXProperty().bind(widthProperty().subtract(valueField.widthProperty()));
+
+		add = initButton(LocalizeHandler.getLocalizedName(Lang.Add));
+		add.setVisible(false);
+		remove = initButton(LocalizeHandler.getLocalizedName(Lang.Remove));
+		remove.visibleProperty().bind(selectIndex.isNotEqualTo(-1));
+		remove.setOnAction(e -> {
+			CurveKey[] array = getArray();
+			if (array.length < 1)
+				return;
+			array = (CurveKey[]) ArrayUtils.remove(array, selectIndex.get());
+			setArray(array);
+			selectIndex.set(-1);
+			updateState(getCurve());
+		});
+
+		leftJustified(labelX, 2, keyField);
+		leftJustified(keyField, 2, labelY);
+		leftJustified(labelY, 2, valueField);
+		leftJustified(valueField, 10, add);
+		leftJustified(valueField, 10, remove);
 
 		keyField.textProperty().addListener((v, ov, nv) -> {
 			final int index = selectIndex.get();
@@ -293,13 +368,30 @@ public class CurveEditPane extends Pane {
 			}
 		});
 
-		label = new Label("NotSet");
+		label = new Label(LocalizeHandler.getLocalizedLore(Lang.NotSet));
 		label.setAlignment(Pos.CENTER);
 		label.translateXProperty().set(20);
 		label.setLayoutY(2);
 		label.setPrefHeight(20);
 		// label.prefWidthProperty().bind(this.widthProperty().subtract(editBottonWidth.multiply(2)));
-		this.getChildren().addAll(label, canvas, keyField, valueField);
+		this.getChildren().addAll(label, canvas, labelX, keyField, labelY, valueField, add, remove);
+	}
+
+	private Label initLabel(String str) {
+		Label text = new Label(str);
+		text.translateYProperty().bind(heightProperty().subtract(20));
+		text.setAlignment(Pos.CENTER);
+		text.setFont(Font.font(10));
+		text.disableProperty().bind(selectIndex.isEqualTo(-1));
+		return text;
+	}
+
+	private Button initButton(String str) {
+		Button text = new Button(str);
+		text.translateYProperty().bind(heightProperty().subtract(text.heightProperty()));
+		text.setAlignment(Pos.CENTER);
+		text.setFont(Font.font(10));
+		return text;
 	}
 
 	private TextField initTextField() {
@@ -311,6 +403,10 @@ public class CurveEditPane extends Pane {
 		text.setFont(Font.font(10));
 		text.disableProperty().bind(selectIndex.isEqualTo(-1));
 		return text;
+	}
+
+	protected static void leftJustified(Region left, int gap, Region right) {
+		right.translateXProperty().bind(left.widthProperty().add(left.translateXProperty()).add(gap));
 	}
 
 	private static TextFormatter<Number> getTextFormatter() {
@@ -325,7 +421,7 @@ public class CurveEditPane extends Pane {
 				str = str.replaceAll("-", "");
 			}
 			int diffcount = change.getText().length() - str.length();
-			System.out.println(diffcount);
+			// System.out.println(diffcount);
 			// change.setAnchor(change.getAnchor() - diffcount);
 			// change.setCaretPosition(change.getCaretPosition() - diffcount);
 			change.setText(str);

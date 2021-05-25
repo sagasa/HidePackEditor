@@ -174,7 +174,7 @@
 				</SplitPane>
             <SplitPane dividerPositions="0.5" maxWidth="200.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
                <items>
-                  <Pane fx:id="curveeditor" maxHeight="200.0" prefHeight="200.0" prefWidth="200.0" />
+                  <Pane fx:id="curveeditor" minHeight="200.0" maxHeight="200.0" prefHeight="200.0" prefWidth="200.0" />
       				<TabPane maxWidth="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
       					<tabs>
       						<Tab text="Icon">

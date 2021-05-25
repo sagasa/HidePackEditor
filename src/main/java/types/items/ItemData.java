@@ -13,6 +13,8 @@ public class ItemData extends NamedData {
 	public static final DataEntry<String> IconName = of("sample", new Info().IsResourceName(true));
 	/** モデル名 String */
 	public static final DataEntry<String> ModelName = of("", new Info().IsResourceName(true));
+	/** スタックサイズ Integer */
+	public static final DataEntry<Integer> StackSize = of(1, new Info().Min(0).Max(64));
 
 	@Override
 	public DataEntry<String> displayName() {

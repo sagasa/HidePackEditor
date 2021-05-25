@@ -5,7 +5,8 @@ import types.base.Info;
 import types.value.Curve;
 
 public class Recoil extends DataBase {
-
+	/** 利用するか？ Boolean */
+	public static final DataEntry<Boolean> Use = of(false);
 	/** 横反動の基礎値 +で右 Curve */
 	public static final DataEntry<Curve> HorizontalBase = of(new Curve(), new Info().Scale("0,1"));
 	/** 横反動の拡散値 +で右 Curve */

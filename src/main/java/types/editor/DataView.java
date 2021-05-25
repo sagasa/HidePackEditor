@@ -33,8 +33,16 @@ public class DataView<V extends DataBase> {
 
 	/** リスナを更新して値を書き換え */
 	public void setValue(int index, ObservableObjectValue<V> value) {
-		if (values[index] == null)
+		if (values[index] == null) {
 			values[index] = new SimpleObjectProperty<>();
+			values[index].addListener((v, ov, nv) -> {
+				if (ov != null)
+					ov.removeView(this);
+				if (nv != null)
+					nv.addView(this);
+				entryPropMap.values().forEach(prop -> prop.onChange());
+			});
+		}
 		if (value != null)
 			values[index].bind(value);
 		else
@@ -49,7 +57,9 @@ public class DataView<V extends DataBase> {
 	}
 
 	public void onChange(DataPath path) {
-		if (entryPropMap.containsKey(path))
+		if (path == null)
+			entryPropMap.forEach((k, v) -> v.onChange());
+		else if (entryPropMap.containsKey(path))
 			entryPropMap.get(path).onChange();
 	}
 
@@ -86,8 +96,9 @@ public class DataView<V extends DataBase> {
 		public T get() {
 			T def = (T) EditHelper.getDataEntry(clazz, path).Default;
 			for (ObservableObjectValue<V> data : values) {
-				if (data != null && data.get() != null)
+				if (data != null && data.get() != null) {
 					def = EditHelper.getValue(data.get(), path, def);
+				}
 			}
 			return def;
 		}

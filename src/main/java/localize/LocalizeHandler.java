@@ -20,6 +20,7 @@ import types.base.NamedData;
 import types.effect.Explosion;
 import types.effect.Recoil;
 import types.effect.Sound;
+import types.gun.ProjectileData;
 import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
@@ -40,8 +41,6 @@ public class LocalizeHandler {
 		for (Lang lang : Lang.values()) {
 			addName(lang.toString().toLowerCase());
 		}
-		System.out.println(new GunData().get(GunData.ADSTick, null));
-
 		// DataBaseクラスのローカライズファイルを作成
 		makeLocalize(GunData.class);
 		makeLocalize(Recoil.class);
@@ -50,6 +49,7 @@ public class LocalizeHandler {
 		makeLocalize(ItemData.class);
 		makeLocalize(MagazineData.class);
 		makeLocalize(NamedData.class);
+		makeLocalize(ProjectileData.class);
 		// makeLocalize(ModelSelector.class);
 		// makeLocalize(Vec3f.class);
 		// makeLocalize(HideModel.class);
@@ -151,11 +151,11 @@ public class LocalizeHandler {
 			return lang.getString(unlocalizedName);
 		else if (defaultRB.containsKey(unlocalizedName))
 			return defaultRB.getString(unlocalizedName);
-		return null;
+		throw new NullPointerException(unlocalizedName + " not found");
 	}
 
 	private static String toName(String unlocalizedName) {
-		//System.out.println(unlocalizedName);
+		// System.out.println(unlocalizedName);
 		return getLocalized(unlocalizedName).split(":", 2)[0];
 	}
 
@@ -185,6 +185,6 @@ public class LocalizeHandler {
 	/** メニュー用Lang */
 	public enum Lang {
 		File, Edit, Help, New, NewOpen, Open, Save, SaveAs, Import, Gun, Magazine, Armor, Attachment, Icon, Sound,
-		Scope, Lang, Exit,
+		Scope, Lang, Exit, NotSet, Add, Remove,
 	}
 }

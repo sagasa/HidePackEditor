@@ -80,13 +80,14 @@ public class EditHelper {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T getValue(DataBase data, DataPath path, T base) {
-		ValueEntry<?> current = data.getEntry(data.getEntries().get(path.fastName));
-		if (current == null)
-			return base;
+		DataEntry<?> key = data.getEntries().get(path.fastName);
 		if (path.hasChild) {
+			ValueEntry<?> current = data.getEntry(key);
+			if (current == null)
+				return base;
 			return getValue((DataBase) current.getValue(), path.nextPath, base);
 		}
-		return data.get((DataEntry<T>) current.Type, base);
+		return data.get((DataEntry<T>) key, base);
 	}
 
 	/** pathから最大値を取得 */

@@ -27,6 +27,7 @@ public class HideImageView extends ImageView {
 		valueProp = type.get(dataPath);
 		List.addListener(new WeakListChangeListener<>(listListener));
 		valueProp.addListener((value, oldValue, newValue) -> {
+			System.out.println("Update image");
 			HideImage img = HidePack.getDataByName(List, newValue);
 			setImage(img == null ? HidePack.NullImage : SwingFXUtils.toFXImage(img.Image, null));
 		});

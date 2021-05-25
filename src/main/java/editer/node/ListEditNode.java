@@ -78,7 +78,7 @@ public class ListEditNode<T> extends EditNode {
 		label.setAlignment(Pos.CENTER);
 		TextField text = new TextField();
 		text.textProperty().addListener((value, oldvalue, newvalue) -> setSearch(newvalue));
-		label.translateXProperty().set(20);
+
 		label.setLayoutY(2);
 		label.setPrefHeight(20);
 		// label.prefWidthProperty().bind(this.widthProperty().subtract(editBottonWidth.multiply(2)));
@@ -94,6 +94,11 @@ public class ListEditNode<T> extends EditNode {
 		label.disableProperty().bind(disable);
 		listview.disableProperty().bind(disable);
 		text.disableProperty().bind(disable);
+
+		leftJustified(propertyEdit, 0, clipEdit);
+		leftJustified(clipEdit, 0, label);
+		label.prefWidthProperty().bind(widthProperty().subtract(label.translateXProperty()));
+
 		this.getChildren().addAll(label, listview, text);
 		writeList();
 	}

@@ -64,12 +64,18 @@ public class RootController implements Initializable {
 	public ListView<PackInfo> packList;
 	public TextField itemSearch;
 	public TabPane itemTab;
-	public ListView<GunData> gunList;
-	public ListView<MagazineData> magazineList;
-	public ListView<IDataEntity> soundList;
-	public ListView<IDataEntity> iconList;
-	public ListView<IDataEntity> modelList;
-	public ListView<HideModel> modelInfoList;
+	@FXML
+	private ListView<GunData> gunList;
+	@FXML
+	private ListView<MagazineData> magazineList;
+	@FXML
+	private ListView<IDataEntity> soundList;
+	@FXML
+	private ListView<IDataEntity> iconList;
+	@FXML
+	private ListView<IDataEntity> modelList;
+	@FXML
+	private ListView<HideModel> modelInfoList;
 
 	/** クリップエディタ */
 	private ClipController clipController;
@@ -171,6 +177,18 @@ public class RootController implements Initializable {
 		editer.setEditValue(null);
 	}
 
+	/** 親子関係の解決 */
+	public static void resolveList() {
+		INSTANCE.resolve();
+	}
+
+	/** リストをリフレッシュ */
+	public void resolve() {
+		NamedData.resolvParent(gunList.getItems());
+		NamedData.resolvParent(magazineList.getItems());
+		NamedData.resolvParent(modelInfoList.getItems());
+	}
+
 	/** リストをリフレッシュ */
 	public static void refreshList() {
 		INSTANCE.refresh();
@@ -246,7 +264,7 @@ public class RootController implements Initializable {
 	public void openPack() {
 		FileChooser fxtest = new FileChooser();
 		File dir = new File(Editer.config.openDir);
-		if (!dir.exists()||!dir.isDirectory())
+		if (!dir.exists() || !dir.isDirectory())
 			dir = new File("./");
 		fxtest.setInitialDirectory(dir);
 		fxtest.getExtensionFilters().add(new ExtensionFilter("zip", "*.zip"));
@@ -371,6 +389,8 @@ public class RootController implements Initializable {
 		newGun.put(newGun.systemName(), Operator.SET, "gun_" + gunNamePointer);
 		newGun.put(newGun.displayName(), Operator.SET, "New Gun No." + gunNamePointer);
 		newGun.getRootPack().set(HidePack.DefaultPack);
+		// ProjectileDataは初期設定
+		newGun.put(GunData.Data);
 		HidePack.GunList.add(newGun);
 		write();
 	}
@@ -387,7 +407,7 @@ public class RootController implements Initializable {
 		magazine.put(magazine.systemName(), Operator.SET, "magazine_" + bulletNamePointer);
 		magazine.put(magazine.displayName(), Operator.SET, "New Magazine No." + bulletNamePointer);
 		magazine.getRootPack().set(HidePack.DefaultPack);
-		// GunDataは初期設定
+		// ProjectileDataは初期設定
 		magazine.put(MagazineData.Data);
 		HidePack.MagazineList.add(magazine);
 		write();

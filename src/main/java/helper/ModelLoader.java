@@ -61,7 +61,6 @@ public class ModelLoader {
 	}
 
 	public void run() {
-		// ファイルから読み込み
 
 	}
 

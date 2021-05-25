@@ -5,6 +5,7 @@ import java.util.Random;
 
 import io.PackCash;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -12,6 +13,7 @@ import resources.HideImage;
 import resources.Model;
 import resources.Sound;
 import types.PackInfo;
+import types.base.NamedData;
 import types.items.GunData;
 import types.items.MagazineData;
 import types.model.HideModel;
@@ -50,6 +52,11 @@ public class HidePack {
 
 	/** 追加時にinit()を呼ばせる */
 
+	private static final ListChangeListener<NamedData> namedinit = (e) -> {
+		while (e.next())
+			if (0 < e.getAddedSize())
+				e.getAddedSubList().forEach(add -> add.container = e.getList());
+	};
 	static {
 		clear();
 	}
@@ -71,6 +78,10 @@ public class HidePack {
 		DefaultPack.put(PackInfo.PackVar, Operator.SET, "");
 		DefaultPack.PackColor.set(Color.GRAY);
 		OpenPacks.add(DefaultPack);
+
+		GunList.addListener(namedinit);
+		MagazineList.addListener(namedinit);
+		ModelInfoList.addListener(namedinit);
 	}
 
 	/** PackCashインポート */

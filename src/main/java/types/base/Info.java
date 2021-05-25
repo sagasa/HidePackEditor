@@ -19,6 +19,22 @@ public class Info {
 		return this;
 	}
 
+	/** エディタ側での編集範囲 */
+	public float KeyMin = 0;
+
+	public Info KeyMin(float min) {
+		this.KeyMin = min;
+		return this;
+	}
+
+	/** エディタ側での編集範囲 */
+	public float KeyMax = Float.MAX_VALUE;
+
+	public Info KeyMax(float max) {
+		this.KeyMax = max;
+		return this;
+	}
+
 	/** エディタ側での編集倍率 */
 	public String Scale = "1";
 

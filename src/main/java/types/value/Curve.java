@@ -10,7 +10,7 @@ public class Curve implements Cloneable {
 	transient Curve pearnt;
 
 	public Curve() {
-		Keys = new CurveKey[] { new CurveKey(0, 0), new CurveKey(1, 10) };
+		Keys = new CurveKey[] { new CurveKey(0, 0) };
 	}
 
 	void setAdd(Curve base) {
@@ -24,6 +24,10 @@ public class Curve implements Cloneable {
 	}
 
 	public float get(float key) {
+		if (Keys.length == 1)
+			return 0;
+		if (Keys.length == 1)
+			return Keys[0].Value;
 		for (int i = 0; i < Keys.length; i++) {
 			if (key <= Keys[i].Key) {
 				float minKey = 0 < i ? Keys[i - 1].Key : 0;
@@ -38,7 +42,7 @@ public class Curve implements Cloneable {
 				return res;
 			}
 		}
-		Float res = 0 < Keys.length ? Keys[Keys.length - 1].Value : 0;
+		Float res = Keys[Keys.length - 1].Value;
 		// 親がいるなら
 		if (pearnt != null)
 			res = operator.apply(pearnt.get(key), res);
@@ -84,7 +88,7 @@ public class Curve implements Cloneable {
 
 		@Override
 		public String toString() {
-			return String.format("key=%s,Value=%s", Key,Value);
+			return String.format("key=%s,Value=%s", Key, Value);
 		}
 
 		@Override

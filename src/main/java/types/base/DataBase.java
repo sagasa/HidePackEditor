@@ -49,7 +49,7 @@ public abstract class DataBase {
 
 		private DataEntry(T def, Info info) {
 			Default = def;
-			Info = info;
+			Info = info == null ? types.base.Info.Default : info;
 		}
 
 		public int getIndex() {
@@ -73,7 +73,6 @@ public abstract class DataBase {
 
 	/** 編集禁止 */
 	public Map<String, DataEntry<?>> getEntries() {
-		initEntry();
 		return nameEntryMap.get(getTypeName(getClass()));
 	}
 
@@ -86,7 +85,6 @@ public abstract class DataBase {
 	private int size = -1;
 
 	public int size() {
-		initEntry();
 		if (size == -1)
 			size = nameEntryMap.get(getTypeName(getClass())).size();
 		return size;
@@ -106,7 +104,7 @@ public abstract class DataBase {
 	/** staticにDataEntryを名前から検索するための登録 */
 	private static boolean initEntry(Class<? extends DataBase> clazz) {
 		if (!nameTypeMap.containsKey(getTypeName(clazz))) {
-			System.out.println("Start init");
+			// System.out.println("Start init");
 			if (nameEntryMap.containsKey(getTypeName(clazz)))
 				// 既にあれば初期化
 				nameEntryMap.get(getTypeName(clazz)).clear();
@@ -161,15 +159,6 @@ public abstract class DataBase {
 		return index;
 	}
 
-	private boolean isInit = false;
-
-	private void initEntry() {
-		if (dataMap == null && !isInit) {
-			initEntry(getClass());
-			init();
-		}
-	}
-
 	// ====== HideDataホルダー ======
 	private static Map<String, Map<String, DataEntry<?>>> nameEntryMap = new HashMap<>();
 	private static Map<String, Class<? extends DataBase>> nameTypeMap = new HashMap<>();
@@ -182,40 +171,30 @@ public abstract class DataBase {
 	/** 包含してる親 */
 	private ValueEntry<?> root;
 
-	protected DataBase parent;
+	public DataBase parent;
 
 	/** nullなら未初期化 */
 	protected DataMap<ValueEntry<?>> dataMap;
 
 	public DataBase() {
 		initEntry(getClass());
-		// 初期化が終わっていなければ実行しない
-		if (nameTypeMap.containsKey(getTypeName(getClass())))
-			init();
-		else {
-			Map<String, DataEntry<?>> map = new LinkedHashMap<>();
-			registerEntry(getClass(), 0, map);
-			System.out.println("err " + getTypeName(getClass()) + " " + map);
-		}
-	}
-
-	/** 初回のインスタンス作成時のみ実行 */
-	private void init() {
-		isInit = true;
 		dataMap = new DataMap<>(getClass());
 	}
 
 	/** 内包するDataBaseオブジェクトに親子関係を反映する */
 	protected void initParent() {
-		initEntry();
 		for (DataEntry<?> key : getEntries().values()) {
 			if (dataMap.containsKey(key) && key.Default instanceof DataBase) {
 				DataBase _child = (DataBase) dataMap.get(key).getValue();
-				Object _parent = parent == null ? null : parent.get(key, null);
-				if (_parent == key.Default)
+				DataBase _parent = parent == null ? null : (DataBase) parent.get(key, null);
+				if (_parent == key.Default) {
+					_parent.children.remove(_child);
 					_child.parent = null;
-				else
+				} else {
+					if (_parent != null)
+						_parent.children.add(_child);
 					_child.parent = (DataBase) _parent;
+				}
 				_child.initParent();
 			}
 		}
@@ -330,7 +309,7 @@ public abstract class DataBase {
 		// Baseが無ければ初期値を
 		if (parent != null)
 			base = parent.get(key, base);
-		else
+		else if (base == null)
 			// 最上位なら
 			base = key.Default;
 		if (entry != null)
@@ -344,7 +323,6 @@ public abstract class DataBase {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> ValueEntry<T> getEntry(DataEntry<T> key) {
-		initEntry();
 		return (ValueEntry<T>) dataMap.get(key);
 	}
 
@@ -394,7 +372,6 @@ public abstract class DataBase {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> ValueEntry<T> put(DataEntry<T> key) {
-		initEntry();
 		T value = key.Default;
 		if (key.Default instanceof DataBase) {
 			try {
@@ -409,7 +386,6 @@ public abstract class DataBase {
 	}
 
 	public <T> ValueEntry<T> put(DataEntry<T> key, Operator operator, T value) {
-		initEntry();
 		if (!ArrayUtils.contains(Operator.getAllow(value.getClass()), operator))
 			throw new IllegalArgumentException("Operator " + operator + " not supported for " + value.getClass());
 		if (dataMap.containsKey(key)) {
@@ -424,7 +400,6 @@ public abstract class DataBase {
 	}
 
 	public void remove(DataEntry<?> key) {
-		initEntry();
 		if (dataMap.containsKey(key)) {
 			dataMap.remove(key);
 			onChange(DataPath.of(key));
@@ -636,6 +611,7 @@ public abstract class DataBase {
 
 	// エディタ側
 
+	protected ArrayList<DataBase> children = new ArrayList<>();
 
 	private Map<DataPath, Entry2Prop> entryPropMap = new HashMap<>();
 
@@ -649,7 +625,6 @@ public abstract class DataBase {
 	protected void onEntryChange(DataPath path) {
 		if (entryPropMap.containsKey(path))
 			entryPropMap.get(path).onChange();
-
 		// rootに通知
 		if (root != null)
 			root.data.onEntryChange(path.appendFirst(root.Type));

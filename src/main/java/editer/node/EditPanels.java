@@ -19,8 +19,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -29,7 +27,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import localize.LocalizeHandler;
 import resources.HideImage;
 import types.base.DataBase;
@@ -39,6 +36,7 @@ import types.base.NamedData;
 import types.editor.DataView;
 import types.effect.Sound;
 import types.gun.GunFireMode;
+import types.gun.ProjectileData;
 import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
@@ -51,8 +49,9 @@ public class EditPanels extends Pane {
 
 	/** 編集パネルの対象 */
 	public enum EditType {
-		NamedData(NamedData.class), Item(ItemData.class), Gun(GunData.class),
-		Magazine(MagazineData.class, (cons, data) -> cons.accept(Gun, data.get(MagazineData.Data, null)));
+		NamedData(NamedData.class), Item(ItemData.class), Projectile(ProjectileData.class),
+		Gun(GunData.class, (cons, data) -> cons.accept(Projectile, data.get(GunData.Data, null))),
+		Magazine(MagazineData.class, (cons, data) -> cons.accept(Projectile, data.get(MagazineData.Data, null))),;
 
 		/** 判別用の型 */
 		public final Class<? extends DataBase> Clazz;
@@ -80,7 +79,7 @@ public class EditPanels extends Pane {
 			return null;
 		}
 
-		public static void addValue(DataBase data, BiConsumer<EditType, DataBase> func) {
+		public static void editValue(DataBase data, BiConsumer<EditType, DataBase> func) {
 			getType(data).forEach(type -> {
 				System.out.println("add edit " + type);
 				if (type.AddFunc != null)
@@ -112,8 +111,114 @@ public class EditPanels extends Pane {
 		writeItemInfoEditor();
 		writeGunEditer();
 		writeMagazineEditor();
+		writeProjectileEditor();
 		// writePackEditer();
 		// writeModelEditer();
+	}
+
+	/** MagazineData */
+	private void writeProjectileEditor() {
+		final EditType type = EditType.Projectile;
+		// cate
+		addEditPane(makeCateEditPanel(type, ProjectileData.GunInfo), type);
+		addEditPane(makeCateEditPanel(type, ProjectileData.BulletInfo), type);
+		addEditPane(makeCateEditPanel(type, ProjectileData.DamageInfo), type);
+		addEditPane(makeCateEditPanel(type, ProjectileData.ExplosionInfo), type);// TODO
+		addEditPane(makeCateEditPanel(type, ProjectileData.KnockBackInfo), type);
+		// sound
+		TabPane sound = new TabPane();
+		sound.setMaxWidth(300);
+		sound.getTabs().addAll(makeTab("Shoot", makeSoundEditer(type, DataPath.of(ProjectileData.SoundShoot))),
+				makeTab("Reload", makeSoundEditer(type, DataPath.of(ProjectileData.SoundReload))),
+				makeTab("HitEntity", makeSoundEditer(type, DataPath.of(ProjectileData.SoundHitEntity))),
+				makeTab("Hit", makeSoundEditer(type, DataPath.of(ProjectileData.SoundHit))),
+				makeTab("Pass", makeSoundEditer(type, DataPath.of(ProjectileData.SoundPassing))));
+		addEditPane(sound, type);
+		// recoil
+		addEditPane(makeRecoilEditer(type, DataPath.of(ProjectileData.Recoil)), type);
+	}
+
+	/** GunEditer */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void writeGunEditer() {
+		final EditType type = EditType.Gun;
+		DataView<GunData> view = new DataView<>(GunData.class, 1);
+		view.setValue(0, (ObservableObjectValue) editModes.get(type));
+		ObservableObjectValue<GunData> editValue = (ObservableObjectValue<GunData>) editModes.get(type);
+
+		Pane iteminfo = makeCateEditPanel(type, GunData.ItemInfo);
+		// 親
+		Node parentname = EditNode
+				.editString(editValue, EditType.NamedData, DataPath.of(NamedData.ParentName), HidePack.GunList)
+				.setChangeListner((ov, nv) -> {
+					if (editValue.get() != null)
+						((NamedData) editValue.get()).onChangeParentName((String) ov, (String) nv);
+				});
+		iteminfo.getChildren().add(parentname);
+		addEditPane(iteminfo, type);
+		addEditPane(makeCateEditPanel(type, GunData.GunInfo), type);
+		// useBullet
+		addEditPane(new ListEditNode<>(editValue, type, DataPath.of(GunData.UseMagazine), HidePack.MagazineList,
+				(data -> data.getSystemName())), type);
+		// fireMode
+		addEditPane(new ListEditNode<>(editValue, type, DataPath.of(GunData.FireMode), GunFireMode.getList()), type);
+
+		// scope
+		Pane scope = makeImageNode(type, DataPath.of(GunData.ScopeName), HidePack.ScopeList, view);
+		scope.getChildren().add(makeCateEditPanel(EditType.Gun, GunData.ScopeInfo));
+		addEditPane(scope, type);
+
+		// recoil
+		TabPane recoil = new TabPane();
+		recoil.setMaxWidth(300);
+		recoil.getTabs().addAll(makeTab("ADS", makeRecoilEditer(type, DataPath.of(GunData.RecoilADS))),
+				makeTab("Sneak", makeRecoilEditer(type, DataPath.of(GunData.RecoilSneak))));
+		addEditPane(recoil, type);
+
+		addEditPane(new RecoilGraphNode(editValue), type);
+		// */
+	}
+
+	/** MagazineData */
+	private void writeMagazineEditor() {
+		final EditType type = EditType.Magazine;
+		// icon
+		// addEditPane(makeImageNode(type, DataPath.of(ItemData.IconName),
+		// HidePack.IconList), type);
+		// Cate0
+		Pane root = makeCateEditPanel(type, 0);
+		root.getChildren()
+				.add(EditNode.editNumber(editModes.get(type), EditType.Item, DataPath.of(ItemData.StackSize)));
+		addEditPane(root, type);
+	}
+
+	/** ItemData用名称+アイコン編集ノード */
+	@SuppressWarnings("unchecked")
+	private void writeItemInfoEditor() {
+		final EditType type = EditType.Item;
+		DataView<ItemData> view = new DataView<>(ItemData.class, 1);
+		view.setValue(0, (ObservableObjectValue<ItemData>) editModes.get(type));
+		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
+		VBox root = new VBox();
+
+		// 短縮名
+		Node shortname = EditNode.editString(editValue, type, DataPath.of(ItemData.ShortName))
+				.setChangeListner((ov, nv) -> {
+					if (editValue.get() != null)
+						((NamedData) editValue.get()).onChangeSystemName((String) ov, (String) nv);
+				});
+		// 表示名
+		Node dizplayname = EditNode.editString(editValue, type, DataPath.of(ItemData.DisplayName))
+				.setChangeListner((ov, nv) -> RootController.refreshList());
+
+		// icon
+		Node icon = makeImageNode(type, DataPath.of(ItemData.IconName), HidePack.IconList, view);
+		// model
+		Node model = EditNode.editString(editValue, type, DataPath.of(ItemData.ModelName), HidePack.IconList);
+
+		root.getChildren().addAll(dizplayname, shortname, icon, model);
+		// root.setPrefSize(200, 72);
+		addEditPane(root, type);
 	}
 
 	/**
@@ -123,7 +228,7 @@ public class EditPanels extends Pane {
 	 */
 	@SuppressWarnings("unchecked")
 	private <T> void startEdit(EditType type, T data) {
-		System.out.println("edit ");
+		// System.out.println("edit ");
 		((ObjectProperty<T>) editModes.get(type)).set(data);
 	}
 
@@ -131,7 +236,7 @@ public class EditPanels extends Pane {
 	public void setEditValue(DataBase data) {
 		for (ObjectProperty<? extends DataBase> prop : editModes.values())
 			prop.set(null);
-		EditType.addValue(data, this::startEdit);
+		EditType.editValue(data, this::startEdit);
 	}
 
 	private void addEditPane(Node node, EditType type) {
@@ -158,115 +263,9 @@ public class EditPanels extends Pane {
 		clear.setTranslateX(16);
 
 		Pane res = new Pane();
-		res.getChildren().addAll(addremove,clear);
+		res.getChildren().addAll(addremove, clear);
 		res.setPrefSize(32, 24);
 		return res;
-	}
-
-	/*
-	 * private void writePackEditer() { final EditType type = EditType.PakcInfo;
-	 * addEditPane(makeCateEditPanel(type, -1), type); addEditPane(new VBox(new
-	 * ColorEditNode(editValue, type, new DataPath("PackColor"), null)), type); } //
-	 */
-
-	/** GunEditer */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void writeGunEditer() {
-		final EditType type = EditType.Gun;
-		DataView<GunData> view = new DataView<>(GunData.class, 1);
-		view.setValue(0, (ObservableObjectValue) editModes.get(type));
-		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
-		// *
-		// Cate0
-		addEditPane(makeCateEditPanel(type, 0), type);
-		// Cate1
-		addEditPane(makeCateEditPanel(type, 1), type);
-		// useBullet
-		addEditPane(new ListEditNode<>(editValue, type, DataPath.of(GunData.UseMagazine), HidePack.MagazineList,
-				(data -> data.getSystemName())), type);
-		// fireMode
-		addEditPane(new ListEditNode<>(editValue, type, DataPath.of(GunData.FireMode), GunFireMode.getList()), type);
-
-		// scope
-		Pane scope = makeImageNode(type, DataPath.of(GunData.ScopeName), HidePack.ScopeList, view);
-		scope.getChildren().add(makeCateEditPanel(EditType.Gun, 2));
-		addEditPane(scope, type);
-
-		// sound
-		TabPane sound = new TabPane();
-		sound.setMaxWidth(300);
-		sound.getTabs().addAll(makeTab("Shoot", makeSoundEditer(type, DataPath.of(GunData.SoundShoot))),
-				makeTab("Reload", makeSoundEditer(type, DataPath.of(GunData.SoundReload))),
-				makeTab("HitEntity", makeSoundEditer(type, DataPath.of(GunData.SoundHitEntity))),
-				makeTab("Hit", makeSoundEditer(type, DataPath.of(GunData.SoundHit))),
-				makeTab("Pass", makeSoundEditer(type, DataPath.of(GunData.SoundPassing))));
-		addEditPane(sound, type);
-
-		// recoil
-		TabPane recoil = new TabPane();
-		recoil.setMaxWidth(300);
-		recoil.getTabs().addAll(makeTab("Default", makeRecoilEditer(type, DataPath.of(GunData.Recoil))),
-				makeTab("ADS", makeRecoilEditer(type, DataPath.of(GunData.RecoilADS))),
-				makeTab("Sneak", makeRecoilEditer(type, DataPath.of(GunData.RecoilSneak))),
-				makeTab("Sneak+ADS", makeRecoilEditer(type, DataPath.of(GunData.RecoilSneakADS))));
-		addEditPane(recoil, type);
-
-		Canvas recoilview = new Canvas(RecoilViewSize, RecoilViewSize);
-		GraphicsContext g = recoilview.getGraphicsContext2D();
-		g.setFill(Color.GRAY);
-		g.fillRect(0, 0, RecoilViewSize, RecoilViewSize);
-		;
-		g.strokeRect(0, 0, RecoilViewSize, RecoilViewSize);
-		g.strokeLine(RecoilViewSize / 2, RecoilViewSize, RecoilViewSize / 2, 0);
-		g.strokeLine(RecoilViewSize, RecoilViewSize / 2, 0, RecoilViewSize / 2);
-
-		for (int i = 0; i < 40; i++) {
-			g.setStroke(Color.hsb(i * 3, 1, 1));
-			g.strokeOval(100, i * 5, 10, 10);
-
-		}
-
-		addEditPane(recoilview, type);
-		// */
-	}
-
-	private static final double RecoilViewSize = 300;
-
-	/** MagazineData */
-	private void writeMagazineEditor() {
-		final EditType type = EditType.Magazine;
-		// icon
-		// addEditPane(makeImageNode(type, DataPath.of(ItemData.IconName),
-		// HidePack.IconList), type);
-		// Cate0
-		addEditPane(makeCateEditPanel(type, 0), type);
-
-	}
-
-	/** ItemData用名称+アイコン編集ノード */
-	@SuppressWarnings("unchecked")
-	private void writeItemInfoEditor() {
-		final EditType type = EditType.Item;
-		DataView<GunData> view = new DataView<>(GunData.class, 1);
-		view.setValue(0, (ObservableObjectValue<GunData>) editModes.get(type));
-		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
-		VBox root = new VBox();
-		// 親
-		Node parentname = EditNode.editString(editValue, EditType.NamedData, DataPath.of(NamedData.ParentName));
-		// 短縮名
-		Node shortname = EditNode.editString(editValue, type, DataPath.of(ItemData.ShortName));
-		// 表示名
-		Node dizplayname = EditNode.editString(editValue, type, DataPath.of(ItemData.DisplayName))
-				.setChangeListner((v) -> RootController.refreshList());
-
-		// icon
-		Node icon = makeImageNode(type, DataPath.of(ItemData.IconName), HidePack.IconList, view);
-		// model
-		Node model = EditNode.editString(editValue, type, DataPath.of(ItemData.ModelName), HidePack.IconList);
-
-		root.getChildren().addAll(parentname, dizplayname, shortname, icon, model);
-		// root.setPrefSize(200, 72);
-		addEditPane(root, type);
 	}
 
 	private static Region setSize(Region node, ObservableValue<? extends Number> x, double y) {

@@ -1,11 +1,12 @@
 package editer.node;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
 
 import editer.IDataEntity;
@@ -47,6 +48,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
@@ -94,18 +96,18 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	private ObservableList<? extends IDataEntity> motherList;
 
 	/** 変更されたタイミングで呼ばれる */
-	public EditNode setChangeListner(Consumer<?>... listener) {
+	public EditNode setChangeListner(BiConsumer<?, ?>... listener) {
 		ChangeListener = listener;
 		return this;
 	}
 
 	/** 変更通知リスナー */
-	protected Consumer<?>[] ChangeListener = new Consumer<?>[0];
+	protected BiConsumer<?, ?>[] ChangeListener = new BiConsumer<?, ?>[0];
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private ChangeListener<?> listener = (v, ov, nv) -> {
-		for (Consumer<?> run : ChangeListener)
-			((Consumer) run).accept(nv);
+		for (BiConsumer<?, ?> run : ChangeListener)
+			((BiConsumer) run).accept(ov, nv);
 	};
 
 	/** 有効化切り替え */
@@ -228,22 +230,22 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	/**
 	 * 左詰めで配置 右側のtranslateXにバインド
 	 */
-	private static void leftJustified(Region left, int gap, Region right) {
+	protected static void leftJustified(Region left, int gap, Region right) {
 		right.translateXProperty().bind(left.widthProperty().add(left.translateXProperty()).add(gap));
 	}
 
 	/** 右詰めで配置 左側のtranslateXにバインド */
-	private static void rightJustified(Region left, int gap, Region right) {
+	protected static void rightJustified(Region left, int gap, Region right) {
 		left.translateXProperty().bind(right.translateXProperty().subtract(left.widthProperty()).subtract(gap));
 	}
 
 	/** 右端に配置 右側のtranslateXにバインド */
-	private static void right(Region parent, int gap, Region right) {
+	protected static void right(Region parent, int gap, Region right) {
 		right.translateXProperty().bind(parent.widthProperty().subtract(right.widthProperty()).subtract(gap));
 	}
 
 	/** 中央に配置 長さを決定 */
-	private static void center(Region center, int gap, Region right) {
+	protected static void center(Region center, int gap, Region right) {
 		center.prefWidthProperty().bind(right.translateXProperty().subtract(center.translateXProperty()).subtract(gap));
 	}
 
@@ -296,7 +298,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 			}
 		});
 		clipEdit = EditPanels.makeClipUI(edit, Path);
-		getChildren().addAll(propertyEdit,clipEdit);
+		getChildren().addAll(propertyEdit, clipEdit);
 	}
 
 	/** このエントリで編集する型 */
@@ -323,8 +325,12 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 				editerProperty = text.textProperty();
 				if (Type == NodeType.StringFromList) {
 					// test
-					TextFields.bindAutoCompletion(text, key -> ArrayEditor.Search(motherList, key.getUserText())
-							.stream().map(data -> data.getDisplayName()).sorted().collect(Collectors.toList()));
+					Callback<ISuggestionRequest, Collection<String>> suggestionProvider = key -> ArrayEditor
+							.Search(motherList, key.getUserText()).stream().map(data -> data.getDisplayName()).sorted()
+							.collect(Collectors.toList());
+
+					TextFields.bindAutoCompletion(text, suggestionProvider);
+
 				}
 			} else if (Type == NodeType.Float || Type == NodeType.Integer) {
 				textFieldWidth.set(50);
