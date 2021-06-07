@@ -8,6 +8,7 @@ import java.util.function.BiConsumer;
 import com.google.common.collect.ImmutableSet;
 
 import editer.HidePack;
+import editer.clip.ClipManager;
 import editer.controller.RootController;
 import helper.EditHelper;
 import javafx.beans.property.ObjectProperty;
@@ -23,12 +24,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import localize.LocalizeHandler;
 import resources.HideImage;
+import types.PackInfo;
 import types.base.DataBase;
 import types.base.DataBase.DataEntry;
 import types.base.DataPath;
@@ -51,7 +54,8 @@ public class EditPanels extends Pane {
 	public enum EditType {
 		NamedData(NamedData.class), Item(ItemData.class), Projectile(ProjectileData.class),
 		Gun(GunData.class, (cons, data) -> cons.accept(Projectile, data.get(GunData.Data, null))),
-		Magazine(MagazineData.class, (cons, data) -> cons.accept(Projectile, data.get(MagazineData.Data, null))),;
+		Magazine(MagazineData.class, (cons, data) -> cons.accept(Projectile, data.get(MagazineData.Data, null))),
+		Pack(PackInfo.class);
 
 		/** 判別用の型 */
 		public final Class<? extends DataBase> Clazz;
@@ -112,6 +116,7 @@ public class EditPanels extends Pane {
 		writeGunEditer();
 		writeMagazineEditor();
 		writeProjectileEditor();
+		writePackInfoEditor();
 		// writePackEditer();
 		// writeModelEditer();
 	}
@@ -135,7 +140,13 @@ public class EditPanels extends Pane {
 				makeTab("Pass", makeSoundEditer(type, DataPath.of(ProjectileData.SoundPassing))));
 		addEditPane(sound, type);
 		// recoil
-		addEditPane(makeRecoilEditer(type, DataPath.of(ProjectileData.Recoil)), type);
+		// recoil
+		TabPane recoil = new TabPane();
+		recoil.setMaxWidth(300);
+		recoil.getTabs().addAll(makeTab("Default", makeRecoilEditer(type, DataPath.of(ProjectileData.Recoil))),
+				makeTab("ADS", makeRecoilEditer(type, DataPath.of(ProjectileData.RecoilADS))),
+				makeTab("Sneak", makeRecoilEditer(type, DataPath.of(ProjectileData.RecoilSneak))));
+		addEditPane(recoil, type);
 	}
 
 	/** GunEditer */
@@ -168,27 +179,30 @@ public class EditPanels extends Pane {
 		scope.getChildren().add(makeCateEditPanel(EditType.Gun, GunData.ScopeInfo));
 		addEditPane(scope, type);
 
-		// recoil
-		TabPane recoil = new TabPane();
-		recoil.setMaxWidth(300);
-		recoil.getTabs().addAll(makeTab("ADS", makeRecoilEditer(type, DataPath.of(GunData.RecoilADS))),
-				makeTab("Sneak", makeRecoilEditer(type, DataPath.of(GunData.RecoilSneak))));
-		addEditPane(recoil, type);
-
 		addEditPane(new RecoilGraphNode(editValue), type);
 		// */
 	}
 
+	@SuppressWarnings("unchecked")
 	/** MagazineData */
 	private void writeMagazineEditor() {
 		final EditType type = EditType.Magazine;
+
+		final ObservableObjectValue<MagazineData> editValue = (ObservableObjectValue<MagazineData>) editModes.get(type);
 		// icon
 		// addEditPane(makeImageNode(type, DataPath.of(ItemData.IconName),
 		// HidePack.IconList), type);
 		// Cate0
 		Pane root = makeCateEditPanel(type, 0);
-		root.getChildren()
-				.add(EditNode.editNumber(editModes.get(type), EditType.Item, DataPath.of(ItemData.StackSize)));
+		root.getChildren().add(EditNode.editNumber(editValue, EditType.Item, DataPath.of(ItemData.StackSize)));
+		// 親
+		Node parentname = EditNode
+				.editString(editValue, EditType.NamedData, DataPath.of(NamedData.ParentName), HidePack.MagazineList)
+				.setChangeListner((ov, nv) -> {
+					if (editValue.get() != null)
+						((NamedData) editValue.get()).onChangeParentName((String) ov, (String) nv);
+				});
+		root.getChildren().add(parentname);
 		addEditPane(root, type);
 	}
 
@@ -221,6 +235,12 @@ public class EditPanels extends Pane {
 		addEditPane(root, type);
 	}
 
+	private void writePackInfoEditor() {
+		final EditType type = EditType.Pack;
+		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
+		addEditPane(makeCateEditPanel(type, 0), type);
+	}
+
 	/**
 	 * エディタの内容
 	 *
@@ -232,11 +252,22 @@ public class EditPanels extends Pane {
 		((ObjectProperty<T>) editModes.get(type)).set(data);
 	}
 
+	/** 編集中のデータ */
+	private DataBase current;
+
+	/** 表示中のものなら表示解除 */
+	public void removeEditValue(DataBase data) {
+		if (current != null && current.equals(data))
+			setEditValue(null);
+	}
+
 	/** エディタの内容設定 */
 	public void setEditValue(DataBase data) {
+		current = data;
 		for (ObjectProperty<? extends DataBase> prop : editModes.values())
 			prop.set(null);
-		EditType.editValue(data, this::startEdit);
+		if (data != null)
+			EditType.editValue(data, this::startEdit);
 	}
 
 	private void addEditPane(Node node, EditType type) {
@@ -246,7 +277,9 @@ public class EditPanels extends Pane {
 		rootPane.getChildren().add(node);
 	}
 
-	static Region makeClipUI(EditType type, DataPath path) {
+	private static ClipManager clipManager = new ClipManager();
+
+	static Region makeClipUI(ObservableObjectValue<? extends DataBase> value, EditType type, DataPath path) {
 		ImageView clipDelete = new ImageView("/icon/clipDelete.png");
 		ImageView clipAdd = new ImageView("/icon/clipAdd.png");
 		ImageView clipRemove = new ImageView("/icon/clipRemove.png");
@@ -256,15 +289,43 @@ public class EditPanels extends Pane {
 		addremove.setPrefSize(16, 24);
 		addremove.setAlignment(Pos.CENTER);
 		addremove.setGraphic(clipAdd);
-		Label clear = new Label();
-		clear.setPrefSize(16, 24);
-		clear.setAlignment(Pos.CENTER);
-		clear.setGraphic(clipDelete);
-		clear.setTranslateX(16);
+		addremove.setOnMouseClicked(e -> {
+			if (e.getButton() == MouseButton.PRIMARY) {
+				if (clipManager.hasPath(path))
+					clipManager.remove(path);
+				else
+					clipManager.add(value.get(), path);
+
+				addremove.setGraphic(clipManager.hasPath(path) ? clipRemove : clipAdd);
+			}
+		});
+		addremove.visibleProperty().bind(clipManager.type.isEqualTo(type.Clazz).or(clipManager.type.isNull()));
+
+		Label clearpaste = new Label();
+		clearpaste.setPrefSize(16, 24);
+		clearpaste.setAlignment(Pos.CENTER);
+		clearpaste.setGraphic(clipDelete);
+		clearpaste.setTranslateX(16);
+		clearpaste.setOnMouseClicked(e -> {
+			if (e.getButton() == MouseButton.PRIMARY) {
+				clearpaste.setGraphic(clipManager.hasPath(path) ? clipPaste : clipDelete);
+			}
+		});
+
+		Class<?> clazz = EditHelper.getType(type.Clazz, path);
+		clipManager.scope.addListener((v, ov, nv) -> {
+			if (clipManager.hasPath(path)) {
+				clipManager.paste(value.get(), path);
+			} else {
+
+			}
+		});
+		clearpaste.visibleProperty().bind(clipManager.scope.isNotNull());
 
 		Pane res = new Pane();
-		res.getChildren().addAll(addremove, clear);
+		res.getChildren().addAll(addremove, clearpaste);
 		res.setPrefSize(32, 24);
+
 		return res;
 	}
 

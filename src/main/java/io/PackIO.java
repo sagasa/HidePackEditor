@@ -26,8 +26,6 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
-
 import editer.HidePack;
 import editer.controller.RootController;
 import helper.ArrayEditor;
@@ -44,7 +42,6 @@ import types.items.MagazineData;
 public class PackIO {
 	private static final Logger log = LogManager.getLogger();
 	public static boolean isChanged = false;
-	private static Gson gson = new Gson();
 
 	/** 新しいパックを作る */
 	public static void makePack() {
@@ -59,7 +56,6 @@ public class PackIO {
 		return filechooser;
 	}
 
-	// TODO キャッチにエラーダイアログを
 	/** iconをインポート */
 	public static void importIcon() {
 		FileChooser filechooser = makeFileChooser(new ExtensionFilter("image", "*.png", "*.jpg", "*.bmp"));
@@ -134,56 +130,52 @@ public class PackIO {
 		}
 	}
 
-	private static void addEntry(Map<PackInfo, List<Entry>> dataMap,Collection<? extends NamedData> data,PackPattern pattern) {
+	private static void addEntry(Map<PackInfo, List<Entry>> dataMap, Collection<? extends NamedData> data,
+			PackPattern pattern) {
 		for (NamedData d : data) {
 			// 参照ではなければ
 			if (!d.isReference()) {
-				dataMap.get(d.getRootPack().get()).add(new Entry(pattern.toPath(d.getDisplayName()),
-						new ByteArrayInputStream(d.toJson().getBytes())));
+				dataMap.get(d.getRootPack().get()).add(
+						new Entry(pattern.toPath(d.getDisplayName()), new ByteArrayInputStream(d.toJson().getBytes())));
+			}
+		}
+	}
+
+	private static void addEntryImage(Map<PackInfo, List<Entry>> dataMap, Collection<? extends HideImage> data,
+			PackPattern pattern) throws IOException {
+		for (HideImage d : data) {
+			// 参照ではなければ
+			if (!d.isReference()) {
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				ImageIO.write(d.Image, "png", out);
+				dataMap.get(d.RootPack.get()).add(
+						new Entry(pattern.toPath(d.getDisplayName()), new ByteArrayInputStream(out.toByteArray())));
 			}
 		}
 	}
 
 	/** パッキングして出力する */
-	public static void export() {
+	public static void export(File path) {
 		// データをまとめる
 		Map<PackInfo, List<Entry>> dataMap = new HashMap<>();
 		for (PackInfo pack : HidePack.OpenPacks) {
 			// 参照では無ければ
-			if (!pack.isReference()) {
-				dataMap.put(pack, new ArrayList<>());
-				// パックデータ
-				dataMap.get(pack).add(new Entry("pack.json", new ByteArrayInputStream(pack.toJson().getBytes())));
-			}
+			dataMap.put(pack, new ArrayList<>());
+			// パックデータ
+			dataMap.get(pack).add(new Entry("pack.json", new ByteArrayInputStream(pack.toJson().getBytes())));
 		}
 
 		// 銃のデータ
-		addEntry(dataMap,HidePack.GunList,PackPattern.GUN);
+		addEntry(dataMap, HidePack.GunList, PackPattern.GUN);
 		// 弾のデータ
-		addEntry(dataMap,HidePack.MagazineList,PackPattern.MAGAZINE);
+		addEntry(dataMap, HidePack.MagazineList, PackPattern.MAGAZINE);
 
 		// リソース
 		try {
 			// Icon
-			for (HideImage d : HidePack.IconList) {
-				// 参照ではなければ
-				if (!d.isReference()) {
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					ImageIO.write(d.Image, "png", out);
-					dataMap.get(d.RootPack.get()).add(new Entry(PackPattern.ICON.toPath(d.getDisplayName()),
-							new ByteArrayInputStream(out.toByteArray())));
-				}
-			}
+			addEntryImage(dataMap, HidePack.IconList, PackPattern.ICON);
 			// Scope
-			for (HideImage d : HidePack.ScopeList) {
-				// 参照ではなければ
-				if (!d.isReference()) {
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					ImageIO.write(d.Image, "png", out);
-					dataMap.get(d.RootPack.get()).add(new Entry(PackPattern.SCOPE.toPath(d.getDisplayName()),
-							new ByteArrayInputStream(out.toByteArray())));
-				}
-			}
+			addEntryImage(dataMap, HidePack.ScopeList, PackPattern.SCOPE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -194,21 +186,21 @@ public class PackIO {
 						new Entry(PackPattern.SOUND.toPath(d.getDisplayName()), new ByteArrayInputStream(d.Sound)));
 			}
 		}
-		// 内容がないエントリを削除
+		// 内容がないor参照のエントリを削除
 		for (PackInfo pack : dataMap.keySet()) {
-			if (dataMap.get(pack).size() <= 1) {
+			if (dataMap.get(pack).size() <= 1 || pack.isReference) {
 				dataMap.remove(pack);
-				log.debug(pack.getDisplayName() + " dont have any contents");
+				log.debug(pack.getDisplayName() + " dont have any contents or reference pack");
 			}
 		}
 
 		try {
-			File path = new File("./export/");
 			path.mkdirs();
 			// 全パック出力
 			for (PackInfo pack : dataMap.keySet()) {
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(// TODO 出力先指定
-						new File(path, pack.getDisplayName()) + ".zip"), Charset.forName("Shift_JIS"));
+						new File(path, pack.getDisplayName() + pack.get(PackInfo.PackVar, null)) + ".zip"),
+						Charset.forName("Shift_JIS"));
 				for (Entry data : dataMap.get(pack)) {
 					ZipEntry entry = new ZipEntry(data.Name);
 					zos.putNextEntry(entry);

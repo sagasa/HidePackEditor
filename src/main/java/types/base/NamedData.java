@@ -17,7 +17,7 @@ public abstract class NamedData extends DataBase implements IDataEntity {
 	public static final DataEntry<String> ParentName = of("", new Info().IsName(true));
 
 	protected void setParent(NamedData data) {
-		if (parent == data)
+		if (parent == data || data == this)
 			return;
 		if (parent != null)
 			parent.children.remove(this);

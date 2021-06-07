@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import helper.EditHelper;
+import types.PackInfo;
 import types.base.DataBase;
 import types.base.DataBase.DataEntry;
 import types.base.DataPath;
@@ -50,7 +52,7 @@ public class LocalizeHandler {
 		makeLocalize(MagazineData.class);
 		makeLocalize(NamedData.class);
 		makeLocalize(ProjectileData.class);
-		// makeLocalize(ModelSelector.class);
+		makeLocalize(PackInfo.class);
 		// makeLocalize(Vec3f.class);
 		// makeLocalize(HideModel.class);
 		// makeLocalize(AnimationKey.class);
@@ -106,7 +108,7 @@ public class LocalizeHandler {
 			for (File file : langDir.listFiles()) {
 				if (file.getName().endsWith(".properties")) {
 					String lang = file.getName().replace(".properties", "");
-					InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
+					InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
 					LangMap.put(lang, new HideLocalizeResource(reader, defaultRB));
 					reader.close();
 				}
@@ -184,7 +186,7 @@ public class LocalizeHandler {
 
 	/** メニュー用Lang */
 	public enum Lang {
-		File, Edit, Help, New, NewOpen, Open, Save, SaveAs, Import, Gun, Magazine, Armor, Attachment, Icon, Sound,
-		Scope, Lang, Exit, NotSet, Add, Remove,
+		File, Edit, Help, New, NewOpen, Open, OpenDir, Save, SaveAs, Import, Gun, Magazine, Armor, Attachment, Icon,
+		Sound, Scope, Lang, Exit, NotSet, Add, Remove,
 	}
 }

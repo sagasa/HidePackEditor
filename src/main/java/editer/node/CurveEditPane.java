@@ -324,8 +324,8 @@ public class CurveEditPane extends Pane {
 		// 入力を数値のみに
 		// FloatかIntegerか判別
 
-		Label labelX = initLabel("X=");
-		Label labelY = initLabel("Y=");
+		Label labelX = initLabel("Key=");
+		Label labelY = initLabel("Value=");
 		keyField = initTextField();
 		valueField = initTextField();
 
@@ -343,11 +343,11 @@ public class CurveEditPane extends Pane {
 			updateState(getCurve());
 		});
 
-		leftJustified(labelX, 2, keyField);
-		leftJustified(keyField, 2, labelY);
-		leftJustified(labelY, 2, valueField);
-		leftJustified(valueField, 10, add);
-		leftJustified(valueField, 10, remove);
+		leftJustified(labelX, 0, keyField);
+		leftJustified(keyField, 0, labelY);
+		leftJustified(labelY, 0, valueField);
+		leftJustified(valueField, 0, add);
+		leftJustified(valueField, 0, remove);
 
 		keyField.textProperty().addListener((v, ov, nv) -> {
 			final int index = selectIndex.get();

@@ -3,7 +3,6 @@ package types.items;
 import org.apache.commons.lang.ArrayUtils;
 
 import types.base.Info;
-import types.effect.Recoil;
 import types.gun.GunFireMode;
 import types.gun.ProjectileData;
 
@@ -49,11 +48,6 @@ public class GunData extends ItemData {
 	/** 装填数 : int型 **/
 	public static final DataEntry<Integer> LoadSize = of(1, new Info().Cate(GunInfo).Min(1));
 
-	/** ADS精度変化 : float型 **/
-	public static final DataEntry<Float> AccuracyADS = of(0f, new Info().Cate(GunInfo).Min(0));
-	/** Sneak精度変化 : float型 **/
-	public static final DataEntry<Float> AccuracySneak = of(0f, new Info().Cate(GunInfo).Min(0));
-
 	/** セカンダリにできるか Boolean */
 	public static final DataEntry<Boolean> UseSecondary = of(false, new Info().Cate(GunInfo));
 	/** 両手持ちできるか Boolean */
@@ -64,10 +58,5 @@ public class GunData extends ItemData {
 
 	/** 使用するマガジンの登録名 : String[] */
 	public static final DataEntry<String[]> UseMagazine = of(ArrayUtils.EMPTY_STRING_ARRAY, new Info().Cate(0));
-
-	/** ADSリコイル変化 : Recoil */
-	public static final DataEntry<Recoil> RecoilADS = of(new Recoil());
-	/** スニークリコイル変化 : GunRecoil型 */
-	public static final DataEntry<Recoil> RecoilSneak = of(new Recoil());
 
 }

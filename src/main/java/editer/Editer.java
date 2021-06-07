@@ -13,10 +13,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
 import sagasa.gltf.GltfLoader.GltfException;
+import types.value.Curve;
+import types.value.Curve.CurveKey;
 
 public class Editer extends Application {
 
@@ -52,6 +57,13 @@ public class Editer extends Application {
 
 		// GltfLoader.LoadGlbFile(new File("./addempty.glb"));
 		// System.out.println(DataBase.getSample(GunData.class, false));
+
+		Curve curve = new Curve();
+		curve.Keys = new CurveKey[2];
+		curve.Keys[0] = new CurveKey(0, 0);
+		curve.Keys[1] = new CurveKey(1, 1);
+
+		// System.out.println(curve.get(1.5f));
 
 		launch(arg);
 
@@ -116,6 +128,7 @@ public class Editer extends Application {
 
 	private static final Logger log = LogManager.getLogger();
 	private static final Point2D STAGE_SIZE = new Point2D(1400, 800);
+	public static final String Title = "HidePackEditer";
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -126,11 +139,20 @@ public class Editer extends Application {
 		RootController.STAGE = stage;
 		log.debug("Showing JFX scene");
 		Scene scene = new Scene(rootNode, STAGE_SIZE.getX(), STAGE_SIZE.getY() - 40);
-		stage.setTitle("HidePackEditer");
+		stage.setTitle(Title);
 		stage.getIcons().add(new Image("icon/M14_scope.png"));
 		stage.setScene(scene);
 		stage.setMinHeight(STAGE_SIZE.getY());
 		stage.setMinWidth(STAGE_SIZE.getX());
 		stage.show();
+
+		stage.setOnCloseRequest(e -> {
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Exit?", ButtonType.YES, ButtonType.NO);
+			alert.setHeaderText(null);
+			ButtonType button = alert.showAndWait().orElse(ButtonType.CANCEL);
+			if (button != ButtonType.YES) {
+				e.consume();
+			}
+		});
 	}
 }

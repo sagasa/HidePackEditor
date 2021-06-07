@@ -15,7 +15,7 @@ public class EditorConfig {
 	private transient static final File configFile = new File("./editor.cfg");
 
 	public List<String> openFiles;
-	public String openDir = "./";
+	public String editDir = "./export/";
 
 	transient private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -31,6 +31,7 @@ public class EditorConfig {
 			return config;
 		}
 	}
+
 	public static void save(EditorConfig config) {
 		try {
 			Files.write(Paths.get(configFile.getPath()), gson.toJson(config).getBytes(StandardCharsets.UTF_8));

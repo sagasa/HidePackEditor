@@ -16,6 +16,7 @@ import types.base.DataPath;
 public class ClipManager {
 
 	DataBase clipData;
+	public final ObjectProperty<Class<? extends DataBase>> type = new SimpleObjectProperty<>();
 	public final ObjectProperty<Class<?>> scope = new SimpleObjectProperty<>();
 	DataPath scopePath;
 	List<DataPath> pathList = new ArrayList<>();
@@ -31,9 +32,6 @@ public class ClipManager {
 			System.err.println("Fuck cant add other database");
 			return;
 		}
-		if (clipData == null) {
-			clipData = ReflectionUtil.instantiate(data.getClass());
-		}
 		// 子があるなら再起追加
 		if (DataBase.class.isAssignableFrom(EditHelper.getType(data.getClass(), path))) {
 			for (DataEntry<?> entry : EditHelper.getDataEntries(data.getClass(), path))
@@ -42,6 +40,11 @@ public class ClipManager {
 		}
 		ValueEntry baseValue = EditHelper.getValueEntry(data, path);
 		if (baseValue != null) {
+			if (clipData == null) {
+				clipData = ReflectionUtil.instantiate(data.getClass());
+				type.set(data.getClass());
+			}
+
 			pathList.add(path);
 			EditHelper.putValueEntry(clipData, path);
 			ValueEntry clipValue = EditHelper.getValueEntry(clipData, path);
@@ -50,7 +53,7 @@ public class ClipManager {
 			clipValue.setValue(baseValue.getValue());
 			updateScope();
 		}
-
+		System.out.println("add " + pathList + " " + scope.get());
 	}
 
 	public void remove(DataPath path) {
@@ -60,14 +63,21 @@ public class ClipManager {
 			EditHelper.removeValueEntry(clipData, path);
 		if (pathList.isEmpty()) {
 			clipData = null;
+			type.set(null);
 		}
 		updateScope();
+
+		System.out.println("remove " + pathList + " " + scope.get());
 	}
 
 	public void clear() {
 		clipData = null;
 		pathList.clear();
 		updateScope();
+	}
+
+	public boolean hasPath(DataPath path) {
+		return pathList.contains(path);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -113,8 +123,15 @@ public class ClipManager {
 				depth = Math.min(and(first, path), depth);
 			}
 		}
-		scopePath = first.limit(depth);
-		scope.set(EditHelper.getType(clipData.getClass(), scopePath));
+		if (0 < depth) {
+			scopePath = first.limit(depth);
+			scope.set(EditHelper.getType(clipData.getClass(), scopePath));
+		} else {
+			scopePath = DataPath.BLANK_PATH;
+			scope.set(clipData.getClass());
+		}
+
+		System.out.println(scopePath + " " + depth);
 	}
 
 	private static int and(DataPath a, DataPath b) {

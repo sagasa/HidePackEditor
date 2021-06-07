@@ -24,28 +24,34 @@ public class Curve implements Cloneable {
 	}
 
 	public float get(float key) {
+		Float res = null;
 		if (Keys.length == 0)
-			return 0;
-		if (Keys.length == 1)
-			return Keys[0].Value;
-		for (int i = 0; i < Keys.length; i++) {
-			if (key <= Keys[i].Key) {
-				float minKey = 0 < i ? Keys[i - 1].Key : 0;
-				float minValue = 0 < i ? Keys[i - 1].Value : 0;
-				float maxKey = Keys[i].Key;
-				float maxValue = Keys[i].Value;
-
-				Float res = minValue + ((key - minKey) / (maxKey - minKey) * (maxValue - minValue));
-				// 親がいるなら
-				if (pearnt != null)
-					res = operator.apply(pearnt.get(key), res);
-				return res;
+			res = 0f;
+		else if (Keys.length == 1)
+			res = Keys[0].Value;
+		else if (key <= Keys[0].Key)
+			res = Keys[0].Value;
+		else if (Keys[Keys.length - 1].Key < key)
+			res = Keys[Keys.length - 1].Value;
+		else {
+			for (int i = 0; i < Keys.length; i++) {
+				if (key <= Keys[i].Key) {
+					float minKey = 0 < i ? Keys[i - 1].Key : 0;
+					float minValue = 0 < i ? Keys[i - 1].Value : 0;
+					float maxKey = Keys[i].Key;
+					float maxValue = Keys[i].Value;
+					// System.out.println(minKey + " " + minValue + " " + maxKey + " " + maxValue);
+					res = minValue + ((key - minKey) / (maxKey - minKey) * (maxValue - minValue));
+					break;
+				}
 			}
+			if (res == null)
+				throw new NullPointerException("");
 		}
-		Float res = Keys[Keys.length - 1].Value;
 		// 親がいるなら
-		if (pearnt != null)
+		if (pearnt != null) {
 			res = operator.apply(pearnt.get(key), res);
+		}
 		return res;
 	}
 
@@ -76,7 +82,6 @@ public class Curve implements Cloneable {
 
 	@Override
 	public String toString() {
-
 		return ArrayUtils.toString(Keys);
 	}
 

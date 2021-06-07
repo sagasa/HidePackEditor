@@ -230,22 +230,22 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	/**
 	 * 左詰めで配置 右側のtranslateXにバインド
 	 */
-	protected static void leftJustified(Region left, int gap, Region right) {
+	public static void leftJustified(Region left, int gap, Region right) {
 		right.translateXProperty().bind(left.widthProperty().add(left.translateXProperty()).add(gap));
 	}
 
 	/** 右詰めで配置 左側のtranslateXにバインド */
-	protected static void rightJustified(Region left, int gap, Region right) {
+	public static void rightJustified(Region left, int gap, Region right) {
 		left.translateXProperty().bind(right.translateXProperty().subtract(left.widthProperty()).subtract(gap));
 	}
 
 	/** 右端に配置 右側のtranslateXにバインド */
-	protected static void right(Region parent, int gap, Region right) {
+	public static void right(Region parent, int gap, Region right) {
 		right.translateXProperty().bind(parent.widthProperty().subtract(right.widthProperty()).subtract(gap));
 	}
 
 	/** 中央に配置 長さを決定 */
-	protected static void center(Region center, int gap, Region right) {
+	public static void center(Region center, int gap, Region right) {
 		center.prefWidthProperty().bind(right.translateXProperty().subtract(center.translateXProperty()).subtract(gap));
 	}
 
@@ -297,7 +297,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 
 			}
 		});
-		clipEdit = EditPanels.makeClipUI(edit, Path);
+		clipEdit = EditPanels.makeClipUI(value, edit, Path);
 		getChildren().addAll(propertyEdit, clipEdit);
 	}
 

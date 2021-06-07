@@ -7,9 +7,7 @@ import types.PackInfo;
 public interface IDataEntity extends Comparable<IDataEntity> {
 	abstract public String getDisplayName();
 
-	public default ObjectProperty<PackInfo> getRootPack() {
-		return null;
-	}
+	public ObjectProperty<PackInfo> getRootPack();
 
 	public default boolean isReference() {
 		PackInfo info = getRootPack().get();

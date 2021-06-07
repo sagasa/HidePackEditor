@@ -19,9 +19,17 @@ public class ProjectileData extends DataBase {
 
 	/** デフォルトリコイル : Recoil */
 	public static final DataEntry<Recoil> Recoil = of(new Recoil());
+	/** ADSリコイル変化 : Recoil */
+	public static final DataEntry<Recoil> RecoilADS = of(new Recoil());
+	/** スニークリコイル変化 : GunRecoil型 */
+	public static final DataEntry<Recoil> RecoilSneak = of(new Recoil());
 
 	/** 精度 : 50ブロック先で1辺精度mの正方形に当たる : float型 **/
 	public static final DataEntry<Float> Accuracy = of(0f, new Info().Cate(GunInfo).Min(0));
+	/** ADS精度変化 : float型 **/
+	public static final DataEntry<Float> AccuracyADS = of(0f, new Info().Cate(GunInfo).Min(0));
+	/** Sneak精度変化 : float型 **/
+	public static final DataEntry<Float> AccuracySneak = of(0f, new Info().Cate(GunInfo).Min(0));
 	/** リロード ; リロードにtickかかる : int型 **/
 	public static final DataEntry<Integer> ReloadTick = of(20, new Info().Cate(GunInfo).Min(0).Scale("5"));
 

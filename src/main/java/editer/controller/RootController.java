@@ -1,7 +1,6 @@
 package editer.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -22,10 +21,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.WeakListChangeListener;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -38,13 +34,13 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import types.PackInfo;
+import types.base.DataBase;
 import types.base.NamedData;
 import types.items.GunData;
 import types.items.MagazineData;
@@ -76,10 +72,6 @@ public class RootController implements Initializable {
 	private ListView<IDataEntity> modelList;
 	@FXML
 	private ListView<HideModel> modelInfoList;
-
-	/** クリップエディタ */
-	private ClipController clipController;
-	private Stage clipEditer;
 
 	/** writeのリスナー */
 	private ListChangeListener<IDataEntity> writeListener = change -> {
@@ -135,28 +127,6 @@ public class RootController implements Initializable {
 		curveeditor.getChildren().add(editer.curveEditPane);
 
 		write();
-
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/clip.fxml"));
-		try {
-			System.out.println(loader.load().toString());
-			;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Parent root = loader.getRoot();
-		clipController = loader.getController();
-		Scene scene = new Scene(root);
-		clipEditer = new Stage(StageStyle.UTILITY);
-		clipEditer.setScene(scene);
-		clipEditer.initOwner(STAGE);
-		clipEditer.initModality(Modality.NONE);
-		// clipEditer.setResizable(false);
-		clipEditer.setTitle("ClipBord");
-		clipEditer.showingProperty().addListener((v, ov, nv) -> {
-			if (!nv) {
-
-			}
-		});
 	}
 
 	/** 選択されたら実行 */
@@ -174,7 +144,8 @@ public class RootController implements Initializable {
 
 	/** パックから要素が削除されたとき編集中なら編集を中止する */
 	private void cancelEdit(IDataEntity obj) {
-		editer.setEditValue(null);
+		if (obj instanceof DataBase)
+			editer.removeEditValue((DataBase) obj);
 	}
 
 	/** 親子関係の解決 */
@@ -252,60 +223,100 @@ public class RootController implements Initializable {
 		e.consume();
 	}
 
-	public void newPack() {
+	// ========メニュー操作========
+	private void updateEditDir(String path) {
+		if (path == null)
+			STAGE.setTitle(Editer.Title);
+		else
+			STAGE.setTitle(Editer.Title + "  *" + path);
+	}
 
+	private void openPack(File file) {
+		updateEditDir(Editer.config.editDir);
+		PackCash pack = PackIO.readPack(file);
+		HidePack.addPack(pack);
+		write();
+	}
+
+	public void newPack() {
+		HidePack.clear();
+		bulletNamePointer = 0;
+		gunNamePointer = 0;
+		packNamePointer = 0;
+		write();
+		updateEditDir(null);
+	}
+
+	public void openNewPackDir() {
+		newPack();
+		DirectoryChooser chooser = new DirectoryChooser();
+		File dir = new File(Editer.config.editDir);
+		if (!dir.exists() || !dir.isDirectory())
+			dir = new File("./export/");
+		chooser.setInitialDirectory(dir);
+		File file = chooser.showDialog(STAGE);
+		if (file != null) {
+			Editer.config.editDir = file.toString();
+			for (File f : file.listFiles())
+				openPack(f);
+		}
 	}
 
 	public void openNewPack() {
-
+		newPack();
+		openPack();
 	}
 
-	// ========メニュー操作========
 	public void openPack() {
 		FileChooser fxtest = new FileChooser();
-		File dir = new File(Editer.config.openDir);
+		File dir = new File(Editer.config.editDir);
 		if (!dir.exists() || !dir.isDirectory())
-			dir = new File("./");
+			dir = new File("./export/");
 		fxtest.setInitialDirectory(dir);
+
 		fxtest.getExtensionFilters().add(new ExtensionFilter("zip", "*.zip"));
 		File file = fxtest.showOpenDialog(STAGE);
 		if (file != null) {
-			Editer.config.openDir = file.getParent();
-			PackCash pack = PackIO.readPack(file);
-			// パックが1つなら
-			if (HidePack.isNewPack) {
-				HidePack.isNewPack = false;
-				HidePack.addPack(pack);
-				write();
-			} else {
-				// インポートダイアログを開く
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/import.fxml"));
-				try {
-					loader.load();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				Parent root = loader.getRoot();
-				ImportController controller = loader.getController();
-				controller.setPack(pack);
-				Scene scene = new Scene(root);
-				Stage confirmDialog = new Stage(StageStyle.UTILITY);
-				confirmDialog.setScene(scene);
-				confirmDialog.initOwner(STAGE);
-				confirmDialog.initModality(Modality.WINDOW_MODAL);
-				confirmDialog.setResizable(false);
-				confirmDialog.setTitle("Select an Option");
-				confirmDialog.show();
-			}
+			Editer.config.editDir = file.getParent();
+			openPack(file);
+			// インポートダイアログを開く
+//			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/import.fxml"));
+//			try {
+//				loader.load();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			Parent root = loader.getRoot();
+//			ImportController controller = loader.getController();
+//			controller.setPack(pack);
+//			Scene scene = new Scene(root);
+//			Stage confirmDialog = new Stage(StageStyle.UTILITY);
+//			confirmDialog.setScene(scene);
+//			confirmDialog.initOwner(STAGE);
+//			confirmDialog.initModality(Modality.WINDOW_MODAL);
+//			confirmDialog.setResizable(false);
+//			confirmDialog.setTitle("Select an Option");
+//			confirmDialog.show();
 		}
 	}
 
 	public void save() {
-		PackIO.export();
+		File file = new File(Editer.config.editDir);
+		PackIO.export(file);
+		updateEditDir(file.toString());
 	}
 
 	public void saveas() {
-		PackIO.export();
+		DirectoryChooser fxtest = new DirectoryChooser();
+		File dir = new File(Editer.config.editDir);
+		if (!dir.exists() || !dir.isDirectory())
+			dir = new File("./export/");
+		fxtest.setInitialDirectory(dir);
+		File file = fxtest.showDialog(STAGE);
+		if (file != null) {
+			Editer.config.editDir = file.toString();
+			save();
+		}
 	}
 
 	// FXCollections.observableArrayList(HidePack.OpenPacks.stream().filter(data ->
@@ -317,38 +328,9 @@ public class RootController implements Initializable {
 		editer.setEditValue(null);
 	}
 
-	public void editData(NamedData item) {
+	public void editData(DataBase item) {
 		if (item != null) {
-			log.debug("edit " + item.getDisplayName());
 			editer.setEditValue(item);
-		}
-	}
-
-	public void editPack(IDataEntity item) {
-		if (item != null) {
-			log.debug(HidePack.getPack(item.getDisplayName()).toString());
-			// editer.setEditValue(HidePack.getPack(item.getDisplayName()));
-		}
-	}
-
-	public void editGun(IDataEntity item) {
-		if (item != null) {
-			log.debug(HidePack.getGunData(item.getDisplayName()).toString() + HidePack.GunList + " " + item.getClass());
-			editer.setEditValue(HidePack.getGunData(item.getDisplayName()));
-		}
-	}
-
-	public void editMagazine(IDataEntity item) {
-		if (item != null) {
-			log.debug(HidePack.getGunData(item.getDisplayName()).toString());
-			// editer.setEditValue(HidePack.getMagazineData(item.getDisplayName()));
-		}
-	}
-
-	public void editModelInfo(IDataEntity item) {
-		if (item != null) {
-			log.debug(HidePack.getModelInfo(item.getDisplayName()).toString());
-			// editer.setEditValue(HidePack.getModelInfo(item.getDisplayName()));
 		}
 	}
 
@@ -371,13 +353,12 @@ public class RootController implements Initializable {
 		while (HidePack.getPack("New Pack No." + packNamePointer) != null) {
 			packNamePointer++;
 		}
-		pack.put(pack.displayName(), Operator.SET, "New Pack No." + packNamePointer);
+		pack.put(PackInfo.PackName, Operator.SET, "New Pack No." + packNamePointer);
 		HidePack.OpenPacks.add(pack);
 		write();
 	}
 
 	public void addGun() {
-		// clipEditer.show();//TODO
 		log.debug("addGun");
 		if (HidePack.getGunData("New Gun No." + gunNamePointer) == null) {
 			gunNamePointer++;

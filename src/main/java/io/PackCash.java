@@ -36,7 +36,7 @@ public class PackCash {
 		if (Pack != null) {
 			// 同じ名前なら優先
 			PackInfo base = HidePack.getPack(Pack.getDisplayName());
-			if (base != null && Pack.getSystemName().equals(base.getSystemName())) {
+			if (base != null && Pack.equals(base)) {
 				pack = base;
 				Pack = null;
 			} else {
@@ -48,6 +48,7 @@ public class PackCash {
 		GunList.forEach(data -> data.getRootPack().set(fInfo));
 		MagazineList.forEach(data -> data.getRootPack().set(fInfo));
 		IconList.forEach(data -> data.RootPack.set(fInfo));
+		SoundList.forEach(data -> data.RootPack.set(fInfo));
 		ScopeList.forEach(data -> data.RootPack.set(fInfo));
 		ModelList.forEach(data -> data.RootPack.set(fInfo));
 		ModelInfoList.forEach(data -> data.getRootPack().set(fInfo));

@@ -1,7 +1,9 @@
 package editer;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 
 import io.PackCash;
 import javafx.collections.FXCollections;
@@ -45,8 +47,6 @@ public class HidePack {
 	public static ObservableList<PackInfo> OpenPacks;
 	/** デフォルトパック */
 	public static PackInfo DefaultPack;
-	/** 初回かどうか */
-	public static boolean isNewPack = true;
 
 	public static Random random = new Random();
 
@@ -58,11 +58,6 @@ public class HidePack {
 				e.getAddedSubList().forEach(add -> add.container = e.getList());
 	};
 	static {
-		clear();
-	}
-
-	/** パック初期化 */
-	public static void clear() {
 		GunList = FXCollections.observableArrayList();
 		MagazineList = FXCollections.observableArrayList();
 		IconList = FXCollections.observableArrayList();
@@ -82,6 +77,50 @@ public class HidePack {
 		GunList.addListener(namedinit);
 		MagazineList.addListener(namedinit);
 		ModelInfoList.addListener(namedinit);
+	}
+
+	/** パック初期化 */
+	public static void clear() {
+		GunList.clear();
+		MagazineList.clear();
+		IconList.clear();
+		ScopeList.clear();
+		SoundList.clear();
+		TextureList.clear();
+		OpenPacks.clear();
+		ModelList.clear();
+		ModelInfoList.clear();
+		DefaultPack = new PackInfo();
+		DefaultPack.put(PackInfo.PackName, Operator.SET, "default");
+		DefaultPack.put(PackInfo.PackDomain, Operator.SET, "default");
+		DefaultPack.put(PackInfo.PackVar, Operator.SET, "");
+		DefaultPack.PackColor.set(Color.GRAY);
+		OpenPacks.add(DefaultPack);
+	}
+
+	/** 各種編集関数実行 false返すと削除 */
+	public static void editToAll(Function<IDataEntity, Boolean> func) {
+		edit(GunList, func);
+		edit(MagazineList, func);
+		edit(IconList, func);
+		edit(ScopeList, func);
+		edit(SoundList, func);
+		edit(TextureList, func);
+		edit(ModelList, func);
+		edit(ModelInfoList, func);
+		DefaultPack = new PackInfo();
+		DefaultPack.put(PackInfo.PackName, Operator.SET, "default");
+		DefaultPack.put(PackInfo.PackDomain, Operator.SET, "default");
+		DefaultPack.put(PackInfo.PackVar, Operator.SET, "");
+		DefaultPack.PackColor.set(Color.GRAY);
+		OpenPacks.add(DefaultPack);
+	}
+
+	private static void edit(List<? extends IDataEntity> list, Function<IDataEntity, Boolean> func) {
+		Iterator<? extends IDataEntity> itr = list.iterator();
+		while (itr.hasNext())
+			if (func.apply(itr.next()))
+				itr.remove();
 	}
 
 	/** PackCashインポート */
