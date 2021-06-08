@@ -1,5 +1,8 @@
 package types.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import sagasa.gltf.GltfLoader.GLBInfo;
 import types.base.NamedData;
 
@@ -11,11 +14,24 @@ public class HideModel extends NamedData {
 	// 共通
 	public String modelName;
 
-	public String handPos;
-
+	public DataEntry<String> handPos;
 	public String sightPos;
+	public String bullelPos;
+
+	public String reloadAnim;
+	public String shootAnim;
+
+	public String[] reload;
+	public String[] shoot;
+
+	/** tag - model */
+	public Map<String, String> tag_model = new HashMap<>();
 
 	public float scale;
+
+	public static class A{
+
+	}
 
 	public HideModel() {
 
