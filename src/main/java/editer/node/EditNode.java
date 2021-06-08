@@ -256,7 +256,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	 */
 	protected EditNode(ObservableObjectValue<? extends DataBase> value, EditType edit, DataPath path) {
 		Path = path;
-		Clazz = edit.Clazz;
+		Clazz = edit.getDataClass();
 		Name = LocalizeHandler.getLocalizedName(Clazz, Path);
 		Lore = LocalizeHandler.getLocalizedLore(Clazz, Path);
 

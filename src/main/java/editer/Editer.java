@@ -147,11 +147,13 @@ public class Editer extends Application {
 		stage.show();
 
 		stage.setOnCloseRequest(e -> {
-			Alert alert = new Alert(AlertType.CONFIRMATION, "Exit?", ButtonType.YES, ButtonType.NO);
-			alert.setHeaderText(null);
-			ButtonType button = alert.showAndWait().orElse(ButtonType.CANCEL);
-			if (button != ButtonType.YES) {
-				e.consume();
+			if (!HidePack.isEmpty()) {
+				Alert alert = new Alert(AlertType.CONFIRMATION, "Exit?", ButtonType.YES, ButtonType.NO);
+				alert.setHeaderText(null);
+				ButtonType button = alert.showAndWait().orElse(ButtonType.CANCEL);
+				if (button != ButtonType.YES) {
+					e.consume();
+				}
 			}
 		});
 	}

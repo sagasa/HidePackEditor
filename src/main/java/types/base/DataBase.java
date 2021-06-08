@@ -193,7 +193,7 @@ public abstract class DataBase {
 				} else {
 					if (_parent != null)
 						_parent.children.add(_child);
-					_child.parent = (DataBase) _parent;
+					_child.parent = _parent;
 				}
 				_child.initParent();
 			}

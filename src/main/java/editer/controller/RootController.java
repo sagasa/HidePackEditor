@@ -3,8 +3,8 @@ package editer.controller;
 import java.io.File;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +22,10 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.WeakListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -39,6 +43,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
+import localize.LocalizeHandler;
+import localize.LocalizeHandler.Lang;
 import types.PackInfo;
 import types.base.DataBase;
 import types.base.NamedData;
@@ -51,15 +58,19 @@ public class RootController implements Initializable {
 	private static final Logger log = LogManager.getLogger();
 	public static RootController INSTANCE;
 	public static Stage STAGE;
-
-	public EditPanels editer;
+	@FXML
+	private EditPanels editer;
 	public Pane curveeditor;
-
-	public TextField packSearch;
-
-	public ListView<PackInfo> packList;
-	public TextField itemSearch;
-	public TabPane itemTab;
+	@FXML
+	private TextField packSearch;
+	@FXML
+	private ListView<PackInfo> packList;
+	@FXML
+	private TextField itemSearch;
+	@FXML
+	private TabPane itemTab;
+	@FXML
+	private ChoiceBox<PackInfo> importTarget;
 	@FXML
 	private ListView<GunData> gunList;
 	@FXML
@@ -84,8 +95,7 @@ public class RootController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		INSTANCE = this;
-		packList.setCellFactory(
-				ColordListCell.getCellFactory(HidePack.OpenPacks, data -> !HidePack.DefaultPack.equals(data)));
+		packList.setCellFactory(ColordListCell.getCellFactory(HidePack.OpenPacks, data -> false));
 		gunList.setCellFactory(ColordListCell.getCellFactory(HidePack.GunList));
 		magazineList.setCellFactory(ColordListCell.getCellFactory(HidePack.MagazineList));
 		soundList.setCellFactory(ColordListCell.getCellFactory(HidePack.SoundList));
@@ -102,10 +112,12 @@ public class RootController implements Initializable {
 		HidePack.SoundList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.OpenPacks.addListener(new WeakListChangeListener<>(writeListener));
 
-		bindEditer(packList, (item) -> editData(item));
-		bindEditer(gunList, (item) -> editData(item));
-		bindEditer(magazineList, (item) -> editData(item));
-		bindEditer(modelInfoList, (item) -> editData(item));
+		bindEditer(packList);
+		bindEditer(gunList);
+		bindEditer(magazineList);
+		bindEditer(iconList);
+		bindEditer(soundList);
+		bindEditer(modelInfoList);
 
 //	//	HideModel hm = ModelIO.read();
 //		hm.rootBone.animation.get(AnimationType.Reload).add(new AnimationKey());
@@ -114,6 +126,19 @@ public class RootController implements Initializable {
 
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
+		importTarget.setItems(HidePack.OpenPacks);
+		importTarget.getSelectionModel().select(HidePack.DefaultPack);
+		importTarget.setConverter(new StringConverter<PackInfo>() {
+			@Override
+			public String toString(PackInfo object) {
+				return object.getDisplayName();
+			}
+
+			@Override
+			public PackInfo fromString(String string) {
+				return null;
+			}
+		});
 		// TODO
 		/*
 		 * Pane modelV = new Pane(); Stage modelView = new Stage(StageStyle.UTILITY);
@@ -130,7 +155,7 @@ public class RootController implements Initializable {
 	}
 
 	/** 選択されたら実行 */
-	private static <T> void bindEditer(ListView<T> list, Consumer<T> run) {
+	private void bindEditer(ListView<?> list) {
 		// フォーカスが切れたら選択解除
 		list.focusedProperty().addListener((v, ov, nv) -> {
 			if (!nv)
@@ -138,14 +163,14 @@ public class RootController implements Initializable {
 		});
 		list.getSelectionModel().selectedItemProperty().addListener((v, ov, nv) -> {
 			if (nv != null)
-				run.accept(nv);
+				editData(nv);
 		});
 	}
 
 	/** パックから要素が削除されたとき編集中なら編集を中止する */
 	private void cancelEdit(IDataEntity obj) {
 		if (obj instanceof DataBase)
-			editer.removeEditValue((DataBase) obj);
+			editer.removeEditValue(obj);
 	}
 
 	/** 親子関係の解決 */
@@ -224,6 +249,8 @@ public class RootController implements Initializable {
 	}
 
 	// ========メニュー操作========
+	private boolean openFromFile = false;
+
 	private void updateEditDir(String path) {
 		if (path == null)
 			STAGE.setTitle(Editer.Title);
@@ -236,19 +263,34 @@ public class RootController implements Initializable {
 		PackCash pack = PackIO.readPack(file);
 		HidePack.addPack(pack);
 		write();
+		openFromFile = true;
 	}
 
-	public void newPack() {
+	public boolean newPack() {
+		// 確認
+		if (!HidePack.isEmpty()) {
+			Alert alert = new Alert(AlertType.CONFIRMATION, LocalizeHandler.getLocalizedName(Lang.ClearPack),
+					ButtonType.YES, ButtonType.NO);
+			alert.setHeaderText(null);
+			ButtonType button = alert.showAndWait().orElse(ButtonType.CANCEL);
+			if (button != ButtonType.YES) {
+				return false;
+			}
+		}
+
+		openFromFile = false;
 		HidePack.clear();
 		bulletNamePointer = 0;
 		gunNamePointer = 0;
 		packNamePointer = 0;
 		write();
 		updateEditDir(null);
+		return true;
 	}
 
 	public void openNewPackDir() {
-		newPack();
+		if (!newPack())
+			return;
 		DirectoryChooser chooser = new DirectoryChooser();
 		File dir = new File(Editer.config.editDir);
 		if (!dir.exists() || !dir.isDirectory())
@@ -263,7 +305,8 @@ public class RootController implements Initializable {
 	}
 
 	public void openNewPack() {
-		newPack();
+		if (!newPack())
+			return;
 		openPack();
 	}
 
@@ -275,10 +318,11 @@ public class RootController implements Initializable {
 		fxtest.setInitialDirectory(dir);
 
 		fxtest.getExtensionFilters().add(new ExtensionFilter("zip", "*.zip"));
-		File file = fxtest.showOpenDialog(STAGE);
+		List<File> file = fxtest.showOpenMultipleDialog(STAGE);
 		if (file != null) {
-			Editer.config.editDir = file.getParent();
-			openPack(file);
+			Editer.config.editDir = file.get(0).getParent();
+			for (File f : file)
+				openPack(f);
 			// インポートダイアログを開く
 //			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/import.fxml"));
 //			try {
@@ -301,6 +345,8 @@ public class RootController implements Initializable {
 	}
 
 	public void save() {
+		if (!openFromFile)
+			saveas();
 		File file = new File(Editer.config.editDir);
 		PackIO.export(file);
 		updateEditDir(file.toString());
@@ -315,6 +361,7 @@ public class RootController implements Initializable {
 		File file = fxtest.showDialog(STAGE);
 		if (file != null) {
 			Editer.config.editDir = file.toString();
+			openFromFile = true;
 			save();
 		}
 	}
@@ -328,7 +375,7 @@ public class RootController implements Initializable {
 		editer.setEditValue(null);
 	}
 
-	public void editData(DataBase item) {
+	public void editData(Object item) {
 		if (item != null) {
 			editer.setEditValue(item);
 		}
@@ -394,12 +441,16 @@ public class RootController implements Initializable {
 		write();
 	}
 
+	private PackInfo getImportTarget() {
+		return importTarget.getSelectionModel().getSelectedItem();
+	}
+
 	public void importIcon() {
-		PackIO.importIcon();
+		PackIO.importIcon(getImportTarget());
 	}
 
 	public void importSound() {
-		PackIO.importSound();
+		PackIO.importSound(getImportTarget());
 	}
 
 	// ===========リストセル============

@@ -48,7 +48,6 @@ public class RecoilGraphNode extends Pane {
 		this.getChildren().addAll(button, ads, sneak, adssneak, recoilview);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void draw(boolean ads, boolean sneak) {
 		g.setFill(Color.GRAY);
 		g.fillRect(0, 0, RecoilViewSize, RecoilViewSize);

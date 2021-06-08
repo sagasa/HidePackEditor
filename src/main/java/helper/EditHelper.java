@@ -147,6 +147,7 @@ public class EditHelper {
 	}
 
 	/** プロパティを取得 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> ObservableObjectValue<ValueEntry<T>> getProperty(DataBase data, DataPath path) {
 		return (ObservableObjectValue) data.getEntryProp(path);
 	}

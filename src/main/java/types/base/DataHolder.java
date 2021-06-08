@@ -37,7 +37,7 @@ public class DataHolder<T extends NamedData> {
 	}
 
 	public boolean put(T data) {
-		String str = (String) data.get(data.systemName(), null);
+		String str = data.get(data.systemName(), null);
 		if (map.containsKey(str)) {
 			return false;
 		}

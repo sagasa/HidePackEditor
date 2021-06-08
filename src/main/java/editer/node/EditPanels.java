@@ -8,6 +8,7 @@ import java.util.function.BiConsumer;
 import com.google.common.collect.ImmutableSet;
 
 import editer.HidePack;
+import editer.IDataEntity;
 import editer.clip.ClipManager;
 import editer.controller.RootController;
 import helper.EditHelper;
@@ -20,6 +21,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -29,7 +32,11 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.StringConverter;
 import localize.LocalizeHandler;
+import localize.LocalizeHandler.Lang;
 import resources.HideImage;
 import types.PackInfo;
 import types.base.DataBase;
@@ -55,35 +62,45 @@ public class EditPanels extends Pane {
 		NamedData(NamedData.class), Item(ItemData.class), Projectile(ProjectileData.class),
 		Gun(GunData.class, (cons, data) -> cons.accept(Projectile, data.get(GunData.Data, null))),
 		Magazine(MagazineData.class, (cons, data) -> cons.accept(Projectile, data.get(MagazineData.Data, null))),
-		Pack(PackInfo.class);
+		Pack(PackInfo.class), PackSelect(IDataEntity.class);
 
 		/** 判別用の型 */
-		public final Class<? extends DataBase> Clazz;
-		private BiConsumer<BiConsumer<EditType, DataBase>, DataBase> AddFunc;
+		public final Class<?> Clazz;
+		public final boolean isDataBase;
 
-		private EditType(Class<? extends DataBase> clazz) {
+		private BiConsumer<BiConsumer<EditType, Object>, Object> AddFunc;
+
+		@SuppressWarnings("unchecked")
+		public Class<? extends DataBase> getDataClass() {
+			if (isDataBase)
+				return (Class<? extends DataBase>) Clazz;
+			return null;
+		}
+
+		private EditType(Class<?> clazz) {
 			this(clazz, null);
 		}
 
-		@SuppressWarnings("unchecked")
-		private <T extends DataBase> EditType(Class<T> clazz, BiConsumer<BiConsumer<EditType, DataBase>, T> addFunc) {
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		private <T> EditType(Class<T> clazz, BiConsumer<BiConsumer<EditType, Object>, T> addFunc) {
 			Clazz = clazz;
-			AddFunc = (BiConsumer<BiConsumer<EditType, DataBase>, DataBase>) addFunc;
+			isDataBase = DataBase.class.isAssignableFrom(clazz);
+			AddFunc = (BiConsumer) addFunc;
 		}
 
-		public boolean isType(DataBase data) {
+		public boolean isType(Object data) {
 			return Clazz.isAssignableFrom(data.getClass());
 		}
 
 		/** 型からエディタを選択 */
-		public static Set<EditType> getType(DataBase data) {
+		public static Set<EditType> getType(Object data) {
 			if (data != null) {
 				return ImmutableSet.copyOf(Arrays.stream(values()).filter(type -> type.isType(data)).iterator());
 			}
 			return null;
 		}
 
-		public static void editValue(DataBase data, BiConsumer<EditType, DataBase> func) {
+		public static void editValue(Object data, BiConsumer<EditType, Object> func) {
 			getType(data).forEach(type -> {
 				System.out.println("add edit " + type);
 				if (type.AddFunc != null)
@@ -96,7 +113,12 @@ public class EditPanels extends Pane {
 	private FlowPane rootPane;
 
 	/** 各編集パネルの表示状態管理用プロパティ */
-	private EnumMap<EditType, ObjectProperty<? extends DataBase>> editModes = new EnumMap<>(EditType.class);
+	private EnumMap<EditType, ObjectProperty<?>> editModes = new EnumMap<>(EditType.class);
+
+	@SuppressWarnings("unchecked")
+	private <T> ObjectProperty<T> getEditModel(EditType type) {
+		return (ObjectProperty<T>) editModes.get(type);
+	}
 
 	public EditPanels() {
 		rootPane = new FlowPane();
@@ -113,12 +135,68 @@ public class EditPanels extends Pane {
 
 		// ItemName
 		writeItemInfoEditor();
+		writePackSelect();
 		writeGunEditer();
 		writeMagazineEditor();
 		writeProjectileEditor();
 		writePackInfoEditor();
-		// writePackEditer();
+
 		// writeModelEditer();
+	}
+
+	private void writePackSelect() {
+		final EditType type = EditType.PackSelect;
+		ObservableObjectValue<IDataEntity> editValue = getEditModel(type);
+
+		Pane root = new Pane();
+		root.setPrefSize(300, 26);
+
+		Rectangle color = new Rectangle(20, 20);
+		color.translateXProperty().bind(root.heightProperty().subtract(color.heightProperty()).divide(2));
+		color.translateYProperty().bind(root.heightProperty().subtract(color.heightProperty()).divide(2));
+
+		ChoiceBox<PackInfo> select = new ChoiceBox<PackInfo>();
+		select.setConverter(new StringConverter<PackInfo>() {
+			@Override
+			public String toString(PackInfo object) {
+				return object.getDisplayName();
+			}
+
+			@Override
+			public PackInfo fromString(String string) {
+				return null;
+			}
+		});
+		select.getSelectionModel().selectedItemProperty().addListener((v, ov, nv) -> {
+			if (nv != null) {
+				editValue.get().getRootPack().set(nv);
+				color.fillProperty().bind(nv.PackColor);
+				RootController.refreshList();
+			}
+		});
+		select.setPrefWidth(120);
+		select.setItems(HidePack.OpenPacks);
+		select.prefHeightProperty().bind(root.heightProperty());
+		EditNode.right(root, 0, select);
+
+		editValue.addListener((v, ov, nv) -> {
+			if (nv != null) {
+				PackInfo pack = nv.getRootPack().get();
+				select.getSelectionModel().select(pack);
+				select.setDisable(nv instanceof PackInfo);
+				color.fillProperty().bind(pack.PackColor);
+			}
+		});
+
+		Label label = new Label(LocalizeHandler.getLocalizedName(Lang.ParentPack) + ":");
+
+		EditNode.center(label, 0, select);
+		label.setAlignment(Pos.CENTER_RIGHT);
+		label.prefHeightProperty().bind(root.heightProperty());
+		EditNode.center(label, 3, select);
+		root.getChildren().addAll(color, label, select);
+
+		addEditPane(root, type);
 	}
 
 	/** MagazineData */
@@ -183,12 +261,11 @@ public class EditPanels extends Pane {
 		// */
 	}
 
-	@SuppressWarnings("unchecked")
 	/** MagazineData */
 	private void writeMagazineEditor() {
 		final EditType type = EditType.Magazine;
 
-		final ObservableObjectValue<MagazineData> editValue = (ObservableObjectValue<MagazineData>) editModes.get(type);
+		final ObservableObjectValue<MagazineData> editValue = getEditModel(type);
 		// icon
 		// addEditPane(makeImageNode(type, DataPath.of(ItemData.IconName),
 		// HidePack.IconList), type);
@@ -212,7 +289,7 @@ public class EditPanels extends Pane {
 		final EditType type = EditType.Item;
 		DataView<ItemData> view = new DataView<>(ItemData.class, 1);
 		view.setValue(0, (ObservableObjectValue<ItemData>) editModes.get(type));
-		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
+		ObservableObjectValue<? extends DataBase> editValue = getEditModel(type);
 		VBox root = new VBox();
 
 		// 短縮名
@@ -237,8 +314,57 @@ public class EditPanels extends Pane {
 
 	private void writePackInfoEditor() {
 		final EditType type = EditType.Pack;
-		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
-		addEditPane(makeCateEditPanel(type, 0), type);
+		ObservableObjectValue<PackInfo> editValue = getEditModel(type);
+		{
+			VBox root = new VBox();
+			Node name = EditNode.editString(editValue, type, DataPath.of(PackInfo.PackName))
+					.setChangeListner((ov, nv) -> RootController.refreshList());
+			Node ver = EditNode.editString(editValue, type, DataPath.of(PackInfo.PackVar))
+					.setChangeListner((ov, nv) -> RootController.refreshList());
+			Node domain = EditNode.editString(editValue, type, DataPath.of(PackInfo.PackDomain));
+			root.getChildren().addAll(name, ver, domain);
+			addEditPane(root, type);
+		}
+		Pane mergePane = new Pane();
+		Button button = new Button(LocalizeHandler.getLocalizedName(Lang.Merge));
+		ChoiceBox<PackInfo> select = new ChoiceBox<PackInfo>();
+
+		button.setTextFill(Color.RED);
+		button.disableProperty().bind(select.getSelectionModel().selectedItemProperty().isNull());
+		button.setOnAction(e -> {
+			HidePack.mergePack(editValue.get(), select.getSelectionModel().getSelectedItem());
+			HidePack.OpenPacks.remove(editValue.get());
+		});
+
+		EditNode.right(mergePane, 0, button);
+		EditNode.rightJustified(select, 0, button);
+
+		select.setConverter(new StringConverter<PackInfo>() {
+			@Override
+			public String toString(PackInfo object) {
+				return object.getDisplayName();
+			}
+
+			@Override
+			public PackInfo fromString(String string) {
+				return null;
+			}
+		});
+		editValue.addListener((v, ov, nv) -> {
+			if (nv != null) {
+				select.setItems(HidePack.OpenPacks.filtered(pack -> pack != nv));
+			}
+		});
+		select.setPrefWidth(120);
+		select.prefHeightProperty().bind(mergePane.heightProperty());
+
+		Label label = new Label(LocalizeHandler.getLocalizedName(Lang.MergeAndDelete) + ":");
+		EditNode.center(label, 0, select);
+		label.setAlignment(Pos.CENTER_RIGHT);
+		label.prefHeightProperty().bind(mergePane.heightProperty());
+
+		mergePane.getChildren().addAll(label, button, select);
+		addEditPane(mergePane, type);
 	}
 
 	/**
@@ -253,18 +379,18 @@ public class EditPanels extends Pane {
 	}
 
 	/** 編集中のデータ */
-	private DataBase current;
+	private Object current;
 
 	/** 表示中のものなら表示解除 */
-	public void removeEditValue(DataBase data) {
+	public void removeEditValue(Object data) {
 		if (current != null && current.equals(data))
 			setEditValue(null);
 	}
 
 	/** エディタの内容設定 */
-	public void setEditValue(DataBase data) {
+	public void setEditValue(Object data) {
 		current = data;
-		for (ObjectProperty<? extends DataBase> prop : editModes.values())
+		for (ObjectProperty<?> prop : editModes.values())
 			prop.set(null);
 		if (data != null)
 			EditType.editValue(data, this::startEdit);
@@ -312,7 +438,7 @@ public class EditPanels extends Pane {
 			}
 		});
 
-		Class<?> clazz = EditHelper.getType(type.Clazz, path);
+		Class<?> clazz = EditHelper.getType(type.getDataClass(), path);
 		clipManager.scope.addListener((v, ov, nv) -> {
 			if (clipManager.hasPath(path)) {
 				clipManager.paste(value.get(), path);
@@ -345,8 +471,8 @@ public class EditPanels extends Pane {
 	private Region makeSoundEditer(EditType type, DataPath path) {
 		VBox root = new VBox();
 
-		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
-		Label label = new Label(LocalizeHandler.getLocalizedName(type.Clazz, path));
+		ObservableObjectValue<? extends DataBase> editValue = getEditModel(type);
+		Label label = new Label(LocalizeHandler.getLocalizedName(type.getDataClass(), path));
 		label.setPrefWidth(200);
 		label.setAlignment(Pos.CENTER);
 		root.getChildren().add(label);
@@ -375,7 +501,7 @@ public class EditPanels extends Pane {
 	/** StringでListからImageを選択し表示するパネル設定パネル */
 	private Pane makeImageNode(EditType type, DataPath dataPath, ObservableList<HideImage> list, DataView<?> view) {
 		VBox root = new VBox();
-		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
+		ObservableObjectValue<? extends DataBase> editValue = getEditModel(type);
 		HideImageView iconview = new HideImageView(view, dataPath, list);
 		iconview.setFitWidth(64);
 		iconview.setFitHeight(64);
@@ -393,11 +519,11 @@ public class EditPanels extends Pane {
 
 	/** カテゴリが付いた値を編集するノード */
 	private Pane makeCateEditPanel(EditType type, int cate, DataPath path) {
-		ObservableObjectValue<? extends DataBase> editValue = editModes.get(type);
+		ObservableObjectValue<? extends DataBase> editValue = getEditModel(type);
 		VBox root = new VBox();
-		Class<? extends DataBase> clazz = type.Clazz;
+		Class<? extends DataBase> clazz = type.getDataClass();
 		// pathがあるなら指定されたクラスで実行
-		for (DataEntry<?> data : EditHelper.getDataEntries(type.Clazz, path)) {
+		for (DataEntry<?> data : EditHelper.getDataEntries(clazz, path)) {
 			// pathが無いなら作る
 			DataPath fieldPath = path == null ? DataPath.of(data) : path.append(data);
 			int c = EditHelper.getCate(clazz, fieldPath);

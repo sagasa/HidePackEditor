@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -56,21 +56,30 @@ public class PackIO {
 		return filechooser;
 	}
 
-	/** iconをインポート */
-	public static void importIcon() {
+	/**
+	 * iconをインポート
+	 *
+	 * @param packInfo
+	 */
+	public static void importIcon(PackInfo packInfo) {
 		FileChooser filechooser = makeFileChooser(new ExtensionFilter("image", "*.png", "*.jpg", "*.bmp"));
 		List<File> files = filechooser.showOpenMultipleDialog(RootController.STAGE);
 		if (files != null) {
 			for (File file : files) {
-				importIcon(file);
+				importIcon(file, packInfo);
 			}
 		}
 	}
 
-	/** iconをインポート */
-	public static void importIcon(File file) {
+	/**
+	 * iconをインポート
+	 *
+	 * @param packInfo
+	 */
+	public static void importIcon(File file, PackInfo packInfo) {
 		try {
-			HideImage image = new HideImage(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
+			HideImage image = new HideImage(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), packInfo,
+					ImageIO.read(file));
 
 			HidePack.IconList.add(image);
 		} catch (IOException e) {
@@ -99,57 +108,56 @@ public class PackIO {
 		}
 	}
 
-	/** Soundをインポート */
-	public static void importSound() {
+	/**
+	 * Soundをインポート
+	 *
+	 * @param packInfo
+	 */
+	public static void importSound(PackInfo packInfo) {
 		FileChooser filechooser = makeFileChooser(new ExtensionFilter("ogg", "*.ogg"));
 		List<File> files = filechooser.showOpenMultipleDialog(RootController.STAGE);
 		if (files != null) {
 			for (File file : files) {
-				importSound(file);
+				importSound(file, packInfo);
 			}
 		}
 	}
 
-	/** Soundをインポート */
-	public static void importSound(File file) {
+	/**
+	 * Soundをインポート
+	 *
+	 * @param packInfo
+	 */
+	public static void importSound(File file, PackInfo packInfo) {
 		try {
-			Sound sound = new Sound(file.getName().replaceAll(".ogg$", ""), Files.readAllBytes(file.toPath()));
+			Sound sound = new Sound(file.getName().replaceAll(".ogg$", ""), packInfo,
+					Files.readAllBytes(file.toPath()));
 			HidePack.SoundList.add(sound);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static class Entry {
-		String Name;
-		ByteArrayInputStream Data;
-
-		public Entry(String name, ByteArrayInputStream data) {
-			Name = name;
-			Data = data;
-		}
-	}
-
-	private static void addEntry(Map<PackInfo, List<Entry>> dataMap, Collection<? extends NamedData> data,
-			PackPattern pattern) {
+	private static void addEntry(Map<PackInfo, Map<String, ByteArrayInputStream>> dataMap,
+			Collection<? extends NamedData> data, PackPattern pattern) {
 		for (NamedData d : data) {
 			// 参照ではなければ
 			if (!d.isReference()) {
-				dataMap.get(d.getRootPack().get()).add(
-						new Entry(pattern.toPath(d.getDisplayName()), new ByteArrayInputStream(d.toJson().getBytes())));
+				dataMap.get(d.getRootPack().get()).put(pattern.toPath(d.getDisplayName()),
+						new ByteArrayInputStream(d.toJson().getBytes()));
 			}
 		}
 	}
 
-	private static void addEntryImage(Map<PackInfo, List<Entry>> dataMap, Collection<? extends HideImage> data,
-			PackPattern pattern) throws IOException {
+	private static void addEntryImage(Map<PackInfo, Map<String, ByteArrayInputStream>> dataMap,
+			Collection<? extends HideImage> data, PackPattern pattern) throws IOException {
 		for (HideImage d : data) {
 			// 参照ではなければ
 			if (!d.isReference()) {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				ImageIO.write(d.Image, "png", out);
-				dataMap.get(d.RootPack.get()).add(
-						new Entry(pattern.toPath(d.getDisplayName()), new ByteArrayInputStream(out.toByteArray())));
+				dataMap.get(d.RootPack.get()).put(pattern.toPath(d.getDisplayName()),
+						new ByteArrayInputStream(out.toByteArray()));
 			}
 		}
 	}
@@ -157,12 +165,12 @@ public class PackIO {
 	/** パッキングして出力する */
 	public static void export(File path) {
 		// データをまとめる
-		Map<PackInfo, List<Entry>> dataMap = new HashMap<>();
+		Map<PackInfo, Map<String, ByteArrayInputStream>> dataMap = new HashMap<>();
 		for (PackInfo pack : HidePack.OpenPacks) {
 			// 参照では無ければ
-			dataMap.put(pack, new ArrayList<>());
+			dataMap.put(pack, new HashMap<>());
 			// パックデータ
-			dataMap.get(pack).add(new Entry("pack.json", new ByteArrayInputStream(pack.toJson().getBytes())));
+			dataMap.get(pack).put("pack.json", new ByteArrayInputStream(pack.toJson().getBytes()));
 		}
 
 		// 銃のデータ
@@ -182,8 +190,8 @@ public class PackIO {
 		for (Sound d : HidePack.SoundList) {
 			// 参照ではなければ
 			if (!d.isReference()) {
-				dataMap.get(d.RootPack.get()).add(
-						new Entry(PackPattern.SOUND.toPath(d.getDisplayName()), new ByteArrayInputStream(d.Sound)));
+				dataMap.get(d.RootPack.get()).put(PackPattern.SOUND.toPath(d.getDisplayName()),
+						new ByteArrayInputStream(d.Sound));
 			}
 		}
 		// 内容がないor参照のエントリを削除
@@ -201,10 +209,10 @@ public class PackIO {
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(// TODO 出力先指定
 						new File(path, pack.getDisplayName() + pack.get(PackInfo.PackVar, null)) + ".zip"),
 						Charset.forName("Shift_JIS"));
-				for (Entry data : dataMap.get(pack)) {
-					ZipEntry entry = new ZipEntry(data.Name);
+				for (Entry<String, ByteArrayInputStream> data : dataMap.get(pack).entrySet()) {
+					ZipEntry entry = new ZipEntry(data.getKey());
 					zos.putNextEntry(entry);
-					try (InputStream is = new BufferedInputStream(data.Data)) {
+					try (InputStream is = new BufferedInputStream(data.getValue())) {
 						byte[] buf = new byte[1024];
 						for (int len = 0; 0 < (len = is.read(buf));) {
 							zos.write(buf, 0, len);

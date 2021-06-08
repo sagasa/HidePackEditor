@@ -187,6 +187,6 @@ public class LocalizeHandler {
 	/** メニュー用Lang */
 	public enum Lang {
 		File, Edit, Help, New, NewOpen, Open, OpenDir, Save, SaveAs, Import, Gun, Magazine, Armor, Attachment, Icon,
-		Sound, Scope, Lang, Exit, NotSet, Add, Remove,
+		Sound, Scope, Lang, Exit, NotSet, Add, Remove, ParentPack, ClearPack, Merge, MergeAndDelete,
 	}
 }

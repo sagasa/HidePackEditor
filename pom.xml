@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>HideMod</groupId>
 	<artifactId>PackEditor</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.8</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -22,7 +22,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<source>1.8</source>
 					<target>1.8</target>
-					<finalName>PackEditor</finalName>
+					<finalName>HidePackEditor-${version}</finalName>
 					<descriptorRefs>
 						<!-- 依存するリソースをすべてjarに同梱する -->
 						<descriptorRef>jar-with-dependencies</descriptorRef>

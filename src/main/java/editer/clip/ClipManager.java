@@ -84,7 +84,7 @@ public class ClipManager {
 	public void paste(DataBase to, DataPath target) {
 		if (clipData == null)
 			return;
-		if (EditHelper.getType(to.getClass(), target).equals(scope)) {
+		if (EditHelper.getType(to.getClass(), target).equals(scope.get())) {
 			for (DataPath path : pathList) {
 				DataPath toPath = target.append(path.sub(scopePath));
 				if (EditHelper.getValueEntry(to, toPath) != null) {

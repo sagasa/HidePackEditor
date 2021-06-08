@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.function.Function;
 
 import io.PackCash;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -98,6 +99,11 @@ public class HidePack {
 		OpenPacks.add(DefaultPack);
 	}
 
+	public static boolean isEmpty() {
+		return GunList.isEmpty() && MagazineList.isEmpty() && IconList.isEmpty() && ScopeList.isEmpty()
+				&& SoundList.isEmpty() && TextureList.isEmpty() && ModelList.isEmpty() && ModelInfoList.isEmpty();
+	}
+
 	/** 各種編集関数実行 false返すと削除 */
 	public static void editToAll(Function<IDataEntity, Boolean> func) {
 		edit(GunList, func);
@@ -108,19 +114,23 @@ public class HidePack {
 		edit(TextureList, func);
 		edit(ModelList, func);
 		edit(ModelInfoList, func);
-		DefaultPack = new PackInfo();
-		DefaultPack.put(PackInfo.PackName, Operator.SET, "default");
-		DefaultPack.put(PackInfo.PackDomain, Operator.SET, "default");
-		DefaultPack.put(PackInfo.PackVar, Operator.SET, "");
-		DefaultPack.PackColor.set(Color.GRAY);
-		OpenPacks.add(DefaultPack);
 	}
 
 	private static void edit(List<? extends IDataEntity> list, Function<IDataEntity, Boolean> func) {
 		Iterator<? extends IDataEntity> itr = list.iterator();
 		while (itr.hasNext())
-			if (func.apply(itr.next()))
+			if (!func.apply(itr.next()))
 				itr.remove();
+	}
+
+	public static void mergePack(PackInfo from, PackInfo to) {
+		editToAll(e -> {
+			ObjectProperty<PackInfo> prop = e.getRootPack();
+			if (from.equals(prop.get())) {
+				prop.set(to);
+			}
+			return true;
+		});
 	}
 
 	/** PackCashインポート */

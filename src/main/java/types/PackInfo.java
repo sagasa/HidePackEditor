@@ -22,7 +22,7 @@ public class PackInfo extends DataBase implements IDataEntity {
 	/** パックの登録名 ファイル名ではない */
 	public static final DataEntry<String> PackName = of("sample", new Info().Cate(0));
 	/** パックのバージョン */
-	public static final DataEntry<String> PackVar = of("0", new Info().Cate(0));
+	public static final DataEntry<String> PackVar = of("", new Info().Cate(0));
 	/** 登録時の名称 */
 	public static final DataEntry<String> PackDomain = of("default", new Info().Cate(0));
 
@@ -51,6 +51,6 @@ public class PackInfo extends DataBase implements IDataEntity {
 
 	@Override
 	public String getDisplayName() {
-		return get(PackName, null);
+		return get(PackName, null) + " " + get(PackVar, null);
 	}
 }
