@@ -88,7 +88,8 @@ public class GltfLoader {
 
 		GLBInfo info = new GLBInfo();
 		info.animations = animations;
-		info.nodes = nodeCache.values().stream().map(n -> n.name).collect(Collectors.toList());
+		info.emptynodes = nodeCache.values().stream().filter(n -> !n.hasMesh).map(n -> n.name)
+				.collect(Collectors.toList());
 		return info;
 	}
 
@@ -103,9 +104,10 @@ public class GltfLoader {
 		}
 	}
 
-	static class GLBInfo {
-		List<String> animations;
-		List<String> nodes;
+	public static class GLBInfo {
+		public List<String> animations;
+		public List<String> emptynodes;
+
 	}
 
 	private static Node loadNode(JsonArray nodeJsonArray, int index) {

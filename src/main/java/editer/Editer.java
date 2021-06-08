@@ -1,12 +1,12 @@
 package editer;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import editer.controller.RootController;
-import helper.ModelLoader;
 import io.EditorConfig;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +19,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
+import sagasa.gltf.GltfLoader;
+import sagasa.gltf.GltfLoader.GLBInfo;
 import sagasa.gltf.GltfLoader.GltfException;
 import types.value.Curve;
 import types.value.Curve.CurveKey;
@@ -55,8 +57,9 @@ public class Editer extends Application {
 //
 //		System.exit(0);
 
-		// GltfLoader.LoadGlbFile(new File("./addempty.glb"));
-		// System.out.println(DataBase.getSample(GunData.class, false));
+		GLBInfo info = GltfLoader.LoadGlbFile(new File("./addempty.glb"));
+		System.out.println(info.animations);
+		System.out.println(info.emptynodes);
 
 		Curve curve = new Curve();
 		curve.Keys = new CurveKey[2];
@@ -118,8 +121,6 @@ public class Editer extends Application {
 //		System.out.println(json);
 //		DataBase from = DataBase.fromJson(json);
 //		System.out.println(DataBase.getGson().toJson(from));
-
-		new ModelLoader().run();
 
 		EditorConfig.save(config);
 
