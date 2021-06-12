@@ -1,4 +1,4 @@
-package editer.node;
+package editor.node;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -7,10 +7,10 @@ import java.util.function.BiConsumer;
 
 import com.google.common.collect.ImmutableSet;
 
-import editer.HidePack;
-import editer.IDataEntity;
-import editer.clip.ClipManager;
-import editer.controller.RootController;
+import editor.HidePack;
+import editor.IDataEntity;
+import editor.clip.ClipManager;
+import editor.controller.RootController;
 import helper.EditHelper;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -136,12 +136,12 @@ public class EditPanels extends Pane {
 		// ItemName
 		writeItemInfoEditor();
 		writePackSelect();
-		writeGunEditer();
+		writeGunEditor();
 		writeMagazineEditor();
 		writeProjectileEditor();
 		writePackInfoEditor();
 
-		// writeModelEditer();
+		// writeModelEditor();
 	}
 
 	private void writePackSelect() {
@@ -155,7 +155,7 @@ public class EditPanels extends Pane {
 		color.translateXProperty().bind(root.heightProperty().subtract(color.heightProperty()).divide(2));
 		color.translateYProperty().bind(root.heightProperty().subtract(color.heightProperty()).divide(2));
 
-		ChoiceBox<PackInfo> select = new ChoiceBox<PackInfo>();
+		ChoiceBox<PackInfo> select = new ChoiceBox<>();
 		select.setConverter(new StringConverter<PackInfo>() {
 			@Override
 			public String toString(PackInfo object) {
@@ -211,25 +211,25 @@ public class EditPanels extends Pane {
 		// sound
 		TabPane sound = new TabPane();
 		sound.setMaxWidth(300);
-		sound.getTabs().addAll(makeTab("Shoot", makeSoundEditer(type, DataPath.of(ProjectileData.SoundShoot))),
-				makeTab("Reload", makeSoundEditer(type, DataPath.of(ProjectileData.SoundReload))),
-				makeTab("HitEntity", makeSoundEditer(type, DataPath.of(ProjectileData.SoundHitEntity))),
-				makeTab("Hit", makeSoundEditer(type, DataPath.of(ProjectileData.SoundHit))),
-				makeTab("Pass", makeSoundEditer(type, DataPath.of(ProjectileData.SoundPassing))));
+		sound.getTabs().addAll(makeTab("Shoot", makeSoundEditor(type, DataPath.of(ProjectileData.SoundShoot))),
+				makeTab("Reload", makeSoundEditor(type, DataPath.of(ProjectileData.SoundReload))),
+				makeTab("HitEntity", makeSoundEditor(type, DataPath.of(ProjectileData.SoundHitEntity))),
+				makeTab("Hit", makeSoundEditor(type, DataPath.of(ProjectileData.SoundHit))),
+				makeTab("Pass", makeSoundEditor(type, DataPath.of(ProjectileData.SoundPassing))));
 		addEditPane(sound, type);
 		// recoil
 		// recoil
 		TabPane recoil = new TabPane();
 		recoil.setMaxWidth(300);
-		recoil.getTabs().addAll(makeTab("Default", makeRecoilEditer(type, DataPath.of(ProjectileData.Recoil))),
-				makeTab("ADS", makeRecoilEditer(type, DataPath.of(ProjectileData.RecoilADS))),
-				makeTab("Sneak", makeRecoilEditer(type, DataPath.of(ProjectileData.RecoilSneak))));
+		recoil.getTabs().addAll(makeTab("Default", makeRecoilEditor(type, DataPath.of(ProjectileData.Recoil))),
+				makeTab("ADS", makeRecoilEditor(type, DataPath.of(ProjectileData.RecoilADS))),
+				makeTab("Sneak", makeRecoilEditor(type, DataPath.of(ProjectileData.RecoilSneak))));
 		addEditPane(recoil, type);
 	}
 
-	/** GunEditer */
+	/** GunEditor */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void writeGunEditer() {
+	private void writeGunEditor() {
 		final EditType type = EditType.Gun;
 		DataView<GunData> view = new DataView<>(GunData.class, 1);
 		view.setValue(0, (ObservableObjectValue) editModes.get(type));
@@ -327,13 +327,12 @@ public class EditPanels extends Pane {
 		}
 		Pane mergePane = new Pane();
 		Button button = new Button(LocalizeHandler.getLocalizedName(Lang.Merge));
-		ChoiceBox<PackInfo> select = new ChoiceBox<PackInfo>();
+		ChoiceBox<PackInfo> select = new ChoiceBox<>();
 
 		button.setTextFill(Color.RED);
 		button.disableProperty().bind(select.getSelectionModel().selectedItemProperty().isNull());
 		button.setOnAction(e -> {
-			HidePack.mergePack(editValue.get(), select.getSelectionModel().getSelectedItem());
-			HidePack.OpenPacks.remove(editValue.get());
+			HidePack.mergeAndDelete(editValue.get(), select.getSelectionModel().getSelectedItem());
 		});
 
 		EditNode.right(mergePane, 0, button);
@@ -468,7 +467,7 @@ public class EditPanels extends Pane {
 	}
 
 	/** Soundの詳細 */
-	private Region makeSoundEditer(EditType type, DataPath path) {
+	private Region makeSoundEditor(EditType type, DataPath path) {
 		VBox root = new VBox();
 
 		ObservableObjectValue<? extends DataBase> editValue = getEditModel(type);
@@ -482,7 +481,7 @@ public class EditPanels extends Pane {
 		return root;
 	}
 
-	private Region makeRecoilEditer(EditType type, DataPath path) {
+	private Region makeRecoilEditor(EditType type, DataPath path) {
 		VBox root = new VBox();
 		// 数値系
 		Pane pane = makeCateEditPanel(type, -1, path);
@@ -544,9 +543,9 @@ public class EditPanels extends Pane {
 	// ベースサイズは200x24
 
 	/** HideModel */
-//	private void writeModelEditer() {
+//	private void writeModelEditor() {
 //		final EditType type = EditType.Model;
-//		addEditPane(makePos3Editer(type, new DataPath("offsetFirstPerson")), type);
+//		addEditPane(makePos3Editor(type, new DataPath("offsetFirstPerson")), type);
 //		// 右側にモデル確認ビューを置く
 //		ModelView modelView = new ModelView(editValue);
 //		modelView.translateXProperty().bind(rootPane.widthProperty().add(5));
@@ -558,8 +557,8 @@ public class EditPanels extends Pane {
 //
 //		ModelTreeView treeView = new ModelTreeView(editValue, modelView);
 //		addEditPane(treeView, type);
-//		// MSEditer
-//		VBox msEditer = new VBox();
+//		// MSEditor
+//		VBox msEditor = new VBox();
 //		Label label = new Label("ModelSelecter");
 //		label.setPrefWidth(200);
 //		label.setAlignment(Pos.CENTER);
@@ -567,34 +566,34 @@ public class EditPanels extends Pane {
 //		EditNode defaultModel = new EditNode(treeView.currentItem, EditType.ModelSelector, new DataPath("defaultModel"),
 //				EditNodeType.StringFromList);
 //
-//		msEditer.getChildren().addAll(label, defaultModel);
+//		msEditor.getChildren().addAll(label, defaultModel);
 //
-//		msEditer.setStyle("-fx-background-color: lightGray;");
-//		msEditer.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone.not()));
-//		msEditer.visibleProperty().bind(editModes.get(type).and(treeView.currentItemIsBone.not()));
+//		msEditor.setStyle("-fx-background-color: lightGray;");
+//		msEditor.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone.not()));
+//		msEditor.visibleProperty().bind(editModes.get(type).and(treeView.currentItemIsBone.not()));
 //
-//		// BoneEditer
-//		VBox boneEditer = new VBox();
+//		// BoneEditor
+//		VBox boneEditor = new VBox();
 //		label = new Label("Bone");
 //		label.setPrefWidth(200);
 //		label.setAlignment(Pos.CENTER);
 //
-//		AnimationListNode animationEditer = new AnimationListNode(treeView.currentItem, new DataPath("animation"));
+//		AnimationListNode animationEditor = new AnimationListNode(treeView.currentItem, new DataPath("animation"));
 //
-//		animationEditer.setPrefSize(160, 300);
+//		animationEditor.setPrefSize(160, 300);
 //
-//		boneEditer.getChildren().addAll(label, animationEditer);
+//		boneEditor.getChildren().addAll(label, animationEditor);
 //
-//		boneEditer.setStyle("-fx-background-color: lightGray;");
-//		boneEditer.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
-//		boneEditer.visibleProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
+//		boneEditor.setStyle("-fx-background-color: lightGray;");
+//		boneEditor.managedProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
+//		boneEditor.visibleProperty().bind(editModes.get(type).and(treeView.currentItemIsBone));
 //
-//		rootPane.getChildren().addAll(msEditer, boneEditer);
+//		rootPane.getChildren().addAll(msEditor, boneEditor);
 //
 //		this.getChildren().addAll(modelView);
 //	}
 
-//	private void addBulletEditer(Pane editer) {
+//	private void addBulletEditor(Pane editor) {
 //		final EditType type = EditType.Magazine;
 //		final DataPath top = new DataPath("BULLETDATA");
 //		// Cate0
@@ -608,12 +607,12 @@ public class EditPanels extends Pane {
 //
 //	}
 
-//	private Region makePos3Editer(EditType type, DataPath path) {
-//		return makePos3Editer(editValue, type, path);
+//	private Region makePos3Editor(EditType type, DataPath path) {
+//		return makePos3Editor(editValue, type, path);
 //	}
 //
 //	/** Pos3f */
-//	public static Region makePos3Editer(ObjectProperty<DataBase<?>> value, EditType type, DataPath path) {
+//	public static Region makePos3Editor(ObjectProperty<DataBase<?>> value, EditType type, DataPath path) {
 //		VBox root = new VBox();
 //		root.setPrefWidth(200);
 //		Label label = new Label(EditHelper.getLocalizedName(type.Clazz, path));

@@ -21,7 +21,7 @@ public class Recoil extends DataBase {
 	public static final DataEntry<Curve> HorizontalReturnTick = of(new Curve(), new Info().Min(0).KeyMin(0).KeyMax(1));
 
 	/** 縦反動の基礎値 +で上 Curve */
-	public static final DataEntry<Curve> VerticalBase = of(new Curve(), new Info().Scale("0,1"));
+	public static final DataEntry<Curve> VerticalBase = of(new Curve(), new Info().Scale("0,1").KeyMin(0).KeyMax(1));
 	/** 縦反動の拡散値 +で上 Curve */
 	public static final DataEntry<Curve> VerticalSpread = of(new Curve(),
 			new Info().Scale("0,1").Min(0).KeyMin(0).KeyMax(1));
@@ -34,8 +34,8 @@ public class Recoil extends DataBase {
 	public static final DataEntry<Curve> VerticalReturnTick = of(new Curve(), new Info().Min(0).KeyMin(0).KeyMax(1));
 
 	/** 射撃毎のパワーの増加値 最大1 Float */
-	public static final DataEntry<Float> PowerShoot = of(0.0f, new Info().Min(0).Max(1).Scale("0.05"));
+	public static final DataEntry<Float> PowerShoot = of(0.0f, new Info().Min(0).Max(1).Scale("0.01"));
 	/** Tick毎のパワーの減少値 最大1 Float */
-	public static final DataEntry<Float> PowerTick = of(0.0f, new Info().Min(0).Max(1).Scale("0.05"));;
+	public static final DataEntry<Float> PowerTick = of(0.0f, new Info().Min(0).Max(1).Scale("0.01"));;
 
 }

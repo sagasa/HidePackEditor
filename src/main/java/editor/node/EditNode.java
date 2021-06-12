@@ -1,4 +1,4 @@
-package editer.node;
+package editor.node;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
 
-import editer.IDataEntity;
-import editer.node.EditPanels.EditType;
+import editor.IDataEntity;
+import editor.node.EditPanels.EditType;
 import helper.ArrayEditor;
 import helper.EditHelper;
 import javafx.beans.binding.DoubleBinding;
@@ -66,7 +66,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 	protected final DataPath Path;
 
 	/** 型にあったプロパティ */
-	protected Property<?> editerProperty;
+	protected Property<?> editorProperty;
 	protected Property<Operator> operatorProperty = new SimpleObjectProperty<>();
 
 	protected ObservableValue<?> currentValue;
@@ -125,7 +125,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		@SuppressWarnings("unchecked")
 		@Override
 		public void accept(Boolean plus, Boolean shift) {
-			BigDecimal oldValue = new BigDecimal(editerProperty.getValue().toString());
+			BigDecimal oldValue = new BigDecimal(editorProperty.getValue().toString());
 			BigDecimal change = new BigDecimal(getScale());
 			if (shift) {
 				change = change.multiply(new BigDecimal("10"));
@@ -137,7 +137,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 			// 最大、最小チェック
 			newValue = newValue.max(new BigDecimal(getMin()));
 			newValue = newValue.min(new BigDecimal(getMax()));
-			Property<Number> property = (Property<Number>) editerProperty;
+			Property<Number> property = (Property<Number>) editorProperty;
 			if (Type == NodeType.Float)
 				property.setValue(newValue.floatValue());
 			else
@@ -154,7 +154,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 		Label label = new Label(res.Name + ":");
 		label.setAlignment(Pos.CENTER_RIGHT);
 		Button button = new Button("Edit");
-		res.editerProperty = new SimpleObjectProperty<>();
+		res.editorProperty = new SimpleObjectProperty<>();
 		res.textFieldWidth.bind(res.heightProperty());
 		button.prefHeightProperty().bind(res.heightProperty());
 		label.prefHeightProperty().bind(res.heightProperty());
@@ -322,7 +322,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 					this.requestFocus();
 			});
 			if (Type == NodeType.String || Type == NodeType.StringFromList) {
-				editerProperty = text.textProperty();
+				editorProperty = text.textProperty();
 				if (Type == NodeType.StringFromList) {
 					// test
 					Callback<ISuggestionRequest, Collection<String>> suggestionProvider = key -> ArrayEditor
@@ -339,7 +339,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 				// FloatかIntegerか判別
 				StringConverter<?> converter;
 				if (Type == NodeType.Float) {
-					editerProperty = new SimpleFloatProperty();
+					editorProperty = new SimpleFloatProperty();
 					// Floatなら
 					formatter = new TextFormatter<>(change -> {
 						String newStr = FloatPattern.matcher(change.getText()).replaceAll("");
@@ -352,7 +352,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 					converter = new FloatStringConverter();
 				} else {
 					// int なら
-					editerProperty = new SimpleIntegerProperty();
+					editorProperty = new SimpleIntegerProperty();
 					converter = new IntegerStringConverter() {
 						@Override
 						public Integer fromString(String str) {
@@ -360,7 +360,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 							try {
 								res = super.fromString(str);
 							} catch (Exception e) {
-								res = (Integer) editerProperty.getValue();
+								res = (Integer) editorProperty.getValue();
 							}
 							// 範囲チェック
 							res = Math.min(res, Math.round(getMax()));
@@ -379,12 +379,12 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 					});
 				}
 				text.setTextFormatter(formatter);
-				text.textProperty().bindBidirectional((Property) editerProperty, converter);
+				text.textProperty().bindBidirectional((Property) editorProperty, converter);
 				text.focusedProperty().addListener((observable, newvalue, oldvalue) ->
 
 				{
 					if (!newvalue) {
-						text.setText(editerProperty.getValue().toString());
+						text.setText(editorProperty.getValue().toString());
 					}
 				});
 				// スクロールの追加
@@ -448,7 +448,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 			Label label = new Label(Name + ":");
 			label.setAlignment(Pos.CENTER_RIGHT);
 			CheckBox check = new CheckBox();
-			editerProperty = check.selectedProperty();
+			editorProperty = check.selectedProperty();
 			textFieldWidth.bind(check.widthProperty());
 			check.prefWidthProperty().bind(this.heightProperty());
 			check.prefHeightProperty().bind(this.heightProperty());
@@ -464,7 +464,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 			label.disableProperty().bind(disable);
 			check.disableProperty().bind(disable);
 		}
-		editerProperty.addListener((ChangeListener) listener);
+		editorProperty.addListener((ChangeListener) listener);
 		setDefault();
 	}
 
@@ -475,20 +475,20 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void bind(ValueEntry<?> data) {
-		editerProperty.bindBidirectional((ObjectProperty) data.ValueProp);
+		editorProperty.bindBidirectional((ObjectProperty) data.ValueProp);
 		operatorProperty.bindBidirectional(data.OperatorProp);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void unbind(ValueEntry<?> data) {
-		editerProperty.unbindBidirectional((Property) data.ValueProp);
+		editorProperty.unbindBidirectional((Property) data.ValueProp);
 		operatorProperty.unbindBidirectional(data.OperatorProp);
 		setDefault();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void setDefault() {
-		((Property) editerProperty).setValue(EditHelper.getDataEntry(Clazz, Path).Default);
+		((Property) editorProperty).setValue(EditHelper.getDataEntry(Clazz, Path).Default);
 		operatorProperty.setValue(Operator.SET);
 	}
 

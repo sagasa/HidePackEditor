@@ -1,4 +1,4 @@
-package editer.node;
+package editor.node;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -37,17 +37,17 @@ import types.value.Curve.CurveKey;
 /** Curve編集 */
 public class CurveEditPane extends Pane {
 
-	private SimpleObjectProperty<Curve> editerProperty = new SimpleObjectProperty<>(null);
+	private SimpleObjectProperty<Curve> editorProperty = new SimpleObjectProperty<>(null);
 
 	private CurveKey[] getArray() {
-		Curve curve = editerProperty.getValue();
+		Curve curve = editorProperty.getValue();
 		return curve == null ? null : curve.Keys;
 	}
 
 	private void setArray(CurveKey[] value) {
-		Curve curve = editerProperty.getValue().clone();
+		Curve curve = editorProperty.getValue().clone();
 		curve.Keys = value;
-		editerProperty.set(curve);
+		editorProperty.set(curve);
 	}
 
 	private ObjectProperty<Curve> currentProp;
@@ -57,15 +57,15 @@ public class CurveEditPane extends Pane {
 	public void setEdit(DataBase data, DataPath path) {
 		ValueEntry<?> entry = data == null ? null : EditHelper.getValueEntry(data, path);
 		if (currentProp != null) {
-			editerProperty.unbindBidirectional(currentProp);
+			editorProperty.unbindBidirectional(currentProp);
 			currentProp = null;
-			editerProperty.setValue(null);
+			editorProperty.setValue(null);
 		}
 		if (entry != null) {
 			label.setText(LocalizeHandler.getLocalizedName(data.getClass(), path));
 			currentProp = (ObjectProperty<Curve>) entry.ValueProp;
 			editInfo = EditHelper.getDataEntry(data.getClass(), path).Info;
-			editerProperty.bindBidirectional(currentProp);
+			editorProperty.bindBidirectional(currentProp);
 		} else {
 			label.setText(LocalizeHandler.getLocalizedLore(Lang.NotSet));
 		}
@@ -231,9 +231,9 @@ public class CurveEditPane extends Pane {
 	}
 
 	private Curve getCurve() {
-		if (editerProperty.get() == null)
+		if (editorProperty.get() == null)
 			return null;
-		return editerProperty.get();
+		return editorProperty.get();
 	}
 
 	/** 移動されたらTrue */
@@ -252,7 +252,7 @@ public class CurveEditPane extends Pane {
 		Canvas canvas = new Canvas(Width, 200);
 		g = canvas.getGraphicsContext2D();
 
-		editerProperty.addListener((v, ov, nv) -> {
+		editorProperty.addListener((v, ov, nv) -> {
 			if (nv != null) {
 				updateState(nv);
 				System.out.println("Change ditect");

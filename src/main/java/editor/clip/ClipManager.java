@@ -1,4 +1,4 @@
-package editer.clip;
+package editor.clip;
 
 import java.util.ArrayList;
 import java.util.List;

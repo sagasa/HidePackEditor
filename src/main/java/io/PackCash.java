@@ -3,7 +3,7 @@ package io;
 import java.util.ArrayList;
 import java.util.List;
 
-import editer.HidePack;
+import editor.HidePack;
 import resources.HideImage;
 import resources.Model;
 import resources.Sound;
@@ -32,7 +32,7 @@ public class PackCash {
 
 	/** パック情報を付与 trueでデフォルトパック 同じ名前があったら統合 */
 	void setPack() {
-		PackInfo pack = HidePack.DefaultPack;
+		PackInfo pack = HidePack.DefaultPack.get();
 		if (Pack != null) {
 			// 同じ名前なら優先
 			PackInfo base = HidePack.getPack(Pack.getDisplayName());

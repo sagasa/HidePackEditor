@@ -1,6 +1,6 @@
-package editer.node;
+package editor.node;
 
-import editer.node.EditPanels.EditType;
+import editor.node.EditPanels.EditType;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.ColorPicker;
 import types.base.DataPath;
@@ -11,7 +11,7 @@ public class ColorEditNode extends EditNode {
 	public ColorEditNode(ObjectProperty<NamedData> editValue, EditType edit, DataPath path) {
 		super(editValue, edit, path);
 		ColorPicker cp = new ColorPicker();
-		editerProperty=cp.valueProperty();
+		editorProperty=cp.valueProperty();
 		this.getChildren().add(cp);
 	}
 

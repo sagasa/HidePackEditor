@@ -1,7 +1,7 @@
 package types;
 
-import editer.HidePack;
-import editer.IDataEntity;
+import editor.HidePack;
+import editor.IDataEntity;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;

@@ -2,7 +2,7 @@ package resources;
 
 import java.util.List;
 
-import editer.HidePack;
+import editor.HidePack;
 import types.PackInfo;
 
 public class Model extends Resource {
@@ -12,7 +12,7 @@ public class Model extends Resource {
 	public List<String> modelList;
 
 	public Model(String name) {
-		this(name, HidePack.DefaultPack);
+		this(name, HidePack.DefaultPack.get());
 	}
 
 	public Model(String name, PackInfo pack) {

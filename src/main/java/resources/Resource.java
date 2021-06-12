@@ -1,21 +1,24 @@
 package resources;
 
-import editer.IDataEntity;
+import editor.HidePack;
+import editor.IDataEntity;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import types.PackInfo;
 
-/**名前付きリソースのスーパークラス*/
+/** 名前付きリソースのスーパークラス */
 public abstract class Resource implements IDataEntity {
 	public Resource(String name, PackInfo pack) {
 		DisplayName = name;
+		if (pack == null)
+			pack = HidePack.DefaultPack.get();
 		RootPack = new SimpleObjectProperty<>(pack);
 	}
 
 	public ObjectProperty<PackInfo> RootPack;
 	public String DisplayName;
 
-	/**参照データか確認*/
+	/** 参照データか確認 */
 	@Override
 	public boolean isReference() {
 		return RootPack.get().isReference;

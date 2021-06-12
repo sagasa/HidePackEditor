@@ -1,4 +1,4 @@
-package editer.node;
+package editor.node;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -6,8 +6,8 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import editer.IDataEntity;
-import editer.node.EditPanels.EditType;
+import editor.IDataEntity;
+import editor.node.EditPanels.EditType;
 import helper.ArrayEditor;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -36,12 +36,12 @@ public class ListEditNode<T> extends EditNode {
 
 	@SuppressWarnings("unchecked")
 	private T[] getArray() {
-		return (T[]) editerProperty.getValue();
+		return (T[]) editorProperty.getValue();
 	}
 
 	@SuppressWarnings("unchecked")
 	private void setArray(T[] value) {
-		((Property<T[]>) editerProperty).setValue(value);
+		((Property<T[]>) editorProperty).setValue(value);
 		;
 	}
 
@@ -65,7 +65,7 @@ public class ListEditNode<T> extends EditNode {
 	public <F> ListEditNode(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path,
 			ObservableList<F> fromList, Function<F, T> func) {
 		super(editValue, edit, path);
-		editerProperty = new SimpleObjectProperty<>();
+		editorProperty = new SimpleObjectProperty<>();
 		listener = arg0 -> writeList();
 		fromList.addListener(new WeakListChangeListener<>((ListChangeListener) listener));
 		// 元リストに対する処理

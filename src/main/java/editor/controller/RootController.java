@@ -1,4 +1,4 @@
-package editer.controller;
+package editor.controller;
 
 import java.io.File;
 import java.net.URL;
@@ -10,10 +10,10 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import editer.Editer;
-import editer.HidePack;
-import editer.IDataEntity;
-import editer.node.EditPanels;
+import editor.Editor;
+import editor.HidePack;
+import editor.IDataEntity;
+import editor.node.EditPanels;
 import helper.ArrayEditor;
 import io.PackCash;
 import io.PackIO;
@@ -59,7 +59,7 @@ public class RootController implements Initializable {
 	public static RootController INSTANCE;
 	public static Stage STAGE;
 	@FXML
-	private EditPanels editer;
+	private EditPanels editor;
 	public Pane curveeditor;
 	@FXML
 	private TextField packSearch;
@@ -112,12 +112,12 @@ public class RootController implements Initializable {
 		HidePack.SoundList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.OpenPacks.addListener(new WeakListChangeListener<>(writeListener));
 
-		bindEditer(packList);
-		bindEditer(gunList);
-		bindEditer(magazineList);
-		bindEditer(iconList);
-		bindEditer(soundList);
-		bindEditer(modelInfoList);
+		bindEditor(packList);
+		bindEditor(gunList);
+		bindEditor(magazineList);
+		bindEditor(iconList);
+		bindEditor(soundList);
+		bindEditor(modelInfoList);
 
 //	//	HideModel hm = ModelIO.read();
 //		hm.rootBone.animation.get(AnimationType.Reload).add(new AnimationKey());
@@ -127,7 +127,7 @@ public class RootController implements Initializable {
 		itemTab.getSelectionModel().selectedItemProperty().addListener((v, n, o) -> itemTabChange());
 
 		importTarget.setItems(HidePack.OpenPacks);
-		importTarget.getSelectionModel().select(HidePack.DefaultPack);
+		importTarget.getSelectionModel().select(HidePack.DefaultPack.get());
 		importTarget.setConverter(new StringConverter<PackInfo>() {
 			@Override
 			public String toString(PackInfo object) {
@@ -139,23 +139,28 @@ public class RootController implements Initializable {
 				return null;
 			}
 		});
+		HidePack.DefaultPack.addListener((v, ov, nv) -> {
+			System.out.println(ov + " " + nv + " " + importTarget.getItems());
+			if (importTarget.getSelectionModel().getSelectedItem() == ov)
+				importTarget.getSelectionModel().select(nv);
+		});
 		// TODO
 		/*
 		 * Pane modelV = new Pane(); Stage modelView = new Stage(StageStyle.UTILITY);
 		 * ModelView mv = new ModelView(modelV); modelView = new
 		 * Stage(StageStyle.UTILITY); modelView.setScene(new Scene(modelV));
 		 * modelView.initOwner(STAGE); modelView.initModality(Modality.NONE); //
-		 * clipEditer.setResizable(false); modelView.setTitle("ModelView");
+		 * clipEditor.setResizable(false); modelView.setTitle("ModelView");
 		 * modelView.show();//
 		 */
 
-		curveeditor.getChildren().add(editer.curveEditPane);
+		curveeditor.getChildren().add(editor.curveEditPane);
 
 		write();
 	}
 
 	/** 選択されたら実行 */
-	private void bindEditer(ListView<?> list) {
+	private void bindEditor(ListView<?> list) {
 		// フォーカスが切れたら選択解除
 		list.focusedProperty().addListener((v, ov, nv) -> {
 			if (!nv)
@@ -170,7 +175,7 @@ public class RootController implements Initializable {
 	/** パックから要素が削除されたとき編集中なら編集を中止する */
 	private void cancelEdit(IDataEntity obj) {
 		if (obj instanceof DataBase)
-			editer.removeEditValue(obj);
+			editor.removeEditValue(obj);
 	}
 
 	/** 親子関係の解決 */
@@ -198,6 +203,7 @@ public class RootController implements Initializable {
 		soundList.refresh();
 		iconList.refresh();
 		modelList.refresh();
+
 	}
 
 	/** CurrentPackの内容をリストに反映 */
@@ -253,13 +259,13 @@ public class RootController implements Initializable {
 
 	private void updateEditDir(String path) {
 		if (path == null)
-			STAGE.setTitle(Editer.Title);
+			STAGE.setTitle(Editor.Title);
 		else
-			STAGE.setTitle(Editer.Title + "  *" + path);
+			STAGE.setTitle(Editor.Title + "  *" + path);
 	}
 
 	private void openPack(File file) {
-		updateEditDir(Editer.config.editDir);
+		updateEditDir(Editor.config.editDir);
 		PackCash pack = PackIO.readPack(file);
 		HidePack.addPack(pack);
 		write();
@@ -292,13 +298,13 @@ public class RootController implements Initializable {
 		if (!newPack())
 			return;
 		DirectoryChooser chooser = new DirectoryChooser();
-		File dir = new File(Editer.config.editDir);
+		File dir = new File(Editor.config.editDir);
 		if (!dir.exists() || !dir.isDirectory())
 			dir = new File("./export/");
 		chooser.setInitialDirectory(dir);
 		File file = chooser.showDialog(STAGE);
 		if (file != null) {
-			Editer.config.editDir = file.toString();
+			Editor.config.editDir = file.toString();
 			for (File f : file.listFiles())
 				openPack(f);
 		}
@@ -312,7 +318,7 @@ public class RootController implements Initializable {
 
 	public void openPack() {
 		FileChooser fxtest = new FileChooser();
-		File dir = new File(Editer.config.editDir);
+		File dir = new File(Editor.config.editDir);
 		if (!dir.exists() || !dir.isDirectory())
 			dir = new File("./export/");
 		fxtest.setInitialDirectory(dir);
@@ -320,7 +326,7 @@ public class RootController implements Initializable {
 		fxtest.getExtensionFilters().add(new ExtensionFilter("zip", "*.zip"));
 		List<File> file = fxtest.showOpenMultipleDialog(STAGE);
 		if (file != null) {
-			Editer.config.editDir = file.get(0).getParent();
+			Editor.config.editDir = file.get(0).getParent();
 			for (File f : file)
 				openPack(f);
 			// インポートダイアログを開く
@@ -347,20 +353,20 @@ public class RootController implements Initializable {
 	public void save() {
 		if (!openFromFile)
 			saveas();
-		File file = new File(Editer.config.editDir);
+		File file = new File(Editor.config.editDir);
 		PackIO.export(file);
 		updateEditDir(file.toString());
 	}
 
 	public void saveas() {
 		DirectoryChooser fxtest = new DirectoryChooser();
-		File dir = new File(Editer.config.editDir);
+		File dir = new File(Editor.config.editDir);
 		if (!dir.exists() || !dir.isDirectory())
 			dir = new File("./export/");
 		fxtest.setInitialDirectory(dir);
 		File file = fxtest.showDialog(STAGE);
 		if (file != null) {
-			Editer.config.editDir = file.toString();
+			Editor.config.editDir = file.toString();
 			openFromFile = true;
 			save();
 		}
@@ -372,12 +378,12 @@ public class RootController implements Initializable {
 	// ========編集========
 
 	public void editClear() {
-		editer.setEditValue(null);
+		editor.setEditValue(null);
 	}
 
 	public void editData(Object item) {
 		if (item != null) {
-			editer.setEditValue(item);
+			editor.setEditValue(item);
 		}
 	}
 
@@ -416,7 +422,7 @@ public class RootController implements Initializable {
 		GunData newGun = new GunData();
 		newGun.put(newGun.systemName(), Operator.SET, "gun_" + gunNamePointer);
 		newGun.put(newGun.displayName(), Operator.SET, "New Gun No." + gunNamePointer);
-		newGun.getRootPack().set(HidePack.DefaultPack);
+		newGun.getRootPack().set(getImportTarget());
 		// ProjectileDataは初期設定
 		newGun.put(GunData.Data);
 		HidePack.GunList.add(newGun);
@@ -434,7 +440,7 @@ public class RootController implements Initializable {
 		MagazineData magazine = new MagazineData();
 		magazine.put(magazine.systemName(), Operator.SET, "magazine_" + bulletNamePointer);
 		magazine.put(magazine.displayName(), Operator.SET, "New Magazine No." + bulletNamePointer);
-		magazine.getRootPack().set(HidePack.DefaultPack);
+		magazine.getRootPack().set(getImportTarget());
 		// ProjectileDataは初期設定
 		magazine.put(MagazineData.Data);
 		HidePack.MagazineList.add(magazine);

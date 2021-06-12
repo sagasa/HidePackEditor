@@ -1,42 +1,18 @@
 package io;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.imageio.ImageIO;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import editer.HidePack;
-import resources.HideImage;
 import resources.Model;
-import types.model.HideModel;
 
 public class ModelIO {
 	public static final String SPACE = " ";// TODO
 	public static final String SLASH = "/";
-
-	@Deprecated
-	public static HideModel read() {
-		File file = new File("./[AR1]StG44/ModelStG44.obj");
-		try {
-			HidePack.TextureList.add(new HideImage("test", ImageIO.read(new File("./[AR1]StG44/SkinStG44.png"))));
-			HideModel model = new HideModel(read("stg44", Files.lines(Paths.get(file.getPath()), PackIO.UTF8)
-					.collect(Collectors.joining(System.getProperty("line.separator")))));
-			model.textureName = "test";
-			return model;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 
 	/** Modelに頂点情報を書き込む */
 	public static Model read(String name, String data) {

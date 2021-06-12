@@ -1,4 +1,4 @@
-package editer;
+package editor;
 
 import javafx.beans.property.ObjectProperty;
 import types.PackInfo;

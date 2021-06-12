@@ -1,4 +1,4 @@
-package editer.node;
+package editor.node;
 
 import javafx.beans.value.ObservableObjectValue;
 import javafx.scene.canvas.Canvas;

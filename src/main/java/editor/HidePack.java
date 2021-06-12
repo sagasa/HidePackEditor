@@ -1,4 +1,4 @@
-package editer;
+package editor;
 
 import java.util.Iterator;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import io.PackCash;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -47,7 +48,7 @@ public class HidePack {
 	/** 編集中のパック デフォルトを含む */
 	public static ObservableList<PackInfo> OpenPacks;
 	/** デフォルトパック */
-	public static PackInfo DefaultPack;
+	public static ObjectProperty<PackInfo> DefaultPack = new SimpleObjectProperty<>();
 
 	public static Random random = new Random();
 
@@ -68,16 +69,12 @@ public class HidePack {
 		OpenPacks = FXCollections.observableArrayList();
 		ModelList = FXCollections.observableArrayList();
 		ModelInfoList = FXCollections.observableArrayList();
-		DefaultPack = new PackInfo();
-		DefaultPack.put(PackInfo.PackName, Operator.SET, "default");
-		DefaultPack.put(PackInfo.PackDomain, Operator.SET, "default");
-		DefaultPack.put(PackInfo.PackVar, Operator.SET, "");
-		DefaultPack.PackColor.set(Color.GRAY);
-		OpenPacks.add(DefaultPack);
-
 		GunList.addListener(namedinit);
 		MagazineList.addListener(namedinit);
 		ModelInfoList.addListener(namedinit);
+		DefaultPack.set(new PackInfo());
+		OpenPacks.add(DefaultPack.get());
+		clear();
 	}
 
 	/** パック初期化 */
@@ -88,15 +85,16 @@ public class HidePack {
 		ScopeList.clear();
 		SoundList.clear();
 		TextureList.clear();
-		OpenPacks.clear();
 		ModelList.clear();
 		ModelInfoList.clear();
-		DefaultPack = new PackInfo();
-		DefaultPack.put(PackInfo.PackName, Operator.SET, "default");
-		DefaultPack.put(PackInfo.PackDomain, Operator.SET, "default");
-		DefaultPack.put(PackInfo.PackVar, Operator.SET, "");
-		DefaultPack.PackColor.set(Color.GRAY);
-		OpenPacks.add(DefaultPack);
+		OpenPacks.removeIf(pack -> DefaultPack.get() != pack);
+		PackInfo defaultPack = DefaultPack.get();
+		defaultPack.put(PackInfo.PackName, Operator.SET, "default");
+		defaultPack.put(PackInfo.PackDomain, Operator.SET, "default");
+		defaultPack.put(PackInfo.PackVar, Operator.SET, "");
+		defaultPack.PackColor.set(Color.GRAY);
+
+		// DefaultPack.set(defaultPack);
 	}
 
 	public static boolean isEmpty() {
@@ -123,7 +121,7 @@ public class HidePack {
 				itr.remove();
 	}
 
-	public static void mergePack(PackInfo from, PackInfo to) {
+	public static void mergeAndDelete(PackInfo from, PackInfo to) {
 		editToAll(e -> {
 			ObjectProperty<PackInfo> prop = e.getRootPack();
 			if (from.equals(prop.get())) {
@@ -131,18 +129,29 @@ public class HidePack {
 			}
 			return true;
 		});
+		if (DefaultPack.get() == from)
+			DefaultPack.set(to);
+		OpenPacks.remove(from);
 	}
 
 	/** PackCashインポート */
 	public static void addPack(PackCash pack) {
+		boolean wasEmpty = isEmpty();
 		// 放り込む
 		GunList.addAll(pack.GunList);
 		MagazineList.addAll(pack.MagazineList);
 		IconList.addAll(pack.IconList);
 		ScopeList.addAll(pack.ScopeList);
 		SoundList.addAll(pack.SoundList);
-		if (pack.Pack != null)
+		if (pack.Pack != null) {
 			OpenPacks.add(pack.Pack);
+			if (wasEmpty) {
+				PackInfo old = DefaultPack.get();
+				DefaultPack.set(pack.Pack);
+				OpenPacks.remove(old);
+			}
+
+		}
 	}
 
 	public static PackInfo addPack(PackInfo pack) {

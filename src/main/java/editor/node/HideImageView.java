@@ -1,6 +1,6 @@
-package editer.node;
+package editor.node;
 
-import editer.HidePack;
+import editor.HidePack;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.ListChangeListener;

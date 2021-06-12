@@ -1,4 +1,4 @@
-package editer;
+package editor;
 
 import java.util.List;
 

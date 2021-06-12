@@ -1,4 +1,4 @@
-package editer.controller;
+package editor.controller;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-import editer.HidePack;
-import editer.IDataEntity;
+import editor.HidePack;
+import editor.IDataEntity;
 import io.PackCash;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -96,7 +96,7 @@ public class ImportController implements Initializable {
 			Pack.isReference = isReference.isCache();
 			Pack = HidePack.addPack(Pack);
 		}
-		PackInfo packinfo = toDefault.isSelected() ? HidePack.DefaultPack : Pack;
+		PackInfo packinfo = toDefault.isSelected() ? HidePack.DefaultPack.get() : Pack;
 		getAll().forEach(entry -> entry.doImport(packinfo));
 
 		gunList.getScene().getWindow().hide();

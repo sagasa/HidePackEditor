@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import editer.HidePack;
+import editor.HidePack;
 
 public class PackChecker {
 	public static void checkAll() {

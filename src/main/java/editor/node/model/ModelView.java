@@ -1,9 +1,8 @@
-package editer.node.model;
+package editor.node.model;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import editer.HidePack;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -11,7 +10,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.WeakChangeListener;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
@@ -41,7 +39,7 @@ public class ModelView extends Pane {
 
 	private Group rootGroup = new Group();
 
-	/**編集中のオブジェクト*/
+	/** 編集中のオブジェクト */
 	ObjectProperty<NamedData> editValue;
 
 	// ビュー設定
@@ -54,7 +52,7 @@ public class ModelView extends Pane {
 	private Translate viewPoint = new Translate(0, 0, 0);
 	private DoubleProperty zoom = new SimpleDoubleProperty(1);
 
-	/**チェック無いよ！！*/
+	/** チェック無いよ！！ */
 	public HideModel getModel() {
 		return (HideModel) editValue.get();
 	}
@@ -136,7 +134,6 @@ public class ModelView extends Pane {
 		back.setMesh(mesh);
 		back.setScaleY(10);
 
-
 		// front.scaleXProperty().bind(scale.divide(25));
 		// front.scaleZProperty().bind(scale.divide(25));
 
@@ -163,8 +160,7 @@ public class ModelView extends Pane {
 	/** セレクターの選択から表示を切り替える */
 	private boolean addPartView(String partName, StringProperty nowselect, List<Transform> moves,
 			BooleanProperty listselect) {
-		Model model = getModel().getModel().get();
-
+		Model model = null;// getModel().getModel().get();
 
 //		if (!model.modelParts.containsKey(partName))
 //			return false;
@@ -173,13 +169,14 @@ public class ModelView extends Pane {
 //		mesh.getTexCoords().addAll(model.texArray);
 //		mesh.getFaces().addAll(model.modelParts.get(partName));
 
-		Image texture = SwingFXUtils.toFXImage(HidePack.getTexture(getModel().textureName).Image, null);
+		Image texture = null;
+		// SwingFXUtils.toFXImage(HidePack.getTexture(getModel().textureName).Image,null);
 
 		PhongMaterial mat = new PhongMaterial(enableColor);
 		// テクスチャがあるなら
-		if (getModel().textureName != null && HidePack.getTexture(getModel().textureName) != null) {
-			mat.setDiffuseMap(texture);
-		}
+//		if (getModel().textureName != null && HidePack.getTexture(getModel().textureName) != null) {
+//			mat.setDiffuseMap(texture);
+//		}
 		PhongMaterial lineMat = new PhongMaterial(Color.WHITE, texture, null, null, null);
 		// 辺表示
 		MeshView linev = new MeshView();
@@ -221,7 +218,8 @@ public class ModelView extends Pane {
 			viewChange.accept(nv, nowselect.get().equals(partName));
 		});
 		// セレクターの反映
-		nowselect.addListener(new WeakChangeListener<>((v, ov, nv) -> viewChange.accept(listselect.get(), nv.equals(partName))));//TODO
+		nowselect.addListener(
+				new WeakChangeListener<>((v, ov, nv) -> viewChange.accept(listselect.get(), nv.equals(partName))));// TODO
 
 		rootGroup.getChildren().addAll(linev, linev2, facev);
 		return true;

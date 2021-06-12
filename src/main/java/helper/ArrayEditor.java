@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import editer.IDataEntity;
+import editor.IDataEntity;
 
 /** プリミティブ配列の結合など */
 public class ArrayEditor {

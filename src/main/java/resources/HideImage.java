@@ -2,13 +2,13 @@ package resources;
 
 import java.awt.image.BufferedImage;
 
-import editer.HidePack;
+import editor.HidePack;
 import types.PackInfo;
 
 public class HideImage extends Resource {
 
 	public HideImage(String name, BufferedImage bufferedImage) {
-		this(name, HidePack.DefaultPack, bufferedImage);
+		this(name, HidePack.DefaultPack.get(), bufferedImage);
 	}
 
 	public HideImage(String name, PackInfo pack, BufferedImage bufferedImage) {

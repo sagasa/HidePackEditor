@@ -26,8 +26,8 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import editer.HidePack;
-import editer.controller.RootController;
+import editor.HidePack;
+import editor.controller.RootController;
 import helper.ArrayEditor;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -207,8 +207,7 @@ public class PackIO {
 			// 全パック出力
 			for (PackInfo pack : dataMap.keySet()) {
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(// TODO 出力先指定
-						new File(path, pack.getDisplayName() + pack.get(PackInfo.PackVar, null)) + ".zip"),
-						Charset.forName("Shift_JIS"));
+						new File(path, pack.getDisplayName()) + ".zip"), Charset.forName("Shift_JIS"));
 				for (Entry<String, ByteArrayInputStream> data : dataMap.get(pack).entrySet()) {
 					ZipEntry entry = new ZipEntry(data.getKey());
 					zos.putNextEntry(entry);

@@ -1,4 +1,4 @@
-package editer;
+package editor;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import editer.controller.RootController;
+import editor.controller.RootController;
 import io.EditorConfig;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -25,7 +25,7 @@ import sagasa.gltf.GltfLoader.GltfException;
 import types.value.Curve;
 import types.value.Curve.CurveKey;
 
-public class Editer extends Application {
+public class Editor extends Application {
 
 	public static EditorConfig config;
 
@@ -128,12 +128,12 @@ public class Editer extends Application {
 	}
 
 	private static final Logger log = LogManager.getLogger();
-	private static final Point2D STAGE_SIZE = new Point2D(1400, 800);
-	public static final String Title = "HidePackEditer";
+	private static final Point2D STAGE_SIZE = new Point2D(1640, 920);
+	public static final String Title = "HidePackEditor";
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		String fxmlFile = "/fxml/editer.fxml";
+		String fxmlFile = "/fxml/editor.fxml";
 		log.debug("Loading FXML for main view from: {}", fxmlFile);
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile), LocalizeHandler.getResourceBundle());
 		Parent rootNode = (Parent) loader.load();

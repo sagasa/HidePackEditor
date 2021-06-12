@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>HideMod</groupId>
 	<artifactId>PackEditor</artifactId>
-	<version>0.0.8</version>
+	<version>0.0.9</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -29,14 +29,14 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>editer.Editer</mainClass>
+							<mainClass>editor.Editor</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
 				<executions>
 					<execution>
 						<!-- idタグは任意の文字列であれば何でもよい -->
-						<id>HideEditer</id>
+						<id>HideEditor</id>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
