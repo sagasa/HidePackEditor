@@ -30,7 +30,6 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import resources.Model;
-import types.base.NamedData;
 import types.model.Bone;
 import types.model.HideModel;
 import types.model.ModelSelector;
@@ -40,7 +39,7 @@ public class ModelView extends Pane {
 	private Group rootGroup = new Group();
 
 	/** 編集中のオブジェクト */
-	ObjectProperty<NamedData> editValue;
+	ObjectProperty<HideModel> editValue;
 
 	// ビュー設定
 	private BooleanProperty showLine = new SimpleBooleanProperty(true);
@@ -57,7 +56,7 @@ public class ModelView extends Pane {
 		return (HideModel) editValue.get();
 	}
 
-	public ModelView(ObjectProperty<NamedData> editvalue) {
+	public ModelView(ObjectProperty<HideModel> editvalue) {
 		this.editValue = editvalue;
 		PerspectiveCamera camera = new PerspectiveCamera(false);
 		camera.setFieldOfView(70.0);
@@ -155,6 +154,9 @@ public class ModelView extends Pane {
 	public void addPartView(ModelSelector model, List<Transform> moves, BooleanProperty select) {
 		addPartView(model.defaultModel, model.nowViewModel, moves, select);
 		model.item_model.values().forEach(name -> addPartView(name, model.nowViewModel, moves, select));
+		{
+
+		}
 	}
 
 	/** セレクターの選択から表示を切り替える */

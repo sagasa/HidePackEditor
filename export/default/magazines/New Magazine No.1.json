@@ -1,0 +1,11 @@
+{
+  "Type": "MagazineData",
+  "Values": {
+    "DisplayName": "New Magazine No.1",
+    "ShortName": "magazine_1",
+    "Data": {
+      "Type": "ProjectileData",
+      "Values": {}
+    }
+  }
+}

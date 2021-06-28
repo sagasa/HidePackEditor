@@ -3,54 +3,63 @@ package types.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import sagasa.gltf.GltfLoader.GLBInfo;
+import javafx.collections.ObservableList;
+import resources.Model;
+import types.base.DataBase;
 import types.base.NamedData;
+import types.value.Operator;
 
 /** Modelはパックから名前で参照する */
 public class HideModel extends NamedData {
 	// 出力時のファイル名
-	transient public String name = "";
+	transient public ObservableList<String> empty;
+	transient public ObservableList<String> mesh;
+	transient public Model model;
 
-	// 共通
-	public String modelName;
+	public static final DataEntry<String> Name = of("sample");
 
-	public DataEntry<String> handPos;
-	public String sightPos;
-	public String bullelPos;
+	public static final DataEntry<String> Model = of("sample");
 
-	public String reloadAnim;
-	public String shootAnim;
+	public static final DataEntry<String> HandPos = of("");
+	public static final DataEntry<String> SightPos = of("");
+	public static final DataEntry<String> BullelPos = of("");
 
-	public String[] reload;
-	public String[] shoot;
+	public static final DataEntry<AnimationEntry[]> ReloadAnimation = of(new AnimationEntry[0]);
+	public static final DataEntry<AnimationEntry[]> ShootAnimation = of(new AnimationEntry[0]);
 
 	/** tag - model */
 	public Map<String, String> tag_model = new HashMap<>();
 
-	public float scale;
-
-	public static class A{
-
+	public static class AnimationEntry extends DataBase {
+		/** 利用するAnimationの名前 String */
+		public static final DataEntry<String> Name = of("");
+		/** 出現率 Integer */
+		public static final DataEntry<Integer> Weight = of(1);
 	}
 
 	public HideModel() {
 
 	}
 
-	public HideModel(GLBInfo info) {
+	public HideModel(Model model) {
+		setModel(model);
+	}
 
+	public HideModel setModel(Model model) {
+		this.model = model;
+		put(Name, Operator.SET, model.DisplayName);
+		put(Model, Operator.SET, model.DisplayName);
+		return this;
 	}
 
 	@Override
 	public DataEntry<String> displayName() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		return Name;
 	}
 
 	@Override
 	public DataEntry<String> systemName() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		return Name;
 	}
 
 }

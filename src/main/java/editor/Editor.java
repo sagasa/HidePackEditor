@@ -1,6 +1,5 @@
 package editor;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
@@ -8,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import editor.controller.RootController;
 import io.EditorConfig;
+import io.GltfInfoReader.GltfException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -19,9 +19,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import localize.LocalizeHandler;
-import sagasa.gltf.GltfLoader;
-import sagasa.gltf.GltfLoader.GLBInfo;
-import sagasa.gltf.GltfLoader.GltfException;
 import types.value.Curve;
 import types.value.Curve.CurveKey;
 
@@ -57,9 +54,9 @@ public class Editor extends Application {
 //
 //		System.exit(0);
 
-		GLBInfo info = GltfLoader.LoadGlbFile(new File("./addempty.glb"));
-		System.out.println(info.animations);
-		System.out.println(info.emptynodes);
+		// GLBInfo info = GltfLoader.LoadGlbFile(new File("./addempty.glb"));
+		// System.out.println(info.animations);
+		// System.out.println(info.emptynodes);
 
 		Curve curve = new Curve();
 		curve.Keys = new CurveKey[2];

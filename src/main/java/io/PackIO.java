@@ -12,10 +12,12 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -32,12 +34,14 @@ import helper.ArrayEditor;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import resources.HideImage;
+import resources.Model;
 import resources.Sound;
 import types.PackInfo;
 import types.base.DataBase;
 import types.base.NamedData;
 import types.items.GunData;
 import types.items.MagazineData;
+import types.model.HideModel;
 
 public class PackIO {
 	private static final Logger log = LogManager.getLogger();
@@ -49,11 +53,57 @@ public class PackIO {
 	}
 
 	/** ファイル選択を開く */
-	private static FileChooser makeFileChooser(ExtensionFilter filter) {
+	private static List<File> openFileChooser(ExtensionFilter... filter) {
 		FileChooser filechooser = new FileChooser();
 		filechooser.setInitialDirectory(new File("."));
-		filechooser.getExtensionFilters().add(filter);
-		return filechooser;
+		filechooser.getExtensionFilters().addAll(filter);
+		List<File> list = filechooser.showOpenMultipleDialog(RootController.STAGE);
+		return list == null ? Collections.emptyList() : list;
+	}
+
+	/**
+	 * imageを読み込み
+	 */
+	public static HideImage readImage(File file) {
+		try {
+			return new HideImage(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Soundを読み込み
+	 */
+	public static Sound readSound(File file) {
+		try {
+			return new Sound(file.getName().replaceAll(".ogg$", ""), Files.readAllBytes(file.toPath()));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
+	/**
+	 * Modelを読み込み
+	 */
+	public static Model readModel(File file) {
+		try {
+			String name = file.getName();
+			if (name.endsWith(".glb"))
+				return Model.from(name.replaceAll(".glb$", ""), Files.readAllBytes(file.toPath()),
+						PackPattern.MODEL_GLB);
+			if (name.endsWith(".obj"))
+				return Model.from(name.replaceAll(".obj$", ""), Files.readAllBytes(file.toPath()),
+						PackPattern.MODEL_OBJ);
+			throw new NoSuchElementException();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -62,49 +112,19 @@ public class PackIO {
 	 * @param packInfo
 	 */
 	public static void importIcon(PackInfo packInfo) {
-		FileChooser filechooser = makeFileChooser(new ExtensionFilter("image", "*.png", "*.jpg", "*.bmp"));
-		List<File> files = filechooser.showOpenMultipleDialog(RootController.STAGE);
-		if (files != null) {
-			for (File file : files) {
-				importIcon(file, packInfo);
-			}
-		}
-	}
-
-	/**
-	 * iconをインポート
-	 *
-	 * @param packInfo
-	 */
-	public static void importIcon(File file, PackInfo packInfo) {
-		try {
-			HideImage image = new HideImage(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), packInfo,
-					ImageIO.read(file));
-
+		for (File file : openFileChooser(new ExtensionFilter("image", "*.png", "*.jpg", "*.bmp"))) {
+			HideImage image = readImage(file);
+			image.RootPack.set(packInfo);
 			HidePack.IconList.add(image);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
 	/** Scopeをインポート */
-	public static void importScope() {
-		FileChooser filechooser = makeFileChooser(new ExtensionFilter("image", "*.png", "*.jpg", "*.bmp"));
-		List<File> files = filechooser.showOpenMultipleDialog(RootController.STAGE);
-		if (files != null) {
-			for (File file : files) {
-				importScope(file);
-			}
-		}
-	}
-
-	/** Scopeをインポート */
-	public static void importScope(File file) {
-		try {
-			HideImage image = new HideImage(file.getName().replaceAll("(.png|.jpg|.bmp)$", ""), ImageIO.read(file));
+	public static void importScope(PackInfo packInfo) {
+		for (File file : openFileChooser(new ExtensionFilter("image", "*.png", "*.jpg", "*.bmp"))) {
+			HideImage image = readImage(file);
+			image.RootPack.set(packInfo);
 			HidePack.ScopeList.add(image);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -114,27 +134,21 @@ public class PackIO {
 	 * @param packInfo
 	 */
 	public static void importSound(PackInfo packInfo) {
-		FileChooser filechooser = makeFileChooser(new ExtensionFilter("ogg", "*.ogg"));
-		List<File> files = filechooser.showOpenMultipleDialog(RootController.STAGE);
-		if (files != null) {
-			for (File file : files) {
-				importSound(file, packInfo);
-			}
+		for (File file : openFileChooser(new ExtensionFilter("ogg", "*.ogg"))) {
+			Sound sound = readSound(file);
+			sound.RootPack.set(packInfo);
+			HidePack.SoundList.add(sound);
 		}
 	}
 
-	/**
-	 * Soundをインポート
-	 *
-	 * @param packInfo
-	 */
-	public static void importSound(File file, PackInfo packInfo) {
-		try {
-			Sound sound = new Sound(file.getName().replaceAll(".ogg$", ""), packInfo,
-					Files.readAllBytes(file.toPath()));
-			HidePack.SoundList.add(sound);
-		} catch (IOException e) {
-			e.printStackTrace();
+	public static void importModel(PackInfo packInfo) {
+		for (File file : openFileChooser(new ExtensionFilter("model", "*.obj", "*.glb"))) {
+			Model model = readModel(file);
+			model.RootPack.set(packInfo);
+			HidePack.ModelList.add(model);
+			HideModel hideModel = new HideModel(model);
+			hideModel.getRootPack().set(packInfo);
+			HidePack.ModelInfoList.add(hideModel);
 		}
 	}
 
@@ -144,7 +158,7 @@ public class PackIO {
 			// 参照ではなければ
 			if (!d.isReference()) {
 				dataMap.get(d.getRootPack().get()).put(pattern.toPath(d.getDisplayName()),
-						new ByteArrayInputStream(d.toJson().getBytes()));
+						new ByteArrayInputStream(d.toJson().getBytes(UTF8)));
 			}
 		}
 	}
@@ -170,7 +184,7 @@ public class PackIO {
 			// 参照では無ければ
 			dataMap.put(pack, new HashMap<>());
 			// パックデータ
-			dataMap.get(pack).put("pack.json", new ByteArrayInputStream(pack.toJson().getBytes()));
+			dataMap.get(pack).put("pack.json", new ByteArrayInputStream(pack.toJson().getBytes(UTF8)));
 		}
 
 		// 銃のデータ
@@ -184,6 +198,8 @@ public class PackIO {
 			addEntryImage(dataMap, HidePack.IconList, PackPattern.ICON);
 			// Scope
 			addEntryImage(dataMap, HidePack.ScopeList, PackPattern.SCOPE);
+
+			addEntryImage(dataMap, HidePack.TextureList, PackPattern.TEXTURE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -192,6 +208,15 @@ public class PackIO {
 			if (!d.isReference()) {
 				dataMap.get(d.RootPack.get()).put(PackPattern.SOUND.toPath(d.getDisplayName()),
 						new ByteArrayInputStream(d.Sound));
+			}
+		}
+		for (HideModel d : HidePack.ModelInfoList) {
+			// 参照ではなければ
+			if (!d.isReference()) {
+				dataMap.get(d.getRootPack().get()).put(PackPattern.MODEL_INFO.toPath(d.getDisplayName()),
+						new ByteArrayInputStream(d.toJson().getBytes(UTF8)));
+				dataMap.get(d.getRootPack().get()).put(d.model.type.toPath(d.getDisplayName()),
+						new ByteArrayInputStream(d.model.data));
 			}
 		}
 		// 内容がないor参照のエントリを削除
@@ -304,13 +329,25 @@ public class PackIO {
 			// System.out.println("scope");
 		}
 		// model
-		if (PackPattern.MODEL.mache(name)) {
-			pack.ModelList.add(ModelIO.read(PackPattern.MODEL.trim(name), new String(data, UTF8)));
+		if (PackPattern.MODEL_GLB.mache(name)) {
+			pack.ModelList.add(Model.from(PackPattern.MODEL_GLB.trim(name), data, PackPattern.MODEL_GLB));
+			// System.out.println("model");
+		}
+		// model
+		if (PackPattern.MODEL_OBJ.mache(name)) {
+			pack.ModelList.add(Model.from(PackPattern.MODEL_GLB.trim(name), data, PackPattern.MODEL_OBJ));
+			// System.out.println("model");
+		}
+		// model
+		if (PackPattern.MODEL_INFO.mache(name)) {
+			pack.ModelInfoList.add(DataBase.fromJson(new String(data, UTF8)));
 			// System.out.println("model");
 		}
 		// texture
 		if (PackPattern.TEXTURE.mache(name)) {
 			// System.out.println("texture");
+			pack.TextureList
+					.add(new HideImage(PackPattern.TEXTURE.trim(name), ImageIO.read(new ByteArrayInputStream(data))));
 		}
 		// sounds
 		if (PackPattern.SOUND.mache(name)) {
@@ -321,10 +358,10 @@ public class PackIO {
 	}
 
 	/** パック認識用パターン エディター側と完全互換 */
-	private enum PackPattern {
+	public enum PackPattern {
 		GUN("guns", "json"), MAGAZINE("magazines", "json"), PACKINFO(Pattern.compile("^(.*)pack\\.json$"), "json"),
 		ICON("icons", "png"), SCOPE("scopes", "png"), TEXTURE("textures", "png"), SOUND("sounds", "ogg"),
-		MODEL("models", "obj"), MODEL_INFO("models", "json");
+		MODEL_OBJ("models", "obj"), MODEL_GLB("models", "glb"), MODEL_INFO("models", "json");
 
 		private PackPattern(Pattern mache, String end) {
 			this.mache = mache;
@@ -358,4 +395,5 @@ public class PackIO {
 		private String start;
 		private String end;
 	}
+
 }

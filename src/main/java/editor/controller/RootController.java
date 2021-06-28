@@ -100,7 +100,8 @@ public class RootController implements Initializable {
 		magazineList.setCellFactory(ColordListCell.getCellFactory(HidePack.MagazineList));
 		soundList.setCellFactory(ColordListCell.getCellFactory(HidePack.SoundList));
 		iconList.setCellFactory(ColordListCell.getCellFactory(HidePack.IconList));
-		// modelList.setCellFactory(ColordListCell.getCellFactory(HidePack.));TODO
+		modelList.setCellFactory(ColordListCell.getCellFactory(HidePack.ModelList));
+		modelInfoList.setCellFactory(ColordListCell.getCellFactory(HidePack.ModelInfoList));
 		// Serch用フック
 		itemSearch.textProperty().addListener(change -> write());
 		packSearch.textProperty().addListener(change -> write());
@@ -111,12 +112,15 @@ public class RootController implements Initializable {
 		HidePack.ScopeList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.SoundList.addListener(new WeakListChangeListener<>(writeListener));
 		HidePack.OpenPacks.addListener(new WeakListChangeListener<>(writeListener));
+		HidePack.ModelInfoList.addListener(new WeakListChangeListener<>(writeListener));
+		HidePack.ModelList.addListener(new WeakListChangeListener<>(writeListener));
 
 		bindEditor(packList);
 		bindEditor(gunList);
 		bindEditor(magazineList);
 		bindEditor(iconList);
 		bindEditor(soundList);
+		bindEditor(modelList);
 		bindEditor(modelInfoList);
 
 //	//	HideModel hm = ModelIO.read();
@@ -187,7 +191,6 @@ public class RootController implements Initializable {
 	public void resolve() {
 		NamedData.resolvParent(gunList.getItems());
 		NamedData.resolvParent(magazineList.getItems());
-		NamedData.resolvParent(modelInfoList.getItems());
 	}
 
 	/** リストをリフレッシュ */
@@ -229,6 +232,9 @@ public class RootController implements Initializable {
 				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.SoundList, itemSearch.getText())));
 		modelInfoList.setItems(
 				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.ModelInfoList, itemSearch.getText())));
+		modelList.setItems(
+				FXCollections.observableArrayList(ArrayEditor.Search(HidePack.ModelList, itemSearch.getText())));
+
 	}
 
 	/** タブ切り替え時にアイテムエディタを描画 */
@@ -289,6 +295,7 @@ public class RootController implements Initializable {
 		bulletNamePointer = 0;
 		gunNamePointer = 0;
 		packNamePointer = 0;
+		modelNamePointer = 0;
 		write();
 		updateEditDir(null);
 		return true;
@@ -396,6 +403,7 @@ public class RootController implements Initializable {
 	private static int packNamePointer = 0;
 	private static int gunNamePointer = 0;
 	private static int bulletNamePointer = 0;
+	private static int modelNamePointer = 0;
 
 	public void addPack() {
 		log.debug("addPack");
@@ -447,6 +455,21 @@ public class RootController implements Initializable {
 		write();
 	}
 
+	public void addModelInfo() {
+		log.debug("addBullet");
+		if (HidePack.getModelInfo("Model No." + modelNamePointer) == null) {
+			modelNamePointer++;
+		}
+		while (HidePack.getModelInfo("Model No." + modelNamePointer) != null) {
+			modelNamePointer++;
+		}
+		HideModel modelinfo = new HideModel();
+		modelinfo.put(modelinfo.systemName(), Operator.SET, "Model No." + modelNamePointer);
+		modelinfo.getRootPack().set(getImportTarget());
+		HidePack.ModelInfoList.add(modelinfo);
+		write();
+	}
+
 	private PackInfo getImportTarget() {
 		return importTarget.getSelectionModel().getSelectedItem();
 	}
@@ -457,6 +480,10 @@ public class RootController implements Initializable {
 
 	public void importSound() {
 		PackIO.importSound(getImportTarget());
+	}
+
+	public void importModel() {
+		PackIO.importModel(getImportTarget());
 	}
 
 	// ===========リストセル============

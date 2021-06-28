@@ -1,5 +1,8 @@
 {
-  "PACK_NAME": "default",
-  "PACK_VER": "",
-  "PACK_ROOTNAME": "default"
+  "Type": "PackInfo",
+  "Values": {
+    "PackName": "default",
+    "PackVar": "",
+    "PackDomain": "default"
+  }
 }

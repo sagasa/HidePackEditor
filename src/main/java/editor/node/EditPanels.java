@@ -50,6 +50,7 @@ import types.gun.ProjectileData;
 import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
+import types.model.HideModel;
 
 /** 編集パネルのルート */
 public class EditPanels extends Pane {
@@ -62,7 +63,7 @@ public class EditPanels extends Pane {
 		NamedData(NamedData.class), Item(ItemData.class), Projectile(ProjectileData.class),
 		Gun(GunData.class, (cons, data) -> cons.accept(Projectile, data.get(GunData.Data, null))),
 		Magazine(MagazineData.class, (cons, data) -> cons.accept(Projectile, data.get(MagazineData.Data, null))),
-		Pack(PackInfo.class), PackSelect(IDataEntity.class);
+		Pack(PackInfo.class), ModelInfo(HideModel.class), PackSelect(IDataEntity.class);
 
 		/** 判別用の型 */
 		public final Class<?> Clazz;
@@ -140,8 +141,25 @@ public class EditPanels extends Pane {
 		writeMagazineEditor();
 		writeProjectileEditor();
 		writePackInfoEditor();
+		writeModelEditor();
+	}
 
-		// writeModelEditor();
+	/** HideModel */
+	private void writeModelEditor() {
+		final EditType type = EditType.ModelInfo;
+		// addEditPane(makePos3Editor(type, new DataPath("offsetFirstPerson")), type);
+		ObservableObjectValue<? extends DataBase> editValue = getEditModel(type);
+		{
+			ObservableList<? extends IDataEntity> empty;
+
+			VBox root = new VBox();
+			root.getChildren().addAll(EditNode.editString(editValue, type, DataPath.of(HideModel.Name)),
+					EditNode.editString(editValue, type, DataPath.of(HideModel.Model), HidePack.ModelList),
+					EditNode.editString(editValue, type, DataPath.of(HideModel.HandPos)),
+					EditNode.editString(editValue, type, DataPath.of(HideModel.BullelPos)),
+					EditNode.editString(editValue, type, DataPath.of(HideModel.SightPos)));
+			addEditPane(root, type);
+		}
 	}
 
 	private void writePackSelect() {
@@ -305,7 +323,7 @@ public class EditPanels extends Pane {
 		// icon
 		Node icon = makeImageNode(type, DataPath.of(ItemData.IconName), HidePack.IconList, view);
 		// model
-		Node model = EditNode.editString(editValue, type, DataPath.of(ItemData.ModelName), HidePack.IconList);
+		Node model = EditNode.editString(editValue, type, DataPath.of(ItemData.ModelName), HidePack.ModelInfoList);
 
 		root.getChildren().addAll(dizplayname, shortname, icon, model);
 		// root.setPrefSize(200, 72);
@@ -542,10 +560,10 @@ public class EditPanels extends Pane {
 	}
 	// ベースサイズは200x24
 
-	/** HideModel */
 //	private void writeModelEditor() {
-//		final EditType type = EditType.Model;
-//		addEditPane(makePos3Editor(type, new DataPath("offsetFirstPerson")), type);
+//		final EditType type = EditType.ModelInfo;
+//		// addEditPane(makePos3Editor(type, new DataPath("offsetFirstPerson")), type);
+//		ObservableObjectValue<? extends DataBase> editValue = getEditModel(type);
 //		// 右側にモデル確認ビューを置く
 //		ModelView modelView = new ModelView(editValue);
 //		modelView.translateXProperty().bind(rootPane.widthProperty().add(5));

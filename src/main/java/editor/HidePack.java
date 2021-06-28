@@ -71,7 +71,7 @@ public class HidePack {
 		ModelInfoList = FXCollections.observableArrayList();
 		GunList.addListener(namedinit);
 		MagazineList.addListener(namedinit);
-		ModelInfoList.addListener(namedinit);
+
 		DefaultPack.set(new PackInfo());
 		OpenPacks.add(DefaultPack.get());
 		clear();
@@ -143,6 +143,9 @@ public class HidePack {
 		IconList.addAll(pack.IconList);
 		ScopeList.addAll(pack.ScopeList);
 		SoundList.addAll(pack.SoundList);
+		TextureList.addAll(pack.TextureList);
+		ModelList.addAll(pack.ModelList);
+		ModelInfoList.addAll(pack.ModelInfoList);
 		if (pack.Pack != null) {
 			OpenPacks.add(pack.Pack);
 			if (wasEmpty) {

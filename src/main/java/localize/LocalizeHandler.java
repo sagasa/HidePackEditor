@@ -26,6 +26,7 @@ import types.gun.ProjectileData;
 import types.items.GunData;
 import types.items.ItemData;
 import types.items.MagazineData;
+import types.model.HideModel;
 
 /** langの読み込みと表示用 + 説明書きも対応 */
 public class LocalizeHandler {
@@ -53,6 +54,7 @@ public class LocalizeHandler {
 		makeLocalize(NamedData.class);
 		makeLocalize(ProjectileData.class);
 		makeLocalize(PackInfo.class);
+		makeLocalize(HideModel.class);
 		// makeLocalize(Vec3f.class);
 		// makeLocalize(HideModel.class);
 		// makeLocalize(AnimationKey.class);

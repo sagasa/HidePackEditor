@@ -27,6 +27,7 @@ public class PackCash {
 	public List<Model> ModelList = new ArrayList<>();
 	/** HideModelのList Sound */
 	public List<HideModel> ModelInfoList = new ArrayList<>();
+	public List<HideImage> TextureList = new ArrayList<>();
 	/** 読み込み中のパック */
 	public PackInfo Pack;
 
@@ -52,5 +53,6 @@ public class PackCash {
 		ScopeList.forEach(data -> data.RootPack.set(fInfo));
 		ModelList.forEach(data -> data.RootPack.set(fInfo));
 		ModelInfoList.forEach(data -> data.getRootPack().set(fInfo));
+		TextureList.forEach(data -> data.getRootPack().set(fInfo));
 	}
 }
