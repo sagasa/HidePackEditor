@@ -1,13 +1,17 @@
 package editor;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import editor.controller.RootController;
 import io.EditorConfig;
+import io.GltfInfoReader;
 import io.GltfInfoReader.GltfException;
+import io.ModelInfo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -54,7 +58,7 @@ public class Editor extends Application {
 //
 //		System.exit(0);
 
-		// GLBInfo info = GltfLoader.LoadGlbFile(new File("./addempty.glb"));
+		ModelInfo info = GltfInfoReader.readInfo(Files.readAllBytes(new File("./test.glb").toPath()));
 		// System.out.println(info.animations);
 		// System.out.println(info.emptynodes);
 

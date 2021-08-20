@@ -15,7 +15,6 @@ public class HideModel extends NamedData {
 	// 出力時のファイル名
 	transient public ObservableList<String> empty;
 	transient public ObservableList<String> mesh;
-	transient public Model model;
 
 	public static final DataEntry<String> Name = of("sample");
 
@@ -49,7 +48,6 @@ public class HideModel extends NamedData {
 	}
 
 	public HideModel setModel(Model model) {
-		this.model = model;
 		put(Name, Operator.SET, model.DisplayName);
 		put(Model, Operator.SET, model.DisplayName);
 		return this;

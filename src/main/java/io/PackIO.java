@@ -191,7 +191,7 @@ public class PackIO {
 		addEntry(dataMap, HidePack.GunList, PackPattern.GUN);
 		// 弾のデータ
 		addEntry(dataMap, HidePack.MagazineList, PackPattern.MAGAZINE);
-
+		addEntry(dataMap, HidePack.ModelInfoList, PackPattern.MODEL_INFO);
 		// リソース
 		try {
 			// Icon
@@ -210,15 +210,15 @@ public class PackIO {
 						new ByteArrayInputStream(d.Sound));
 			}
 		}
-		for (HideModel d : HidePack.ModelInfoList) {
+
+		for (Model d : HidePack.ModelList) {
 			// 参照ではなければ
 			if (!d.isReference()) {
-				dataMap.get(d.getRootPack().get()).put(PackPattern.MODEL_INFO.toPath(d.getDisplayName()),
-						new ByteArrayInputStream(d.toJson().getBytes(UTF8)));
-				dataMap.get(d.getRootPack().get()).put(d.model.type.toPath(d.getDisplayName()),
-						new ByteArrayInputStream(d.model.data));
+				dataMap.get(d.getRootPack().get()).put(d.type.toPath(d.getDisplayName()),
+						new ByteArrayInputStream(d.data));
 			}
 		}
+
 		// 内容がないor参照のエントリを削除
 		for (PackInfo pack : dataMap.keySet()) {
 			if (dataMap.get(pack).size() <= 1 || pack.isReference) {
@@ -335,7 +335,7 @@ public class PackIO {
 		}
 		// model
 		if (PackPattern.MODEL_OBJ.mache(name)) {
-			pack.ModelList.add(Model.from(PackPattern.MODEL_GLB.trim(name), data, PackPattern.MODEL_OBJ));
+			pack.ModelList.add(Model.from(PackPattern.MODEL_OBJ.trim(name), data, PackPattern.MODEL_OBJ));
 			// System.out.println("model");
 		}
 		// model

@@ -49,8 +49,7 @@ public class GltfInfoReader {
 			}
 			JsonParser parser = new JsonParser();
 			root = parser.parse(new String(data, StandardCharsets.UTF_8)).getAsJsonObject();
-			stream.close();
-
+			System.out.println(gson.toJson(root));
 		}
 
 		// Get scene
