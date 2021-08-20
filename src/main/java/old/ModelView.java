@@ -1,4 +1,4 @@
-package editor.node.model;
+package old;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -30,7 +30,6 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import resources.Model;
-import types.model.Bone;
 import types.model.HideModel;
 import types.model.ModelSelector;
 

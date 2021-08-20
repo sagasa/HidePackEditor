@@ -16,6 +16,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -38,6 +39,7 @@ import javafx.util.StringConverter;
 import localize.LocalizeHandler;
 import localize.LocalizeHandler.Lang;
 import resources.HideImage;
+import resources.Model;
 import types.PackInfo;
 import types.base.DataBase;
 import types.base.DataBase.DataEntry;
@@ -142,7 +144,11 @@ public class EditPanels extends Pane {
 		writeProjectileEditor();
 		writePackInfoEditor();
 		writeModelEditor();
+
+		// this.getChildren().add(new NumberEditField(true, true));
 	}
+
+	ObservableList<String> empty = FXCollections.observableArrayList();
 
 	/** HideModel */
 	private void writeModelEditor() {
@@ -150,16 +156,27 @@ public class EditPanels extends Pane {
 		// addEditPane(makePos3Editor(type, new DataPath("offsetFirstPerson")), type);
 		ObservableObjectValue<? extends DataBase> editValue = getEditModel(type);
 		{
-			ObservableList<? extends IDataEntity> empty;
 
 			VBox root = new VBox();
-			root.getChildren().addAll(EditNode.editString(editValue, type, DataPath.of(HideModel.Name)),
-					EditNode.editString(editValue, type, DataPath.of(HideModel.Model), HidePack.ModelList),
+			EditNode model = EditNode.editString(editValue, type, DataPath.of(HideModel.Model), HidePack.ModelList);
+
+			model.setChangeListner((ov, nv) -> {
+				Model m = HidePack.getModel(nv.toString());
+				if (m != null)
+					empty.setAll(m.info.animations);
+			});
+
+			root.getChildren().addAll(EditNode.editString(editValue, type, DataPath.of(HideModel.Name)), model,
 					EditNode.editString(editValue, type, DataPath.of(HideModel.HandPos)),
 					EditNode.editString(editValue, type, DataPath.of(HideModel.BullelPos)),
 					EditNode.editString(editValue, type, DataPath.of(HideModel.SightPos)));
 			addEditPane(root, type);
+
+			WaghtListEditNode<String> reload = new WaghtListEditNode<>(editValue, type,
+					DataPath.of(HideModel.ReloadAnimation), empty);
+			addEditPane(reload, type);
 		}
+
 	}
 
 	private void writePackSelect() {

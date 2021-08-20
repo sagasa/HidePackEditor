@@ -1,4 +1,4 @@
-package types.model;
+package old;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -13,6 +13,9 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import types.base.DataBase;
+import types.model.AnimationType;
+import types.model.HideModel;
+import types.model.ModelSelector;
 
 /** モデルのアニメーション用 */
 public class Bone extends DataBase {

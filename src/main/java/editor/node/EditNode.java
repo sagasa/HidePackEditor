@@ -380,9 +380,7 @@ public class EditNode extends Pane implements ChangeListener<DataBase> {
 				}
 				text.setTextFormatter(formatter);
 				text.textProperty().bindBidirectional((Property) editorProperty, converter);
-				text.focusedProperty().addListener((observable, newvalue, oldvalue) ->
-
-				{
+				text.focusedProperty().addListener((observable, newvalue, oldvalue) -> {
 					if (!newvalue) {
 						text.setText(editorProperty.getValue().toString());
 					}

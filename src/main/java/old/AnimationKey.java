@@ -1,9 +1,9 @@
-package types.model;
+package old;
 
 import java.util.List;
 
+import old.Bone.ModelTransforms;
 import types.base.DataBase;
-import types.model.Bone.ModelTransforms;
 
 /** アニメーション用 */
 public class AnimationKey extends DataBase implements Comparable<AnimationKey> {

@@ -30,31 +30,30 @@ import types.base.DataPath;
 /** 母集団のリストから任意に選択するListView */
 public class ListEditNode<T> extends EditNode {
 
-	private ListView<T> listview;
+	protected ListView<T> listview;
 	private String SearchKey = null;
 	private ListChangeListener<IDataEntity> listener;
 
 	@SuppressWarnings("unchecked")
-	private T[] getArray() {
+	protected T[] getArray() {
 		return (T[]) editorProperty.getValue();
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setArray(T[] value) {
+	protected void setArray(T[] value) {
 		((Property<T[]>) editorProperty).setValue(value);
-		;
 	}
 
-	private Supplier<Stream<T>> fromStream;
+	protected Supplier<Stream<T>> fromStream;
 
 	// TODO 要素の最大、最小数の指定を
 
 	/**
 	 * @param fromList 母集団
 	 */
-	@SuppressWarnings({ "unchecked" })
-	public <F> ListEditNode(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path,
-			ObservableList<F> fromList) {
+	@SuppressWarnings({})
+	public ListEditNode(ObservableObjectValue<? extends DataBase> editValue, EditType edit, DataPath path,
+			ObservableList<T> fromList) {
 		this(editValue, edit, path, fromList, from -> (T) from);
 	}
 
@@ -110,7 +109,7 @@ public class ListEditNode<T> extends EditNode {
 	}
 
 	/** リストを読み取って値をセット */
-	private void writeList() {
+	protected void writeList() {
 		listview.getItems().clear();
 		if (getArray() == null)
 			return;

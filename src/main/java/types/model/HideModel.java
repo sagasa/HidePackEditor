@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.collections.ObservableList;
+import old.WeightEntry;
 import resources.Model;
 import types.base.DataBase;
 import types.base.NamedData;
@@ -24,8 +25,10 @@ public class HideModel extends NamedData {
 	public static final DataEntry<String> SightPos = of("");
 	public static final DataEntry<String> BullelPos = of("");
 
-	public static final DataEntry<AnimationEntry[]> ReloadAnimation = of(new AnimationEntry[0]);
-	public static final DataEntry<AnimationEntry[]> ShootAnimation = of(new AnimationEntry[0]);
+	@SuppressWarnings("unchecked")
+	public static final DataEntry<WeightEntry<String>[]> ReloadAnimation = of(new WeightEntry[0]);
+	@SuppressWarnings("unchecked")
+	public static final DataEntry<WeightEntry<String>[]> ShootAnimation = of(new WeightEntry[0]);
 
 	/** tag - model */
 	public Map<String, String> tag_model = new HashMap<>();
