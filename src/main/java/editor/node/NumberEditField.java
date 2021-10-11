@@ -13,11 +13,42 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.StringConverter;
+import javafx.util.converter.FloatStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
-public class NumberEditField extends TextField {
+public class NumberEditField<T extends Number> extends TextField {
+
+	public static class FloatEditField extends NumberEditField<Float> {
+
+		public FloatEditField(boolean isNonNegative) {
+			super(false, isNonNegative);
+			converter = new FloatStringConverter();
+		}
+
+		@SuppressWarnings("unchecked")
+		public void bind(Property<Float> prop) {
+			bind(prop, converter);
+		}
+	}
+
+	public static class IntEditField extends NumberEditField<Integer> {
+
+		public IntEditField(boolean isNonNegative) {
+			super(false, isNonNegative);
+			converter = new IntegerStringConverter();
+		}
+
+		@SuppressWarnings("unchecked")
+		public void bind(Property<Integer> prop) {
+			bind(prop, converter);
+		}
+	}
 
 	protected boolean isInteger;
 	protected boolean isNonNegative = false;
+
+	protected float max = Float.MAX_VALUE;
+	protected float min = -Float.MAX_VALUE;
 
 	private static final Pattern NumberPattern = Pattern.compile("[^0-9\\.-]+");
 	private static final Pattern IntPattern = Pattern.compile("[\\.]+");
@@ -27,12 +58,9 @@ public class NumberEditField extends TextField {
 			new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(2), new Insets(2)));
 
 	@SuppressWarnings("rawtypes")
-	private StringConverter converter;
-	@SuppressWarnings("rawtypes")
-	private Property property;
+	protected StringConverter converter;
 
-	public <T extends Number> void bind(Property<T> prop, StringConverter<T> conv) {
-		property = prop;
+	public void bind(Property<T> prop, StringConverter<T> conv) {
 		converter = conv;
 		textProperty().bindBidirectional(prop, conv);
 	}
@@ -55,7 +83,7 @@ public class NumberEditField extends TextField {
 				return c;
 			}
 
-			System.out.println(c);
+			// System.out.println(c);
 			final String input = c.getText();
 			final int caret = c.getControlCaretPosition();
 			final String old = c.getControlNewText().replaceFirst(Pattern.quote(c.getText()), "");
@@ -92,9 +120,9 @@ public class NumberEditField extends TextField {
 
 			newCaret = newCaret - input.length() + str.length();
 
-			System.out.println(c.getControlNewText() + " " + c.getText() + " " + old + " " + c.getAnchor() + " "
-					+ c.getCaretPosition());
-			System.out.println("replaceText " + input + " " + str + " == " + c.getCaretPosition() + " " + newCaret);
+//			System.out.println(c.getControlNewText() + " " + c.getText() + " " + old + " " + c.getAnchor() + " "
+//					+ c.getCaretPosition());
+//			System.out.println("replaceText " + input + " " + str + " == " + c.getCaretPosition() + " " + newCaret);
 
 			c.setText(str);
 			c.selectRange(newCaret, newCaret);
@@ -103,9 +131,21 @@ public class NumberEditField extends TextField {
 		}));
 
 		focusedProperty().addListener((v, ov, nv) -> {
-			if (converter != null)
-				setText(converter.toString(property.getValue()));
+			if (converter != null) {
+				Object raw = converter.fromString(getText());
+				if (isInteger) {
+					int value = raw == null ? 0 : (int) raw;
+					value = Math.max((int) min, value);
+					value = Math.min((int) max, value);
+					setText(converter.toString(value));
+				} else {
+					float value = raw == null ? 0 : (float) raw;
+					value = Math.max(min, value);
+					value = Math.min(max, value);
+					setText(converter.toString(value));
+				}
+
+			}
 		});
 	}
-
 }

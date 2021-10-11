@@ -88,8 +88,9 @@ public class LocalizeHandler {
 		try (FileWriter writer = new FileWriter("./lang/default.properties", false)) {
 			Map<String, String> map = new HashMap<>();
 			for (String name : UnlocalizedNames) {
-				writer.write(name + " = " + name + "\n");
-				map.put(name, name);
+				String[] sName = name.split("\\.");
+				writer.write(name + " = " + sName[sName.length - 1] + "\n");
+				map.put(name, sName[sName.length - 1]);
 			}
 			defaultRB = new HideLocalizeResource(map);
 			writer.close();

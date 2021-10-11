@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import org.apache.logging.log4j.Logger;
 
 import editor.HidePack;
 import editor.controller.RootController;
-import helper.ArrayEditor;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import resources.HideImage;
@@ -254,33 +252,27 @@ public class PackIO {
 	public static PackCash readPack(File file) {
 		// 読み込むファイル
 		PackCash pack = new PackCash();
-		try {
-			FileInputStream in = new FileInputStream(file);
+		try (ZipInputStream zipIn = new ZipInputStream(new BufferedInputStream(new FileInputStream(file)),
+				Charset.forName("Shift_JIS"))) {
 			// 以下、zipを展開して、中身を確認する
-			ZipInputStream zipIn = new ZipInputStream(in, Charset.forName("Shift_JIS"));
 			ZipEntry entry = null;
+			byte[] buf = new byte[1024];
+			ByteCollector data = new ByteCollector();
 			while ((entry = zipIn.getNextEntry()) != null) {
 				// dirかどうか確認
 				if (!entry.isDirectory()) {
 					// 内容を読み取り
-					// byte[] buffer = new byte[0x6400000];
-					byte[] buffer = new byte[1024];
-					byte[] data = new byte[0];
-					int size;
-					while (0 < (size = zipIn.read(buffer))) {
-						data = ArrayEditor.ByteArrayCombining(data, Arrays.copyOf(buffer, size));
-						buffer = new byte[1024];
-
-					}
+					data.clear();
+					int size = 0;
+					while (0 < (size = zipIn.read(buf)))
+						data.apend(buf, size);
 					// パックラッパーに送る
-					PackWrapper(data, entry.getName(), pack);
+					PackWrapper(data.get(), entry.getName(), pack);
 				}
 				zipIn.closeEntry();
 			}
-			zipIn.close();
-			in.close();
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 		pack.setPack();
 		return pack;

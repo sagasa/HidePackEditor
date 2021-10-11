@@ -11,6 +11,7 @@ import editor.HidePack;
 import editor.IDataEntity;
 import editor.clip.ClipManager;
 import editor.controller.RootController;
+import editor.node.NumberEditField.FloatEditField;
 import helper.EditHelper;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -145,7 +146,12 @@ public class EditPanels extends Pane {
 		writePackInfoEditor();
 		writeModelEditor();
 
-		// this.getChildren().add(new NumberEditField(true, true));
+		FloatEditField nef = new FloatEditField(false);
+		nef.max = 1;
+		nef.min = -1;
+		// nef.bind((Property) fp, new FloatStringConverter());
+
+		this.getChildren().add(nef);
 	}
 
 	ObservableList<String> empty = FXCollections.observableArrayList();
@@ -162,8 +168,10 @@ public class EditPanels extends Pane {
 
 			model.setChangeListner((ov, nv) -> {
 				Model m = HidePack.getModel(nv.toString());
-				if (m != null)
+				if (m != null) {
 					empty.setAll(m.info.animations);
+					System.out.println(m.info.animations + " " + m.info.emptynodes);
+				}
 			});
 
 			root.getChildren().addAll(EditNode.editString(editValue, type, DataPath.of(HideModel.Name)), model,

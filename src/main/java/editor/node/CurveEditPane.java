@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.ArrayUtils;
 
+import editor.node.NumberEditField.FloatEditField;
 import helper.ArrayEditor;
 import helper.EditHelper;
 import javafx.beans.property.ObjectProperty;
@@ -16,7 +17,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -222,12 +222,6 @@ public class CurveEditPane extends Pane {
 		g.setTextAlign(TextAlignment.RIGHT);
 		g.setTextBaseline(VPos.BOTTOM);
 		g.fillText(String.format("(%.2f,%.2f)", maxX, maxY), Width, Top);
-		// 入力
-		if (selectIndex.get() != -1) {
-			keyField.setText(String.format("%.3f", keys[selectIndex.get()].Key));
-			valueField.setText(String.format("%.3f", keys[selectIndex.get()].Value));
-		}
-
 	}
 
 	private Curve getCurve() {
@@ -238,8 +232,8 @@ public class CurveEditPane extends Pane {
 
 	/** 移動されたらTrue */
 	private boolean isDrag = false;
-	TextField keyField;
-	TextField valueField;
+	FloatEditField keyField;
+	FloatEditField valueField;
 
 	StringConverter<Float> converter = new FloatStringConverter();
 	Label label;
@@ -290,6 +284,10 @@ public class CurveEditPane extends Pane {
 					resX = array[index - 1].Key;
 				if (index < array.length - 1 && array[index + 1].Key < resX)
 					resX = array[index + 1].Key;
+
+				keyField.setText(String.format("%.3f", resX));
+				valueField.setText(String.format("%.3f", resY));
+
 				array[index] = new CurveKey(resX, resY);
 				isDrag = true;
 				lastX = x;
@@ -353,7 +351,8 @@ public class CurveEditPane extends Pane {
 			final int index = selectIndex.get();
 			if (index != -1 && !nv.equals(ov)) {
 				CurveKey[] array = getArray();
-				float x = Math.max(converter.fromString(nv), index == 0 ? -Float.MAX_VALUE : array[index - 1].Key);
+				float value = converter.fromString(nv) == null ? 0 : converter.fromString(nv);
+				float x = Math.max(value, index == 0 ? -Float.MAX_VALUE : array[index - 1].Key);
 				x = Math.min(x, index == posX.length - 1 ? Float.MAX_VALUE : array[index + 1].Key);
 				array[index] = new CurveKey(x, array[index].Value);
 				updateState(getCurve());
@@ -394,12 +393,10 @@ public class CurveEditPane extends Pane {
 		return text;
 	}
 
-	private TextField initTextField() {
-		TextField text = new TextField();
-		text.setTextFormatter(getTextFormatter());
+	private FloatEditField initTextField() {
+		FloatEditField text = new FloatEditField(false);
 		text.translateYProperty().bind(heightProperty().subtract(text.heightProperty()));
 		text.setPrefWidth(50);
-		text.setAlignment(Pos.CENTER);
 		text.setFont(Font.font(10));
 		text.disableProperty().bind(selectIndex.isEqualTo(-1));
 		return text;
